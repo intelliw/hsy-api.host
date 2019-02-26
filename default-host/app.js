@@ -30,7 +30,7 @@ app.use(bodyParser.json());
 app.post('/echo', (req, res) => {
   res
     .status(200)
-    .json({message: req.body.message + " (axc 01)"})
+    .json({message: req.body.message + " (axc 00.04)"})
     .end();
 });
 
