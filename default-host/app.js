@@ -1,5 +1,5 @@
 /**
- * version 00.07
+ * version 00.08
  */
 
 // [START app]
@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 app.post('/echo', (req, res) => {
   res
     .status(200)
-    .json({message: req.body.message + " (axc 00.07)"})
+    .json({message: req.body.message + " (axc 00.08)"})
     .end();
 });
 
