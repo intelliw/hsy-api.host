@@ -11,6 +11,7 @@ const bodyParser = require('body-parser');
 const Buffer = require('safe-buffer').Buffer;
 
 const app = express();
+const DEBUG = "(axc 00.09)"
 
 app.set('case sensitive routing', true);
 app.use(bodyParser.json());
@@ -19,9 +20,18 @@ app.use(bodyParser.json());
 app.post('/echo', (req, res) => {
   res
     .status(200)
-    .json({message: req.body.message + " (axc 00.08)"})
+    .json({message: req.body.message + DEBUG})
     .end();
 });
+
+app.get('/energy/:type', (req, res) => {
+  var energyType = req.params.type;
+  res
+    .status(200)
+    .json({message: energyType + DEBUG})
+    .end();  
+});
+
 
 function authInfoHandler(req, res) {
   let authUser = {id: 'anonymous'};
