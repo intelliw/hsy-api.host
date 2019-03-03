@@ -44,7 +44,7 @@ function authInfoHandler(req, res) {
     .json(authUser)
     .end();
 }
-
+ 
 app.get('/auth/info/googlejwt', authInfoHandler);
 app.get('/auth/info/googleidtoken', authInfoHandler);
 
