@@ -24,11 +24,11 @@ app.post('/echo', (req, res) => {
     .end();
 });
 
-app.get('/energy/:type', (req, res) => {
-  var energyType = req.params.type;
+app.get('/energy/:energy', (req, res) => {
+  var energy = req.params.energy;
   res
     .status(200)
-    .json({message: energyType + DEBUG})
+    .json({message: energy + DEBUG})
     .end();  
 });
 
