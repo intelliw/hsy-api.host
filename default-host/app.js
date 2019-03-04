@@ -11,7 +11,7 @@ const bodyParser = require('body-parser');
 const Buffer = require('safe-buffer').Buffer;
 
 const app = express();
-const DEBUG = "(sundaya2 00.12)"
+const DEBUG = "(sundaya2 project 00.12)"
 
 app.set('case sensitive routing', true);
 app.use(bodyParser.json());
