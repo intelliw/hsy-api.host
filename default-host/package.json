@@ -1,13 +1,13 @@
 {
   "name": "endpoints",
-  "description": "Endpoints Node.js sample for Google App Engine",
+  "description": "Sundaya Energy Management Endpoints for Node.js on Google Compute Engine (gcr.io/google_appengine/nodejs)",
   "version": "0.0.1",
   "private": true,
   "license": "Apache-2.0",
-  "author": "Google Inc.",
+  "author": "Sundaya",
   "repository": {
     "type": "git",
-    "url": "https://github.com/GoogleCloudPlatform/nodejs-docs-samples.git"
+    "url": "https://github.com/intelliw/hse-api-host.git"
   },
   "engines": {
     "node": ">=8.0.0"

@@ -11,24 +11,38 @@ const bodyParser = require('body-parser');
 const Buffer = require('safe-buffer').Buffer;
 
 const app = express();
-const DEBUG = "(sundaya2 project 0.0.03)"
+const API_VERSIONS = "v0.0.04"
 
 app.set('case sensitive routing', true);
 app.use(bodyParser.json());
 // [END setup]
 
-app.post('/echo', (req, res) => {
+// API ROUTE [versions.v.get] ---------------------------------------------------------
+app.get('/v', (req, res) => {
   res
     .status(200)
-    .json({message: req.body.message + DEBUG})
+    .json({message: 'Versions ' + API_VERSIONS})
     .end();
 });
 
-app.get('/energy/:energy', (req, res) => {
-  var energy = req.params.energy;
+// API ROUTE [energymanagement.energy.type.get] --------------------------------------
+app.get('/energy/:energyType?/:period?/:numPeriods?', (req, res) => {
+  
+  var energyType = req.params.energyType;
+  var period = req.params.period; 
+  var numPeriods = req.params.numPeriods;
+
+  var msg;
+
+  energyType = !energyType ? 'hse' : energyType;
+  period = (!period) ? 'now' : period;
+  numPeriods = (!numPeriods) ? '1' : numPeriods;
+
+  msg = energyType + ',' + period + ',' + numPeriods;
+  
   res
     .status(200)
-    .json({message: energy + DEBUG})
+    .json({message: msg})
     .end();  
 });
 

@@ -1,35 +1,13 @@
-# Google Cloud Endpoints sample for Node.js
+# Energy Managementy API Host
 
-This sample demonstrates how to use Google Cloud Endpoints using Node.js.
-
-For a complete walkthrough showing how to run this sample in different
-environments, see the
-[Google Cloud Endpoints Quickstarts](https://cloud.google.com/endpoints/docs/quickstarts).
-
-## Running locally
-
-Refer to the [appengine/README.md](../../appengine/README.md) file for
-instructions on running locally.
-
-## Send an echo request
-
-Choose your local or production server:
 
 ```
-# If you're running locally, you won't need an API key.
-$ export ENDPOINTS_HOST=http://localhost:8080
+# If you're running locally, build the image with local.Dockerfile
 
-$ export ENDPOINTS_HOST=https://PROJECT-ID.appspot.com
-$ export ENDPOINTS_KEY=AIza...
-```
-
-Send the request:
+docker build -f local.Dockerfile -t axc-hse .
 
 ```
-$ curl -vv -d '{"message":"foo"}' -H 'Content-Type: application/json' "${ENDPOINTS_HOST}/echo?key=${ENDPOINTS_KEY}"
-```
 
-If you're running locally, you won't need an API key.
 
 ## Sending authenticated requests
 
