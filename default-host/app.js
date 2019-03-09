@@ -25,20 +25,22 @@ app.get('/v', (req, res) => {
     .end();
 });
 
-// API ROUTE [energymanagement.energy.type.get] --------------------------------------
-app.get('/energy/:energyType?/:period?/:numPeriods?', (req, res) => {
+// API ROUTE [energymanagement.energy.get] /energy/{type}/{period}/{epoch} --------------------------------------
+app.get('/energy/:type?/:period?/:epoch?/:number?', (req, res) => {
   
-  var energyType = req.params.energyType;
+  var type = req.params.type;
   var period = req.params.period; 
-  var numPeriods = req.params.numPeriods;
+  var epoch = req.params.epoch; 
+  var num = req.params.number;
 
   var msg;
 
-  energyType = !energyType ? 'hse' : energyType;
-  period = (!period) ? 'now' : period;
-  numPeriods = (!numPeriods) ? '1' : numPeriods;
+  type = !type ? 'hse' : type;
+  period = (!period) ? 'period-now' : period;
+  epoch = (!epoch) ? 'epoch-now' : epoch;
+  num = (!num) ? '1' : num;
 
-  msg = energyType + ',' + period + ',' + numPeriods;
+  msg = type + ',' + period + ',' + epoch + ',' + num;
   
   res
     .status(200)
@@ -46,6 +48,7 @@ app.get('/energy/:energyType?/:period?/:numPeriods?', (req, res) => {
     .end();  
 });
 
+// API ROUTE [devices.datasets.post]
 
 function authInfoHandler(req, res) {
   let authUser = {id: 'anonymous'};
