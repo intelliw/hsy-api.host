@@ -25,7 +25,7 @@ app.get('/v', (req, res) => {
     .end();
 });
 
-// API ROUTE [energymanagement.energy.get] /energy/{type}/{period}/{epoch} --------------------------------------
+// API ROUTE [energy.type.get] /energy/{type}/{period}/{epoch} --------------------------------------
 app.get('/energy/:type?/:period?/:epoch?/:number?', (req, res) => {
   
   var type = req.params.type;
@@ -36,8 +36,8 @@ app.get('/energy/:type?/:period?/:epoch?/:number?', (req, res) => {
   var msg;
 
   type = !type ? 'hse' : type;
-  period = (!period) ? 'period-now' : period;
-  epoch = (!epoch) ? 'epoch-now' : epoch;
+  period = (!period) ? 'now' : period;
+  epoch = (!epoch) ? 'now' : epoch;
   num = (!num) ? '1' : num;
 
   msg = type + ',' + period + ',' + epoch + ',' + num;
@@ -49,6 +49,8 @@ app.get('/energy/:type?/:period?/:epoch?/:number?', (req, res) => {
 });
 
 // API ROUTE [devices.datasets.post]
+
+
 
 function authInfoHandler(req, res) {
   let authUser = {id: 'anonymous'};
