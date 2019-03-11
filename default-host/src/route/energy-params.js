@@ -1,27 +1,23 @@
-// lib/energy-params.js
+// src/energy-params.js
 /**
  * validates parameters and returns a default value if the parameter was missing. 
  * throws an exception if the parameter was mandatory and missing.
  */
 
-module.exports = function Group(id, name, info)
-{
+module.exports = function Group(id, name, info) {
     var _id = id;
     var _name = name;
     var _info = info
 
-    this.getID = function()
-    {
+    this.getID = function () {
         return _id;
     }
 
-    this.getName = function()
-    {
+    this.getName = function () {
         return _name;
     }
 
-    this.getInfo = function()
-    {
+    this.getInfo = function () {
         return _info;
     }
 }
