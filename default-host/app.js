@@ -9,38 +9,47 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const Buffer = require('safe-buffer').Buffer;
+const path = require('path');
 
 const app = express();
-const API_VERSIONS = "v0.0.04"
 
 app.set('case sensitive routing', true);
 app.use(bodyParser.json());
-// [END setup]
 
-// API ROUTE [versions.v.get] ---------------------------------------------------------
-app.get('/v', (req, res) => {
+app.set('view engine', 'ejs');                          // set ejs
+app.set('views', path.join(__dirname, '/responses'));   // ejs templates folder
+
+// [END setup] 
+
+// API ROUTE [diagnostics.versions.get] /versions ---------------------------------
+app.all('/v', (req, res) => {
   res
     .status(200)
-    .json({message: 'Versions ' + API_VERSIONS})
+    .json({versions: 'v1.0 v1.1'})
     .end();
 });
 
-// API ROUTE [energy.type.get] /energy/{type}/{period}/{epoch} --------------------------------------
-app.get('/energy/:type?/:period?/:epoch?/:number?', (req, res) => {
+// API ROUTE [energy.type.get] /energy/{energy}/{period}/{epoch} --------------------
+app.get('/energy/:energy?/:period?/:epoch?/:number?', (req, res) => {
   
-  var type = req.params.type;
-  var period = req.params.period; 
-  var epoch = req.params.epoch; 
-  var num = req.params.number;
+  let type = req.params.type;
+  let period = req.params.period; 
+  let epoch = req.params.epoch; 
+  let num = req.params.number;
+  let site = req.query.site;
 
-  var msg;
+  const params = require("./lib/energy-params.js");
+
+  let msg;
 
   type = !type ? 'hse' : type;
-  period = (!period) ? 'now' : period;
-  epoch = (!epoch) ? 'now' : epoch;
-  num = (!num) ? '1' : num;
-
-  msg = type + ',' + period + ',' + epoch + ',' + num;
+  period = (!period) ? 'now-period' : period;
+  epoch = (!epoch) ? 'now-epoch' : epoch;
+  num = (!num) ? 'num' : num;
+  
+  site = new params(1,2,3).getID();
+  
+  msg = type + ',' + period + ',' + epoch + ',' + num + ',' + site;
   
   res
     .status(200)
@@ -48,10 +57,15 @@ app.get('/energy/:type?/:period?/:epoch?/:number?', (req, res) => {
     .end();  
 });
 
-// API ROUTE [devices.datasets.post]
+// API ROUTE [devices.datasets.post] /devices/{device}/datasets/{dataset} ---------------
+
+// TEST ROUTE  
+app.get('/devtest', (req, res) => {
+    res.render('energy/index',{user: "Any User",title:"homepage"});
+});
 
 
-
+// AUTH -----------------------------------------------------------------------------
 function authInfoHandler(req, res) {
   let authUser = {id: 'anonymous'};
   const encodedInfo = req.get('X-Endpoint-API-UserInfo');
@@ -67,7 +81,9 @@ function authInfoHandler(req, res) {
 app.get('/auth/info/googlejwt', authInfoHandler);
 app.get('/auth/info/googleidtoken', authInfoHandler);
 
+// LISTEN ------------------------------------------------------------------------
 if (module === require.main) {
+
   // [START listen]
   const PORT = process.env.PORT || 8080;
   app.listen(PORT, () => {
@@ -75,7 +91,9 @@ if (module === require.main) {
     console.log('Press Ctrl+C to quit.');
   });
   // [END listen]
+
 }
+
 // [END app]
 
 module.exports = app;

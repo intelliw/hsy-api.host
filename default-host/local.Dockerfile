@@ -12,4 +12,4 @@ RUN npm install
 RUN npm install -g nodemon
 
 ENV PORT=8080
-ENTRYPOINT ["nodemon", "app.js"]
+ENTRYPOINT ["nodemon", "start"]
