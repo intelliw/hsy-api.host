@@ -1,11 +1,13 @@
 /**
- * ./src/svc/security.js
+ * ./svc/security.js
  * 
- * security services
+ * security functions
  */
 
+module.exports = function () {
 
-// AUTH ----------------------------------------------------------------------------
+}
+
 module.exports.authInfoHandler = function (req, res) {
     let authUser = { id: 'anonymous' };
     const encodedInfo = req.get('X-Endpoint-API-UserInfo');

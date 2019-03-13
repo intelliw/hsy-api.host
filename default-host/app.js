@@ -4,26 +4,40 @@
 
 'use strict';
 
-// SETUP -------------------------------------------------------------------------
+// [START setup]------------------------------
+
 const express = require('express');
+const bodyParser = require('body-parser');
 const Buffer = require('safe-buffer').Buffer;
+
 const app = express();
 
-const svc = require('./src/svc');                       // services
-svc.config.initialise(app, __dirname);                  // .. initialise the app
+app.set('case sensitive routing', true);
+app.use(bodyParser.json());
 
-const route = require('./src/route')(app);              // routes
-const model = require('./src/model')(app);              // model
-const view = require('./src/view')(app);                // templates
+// [END setup]-------------------------------
 
-// LISTEN ------------------------------------------------------------------------
+
+
+// load modules and start the api
+const svc = require('./svc');               // modules for common services
+const api = require('./api');               // start modules for each route
+
+svc.config.setup(app);                 // .. initialise the app
+api.route.start(app);
+
+
+// LISTEN ------------------------------------
+
 if (module === require.main) {
 
-    // [START listen]
     const PORT = process.env.PORT || 8080;
+
     app.listen(PORT, () => {
         console.log(`App listening on port ${PORT}`);
         console.log('Press Ctrl+C to quit.');
     });
-    // [END listen]
+
 }
+    // --------------------------------------------
+
