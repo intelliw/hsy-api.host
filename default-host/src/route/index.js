@@ -1,11 +1,14 @@
-// route/index.js
+
 /**
+ * ./src/route/index.js
  * provides a hander for each route  
  */
 module.exports = function (app) {
 
     const SUPPORTED_VERSIONS = 'v1.0 v1.1';
-
+    
+    let svc = require('../svc');                       // services
+    
     // DEVTEST ROUTE  
     app.get('/devtest', (req, res) => {
         res.render('welcome', { user: "Any Oteh User?", title: "homepage" });
@@ -13,7 +16,7 @@ module.exports = function (app) {
 
 
     // API ROUTE [diagnostics.versions.get] /versions ---------------------------------
-    app.all('/v', (req, res) => {
+    app.all('/versions', (req, res) => {
         res
             .status(200)
             .json({ versions: SUPPORTED_VERSIONS })
@@ -46,8 +49,15 @@ module.exports = function (app) {
             .status(200)
             .json({ message: msg })
             .end();
-    });
+
 
     // API ROUTE [devices.datasets.post] /devices/{device}/datasets/{dataset} ---------------
+
+    // SECURITY
+    app.get('/auth/info/googlejwt', svc.security.authInfoHandler);
+    app.get('/auth/info/googleidtoken', svc.security.authInfoHandler);
+
+    });
+
 
 }

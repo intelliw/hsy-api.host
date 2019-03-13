@@ -2,20 +2,19 @@
  * version 00.08
  */
 
-// [START app]
 'use strict';
 
-// [START setup] ----------------------------------------------------------------
+// SETUP -------------------------------------------------------------------------
 const express = require('express');
 const Buffer = require('safe-buffer').Buffer;
 const app = express();
 
-require('./src/config')(app, __dirname);        // configs    
-require('./src/route')(app);                    // routes
-require('./src/security')(app);                 // security
-require('./src/model')(app);                    // model
-require('./src/template')(app);                 // template
+const svc = require('./src/svc');                       // services
+svc.config.initialise(app, __dirname);                  // .. initialise the app
 
+const route = require('./src/route')(app);              // routes
+const model = require('./src/model')(app);              // model
+const view = require('./src/view')(app);                // templates
 
 // LISTEN ------------------------------------------------------------------------
 if (module === require.main) {
@@ -27,9 +26,4 @@ if (module === require.main) {
         console.log('Press Ctrl+C to quit.');
     });
     // [END listen]
-
 }
-
-// [END app]
-
-module.exports = app;
