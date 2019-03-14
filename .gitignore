@@ -1,3 +1,5 @@
+*.tmp
+*.lnk
 ~*.*
 DELETE-*.*
-default-host/node_modules/
+node_modules/
