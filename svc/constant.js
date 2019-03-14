@@ -7,7 +7,7 @@ const path = require('path');
 
 module.exports = {
     folder: {
-        VIEWS: path.dirname(require.resolve('../api/view'))
+        VIEWS: path.dirname(require.resolve('../vws'))
     }
 };
 

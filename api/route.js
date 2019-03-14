@@ -4,7 +4,7 @@
  * 
  * handlers for each route  
  */
-const svc = require('../../svc');
+const svc = require('../svc');
 
 module.exports.start = function (app) {
 

@@ -20,8 +20,10 @@ app.use(bodyParser.json());
 
 
 // load modules and start the api
-const svc = require('./svc');               // modules for common services
+const svc = require('./svc');               // common services
 const api = require('./api');               // start modules for each route
+const dto = require('./dto');
+const vws = require('./vws');
 
 svc.config.setup(app);                 // .. initialise the app
 api.route.start(app);
@@ -39,5 +41,5 @@ if (module === require.main) {
     });
 
 }
-    // --------------------------------------------
+// --------------------------------------------
 

@@ -1,6 +1,6 @@
 /**
   * PACKAGE
- * ./api/view/index.js
+ * ./vws/index.js
  * 
  * view templates  
  */
