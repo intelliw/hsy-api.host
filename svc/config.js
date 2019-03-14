@@ -5,12 +5,14 @@
  */
 const svc = require('../svc');
 
-// application initialisation 
-module.exports.setup = function (app) {
+module.exports = {
+    setup : setup
+}
 
-    // ESJ ------------------------------------------------------------------------
-    app.set('view engine', 'ejs');                        // set engine
-    app.set('views', svc.constant.folder.VIEWS);   // ejs templates folder
+function setup(app) {
+
+    app.set('view engine', 'ejs');                 // set engine
+    // app.set('views', svc.constant.folder.VIEWS);   // ejs templates folder
 
 }
 

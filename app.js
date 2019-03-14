@@ -4,29 +4,24 @@
 
 'use strict';
 
+let express = require('express');
+let bodyParser = require('body-parser');
+let Buffer = require('safe-buffer').Buffer;
+
+let app = express();
+
+let svc = require('./svc');           // common services
+let api = require('./api');           // routes
+
 // [START setup]------------------------------
-
-const express = require('express');
-const bodyParser = require('body-parser');
-const Buffer = require('safe-buffer').Buffer;
-
-const app = express();
 
 app.set('case sensitive routing', true);
 app.use(bodyParser.json());
 
+svc.config.setup(app);                // initialise
+api.route.start(app);                 // start the app
+
 // [END setup]-------------------------------
-
-
-
-// load modules and start the api
-const svc = require('./svc');               // common services
-const api = require('./api');               // start modules for each route
-const dto = require('./dto');
-const vws = require('./vws');
-
-svc.config.setup(app);                 // .. initialise the app
-api.route.start(app);
 
 
 // LISTEN ------------------------------------
@@ -39,7 +34,6 @@ if (module === require.main) {
         console.log(`App listening on port ${PORT}`);
         console.log('Press Ctrl+C to quit.');
     });
-
 }
 // --------------------------------------------
 

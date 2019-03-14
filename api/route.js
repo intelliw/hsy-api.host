@@ -4,11 +4,15 @@
  * 
  * handlers for each route  
  */
-const svc = require('../svc');
+let svc = require('../svc');
 
-module.exports.start = function (app) {
+module.exports = {
+    start: start
+}
 
-    const SUPPORTED_VERSIONS = 'v1.0 v1.1';
+function start(app) {
+
+    
 
     // DEVTEST ROUTE  
     app.get('/devtest', (req, res) => {
@@ -20,7 +24,7 @@ module.exports.start = function (app) {
     app.all('/versions', (req, res) => {
         res
             .status(200)
-            .json({ versions: SUPPORTED_VERSIONS })
+            .json({ versions: svc.constant.SUPPORTED_VERSIONS })
             .end();
     });
 
@@ -41,7 +45,7 @@ module.exports.start = function (app) {
         epoch = (!epoch) ? 'now-epoch' : epoch;
         num = (!num) ? 'num' : num;
 
-        const params = require("./energy-params.js");
+        let params = require("./energy-params.js");
         site = new params(11, 2, 3).getID();
 
         msg = energy + ',' + period + ',' + epoch + ',' + num + ',' + site;

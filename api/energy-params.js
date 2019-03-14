@@ -3,8 +3,11 @@
  * validates parameters and returns a default value if the parameter was missing. 
  * throws an exception if the parameter was mandatory and missing.
  */
+module.exports = {
+    Group: Group
+}
 
-module.exports = function Group(id, name, info) {
+function Group(id, name, info) {
     var _id = id;
     var _name = name;
     var _info = info

@@ -4,7 +4,7 @@
  * global enumerations
  */
 
-module.exports = function () {
+module.exports = {
 
-};
+}
 

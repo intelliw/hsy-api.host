@@ -6,4 +6,6 @@
  * modules can access svc and app but cannot access other api modules
  */
 
-module.exports.route = require('./route')
+module.exports = {
+    route : require('./route')
+}

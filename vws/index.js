@@ -5,7 +5,7 @@
  * view templates  
  */
 
-module.exports = function () {
+module.exports = {
 
 
 }

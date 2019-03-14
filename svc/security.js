@@ -4,11 +4,11 @@
  * security functions
  */
 
-module.exports = function () {
-
+module.exports = {
+    authInfoHandler: authInfoHandler
 }
 
-module.exports.authInfoHandler = function (req, res) {
+function authInfoHandler(req, res) {
     let authUser = { id: 'anonymous' };
     const encodedInfo = req.get('X-Endpoint-API-UserInfo');
     if (encodedInfo) {
