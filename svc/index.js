@@ -5,6 +5,6 @@
  */
 module.exports.config = require('./config');
 module.exports.constant = require('./constant');
-module.exports.enum = require('./enum');
+module.exports.enums = require('./enums');
 module.exports.security = require('./security');
 module.exports.util = require('./util');

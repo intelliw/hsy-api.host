@@ -2,7 +2,7 @@
  * ./api/route.js
  * handlers for each route  
  */
-let svc = require('../svc');           // common services
+let svc = require('../svc');           
 
 module.exports.start = function(app) {
 
@@ -21,7 +21,7 @@ module.exports.start = function(app) {
 
 
     // API ROUTE [diagnostics.versions.get] /versions ---------------------------------
-    app.all('/versions', (req, res) => {
+    app.all("/versions", (req, res) => {
         res
             .status(200)
             .json({ versions: svc.constant.SUPPORTED_VERSIONS })
@@ -39,6 +39,11 @@ module.exports.start = function(app) {
         let site = req.query.site;
 
         let msg;
+    
+        //let enums = require('../svc/enum');
+        if (svc.enums.energy().isDefined(energy)) {
+            console.log(energy);
+        }
 
         energy = !energy ? 'hse' : energy;
         period = (!period) ? 'now-period' : period;

@@ -24,27 +24,27 @@ module.exports.Group = function (id, name, info) {
 
 class Car {
     constructor(options) {
-        this.engine = options.engine
-        this.trasmission = options.trasmission
+        this.engine = options.engine;
+        this.trasmission = options.trasmission;
     }
 
     start() {
-        this.engine.start()
+        this.engine.start();
     }
 }
 
 module.exports.createCar = function (options) {
-    return new Car(options)
+    return new Car(options);
 }
 
 module.exports.Bus = class {
     constructor(options) {
-        this.engine = options.engine
-        this.trasmission = options.trasmission
+        this.engine = options.engine;
+        this.trasmission = options.trasmission;
     }
 
     start() {
-        this.engine.start()
+        this.engine.start();
     }
 }
 
