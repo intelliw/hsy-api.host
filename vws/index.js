@@ -4,8 +4,3 @@
  * 
  * view templates  
  */
-
-module.exports = {
-
-
-}

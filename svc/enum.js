@@ -4,7 +4,3 @@
  * global enumerations
  */
 
-module.exports = {
-
-}
-

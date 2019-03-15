@@ -6,7 +6,3 @@
  * data access functions and data transfer objects
  * 
  */
-
-module.exports = {
-
-}

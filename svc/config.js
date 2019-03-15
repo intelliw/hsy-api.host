@@ -1,18 +1,13 @@
 /**
  * ./svc/config.js
- * 
  * configuration and initialisation functions
  */
 const svc = require('../svc');
 
-module.exports = {
-    setup : setup
-}
-
-function setup(app) {
+module.exports.setup = function(app) {
 
     app.set('view engine', 'ejs');                 // set engine
-    // app.set('views', svc.constant.folder.VIEWS);   // ejs templates folder
+    app.set('views', svc.constant.folder.VIEWS);   // ejs templates folder
 
 }
 

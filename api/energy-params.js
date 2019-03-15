@@ -1,13 +1,10 @@
-// src/energy-params.js
 /**
+ * ./api/energy-params.js
  * validates parameters and returns a default value if the parameter was missing. 
  * throws an exception if the parameter was mandatory and missing.
  */
-module.exports = {
-    Group: Group
-}
 
-function Group(id, name, info) {
+module.exports.Group = function (id, name, info) {
     var _id = id;
     var _name = name;
     var _info = info
@@ -24,3 +21,30 @@ function Group(id, name, info) {
         return _info;
     }
 }
+
+class Car {
+    constructor(options) {
+        this.engine = options.engine
+        this.trasmission = options.trasmission
+    }
+
+    start() {
+        this.engine.start()
+    }
+}
+
+module.exports.createCar = function (options) {
+    return new Car(options)
+}
+
+module.exports.Bus = class {
+    constructor(options) {
+        this.engine = options.engine
+        this.trasmission = options.trasmission
+    }
+
+    start() {
+        this.engine.start()
+    }
+}
+

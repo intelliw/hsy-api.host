@@ -1,20 +1,12 @@
 /**
  * ./svc/constant.js
- * 
  * global constants
  */
 let path = require('path');
 
-module.exports = {
-    
-    // grouped constants 
-    folder: folder,
 
-    // general constants
-    SUPPORTED_VERSIONS : 'v1.0 v1.1'
-}
+module.exports.folder = {
+    VIEWS: path.dirname(require.resolve('../vws'))
+};
 
-function folder() {
-    VIEWS = path.dirname(require.resolve('../vws'));
-}
-
+module.exports.SUPPORTED_VERSIONS = 'v1.0 v1.1';

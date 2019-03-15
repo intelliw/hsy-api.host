@@ -1,22 +1,22 @@
 /**
-  * PACKAGE
- * ./api/route/index.js
- * 
+ * ./api/route.js
  * handlers for each route  
  */
-let svc = require('../svc');
+let svc = require('../svc');           // common services
 
-module.exports = {
-    start: start
-}
-
-function start(app) {
-
-    
+module.exports.start = function(app) {
 
     // DEVTEST ROUTE  
     app.get('/devtest', (req, res) => {
-        res.render('welcome', { user: "Any User?", title: "homepage" });
+
+        let params = require("./energy-params.js");
+        
+        let site = new params.Group(11, 2, 3).getID();
+        let car = params.createCar({engine: "2.5L", trasmission: "auto"});
+        let bus = new params.Bus({engine: "6.0L", trasmission: "manual"});
+        //let car = {engine: "2.0L", start: "proximity"};
+
+        res.render('welcome', { user: "Any User?", title: "homepage", car: car, bus:bus});
     });
 
 
@@ -44,9 +44,7 @@ function start(app) {
         period = (!period) ? 'now-period' : period;
         epoch = (!epoch) ? 'now-epoch' : epoch;
         num = (!num) ? 'num' : num;
-
-        let params = require("./energy-params.js");
-        site = new params(11, 2, 3).getID();
+        site = (!site) ? 'site' : site;
 
         msg = energy + ',' + period + ',' + epoch + ',' + num + ',' + site;
 
