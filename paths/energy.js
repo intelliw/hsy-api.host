@@ -8,9 +8,9 @@ const router = express.Router();
 const def = require('../definitions');
 
 // API ROUTE [energy.type.get] /energy/{energy}/{period}/{epoch} --------------------
-router.get('/:energy?/:period?/:epoch?/:number?', (req, res) => {
+router.get('/:energy?/:period?/:epoch?/:number?', (req, res, next) => {
 
-    let energy = req.params.energy;
+    let energyType = req.params.energy;
     let period = req.params.period;
     let epoch = req.params.epoch;
     let num = req.params.number;
@@ -20,17 +20,17 @@ router.get('/:energy?/:period?/:epoch?/:number?', (req, res) => {
     let msg;
 
     //let enums = require('../svc/enum');
-    if (def.enums.energy.isDefined(energy)) {
-        console.log(energy);
+    if (def.enums.energy.isDefined(energyType)) {
+        console.log(energyType);
     }
 
-    energy = !energy ? 'hse' : energy;
+    energyType = !energyType ? 'hse' : energyType;
     period = (!period) ? 'period-moment' : period;
     epoch = (!epoch) ? 'now-epoch' : epoch;
     num = (!num) ? 'num' : num;
     site = (!site) ? 'site' : site;
 
-    msg = energy + ',' + period + ',' + epoch + ',' + num + ',' + site;
+    msg = energyType + ',' + period + ',' + epoch + ',' + num + ',' + site;
 
     res
         .status(200)

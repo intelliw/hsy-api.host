@@ -6,7 +6,7 @@ const express = require('express');
 const router = express.Router();
 
 // API ROUTE [devices.datasets.post] /devices/{device}/datasets/{dataset} ---------------
-router.get('/:device?/datasets/:dataset?', (req, res) => {
+router.get('/:device?/datasets/:dataset?', (req, res, next) => {
 
     res
         .status(200)

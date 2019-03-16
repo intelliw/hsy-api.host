@@ -25,6 +25,11 @@ app.use('/devices', path.devices.router);
 app.use('/versions', path.versions.router);
 app.use('/devtest', path.devtest.router);
 
+// handle error
+app.use(function(err,req, res, next){
+    console.log('Unexpected' + err);
+    res.status(500).send(err);
+});
 
 // [END setup]-------------------------------
 

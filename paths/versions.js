@@ -8,7 +8,7 @@ const router = express.Router();
 let def = require('../definitions');
 
 // API ROUTE [diagnostics.versions.get] /versions ---------------------------------
-router.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
 
     res
     .status(200)
