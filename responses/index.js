@@ -1,6 +1,5 @@
 /**
-  * PACKAGE
- * ./vws/index.js
+ * ./response/index.js
  * 
  * view templates  
  */

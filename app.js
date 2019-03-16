@@ -4,28 +4,32 @@
 
 'use strict';
 
-let express = require('express');
-let bodyParser = require('body-parser');
-let Buffer = require('safe-buffer').Buffer;
+const express = require('express');
+const app = express();
 
-let app = express();
+const bodyParser = require('body-parser');
+const Buffer = require('safe-buffer').Buffer;
 
-let svc = require('./svc');           // common services
-let api = require('./api');           // routes
+const host = require('./host');           // common services
+const path = require('./paths');           // routes
 
 // [START setup]------------------------------
 
-app.set('case sensitive routing', true);
+host.config.initialise(app);                // configuration settings
+
 app.use(bodyParser.json());
 
-svc.config.setup(app);                // initialise
-api.route.start(app);                 // start the app
+// initialise routes
+app.use('/energy', path.energy.router);
+app.use('/devices', path.devices.router);
+app.use('/versions', path.versions.router);
+app.use('/devtest', path.devtest.router);
+
 
 // [END setup]-------------------------------
 
 
-// LISTEN ------------------------------------
-
+// listen for requests---------------------------
 if (module === require.main) {
 
     const PORT = process.env.PORT || 8080;
