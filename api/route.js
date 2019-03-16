@@ -9,19 +9,19 @@ module.exports.start = function (app) {
     // DEVTEST ROUTE  
     app.get('/devtest', (req, res) => {
 
-        let params = require("./energy-params.js");
+        let params = require('./energy-params.js');
 
         let site = new params.Group(11, 2, 3).getID();
-        let car = params.createCar({ engine: "2.5L", trasmission: "auto" });
-        let bus = new params.Bus({ engine: "6.0L", trasmission: "manual" });
-        //let car = {engine: "2.0L", start: "proximity"};
+        let car = params.createCar({ engine: '2.5L', trasmission: 'auto' });
+        let bus = new params.Bus({ engine: '6.0L', trasmission: 'manual' });
+        //let car = {engine: '2.0L', start: 'proximity'};
 
-        res.render('welcome', { user: "Any User?", title: "homepage", car: car, bus: bus });
+        res.render('welcome', { user: 'Any User?', title: 'homepage', car: car, bus: bus });
     });
 
 
     // API ROUTE [diagnostics.versions.get] /versions ---------------------------------
-    app.all("/versions", (req, res) => {
+    app.all('/versions', (req, res) => {
         res
             .status(200)
             .json({ versions: svc.constant.SUPPORTED_VERSIONS })
