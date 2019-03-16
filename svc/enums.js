@@ -4,14 +4,7 @@
  */
 let Enum = require('enum');
 
-module.exports.energy = function () { return energyEnum; }
-module.exports.period = function () { return periodEnum; }
-module.exports.datasets = function () { return datasetsEnum; }
-module.exports.energyData = function () { return energyDataEnum; }
-module.exports.datasetsPMSEPACK = function () { return datasetsPMSEPACKEnum; }
-module.exports.datasetsMPPTSNMP = function () { return datasetsMPPTSNMPEnum; }
-
-const energyEnum = new Enum([
+module.exports.energy = new Enum([
     "hse",
     "harvest",
     "store",
@@ -19,7 +12,7 @@ const energyEnum = new Enum([
     "grid"
 ]);
 
-const periodEnum = new Enum([
+module.exports.period = new Enum([
     "instant",
     "second",
     "hour",
@@ -32,12 +25,12 @@ const periodEnum = new Enum([
     "5year"
 ]);
 
-const datasetsEnum = new Enum([
+module.exports.datasets = new Enum([
     "MPPT-SNMP",
     "PMS-EPACK"
 ]);
 
-const energyDataEnum = new Enum([
+module.exports.energyData = new Enum([
     "hse",
     "harvest",
     "store.in",
@@ -47,7 +40,7 @@ const energyDataEnum = new Enum([
     "grid.out"
 ]);
 
-const datasetsPMSEPACKEnum = new Enum([
+module.exports.datasetsPMSEPACK = new Enum([
     "event.time",
     "vcell.01",
     "vcell.02",
@@ -73,7 +66,7 @@ const datasetsPMSEPACKEnum = new Enum([
     "cmos.status"
 ]);
 
-const datasetsMPPTSNMPEnum = new Enum([
+module.exports.datasetsMPPTSNMP = new Enum([
     "event.time",
     "pv1",
     "pv2",
@@ -84,4 +77,4 @@ const datasetsMPPTSNMPEnum = new Enum([
     "lvd.2.bts",
     "vsat.current",
     "bts.current"
-]); 
+]);

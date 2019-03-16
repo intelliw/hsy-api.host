@@ -2,21 +2,21 @@
  * ./api/route.js
  * handlers for each route  
  */
-let svc = require('../svc');           
+let svc = require('../svc');
 
-module.exports.start = function(app) {
+module.exports.start = function (app) {
 
     // DEVTEST ROUTE  
     app.get('/devtest', (req, res) => {
 
         let params = require("./energy-params.js");
-        
+
         let site = new params.Group(11, 2, 3).getID();
-        let car = params.createCar({engine: "2.5L", trasmission: "auto"});
-        let bus = new params.Bus({engine: "6.0L", trasmission: "manual"});
+        let car = params.createCar({ engine: "2.5L", trasmission: "auto" });
+        let bus = new params.Bus({ engine: "6.0L", trasmission: "manual" });
         //let car = {engine: "2.0L", start: "proximity"};
 
-        res.render('welcome', { user: "Any User?", title: "homepage", car: car, bus:bus});
+        res.render('welcome', { user: "Any User?", title: "homepage", car: car, bus: bus });
     });
 
 
@@ -39,9 +39,9 @@ module.exports.start = function(app) {
         let site = req.query.site;
 
         let msg;
-    
+
         //let enums = require('../svc/enum');
-        if (svc.enums.energy().isDefined(energy)) {
+        if (svc.enums.energy.isDefined(energy)) {
             console.log(energy);
         }
 
@@ -66,3 +66,4 @@ module.exports.start = function(app) {
     app.get('/auth/info/googleidtoken', svc.security.authInfoHandler);
 
 }
+
