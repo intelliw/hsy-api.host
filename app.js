@@ -19,11 +19,12 @@ host.config.initialise(app);                // configuration settings
 
 app.use(bodyParser.json());
 
-// initialise routes
-app.use('/energy', path.energy.router);
-app.use('/devices', path.devices.router);
-app.use('/versions', path.versions.router);
-app.use('/devtest', path.devtest.router);
+// initialise routes - each tag has a route handler
+app.use('/energy', path.energy);            // endpoint tag: Energy 
+app.use('/devices', path.devices);          // endpoint tag: Devices
+app.use('/api', path.diagnostics);          // endpoint tag: Diagnostics
+
+app.use('/devtest', path.devtest);
 
 // handle error
 app.use(function(err,req, res, next){

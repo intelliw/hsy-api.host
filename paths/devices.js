@@ -1,11 +1,11 @@
 /**
- * ./route/energy.js
- * handlers for /energy path  
+ * ./route/devices.js
+ * handlers for /devices path  
  */
 const express = require('express');
 const router = express.Router();
 
-// API ROUTE [devices.datasets.post] /devices/{device}/datasets/{dataset} ---------------
+// [devices.device.dataset.post] /devices/{device}/datasets/{dataset} ---------------
 router.get('/:device?/datasets/:dataset?', (req, res, next) => {
 
     res
@@ -14,4 +14,14 @@ router.get('/:device?/datasets/:dataset?', (req, res, next) => {
         .end();
 });
 
-module.exports.router = router;
+// [devices.device.config.epoch.get] /devices/{device}/config/{epoch}
+router.get('/:device?/config/:epoch?', (req, res, next) => {
+
+    res
+        .status(200)
+        .json({ message: 'devices...' })
+        .end();
+});
+
+
+module.exports = router;

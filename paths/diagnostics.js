@@ -1,14 +1,14 @@
 /**
- * ./path/energy.js
- * handlers for /energy path  
+ * ./path/diagnostics.js
+ * handlers for /api path which contains diagnostics for the api 
  */
 const express = require('express');
 const router = express.Router();
 
 let def = require('../definitions');
 
-// API ROUTE [diagnostics.versions.get] /versions ---------------------------------
-router.get('/', (req, res, next) => {
+// [diagnostics.api.versions.get] /api/versions
+router.get('/versions', (req, res, next) => {
 
     res
     .status(200)
@@ -17,4 +17,4 @@ router.get('/', (req, res, next) => {
 
 });
 
-module.exports.router = router;
+module.exports = router;

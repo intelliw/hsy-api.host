@@ -1,12 +1,12 @@
 /**
- * ./route/energy.js
- * handlers for /energy path  
+ * ./route/devtest.js
+ * handlers for sandbox routes, for testing only/. these routes do not exist in the endpoint definition 
  */
 const express = require('express');
 const router = express.Router();
 const consts = require('../definitions').constants;
 
-// DEVTEST ROUTE  ---------------------------------
+// DEVTEST ROUTE - these are sandbox routes for testing only
 router.get('/car', (req, res, next) => {
 
     let params = require('./energy-params.js');
@@ -17,7 +17,7 @@ router.get('/car', (req, res, next) => {
     //let car = {engine: '2.0L', start: 'proximity'};
 
     // choose the ejs template here and also the response content type, based on the request Accepts header 
-    var contentType = (req.accepts(consts.mimeTypes.textHtlml)) ? consts.mimeTypes.textHtlml : consts.mimeTypes.applicationCollectionJson;
+    var contentType = (req.accepts(consts.mimeTypes.textHtml)) ? consts.mimeTypes.textHtml : consts.mimeTypes.applicationCollectionJson;
     console.log(contentType);
     
     // send the response
@@ -28,7 +28,7 @@ router.get('/car', (req, res, next) => {
 
 });
 
-// SECURITY
+// SECURITY tests
 router.get('/auth/info/googlejwt', authInfoHandler);
 
 router.get('/auth/info/googleidtoken', authInfoHandler);
@@ -45,4 +45,4 @@ function authInfoHandler(req, res) {
         .end();
 }
 
-module.exports.router = router;
+module.exports = router;

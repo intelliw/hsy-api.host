@@ -7,7 +7,7 @@ const router = express.Router();
 
 const def = require('../definitions');
 
-// API ROUTE [energy.type.get] /energy/{energy}/{period}/{epoch} --------------------
+// [energy.type.period.epoch.get] /energy/{energy}/{period}/{epoch}/{number}
 router.get('/:energy?/:period?/:epoch?/:number?', (req, res, next) => {
 
     let energyType = req.params.energy;
@@ -38,4 +38,4 @@ router.get('/:energy?/:period?/:epoch?/:number?', (req, res, next) => {
         .end();
 });
 
-module.exports.router = router;
+module.exports = router;
