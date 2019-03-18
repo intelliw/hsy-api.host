@@ -24,7 +24,7 @@ app.use('/energy', path.energy);            // endpoint tag: Energy
 app.use('/devices', path.devices);          // endpoint tag: Devices
 app.use('/api', path.diagnostics);          // endpoint tag: Diagnostics
 
-app.use('/devtest', path.devtest);
+app.use('/devtest', require('./src/sandbox/devtest'));
 
 // handle error
 app.use(function(err,req, res, next){

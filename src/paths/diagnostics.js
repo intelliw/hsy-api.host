@@ -2,6 +2,7 @@
 /**
  * ./path/diagnostics.js
  * handlers for /api path which contains diagnostics for the api 
+ * basepath /api
  */
 const express = require('express');
 const router = express.Router();

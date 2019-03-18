@@ -2,6 +2,7 @@
 /**
  * ./route/devices.js
  * handlers for /devices path  
+ * basepath /devices
  */
 const express = require('express');
 const router = express.Router();
