@@ -5,4 +5,5 @@
  */
 
 module.exports.constants = require('./constants');
+module.exports.utils = require('./utils');
 module.exports.enums = require('./enums');

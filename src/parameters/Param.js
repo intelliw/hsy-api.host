@@ -6,12 +6,13 @@
  * 
  */
 
+
 // parameter class to validata and store paramters 
 class Param {
     constructor(name, value, enumList, defaultValue) {
 
         this.name = name;
-
+        
         // if an enum was provided the value must exist in it, otherwise set the value to default
         if (enumList) {
             value = enumList[value] ? value : defaultValue;
@@ -22,4 +23,32 @@ class Param {
         this.value = value;
     }
 }
+
+/**
+ * expects a date-time value in utc format. period is required (as a string)
+ * checks to see if value is a valid time and sets default to current time if it is not.
+ * the value is formatted accordinf to the specified period (def.enum.period) argument 
+ */
+class ParamTime extends Param {
+    
+    constructor(name, value, period) {
+
+        const moment = require('moment');
+        const def = require('../definitions');
+
+        // if the value is not valid default to now
+        value = moment(value).isValid() ? value : moment.utc();      
+
+        // format the value according to the period        
+        var format =  def.utils.periodFormatUTC(period);
+        value = moment.utc(value).format(format);         //  e.g. 20190310 for 'week' (YYYYMMDD)
+
+        // call super    
+        super(name, value);                              // no need for enuma or defaults
+
+    }
+}
+
+
 module.exports = Param;
+module.exports.ParamTime = ParamTime;

@@ -8,6 +8,7 @@
 const express = require('express');
 const router = express.Router();
 
+
 const def = require('../definitions');
 const params = require('../parameters');
 
@@ -25,16 +26,14 @@ router.get('/:energy?/:period?/:epoch?/:number?', (req, res, next) => {
     let period = new params('period', req.params.period, def.enums.period, DEFAULT_PERIOD);
     let num = new params('number', req.params.number, none, DEFAULT_NUMBER);
 
-    let epoch = req.params.epoch;
-    
+    let epoch = new params.ParamTime('epoch', req.params.epoch, period.value);
+
+        
     let site = req.query.site;
-
-    let msg;
-
-    epoch = (!epoch) ? 'now-epoch' : epoch;
     site = (!site) ? 'site' : site;
 
-    msg = energy.value + ',' + period.value + ',' + epoch + ',' + num.value + ',' + site;
+    let msg;
+    msg = energy.value + ',' + period.value + ',' + epoch.value + ',' + num.value + ',' + site;
 
     res
         .status(200)
