@@ -1,3 +1,4 @@
+//@ts-check
 /**
  * ./path/energy.js
  * handlers for /energy path  

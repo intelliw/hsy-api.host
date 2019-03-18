@@ -1,3 +1,4 @@
+//@ts-check
 /**
  * ./svc/constant.js
  * global constants
@@ -5,7 +6,7 @@
 let path = require('path');     // this is a node package not the '../paths' applicaiton module
 
 module.exports.folders = {
-    VIEWS: path.dirname(require.resolve('../responses'))
+    VIEWS: path.dirname(require.resolve('../../responses'))
 };
 
 // mime types used in headers

@@ -10,8 +10,8 @@ const app = express();
 const bodyParser = require('body-parser');
 const Buffer = require('safe-buffer').Buffer;
 
-const host = require('./host');           // common services
-const path = require('./paths');           // routes
+const host = require('./src/host');           // common services
+const path = require('./src/paths');           // routes
 
 // [START setup]------------------------------
 

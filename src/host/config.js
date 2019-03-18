@@ -1,3 +1,4 @@
+//@ts-check
 /**
  * ./svc/config.js
  * configuration settings 

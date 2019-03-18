@@ -1,3 +1,4 @@
+//@ts-check
 /**
  * PACKAGE: ./definitions/index.js
  * schemas and constants

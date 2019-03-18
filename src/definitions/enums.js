@@ -1,3 +1,4 @@
+//@ts-check
 /**
  * ./svc/enum.js
  * global enumerations

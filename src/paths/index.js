@@ -1,3 +1,4 @@
+//@ts-check
 /**
  * ./path/index.js   
  */

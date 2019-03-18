@@ -1,3 +1,4 @@
+//@ts-check
 /**
  * ./api/energy-params.js
  * validates parameters and returns a default value if the parameter was missing. 

@@ -1,3 +1,4 @@
+//@ts-check
 /**
  * ./route/devtest.js
  * handlers for sandbox routes, for testing only/. these routes do not exist in the endpoint definition 

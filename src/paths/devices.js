@@ -1,3 +1,4 @@
+//@ts-check
 /**
  * ./route/devices.js
  * handlers for /devices path  
