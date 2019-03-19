@@ -21,3 +21,4 @@ module.exports.mimeTypes = {
 // general constants
 module.exports.SUPPORTED_VERSIONS = 'v1.0 v1.1';
 module.exports.HOST_NAME = 'api.endpoints.sundaya.cloud.goog';
+module.exports.DATE_PARAM_FORMAT = 'YYYYMMDDThhmmsssss±hhmm';

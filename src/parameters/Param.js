@@ -7,18 +7,19 @@
  */
 
 
-// parameter class to validata and store paramters 
+// parameter class stores a parameter and optionally validates against an enum
 class Param {
     constructor(name, value, enumList, defaultValue) {
 
         this.name = name;
-        
-        // if an enum was provided the value must exist in it, otherwise set the value to default
+
+        // if an enum was provided the value must exist in it
         if (enumList) {
             value = enumList[value] ? value : defaultValue;
-        } else {
-            value = value ? value : defaultValue;       // set default if value is missing 
         }
+
+        // set the value to default
+        value = value ? value : defaultValue;       // set default if value is missing 
 
         this.value = value;
     }
@@ -30,21 +31,24 @@ class Param {
  * the value is formatted accordinf to the specified period (def.enum.period) argument 
  */
 class ParamTime extends Param {
-    
-    constructor(name, value, period) {
 
+    constructor(name, value, period) {
         const moment = require('moment');
         const def = require('../definitions');
 
-        // if the value is not valid default to now
-        value = moment(value).isValid() ? value : moment.utc();      
+        // check iof the date is valid
+        var isValid = (moment(value, def.constants.DATE_PARAM_FORMAT).isValid());     // must be in 
 
-        // format the value according to the period        
-        var format =  def.utils.periodFormatUTC(period);
-        value = moment.utc(value).format(format);         //  e.g. 20190310 for 'week' (YYYYMMDD)
+        // if  not a valid moment then default to now
+        console.log(isValid);
+        value = isValid ? value : moment.utc();
+
+        // format value according to period        
+        var format = def.utils.periodFormatUTC(period);
+        value = moment.utc(value).format(format);           //  e.g. 20190310 for 'week' (YYYYMMDD)
 
         // call super    
-        super(name, value);                              // no need for enuma or defaults
+        super(name, value);                                 // no need for enuma or defaults
 
     }
 }
