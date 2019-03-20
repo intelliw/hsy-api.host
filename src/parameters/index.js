@@ -6,4 +6,4 @@
  */
 
 module.exports = require('./Param');
-module.exports.EnergyParam = require('./EnergyParam');
+module.exports.Period = require('./Period');

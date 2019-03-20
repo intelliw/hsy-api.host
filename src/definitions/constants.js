@@ -20,6 +20,7 @@ module.exports.mimeTypes = {
 // mime types used in headers
 module.exports.params = {
     DEFAULT_DURATION : '1',
+    DEFAULT_SITE : '999'
 };
 
 // general constants

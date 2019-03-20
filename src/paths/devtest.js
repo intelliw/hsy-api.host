@@ -48,9 +48,8 @@ router.get('/car', (req, res, next) => {
 
     // choose the ejs template here and also the response content type, based on the request Accepts header 
     let contentType = (req.accepts(consts.mimeTypes.textHtml)) ? consts.mimeTypes.textHtml : consts.mimeTypes.applicationCollectionJson;
-    //console.log(contentType);
-
-    let paramE = new params.EnergyParam('storex');
+    
+    let paramE = new params.Period('storex');
     console.log('paramE Name = ' + paramE.name + ', paramE Value = ' + paramE.value);
 
     // send the response
