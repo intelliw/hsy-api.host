@@ -6,9 +6,9 @@
  */
 
 module.exports.Group = function (id, name, info) {
-    var _id = id;
-    var _name = name;
-    var _info = info
+    let _id = id;
+    let _name = name;
+    let _info = info
 
     this.getID = function () {
         return _id;

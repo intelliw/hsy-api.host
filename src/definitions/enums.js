@@ -11,6 +11,7 @@ module.exports.energy = {
     enjoy: 'enjoy',
     grid: 'grid'
 };
+module.exports.energy.default = this.energy.hse;
 
 module.exports.period = {
     instant: 'instant',
@@ -22,8 +23,9 @@ module.exports.period = {
     month: 'month',
     quarter: 'quarter',
     year: 'year',
-    fiveyear: '5year'
+    fiveyear: 'fiveyear'
 };
+module.exports.period.default = this.period.week;
 
 module.exports.datasets = {
     MPPTSNMP: 'MPPT-SNMP',
@@ -77,3 +79,12 @@ module.exports.datasetsMPPTSNMP = {
     vsatcurrent: 'vsat.current',
     btscurrent: 'bts.current'
 };
+
+module.exports.timeOfDay = {
+    morning: 'morning',
+    afternoon: 'afternoon',
+    evening: 'evening',
+    night: 'night'
+};
+
+

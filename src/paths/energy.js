@@ -9,28 +9,24 @@ const express = require('express');
 const router = express.Router();
 
 
-const def = require('../definitions');
+const enums = require('../definitions/enums');
+const consts = require('../definitions/constants');
 const params = require('../parameters');
 
-const none = global.undefined;
 
 // [energy.type.period.epoch.get] /energy/{energy}/{period}/{epoch}/{number}
 router.get('/:energy?/:period?/:epoch?/:duration?', (req, res, next) => {
-    
-    const DEFAULT_ENERGY = def.enums.energy.hse;
-    const DEFAULT_PERIOD = def.enums.period.week;
-    const DEFAULT_NUMBER = 1;
-    
+    let none = global.undefined;
+
     // validate and default all parameters 
-    let energy = new params('energy', req.params.energy, def.enums.energy, DEFAULT_ENERGY);
-    let period = new params('period', req.params.period, def.enums.period, DEFAULT_PERIOD);
-    let duration = new params('number', req.params.duration, none, DEFAULT_NUMBER);
-
+    let energy = new params('energy', req.params.energy, enums.energy.default, enums.energy);
+    let period = new params('period', req.params.period, enums.period.default, enums.period);
+    let duration = new params('duration', req.params.duration, consts.params.DEFAULT_DURATION, none);
+    
     let epoch = new params.ParamTime('epoch', req.params.epoch, period.value);
-
         
     let site = req.query.site;
-    site = (!site) ? 'site' : site;
+    site = (!site) ? '999' : site;
 
     let msg;
     msg = energy.value + ',' + period.value + ',' + epoch.value + ',' + duration.value + ',' + site;

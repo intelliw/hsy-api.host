@@ -16,7 +16,7 @@ const params = require('../parameters');
 
 router.get('/test', (req, res, next) => {
 
-    var t = require('../parameters/Test');
+    let t = require('../parameters/Test');
     // const custom = new t();
     const foo = new t.Foo();
     
@@ -36,10 +36,10 @@ router.get('/car', (req, res, next) => {
     //let car = {engine: '2.0L', start: 'proximity'};
 
     // choose the ejs template here and also the response content type, based on the request Accepts header 
-    var contentType = (req.accepts(consts.mimeTypes.textHtml)) ? consts.mimeTypes.textHtml : consts.mimeTypes.applicationCollectionJson;
+    let contentType = (req.accepts(consts.mimeTypes.textHtml)) ? consts.mimeTypes.textHtml : consts.mimeTypes.applicationCollectionJson;
     //console.log(contentType);
 
-    var paramE = new params.EnergyParam('storex');
+    let paramE = new params.EnergyParam('storex');
     console.log('paramE Name = ' + paramE.name + ', paramE Value = ' + paramE.value);
 
     // send the response
