@@ -114,7 +114,7 @@ function isEpochValid(epoch, format) {
     const SECONDS_LENGTH = 6;         // secondss must be 6 characters (e.g 120050)
     const MILLISECONDS_LENGTH = 10;   // millseconds must be 10 characters (e.g 120050.233)
 
-    // check if the date is valid. 
+    // check if date is valid. 
     let isValid = (moment.utc(epoch, format).isValid());
     isValid = isValid && (epoch.length >= MIN_DATE_LENGTH);      // enforce minimum length
 
