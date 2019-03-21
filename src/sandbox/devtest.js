@@ -38,38 +38,86 @@ router.get('/energy/:energy?/:period?/:epoch?/:duration?', (req, res, next) => {
 });
 
 // period object test
-router.get('/periods/:epoch?/:duration?', (req, res, next) => {
-    
+router.get('/periods/:period?/:epoch?/:duration?', (req, res, next) => {
+
+    console.log(req.params.period);
+
+    let periodObj = new Param.Period(req.params.period, req.params.epoch);
+    let msg;
+    msg = `epoch ${req.params.epoch}, duration ${req.params.duration}`
+    res
+        .status(200)
+        .json({
+            params: msg,
+            PERIOD: periodObj
+        })
+        .end();
+});
+
+// periods object test
+router.get('/allperiods/:epoch?/:duration?', (req, res, next) => {
+
     // get params for all periods 
     let instant = new Param.Period(enums.period.instant, req.params.epoch);
+    
     let second = new Param.Period(enums.period.second, req.params.epoch);
+    let secondnext = second.getNext();
+
     let minute = new Param.Period(enums.period.minute, req.params.epoch);
+    let minutenext = minute.getNext();
+
     let hour = new Param.Period(enums.period.hour, req.params.epoch);
+    let hournext = hour.getNext();
+
     let timeofday = new Param.Period(enums.period.timeofday, req.params.epoch);
+    let timeofdaynext = timeofday.getNext();
+
     let day = new Param.Period(enums.period.day, req.params.epoch);
+    let daynext = day.getNext();
+
     let week = new Param.Period(enums.period.week, req.params.epoch);
+    let weeknext = week.getNext();
+
     let month = new Param.Period(enums.period.month, req.params.epoch);
+    let monthnext = month.getNext();
+
     let quarter = new Param.Period(enums.period.quarter, req.params.epoch);
+    let quarternext = quarter.getNext();
+    
     let year = new Param.Period(enums.period.year, req.params.epoch);
+    let yearnext = year.getNext();
+
     let fiveyear = new Param.Period(enums.period.fiveyear, req.params.epoch);
+    let fiveyearnext = fiveyear.getNext();
 
     let msg;
     msg = `epoch ${req.params.epoch}, duration ${req.params.duration}`
     res
         .status(200)
-        .json({ params: msg, 
+        .json({
+            params: msg,
             INSTANT: instant,
             SECOND: second,
+            SECONDNEXT: secondnext,
             MINUTE: minute,
+            MINUTENEXT: minutenext,
             HOUR: hour,
+            HOURNEXT: hournext,
             TIMEOFDAY: timeofday,
+            TIMEOFDAYNEXT: timeofdaynext,
             DAY: day,
+            DAYNEXT: daynext,
             WEEK: week,
+            WEEKNEXT: weeknext,
             MONTH: month,
+            MONTHNEXT: monthnext,
             QUARTER: quarter,
+            QUARTERNEXT: quarternext,
             YEAR: year,
+            YEARNEXT: yearnext,
             FIVEYEAR: fiveyear,
-         })
+            FIVEYEARNEXT: fiveyearnext
+        })
         .end();
 });
 

@@ -11,7 +11,7 @@ const consts = require('../definitions/constants');
 const utils = require('../definitions/utils');
 
 const Param = require('./Param');
-const INSTANT_FORMAT = periodFormatString(enums.period.instant);     // the default format, YYYYMMDDTHHmmss.SSS
+const INSTANT_FORMAT = periodFormatString(enums.period.instant, true);     // the default format, YYYYMMDDTHHmmss.SSS
 
 /**
  * expects a date-time value in utc format. period is required (as a string) and must contain a complete date
@@ -42,13 +42,24 @@ class Period extends Param {
         this.epoch = periodFormat(this.epochInstant, period)           // formatted for the period  
         this.end = periodFormat(this.endInstant, period)
         //.. 
-        this.rel = 'self';                                             // rel, name, prompt, title 
-        this.prompt = periodPrompt(period, epoch);
-
-        this.title = "04/02/2019 - 10/02/2019";
-        //getCollection = [] new Param.Period(period.child, epoch + n, format)  ..iterated 
+        this.rel = 'self';                                             // note name = Param.value
+        this.prompt = periodPrompt(period, this.epochInstant);
+        this.title = titleString(this.epochInstant, this.endInstant, period)          // "04/02/2019 - 10/02/2019";
 
     }
+
+
+    // returns the next period 
+    getNext() {
+        
+        // add a milisecond to the period end to make it the next period epoch
+        let nextEpoch = moment.utc(this.endInstant).add(1, 'milliseconds').format(INSTANT_FORMAT);
+        let nextPeriod = new Period(this.value, nextEpoch);
+        nextPeriod.rel = 'next'
+        return nextPeriod;
+
+    }
+
 }
 
 // returns an epoch adjusted for the start of the period
@@ -194,23 +205,23 @@ function timeOfDay(epoch) {
 
 
 
-// returns a format string for UTC time corresponding to the specified period.   
-function periodFormatString(period) {
+// returns a format string for UTC time corresponding to the specified period. 
+function periodFormatString(period, compressed) {
 
     let format;
     switch (period) {
         case enums.period.instant:
-            format = 'YYYYMMDDTHHmmss.SSS';
+            format = compressed ? 'YYYYMMDDTHHmmss.SSS' : 'DD/MM/YY HHmmss.SSS';
             break;
         case enums.period.second:
-            format = 'YYYYMMDDTHHmmss';
+            format = compressed ? 'YYYYMMDDTHHmmss' : 'DD/MM/YY HHmm:ss';
             break;
         case enums.period.minute:
-            format = 'YYYYMMDDTHHmm';
+            format = compressed ? 'YYYYMMDDTHHmm' : 'DD/MM/YY HH:mm';
             break;
         case enums.period.hour:
         case enums.period.timeofday:            // timofday formatted same as hour
-            format = 'YYYYMMDDTHHmm';
+            format = compressed ? 'YYYYMMDDTHHmm' : 'DD/MM/YY HH:mm';
             break;
         case enums.period.day:
         case enums.period.week:                 // week and day are the same
@@ -219,7 +230,7 @@ function periodFormatString(period) {
         case enums.period.year:                 // year and fiveyear are the same
         case enums.period.fiveyear:
         default:                                // default is week 
-            format = 'YYYYMMDD';
+            format = compressed ? 'YYYYMMDD' : 'DD/MM/YY';
             break;
     }
 
@@ -228,8 +239,22 @@ function periodFormatString(period) {
 
 // formats the date-time specifically for the period 
 function periodFormat(instant, period) {
-    const format = periodFormatString(enums.period[period]);
-    return moment.utc(instant).format(format);
+
+    const format = periodFormatString(enums.period[period], true);   // get the format string 
+    return moment.utc(instant).format(format);                 // return formatted 
+
+}
+
+// formats the date-time for the title property 
+function titleString(epoch, end, period) {
+
+    const format = periodFormatString(enums.period[period], false);   // get the format string without copmpression
+
+    let epochStr = moment.utc(epoch).format(format);
+    let endStr = moment.utc(end).format(format);
+    let titleStr = (epochStr == endStr) ? epochStr : `${epochStr} - ${endStr}`;
+    return titleStr;                 // return formatted 
+
 }
 
 
@@ -237,8 +262,16 @@ function periodFormat(instant, period) {
 function periodPrompt(period, epoch) {
 
     let prompt;
-    let year =  moment(epoch).format('YYYY');
+    let year = moment(epoch).format('YYYY');
     switch (period) {
+
+        case enums.period.second:               // Second 0906:24
+            prompt = `Second ${moment(epoch).format('HHmm:ss')}`;
+            break;
+
+        case enums.period.minute:               // Minute 09:06
+            prompt = `Minute ${moment(epoch).format('HH:mm')}`;
+            break;
 
         case enums.period.timeofday:            // Jan 1 Morning 
             prompt = `${moment(epoch).format('MMM')} ${moment(epoch).format('D')} ${utils.capitalise(timeOfDay(epoch))}`;
@@ -257,15 +290,15 @@ function periodPrompt(period, epoch) {
             break;
 
         case enums.period.week:                 // 2019 Week 27 
-            prompt = `${year} Week ${moment(epoch).format('gg')}`;
+            prompt = `${year} Week ${moment(epoch).format('WW')}`;
             break;
 
-        case enums.period.hour:                 // 2100 Hours     
-            prompt = `${moment(epoch).format('HH')}00 Hours`;
+        case enums.period.hour:                 // Hour 2100     
+            prompt = `Hour ${moment(epoch).format('HH')}00`;
             break;
 
-        case enums.period.year:                 // 2019
-            prompt = `${year}`;
+        case enums.period.year:                 // Year 2019
+            prompt = `Year ${year}`;
             break;
 
         case enums.period.fiveyear:             // 5 Years 2014-2019
@@ -273,8 +306,6 @@ function periodPrompt(period, epoch) {
             break;
 
         case enums.period.instant:
-        case enums.period.second:
-        case enums.period.minute:
         default:                                // default is week 
             prompt = utils.capitalise(period);
             break;
