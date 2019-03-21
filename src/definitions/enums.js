@@ -16,6 +16,7 @@ module.exports.energy.default = this.energy.hse;
 module.exports.period = {
     instant: 'instant',
     second: 'second',
+    minute: 'minute',
     hour: 'hour',
     timeofday: 'timeofday',
     day: 'day',

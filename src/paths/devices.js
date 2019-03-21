@@ -12,7 +12,7 @@ router.get('/:device?/datasets/:dataset?', (req, res, next) => {
 
     res
         .status(200)
-        .json({ message: 'devices...' })
+        .json({ message: 'devices/datasets...' })
         .end();
 });
 
@@ -21,7 +21,7 @@ router.get('/:device?/config/:epoch?', (req, res, next) => {
 
     res
         .status(200)
-        .json({ message: 'devices...' })
+        .json({ message: 'devices/config...' })
         .end();
 });
 
