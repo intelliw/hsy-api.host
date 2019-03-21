@@ -24,6 +24,7 @@ class Period extends Param {
     constructor(period, epoch) {
 
         const PARAM_NAME = 'period';
+        const REL = 'self';
         const defaultFormat = INSTANT_FORMAT;                     // use ms precision for period epoch and end 
 
         // period ------------
@@ -42,7 +43,7 @@ class Period extends Param {
         this.epoch = periodFormat(this.epochInstant, period)           // formatted for the period  
         this.end = periodFormat(this.endInstant, period)
         //.. 
-        this.rel = 'self';                                             // note name = Param.value
+        this.rel = REL;                                                // btw: name = Param.value
         this.prompt = periodPrompt(period, this.epochInstant);
         this.title = titleString(this.epochInstant, this.endInstant, period)          // "04/02/2019 - 10/02/2019";
 
@@ -51,11 +52,15 @@ class Period extends Param {
 
     // returns the next period 
     getNext() {
-        
+        const REL = 'next';
+
         // add a milisecond to the period end to make it the next period epoch
         let nextEpoch = moment.utc(this.endInstant).add(1, 'milliseconds').format(INSTANT_FORMAT);
+        
+        //create the period and sets its relationship
         let nextPeriod = new Period(this.value, nextEpoch);
-        nextPeriod.rel = 'next'
+        nextPeriod.rel = REL
+
         return nextPeriod;
 
     }
@@ -277,20 +282,20 @@ function periodPrompt(period, epoch) {
             prompt = `${moment(epoch).format('MMM')} ${moment(epoch).format('D')} ${utils.capitalise(timeOfDay(epoch))}`;
             break;
 
-        case enums.period.day:                  // 'Monday Jan 1st'
-            prompt = `${moment(epoch).format('dddd')} ${moment(epoch).format('MMM')} ${moment(epoch).format('Do')}`
+        case enums.period.day:                  // 'Mon Jan 1st'
+            prompt = `${moment(epoch).format('ddd')} ${moment(epoch).format('MMM')} ${moment(epoch).format('Do')}`
             break;
 
         case enums.period.month:                // 'March 2019'
             prompt = `${moment(epoch).format('MMMM')} ${year}`;
             break;
 
-        case enums.period.quarter:              // '2019 Quarter 1'
-            prompt = `${year} Quarter ${moment(epoch).quarter()}`;
+        case enums.period.quarter:              // 'Quarter 1 2019'
+            prompt = `Quarter ${moment(epoch).quarter()} ${year}`;
             break;
 
-        case enums.period.week:                 // 2019 Week 27 
-            prompt = `${year} Week ${moment(epoch).format('WW')}`;
+        case enums.period.week:                 // Week 27 2019
+            prompt = `Week ${moment(epoch).format('WW')} ${year}`;
             break;
 
         case enums.period.hour:                 // Hour 2100     
