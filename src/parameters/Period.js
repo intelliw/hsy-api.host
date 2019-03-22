@@ -210,15 +210,17 @@ function isEpochValid(epoch, format) {
 function selectTimeOfDay(epoch) {
 
     let tod;
-    let hr = moment.utc(epoch).get('hour');                     // get the hour
+    let hr = moment.utc(epoch).get('hour');                     // get the hour of the epoch
 
-    if (hr >= 0 && hr < 6) {
+    const hrTod = consts.timeOfDayStart;                        // hour constants
+
+    if (hr >=  parseInt(hrTod.night) && hr < parseInt(hrTod.morning)) {
         tod = enums.timeOfDay.night;
 
-    } else if (hr >= 6 && hr < 12) {
+    } else if (hr >= parseInt(hrTod.morning) && hr < parseInt(hrTod.afternoon)) {
         tod = enums.timeOfDay.morning;
 
-    } else if (hr >= 12 && hr < 18) {
+    } else if (hr >= parseInt(hrTod.afternoon) && hr < parseInt(hrTod.evening)) {
         tod = enums.timeOfDay.afternoon;
 
     } else {
