@@ -441,43 +441,43 @@ function periodTitle(epoch, end, period) {
 function periodPrompt(period, epoch) {
 
     let prompt;
-    let year = moment(epoch).format('YYYY');
+    let year = moment.utc(epoch).format('YYYY');
     switch (period) {
 
         case enums.period.instant:
-            prompt = `Instant ${moment(epoch).format('HHmmss.SSS')}`;
+            prompt = `Instant ${moment.utc(epoch).format('HHmmss.SSS')}`;
             break;
 
         case enums.period.second:               // Second 0906:24
-            prompt = `Second ${moment(epoch).format('HHmm:ss')}`;
+            prompt = `Second ${moment.utc(epoch).format('HHmm:ss')}`;
             break;
 
         case enums.period.minute:               // Minute 09:06
-            prompt = `Minute ${moment(epoch).format('HH:mm')}`;
+            prompt = `Minute ${moment.utc(epoch).format('HH:mm')}`;
             break;
 
         case enums.period.timeofday:            // Jan 1 Morning 
-            prompt = `${moment(epoch).format('MMM')} ${moment(epoch).format('D')} ${utils.capitalise(selectTimeOfDay(epoch))}`;
+            prompt = `${moment.utc(epoch).format('MMM')} ${moment.utc(epoch).format('D')} ${utils.capitalise(selectTimeOfDay(epoch))}`;
             break;
 
         case enums.period.day:                  // 'Mon Jan 1st'
-            prompt = `${moment(epoch).format('ddd')} ${moment(epoch).format('MMM')} ${moment(epoch).format('Do')}`
+            prompt = `${moment.utc(epoch).format('ddd')} ${moment.utc(epoch).format('MMM')} ${moment.utc(epoch).format('Do')}`
             break;
 
         case enums.period.month:                // 'March 2019'
-            prompt = `${moment(epoch).format('MMMM')} ${year}`;
+            prompt = `${moment.utc(epoch).format('MMMM')} ${year}`;
             break;
 
         case enums.period.quarter:              // 'Quarter 1 2019'
-            prompt = `Quarter ${moment(epoch).quarter()} ${year}`;
+            prompt = `Quarter ${moment.utc(epoch).quarter()} ${year}`;
             break;
 
         case enums.period.week:                 // Week 27 2019
-            prompt = `Week ${moment(epoch).format('WW')} ${year}`;
+            prompt = `Week ${moment.utc(epoch).format('WW')} ${year}`;
             break;
 
         case enums.period.hour:                 // Hour 2100     
-            prompt = `Hour ${moment(epoch).format('HH')}00`;
+            prompt = `Hour ${moment.utc(epoch).format('HH')}00`;
             break;
 
         case enums.period.year:                 // Year 2019
@@ -485,7 +485,7 @@ function periodPrompt(period, epoch) {
             break;
 
         case enums.period.fiveyear:             // 5 Years 2014-2019
-            prompt = `5 Years ${year}-${moment(epoch).add(5, 'years').format('YYYY')}`;
+            prompt = `5 Years ${year}-${moment.utc(epoch).add(5, 'years').format('YYYY')}`;
             break;
 
         default:                                // default is week 
