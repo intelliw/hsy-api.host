@@ -19,17 +19,17 @@ router.get('/:energy?/:period?/:epoch?/:duration?', (req, res, next) => {
     let noEnum = global.undefined;
 
     // validate and default all parameters 
-    let site = new Param('site', req.query.site, consts.params.DEFAULT_SITE);    
+    let site = new Param('site', req.query.site, consts.params.DEFAULT_SITE);
     let energy = new Param('energy', req.params.energy, enums.energy.default, enums.energy);
     let duration = new Param('duration', req.params.duration, consts.params.DEFAULT_DURATION, noEnum);
     let period = new Param.Period(req.params.period, req.params.epoch);
-    
+
     let msg;
     msg = energy.value + ',' + period.value + ',' + period.epoch + ',' + period.end + ',' + duration.value + ',' + site.value;
 
     res
         .status(200)
-        .json({ period: msg, message : msg })
+        .json({ period: msg, message: msg })
         .end();
 });
 

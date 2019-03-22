@@ -88,4 +88,13 @@ module.exports.timeOfDay = {
     night: 'night'
 };
 
+// supported RFC8288 Link-relations for 'rel' property in Response objects
+module.exports.linkRelations = {
+    self: 'self',
+    collection: 'collection',
+    up: 'up',
+    next: 'next',
+    prev: 'prev'
+};
+
 

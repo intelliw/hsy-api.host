@@ -16,7 +16,6 @@ const Param = require('../parameters');
 
 // @ts-ignore
 const vehicle = require('./vehicle');
-const params = require('../parameters');
 
 
 // [energy.type.period.epoch.get] /energy/{energy}/{period}/{epoch}/{number}
@@ -58,49 +57,17 @@ router.get('/periods/:period?/:epoch?/:duration?', (req, res, next) => {
 router.get('/allperiods/:epoch?/:duration?', (req, res, next) => {
 
     // get params for all periods 
-    let instant = new Param.Period(enums.period.instant, req.params.epoch);
-    let instantnext = instant.getNext();
-    let instantprev = instant.getPrev();
-
-    let second = new Param.Period(enums.period.second, req.params.epoch);
-    let secondnext = second.getNext();
-    let secondprev = second.getPrev();
-
-    let minute = new Param.Period(enums.period.minute, req.params.epoch);
-    let minutenext = minute.getNext();
-    let minuteprev = minute.getPrev();
-
-    let hour = new Param.Period(enums.period.hour, req.params.epoch);
-    let hournext = hour.getNext();
-    let hourprev = hour.getPrev();
-
-    let timeofday = new Param.Period(enums.period.timeofday, req.params.epoch);
-    let timeofdaynext = timeofday.getNext();
-    let timeofdayprev = timeofday.getPrev();
-
-    let day = new Param.Period(enums.period.day, req.params.epoch);
-    let daynext = day.getNext();
-    let dayprev = day.getPrev();
-
-    let week = new Param.Period(enums.period.week, req.params.epoch);
-    let weeknext = week.getNext();
-    let weekprev = week.getPrev();
-
-    let month = new Param.Period(enums.period.month, req.params.epoch);
-    let monthnext = month.getNext();
-    let monthprev = month.getPrev();
-
-    let quarter = new Param.Period(enums.period.quarter, req.params.epoch);
-    let quarternext = quarter.getNext();
-    let quarterprev = quarter.getPrev();
-
-    let year = new Param.Period(enums.period.year, req.params.epoch);
-    let yearnext = year.getNext();
-    let yearprev = year.getPrev();
-
-    let fiveyear = new Param.Period(enums.period.fiveyear, req.params.epoch);
-    let fiveyearnext = fiveyear.getNext();
-    let fiveyearprev = fiveyear.getPrev();
+    let instant = new Param.Period(enums.period.instant, req.params.epoch); let instantnext = instant.getNext(); let instantprev = instant.getPrev(); let instantparent = instant.getParent();let instantchild = instant.getChild();
+    let second = new Param.Period(enums.period.second, req.params.epoch); let secondnext = second.getNext(); let secondprev = second.getPrev(); let secondparent = second.getParent();let secondchild = second.getChild();
+    let minute = new Param.Period(enums.period.minute, req.params.epoch); let minutenext = minute.getNext(); let minuteprev = minute.getPrev(); let minuteparent = minute.getParent();let minutechild = minute.getChild();
+    let hour = new Param.Period(enums.period.hour, req.params.epoch); let hournext = hour.getNext(); let hourprev = hour.getPrev(); let hourparent = hour.getParent();let hourchild = hour.getChild();
+    let timeofday = new Param.Period(enums.period.timeofday, req.params.epoch); let timeofdaynext = timeofday.getNext(); let timeofdayprev = timeofday.getPrev(); let timeofdayparent = timeofday.getParent();let timeofdaychild = timeofday.getChild();
+    let day = new Param.Period(enums.period.day, req.params.epoch); let daynext = day.getNext(); let dayprev = day.getPrev(); let dayparent = day.getParent();let daychild = day.getChild();
+    let week = new Param.Period(enums.period.week, req.params.epoch); let weeknext = week.getNext(); let weekprev = week.getPrev(); let weekparent = week.getParent();let weekchild = week.getChild();
+    let month = new Param.Period(enums.period.month, req.params.epoch); let monthnext = month.getNext(); let monthprev = month.getPrev(); let monthparent = month.getParent();let monthchild = month.getChild();
+    let quarter = new Param.Period(enums.period.quarter, req.params.epoch); let quarternext = quarter.getNext(); let quarterprev = quarter.getPrev(); let quarterparent = quarter.getParent();let quarterchild = quarter.getChild();
+    let year = new Param.Period(enums.period.year, req.params.epoch); let yearnext = year.getNext(); let yearprev = year.getPrev(); let yearparent = year.getParent();let yearchild = year.getChild();
+    let fiveyear = new Param.Period(enums.period.fiveyear, req.params.epoch); let fiveyearnext = fiveyear.getNext(); let fiveyearprev = fiveyear.getPrev(); let fiveyearparent = fiveyear.getParent();let fiveyearchild = fiveyear.getChild();
 
     let msg;
     msg = `epoch ${req.params.epoch}, duration ${req.params.duration}`
@@ -108,50 +75,17 @@ router.get('/allperiods/:epoch?/:duration?', (req, res, next) => {
         .status(200)
         .json({
             params: msg,
-
-            INSTANTPREV: instantprev,
-            INSTANT: instant,
-            INSTANTNEXT: instantnext,
-
-            SECONDPREV: secondprev,
-            SECOND: second,
-            SECONDNEXT: secondnext,
-
-            MINUTEPREV: minuteprev,
-            MINUTE: minute,
-            MINUTENEXT: minutenext,
-
-            HOURPREV: hourprev,
-            HOUR: hour,
-            HOURNEXT: hournext,
-
-            TIMEOFDAYPREV: timeofdayprev,
-            TIMEOFDAY: timeofday,
-            TIMEOFDAYNEXT: timeofdaynext,
-
-            DAYPREV: dayprev,
-            DAY: day,
-            DAYNEXT: daynext,
-
-            WEEKPREV: weekprev,
-            WEEK: week,
-            WEEKNEXT: weeknext,
-
-            MONTHPREV: monthprev,
-            MONTH: month,
-            MONTHNEXT: monthnext,
-
-            QUARTERPREV: quarterprev,
-            QUARTER: quarter,
-            QUARTERNEXT: quarternext,
-
-            YEARPREV: yearprev,
-            YEAR: year,
-            YEARNEXT: yearnext,
-
-            FIVEYEARPREV: fiveyearprev,
-            FIVEYEAR: fiveyear,
-            FIVEYEARNEXT: fiveyearnext
+            INSTANTPREV: instantprev, INSTANT: instant, INSTANTNEXT: instantnext, INSTANTPARENT: instantparent,INSTANTCHILD: instantchild,
+            SECONDPREV: secondprev, SECOND: second, SECONDNEXT: secondnext, SECONDPARENT: secondparent,SECONDCHILD: secondchild,
+            MINUTEPREV: minuteprev, MINUTE: minute, MINUTENEXT: minutenext, MINUTEPARENT: minuteparent,MINUTECHILD: minutechild,
+            HOURPREV: hourprev, HOUR: hour, HOURNEXT: hournext, HOURPARENT: hourparent,HOURCHILD: hourchild,
+            TIMEOFDAYPREV: timeofdayprev, TIMEOFDAY: timeofday, TIMEOFDAYNEXT: timeofdaynext, TIMEOFDAYPARENT: timeofdayparent,TIMEOFDAYCHILD: timeofdaychild,
+            DAYPREV: dayprev, DAY: day, DAYNEXT: daynext, DAYPARENT: dayparent,DAYCHILD: daychild,
+            WEEKPREV: weekprev, WEEK: week, WEEKNEXT: weeknext, WEEKPARENT: weekparent,WEEKCHILD: weekchild,
+            MONTHPREV: monthprev, MONTH: month, MONTHNEXT: monthnext, MONTHPARENT: monthparent,MONTHCHILD: monthchild,
+            QUARTERPREV: quarterprev, QUARTER: quarter, QUARTERNEXT: quarternext, QUARTERPARENT: quarterparent,QUARTERCHILD: quarterchild,
+            YEARPREV: yearprev, YEAR: year, YEARNEXT: yearnext, YEARPARENT: yearparent,YEARCHILD: yearchild,
+            FIVEYEARPREV: fiveyearprev, FIVEYEAR: fiveyear, FIVEYEARNEXT: fiveyearnext, FIVEYEARPARENT: fiveyearparent, FIVEYEARCHILD: fiveyearchild,
         })
         .end();
 });
@@ -176,7 +110,7 @@ router.get('/car', (req, res, next) => {
     // choose the ejs template here and also the response content type, based on the request Accepts header 
     let contentType = (req.accepts(consts.mimeTypes.textHtml)) ? consts.mimeTypes.textHtml : consts.mimeTypes.applicationCollectionJson;
 
-    let paramE = new params.Period('storex');
+    let paramE = new Param.Period('storex');
     console.log('paramE Name = ' + paramE.name + ', paramE Value = ' + paramE.value);
 
     // send the response
