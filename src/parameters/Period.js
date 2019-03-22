@@ -1,7 +1,8 @@
 //@ts-check
 "use strict";
 /**
- * ./parameters/Energy.js
+ * ./parameters/Period.js
+ * An object to populate and traverse time periods 
  *  
  */
 const moment = require('moment');
@@ -11,7 +12,7 @@ const consts = require('../definitions/constants');
 const utils = require('../definitions/utils');
 
 const Param = require('./Param');
-const INSTANT_FORMAT = periodFormatString(enums.period.instant, true);     // the default format, YYYYMMDDTHHmmss.SSS
+const INSTANT_FORMAT = datetimeFormatString(enums.period.instant, true);     // the default format, YYYYMMDDTHHmmss.SSS
 
 /**
  * expects a date-time value in utc format. period is required (as a string) and must contain a complete date
@@ -25,27 +26,27 @@ class Period extends Param {
 
         const PARAM_NAME = 'period';
         const REL = 'self';
-        const defaultFormat = INSTANT_FORMAT;                     // use ms precision for period epoch and end 
+        const defaultFormat = INSTANT_FORMAT;                           // use millisec precision for period epoch and end datetimes
 
         // period ------------
         period = enums.period[period] ? period : enums.period.default;  // check if period is valid,  set default if it is not
         super(PARAM_NAME, period);                                      // no need for enums or defaults
 
-        // epoch and end - validate and normalise the epoch for the supplied period 
-        let valid = isEpochValid(epoch, defaultFormat);                // make sure epoch is a valid date-time 
-        epoch = valid ? epoch : moment.utc().format(defaultFormat);    // if not valid default to 'now'
-        epoch = periodStart(period, epoch, defaultFormat);             // adjust the start of the period for timeofday, week, quarter, fiveyear  
+        // timestamps - period epoch and end                            // validate and normalise the epoch for the supplied period 
+        let valid = isEpochValid(epoch, defaultFormat);                 // make sure epoch is a valid date-time 
+        epoch = valid ? epoch : moment.utc().format(defaultFormat);     // if not valid default to 'now'
+        epoch = periodEpoch(period, epoch, defaultFormat);              // normalise the epoch to the exact start of the period
         //..
         this.epochInstant = epoch;
-        this.endInstant = periodEnd(period, epoch, defaultFormat);     // period end - get the end date-time based on the epoch and period 
+        this.endInstant = periodEnd(period, epoch, defaultFormat);      // period end - get the end date-time based on the epoch and period 
 
-        // properties for display 
-        this.epoch = periodFormat(this.epochInstant, period)           // formatted for the period  
-        this.end = periodFormat(this.endInstant, period)
+        // display properties 
+        this.epoch = datetimeFormat(this.epochInstant, period)          // formatted for the period  
+        this.end = datetimeFormat(this.endInstant, period)
         //.. 
-        this.rel = REL;                                                // btw: name = Param.value
+        this.rel = REL;                                                 // btw: name = Param.value
         this.prompt = periodPrompt(period, this.epochInstant);
-        this.title = titleString(this.epochInstant, this.endInstant, period)          // "04/02/2019 - 10/02/2019";
+        this.title = periodTitle(this.epochInstant, this.endInstant, period)          // "04/02/2019 - 10/02/2019";
 
     }
 
@@ -54,35 +55,53 @@ class Period extends Param {
     getNext() {
         const REL = 'next';
 
-        // add a milisecond to the period end to make it the next period epoch
-        let nextEpoch = moment.utc(this.endInstant).add(1, 'milliseconds').format(INSTANT_FORMAT);
-        
-        //create the period and sets its relationship
-        let nextPeriod = new Period(this.value, nextEpoch);
-        nextPeriod.rel = REL
+        // add a milisecond to the period end to make it the next period's epoch
+        let epoch = moment.utc(this.endInstant).add(1, 'milliseconds').format(INSTANT_FORMAT);
 
-        return nextPeriod;
+        //create the period and sets its relationship
+        let period = new Period(this.value, epoch);
+        period.rel = REL
+
+        return period;
 
     }
 
+    // returns the previous period 
+    getPrev() {
+        const REL = 'prev';
+
+        // subtract a milisecond from the period epoch to get the previous period's epoch
+        let epoch = moment.utc(this.epochInstant).subtract(1, 'milliseconds').format(INSTANT_FORMAT);
+
+        //create the period and sets its relationship
+        let period = new Period(this.value, epoch);
+        period.rel = REL
+
+        return period;
+
+    }
 }
 
 // returns an epoch adjusted for the start of the period
-function periodStart(period, epoch, format) {
+function periodEpoch(period, epoch, format) {
 
     switch (period) {
 
         // epoch format YYYYMMDDTHHmmss.SSS -----------------------------------              
         case enums.period.instant:
 
-            epoch = moment.utc(epoch).format(format);                     // no adjustment - return milliseconds epoch (format YYYYMMDDTHHmmss.SSS)  
+            epoch = moment.utc(epoch).format(format);                       // no adjustment - return milliseconds epoch (format YYYYMMDDTHHmmss.SSS)  
             break;
 
-        case enums.period.timeofday:                    // adjust to the start of the last 6hr block in the day (morning=6, afternoon=12, evening-18, night=00)   
+        case enums.period.timeofday:                                        // adjust to the start of the last 6hr block in the day (morning=6, afternoon=12, evening-18, night=00)   
 
-            let hr = consts.timeOfDayStart[timeOfDay(epoch)];        // get the starting hour for the timeofday     
-            epoch = moment.utc(epoch).set('hour', hr).format(format);     // set hour to 0,6,12,or 18
-            epoch = moment.utc(epoch).set('minute', 0).format(format);    // set minute always zero
+            let hr = consts.timeOfDayStart[selectTimeOfDay(epoch)];         // get the starting hour for the timeofday     
+            epoch = moment.utc(epoch).set('hour', hr).format(format);       // set hour to 0,6,12,or 18
+            
+            epoch = moment.utc(epoch).set('minute', 0).format(format);      // set minute, second, millisecond to zero
+            epoch = moment.utc(epoch).set('second', 0).format(format);      
+            epoch = moment.utc(epoch).set('millisecond', 0).format(format); 
+
             break;
 
         // epoch format YYYYMMDD -----------------------------------------
@@ -95,8 +114,8 @@ function periodStart(period, epoch, format) {
 
             let yr = moment.utc(epoch).get('year');     // get the year
             yr = yr - (yr % 5);                         // round down to nearest 5 year epoch
-            epoch = moment.utc(epoch).set('year', yr).format(format);     // set year
-            epoch = moment.utc(epoch).startOf('year').format(format);    // set to January 1st of that year
+            epoch = moment.utc(epoch).set('year', yr).format(format);       // set year
+            epoch = moment.utc(epoch).startOf('year').format(format);       // set to January 1st of that year
             break;
 
         case enums.period.hour:
@@ -106,7 +125,7 @@ function periodStart(period, epoch, format) {
         case enums.period.month:
         case enums.period.quarter:
         case enums.period.year:
-            epoch = moment.utc(epoch).startOf(period).format(format);    // get the end of the period 
+            epoch = moment.utc(epoch).startOf(period).format(format);       // get the start of the period 
             break;
 
     }
@@ -188,7 +207,7 @@ function isEpochValid(epoch, format) {
 }
 
 // returns the timeofday for the epoch
-function timeOfDay(epoch) {
+function selectTimeOfDay(epoch) {
 
     let tod;
     let hr = moment.utc(epoch).get('hour');                     // get the hour
@@ -211,7 +230,7 @@ function timeOfDay(epoch) {
 
 
 // returns a format string for UTC time corresponding to the specified period. 
-function periodFormatString(period, compressed) {
+function datetimeFormatString(period, compressed) {
 
     let format;
     switch (period) {
@@ -243,17 +262,17 @@ function periodFormatString(period, compressed) {
 };
 
 // formats the date-time specifically for the period 
-function periodFormat(instant, period) {
+function datetimeFormat(instant, period) {
 
-    const format = periodFormatString(enums.period[period], true);   // get the format string 
+    const format = datetimeFormatString(enums.period[period], true);   // get the format string 
     return moment.utc(instant).format(format);                 // return formatted 
 
 }
 
-// formats the date-time for the title property 
-function titleString(epoch, end, period) {
+// returns a formatted string for the title property ("04/02/2019 - 10/02/2019")
+function periodTitle(epoch, end, period) {
 
-    const format = periodFormatString(enums.period[period], false);   // get the format string without copmpression
+    const format = datetimeFormatString(enums.period[period], false);   // get the format string without copmpression
 
     let epochStr = moment.utc(epoch).format(format);
     let endStr = moment.utc(end).format(format);
@@ -263,12 +282,16 @@ function titleString(epoch, end, period) {
 }
 
 
-// returns a prompt based on the period and epoch
+// returns a string for the prompt property based on the period and epoch ("Week 13 2019")
 function periodPrompt(period, epoch) {
 
     let prompt;
     let year = moment(epoch).format('YYYY');
     switch (period) {
+
+        case enums.period.instant:
+            prompt = `Instant ${moment(epoch).format('HHmmss.SSS')}`;
+            break;
 
         case enums.period.second:               // Second 0906:24
             prompt = `Second ${moment(epoch).format('HHmm:ss')}`;
@@ -279,7 +302,7 @@ function periodPrompt(period, epoch) {
             break;
 
         case enums.period.timeofday:            // Jan 1 Morning 
-            prompt = `${moment(epoch).format('MMM')} ${moment(epoch).format('D')} ${utils.capitalise(timeOfDay(epoch))}`;
+            prompt = `${moment(epoch).format('MMM')} ${moment(epoch).format('D')} ${utils.capitalise(selectTimeOfDay(epoch))}`;
             break;
 
         case enums.period.day:                  // 'Mon Jan 1st'
@@ -310,7 +333,6 @@ function periodPrompt(period, epoch) {
             prompt = `5 Years ${year}-${moment(epoch).add(5, 'years').format('YYYY')}`;
             break;
 
-        case enums.period.instant:
         default:                                // default is week 
             prompt = utils.capitalise(period);
             break;

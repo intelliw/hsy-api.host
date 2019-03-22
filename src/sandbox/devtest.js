@@ -59,36 +59,48 @@ router.get('/allperiods/:epoch?/:duration?', (req, res, next) => {
 
     // get params for all periods 
     let instant = new Param.Period(enums.period.instant, req.params.epoch);
-    
+    let instantnext = instant.getNext();
+    let instantprev = instant.getPrev();
+
     let second = new Param.Period(enums.period.second, req.params.epoch);
     let secondnext = second.getNext();
+    let secondprev = second.getPrev();
 
     let minute = new Param.Period(enums.period.minute, req.params.epoch);
     let minutenext = minute.getNext();
+    let minuteprev = minute.getPrev();
 
     let hour = new Param.Period(enums.period.hour, req.params.epoch);
     let hournext = hour.getNext();
+    let hourprev = hour.getPrev();
 
     let timeofday = new Param.Period(enums.period.timeofday, req.params.epoch);
     let timeofdaynext = timeofday.getNext();
+    let timeofdayprev = timeofday.getPrev();
 
     let day = new Param.Period(enums.period.day, req.params.epoch);
     let daynext = day.getNext();
+    let dayprev = day.getPrev();
 
     let week = new Param.Period(enums.period.week, req.params.epoch);
     let weeknext = week.getNext();
+    let weekprev = week.getPrev();
 
     let month = new Param.Period(enums.period.month, req.params.epoch);
     let monthnext = month.getNext();
+    let monthprev = month.getPrev();
 
     let quarter = new Param.Period(enums.period.quarter, req.params.epoch);
     let quarternext = quarter.getNext();
-    
+    let quarterprev = quarter.getPrev();
+
     let year = new Param.Period(enums.period.year, req.params.epoch);
     let yearnext = year.getNext();
+    let yearprev = year.getPrev();
 
     let fiveyear = new Param.Period(enums.period.fiveyear, req.params.epoch);
     let fiveyearnext = fiveyear.getNext();
+    let fiveyearprev = fiveyear.getPrev();
 
     let msg;
     msg = `epoch ${req.params.epoch}, duration ${req.params.duration}`
@@ -96,25 +108,48 @@ router.get('/allperiods/:epoch?/:duration?', (req, res, next) => {
         .status(200)
         .json({
             params: msg,
+
+            INSTANTPREV: instantprev,
             INSTANT: instant,
+            INSTANTNEXT: instantnext,
+
+            SECONDPREV: secondprev,
             SECOND: second,
             SECONDNEXT: secondnext,
+
+            MINUTEPREV: minuteprev,
             MINUTE: minute,
             MINUTENEXT: minutenext,
+
+            HOURPREV: hourprev,
             HOUR: hour,
             HOURNEXT: hournext,
+
+            TIMEOFDAYPREV: timeofdayprev,
             TIMEOFDAY: timeofday,
             TIMEOFDAYNEXT: timeofdaynext,
+
+            DAYPREV: dayprev,
             DAY: day,
             DAYNEXT: daynext,
+
+            WEEKPREV: weekprev,
             WEEK: week,
             WEEKNEXT: weeknext,
+
+            MONTHPREV: monthprev,
             MONTH: month,
             MONTHNEXT: monthnext,
+
+            QUARTERPREV: quarterprev,
             QUARTER: quarter,
             QUARTERNEXT: quarternext,
+
+            YEARPREV: yearprev,
             YEAR: year,
             YEARNEXT: yearnext,
+
+            FIVEYEARPREV: fiveyearprev,
             FIVEYEAR: fiveyear,
             FIVEYEARNEXT: fiveyearnext
         })
