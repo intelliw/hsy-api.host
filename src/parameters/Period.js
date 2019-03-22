@@ -98,7 +98,7 @@ class Period extends Param {
         return parent;
     }
 
-    // returns the child of this period 
+    // returns the child of this period including the duration = number of child periods in the period 
     getChild() {
 
         let child;

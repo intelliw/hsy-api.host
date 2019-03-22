@@ -18,14 +18,26 @@ const Param = require('../parameters');
 router.get('/:energy?/:period?/:epoch?/:duration?', (req, res, next) => {
     let noEnum = global.undefined;
 
-    // validate and default all parameters 
+    /**
+     * get the parameter objects - for creating the links and collections
+     * energy, site, period -> including next/prev/parent/child periods, with durations
+     * param objects have all the data needed for the 
+     */
     let site = new Param('site', req.query.site, consts.params.DEFAULT_SITE);
     let energy = new Param('energy', req.params.energy, enums.energy.default, enums.energy);
-    let duration = new Param('duration', req.params.duration, consts.params.DEFAULT_DURATION, noEnum);
-    let period = new Param.Period(req.params.period, req.params.epoch);
+    let period = new Param.Period(req.params.period, req.params.epoch, req.params.duration);
 
+    //-----------[start debug]
     let msg;
-    msg = energy.value + ',' + period.value + ',' + period.epoch + ',' + period.end + ',' + duration.value + ',' + site.value;
+    msg = energy.value + ',' + period.value + ',' + period.epochInstant + ',' + period.endInstant + ',' + period.duration + ',' + site.value;
+    //-----------[end debug]
+
+    /**
+     * call the [energy.type.period.epoch.get] operation to get the data objects 
+     */ 
+
+
+    // render the response
 
     res
         .status(200)

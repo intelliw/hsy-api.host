@@ -41,7 +41,7 @@ router.get('/periods/:period?/:epoch?/:duration?', (req, res, next) => {
 
     console.log(req.params.period);
 
-    let periodObj = new Param.Period(req.params.period, req.params.epoch);
+    let periodObj = new Param.Period(req.params.period, req.params.epoch, req.params.duration);
     let msg;
     msg = `epoch ${req.params.epoch}, duration ${req.params.duration}`
     res
