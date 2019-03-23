@@ -23,10 +23,15 @@ const MILLISECOND_FORMAT = consts.periodDatetimeISO.instant;                    
 class Period extends Param {
     /**
      * attributes:  
-     * super."name": "period", super."value": "week.day",
-     *  "epochInstant": "20190204T000000.000", "endInstant": "20190204T235959.999",
-     *  "duration": "7", "epoch": "20190204", "end": "20190204",
-     *  "rel": "collection", "prompt": "Mon Feb 4th", "title": "04/02/19"
+     * super.name: "period", 
+     * super.value: "week",
+     * "context": "week.day",
+     * "epochInstant": "20190204T000000.000", "endInstant": "20190204T235959.999",
+     * "epoch": "20190204", "end": "20190204",
+     * "duration": "7",
+     * "rel": "collection", 
+     * "prompt": "Mon Feb 4th-Sun Feb 10th", "title": "04/02/19 - 10/02/19"
+     * 
      * @param {*} period    // enums.period
      * @param {*} epoch     // date-time 
      * @param {*} duration  // positive integer
@@ -55,7 +60,7 @@ class Period extends Param {
 
         // hypermedia properties 
         this.rel = enums.linkRelations.self;                                    // default is 'self' this is overwritten for parent, child, etc after construction
-        this.prompt = periodPrompt(this.epochInstant, this.endInstant, period); 
+        this.prompt = periodPrompt(this.epochInstant, this.endInstant, period);
         this.title = periodTitle(this.epochInstant, this.endInstant, period);   // "04/02/2019 - 10/02/2019";
 
     }
@@ -90,6 +95,7 @@ class Period extends Param {
         return prev;
 
     }
+
     // returns the parent of this period 
     getParent() {
 
@@ -106,6 +112,52 @@ class Period extends Param {
         }
 
         return parent;
+    }
+
+    // returns a clone of the period 
+    getClone() {
+
+        // add a milisecond to the period end to make it the next period's epoch
+        const epoch = this.epoch;
+        const periodEnum = this.value;
+
+        //create the clone and sets its relationship
+        let clone = new Period(periodEnum, epoch, consts.params.DEFAULT_DURATION);
+
+        clone.context = this.context
+        clone.epochInstant = this.epochInstant
+        clone.endInstant = this.endInstant
+        clone.epoch = this.epoch
+        clone.end = this.end
+        clone.duration = this.duration
+        clone.rel = this.rel
+        clone.prompt = this.prompt
+        clone.title = this.title
+
+        return clone;
+
+    }
+
+    // returns each individual period in the duration in an array. Each period in the array will have a duration of 1, and there will be as many objects in the array as the original period's duration 
+    getEach() {
+
+
+        let periods = [];
+        const duration = this.duration;
+        const period = this.value;
+        
+        // create the first one  
+        let newPeriod = new Period(period, this.epochInstant, consts.params.DEFAULT_DURATION);
+
+        let p;
+        for (p = 1; p <= duration; p++) {
+            
+            periods.push(newPeriod);                    // add to the array
+            newPeriod = newPeriod.getNext();            // get the next 
+        }
+
+        return periods;
+
     }
 
     // returns the child of this period including the duration = number of child periods in the period 
@@ -378,10 +430,10 @@ function datetimeLabel(instant, period) {
             label = `5 Years ${year}-${moment.utc(instant).add(5, 'years').format('YYYY')}`;
             break;
 
-        default:                                
+        default:
             label = utils.capitalise(period);
             break;
     }
-    return label; 
+    return label;
 }
 module.exports = Period;
