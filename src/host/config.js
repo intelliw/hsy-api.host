@@ -11,7 +11,7 @@ module.exports.initialise = function (app) {
     app.disable('x-powered-by');                   // disable the 'X-Powered-By →Express' header 
 
     app.set('view engine', 'ejs');                 // set engine
-    app.set('views', def.constants.folders.VIEWS_FOLDER);   // ejs templates folder
+    app.set('views', def.constants.folders.VIEWS);   // ejs templates folder
 
 }
 

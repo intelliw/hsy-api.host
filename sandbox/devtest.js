@@ -118,7 +118,7 @@ router.get('/car', (req, res, next) => {
     res
         .status(200)
         .type(contentType)                              // same as res.set('Content-Type', 'text/html')
-        .render('energyData', { user: 'Any User?', title: 'homepage', car: car, bus: bus });
+        .render('welcome', { user: 'Any User?', title: 'homepage', car: car, bus: bus });
 
 });
 

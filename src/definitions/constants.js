@@ -8,7 +8,7 @@ const enums = require('./enums');
 
 // folder locations
 module.exports.folders = {
-    VIEWS: path.dirname(require.resolve('../definitions'))
+    VIEWS: path.dirname(require.resolve('../responses'))
 };
 
 // mime types used in headers
