@@ -50,8 +50,8 @@ class Period extends Param {
         this.endInstant = periodEnd(period, this.epochInstant, this.duration, MILLISECOND_FORMAT);   // period end - get the end date-time based on the epoch and duration 
 
         // epoch and end formatted timestamps
-        this.epoch = datetimeFormat(this.epochInstant, period);                 // formatted for the period  
-        this.end = datetimeFormat(this.endInstant, period);
+        this.epoch = datetimeFormatISO(this.epochInstant, period);                 // formatted for the period  
+        this.end = datetimeFormatISO(this.endInstant, period);
 
         // hypermedia properties 
         this.rel = enums.linkRelations.self;                                    // default is 'self' this is overwritten for parent, child, etc
@@ -292,42 +292,18 @@ function selectTimeOfDay(epoch) {
     return tod;
 }
 
-// returns a format string for UTC time corresponding to the specified period. 
-function datetimeFormatString(period, compressed) {
-    // compresed format is used in links and identifiers, the uncompressed format is for display rendering 
-    let format;
-    switch (period) {
-        case enums.period.instant:
-            format = compressed ? 'YYYYMMDDTHHmmss.SSS' : 'DD/MM/YY HHmmss.SSS';
-            break;
-        case enums.period.second:
-            format = compressed ? 'YYYYMMDDTHHmmss' : 'DD/MM/YY HHmm:ss';
-            break;
-        case enums.period.minute:
-            format = compressed ? 'YYYYMMDDTHHmm' : 'DD/MM/YY HH:mm';
-            break;
-        case enums.period.hour:
-        case enums.period.timeofday:            // timofday formatted same as hour
-            format = compressed ? 'YYYYMMDDTHHmm' : 'DD/MM/YY HH:mm';
-            break;
-        case enums.period.day:
-        case enums.period.week:                 // week and day are the same
-        case enums.period.month:                // quarter formatted same as month
-        case enums.period.quarter:
-        case enums.period.year:                 // year and fiveyear are the same
-        case enums.period.fiveyear:
-        default:                                // default is week 
-            format = compressed ? 'YYYYMMDD' : 'DD/MM/YY';
-            break;
-    }
-
-    return format;
-};
-
-// formats the date-time specifically for the period 
-function datetimeFormat(instant, period) {
+// formats the instant in compressed ISO datetime format
+function datetimeFormatISO(instant, period) {
 
     const format = consts.periodDatetimeISO[period];                    // get the comnpressed format string 
+    return moment.utc(instant).format(format);                          // return formatted 
+
+}
+
+// formats the instant in general datetime format
+function datetimeFormatGeneral(instant, period) {
+
+    const format = consts.periodDatetimeGeneral[period];                // get the format string without copmpression
     return moment.utc(instant).format(format);                          // return formatted 
 
 }
@@ -335,12 +311,10 @@ function datetimeFormat(instant, period) {
 // returns a formatted string for the title property ("04/02/2019 - 10/02/2019")
 function periodTitle(epoch, end, period) {
 
-    const format = consts.periodDatetimeGeneral[period];                // get the format string without copmpression
-
-    let epochStr = moment.utc(epoch).format(format);
-    let endStr = moment.utc(end).format(format);
+    let epochStr = datetimeFormatGeneral(epoch, period);
+    let endStr = datetimeFormatGeneral(end, period);
     let titleStr = (epochStr == endStr) ? epochStr : `${epochStr} - ${endStr}`;
-    return titleStr;                 // return formatted 
+    return titleStr;                                                    // return formatted title
 
 }
 
