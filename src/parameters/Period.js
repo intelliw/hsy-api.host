@@ -12,7 +12,7 @@ const consts = require('../definitions/constants');
 const utils = require('../definitions/utils');
 
 const Param = require('./Param');
-const MILLISECOND_FORMAT = datetimeFormatString(enums.period.instant, true);     // the default format, YYYYMMDDTHHmmss.SSS
+const MILLISECOND_FORMAT = consts.periodDatetimeISO.instant;                    // the default format, YYYYMMDDTHHmmss.SSS
 
 /**
  * expects a date-time value in utc format. period is required (as a string) and must contain a complete date (isEpochValid())
