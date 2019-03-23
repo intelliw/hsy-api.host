@@ -12,7 +12,7 @@ const Buffer = require('safe-buffer').Buffer;
 
 const host = require('./src/host');                 // common services
 const path = require('./src/paths');                // routes
-const sandbox = require('./src/sandbox');
+const sandbox = require('./sandbox');
 
 // [START setup]------------------------------
 
@@ -25,12 +25,12 @@ app.use('/energy', path.energy);            // endpoint tag: Energy
 app.use('/devices', path.devices);          // endpoint tag: Devices
 app.use('/api', path.diagnostics);          // endpoint tag: Diagnostics
 
-// for testing and troubleshooting
+// for testing and troubleshooting only
 app.use('/devtest', sandbox.devtest);
 
 
 // handle error
-app.use(function(err,req, res, next){
+app.use((err, req, res, next) => {
     console.log('Unexpected ' + err);
     res.status(500).json(err);
 });
