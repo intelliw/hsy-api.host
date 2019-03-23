@@ -82,3 +82,34 @@ module.exports.childPeriod = {
     year: enums.period.quarter,
     fiveyear: enums.period.year
 }
+
+// returns a format string for UTC compresed datetime for use in links and identifiers
+module.exports.periodDatetimeISO = {
+    instant: 'YYYYMMDDTHHmmss.SSS', 
+    second: 'YYYYMMDDTHHmmss',
+    minute: 'YYYYMMDDTHHmm',
+    hour: 'YYYYMMDDTHHmm',
+    timeofday: 'YYYYMMDDTHHmm',                 // timofday formatted same as hour
+    day: 'YYYYMMDD',
+    week: 'YYYYMMDD',
+    month: 'YYYYMMDD',
+    quarter: 'YYYYMMDD',
+    year: 'YYYYMMDD',
+    fiveyear: 'YYYYMMDD'
+}
+
+
+// returns a format string for uncompressed date time for use in display properties  
+module.exports.periodDatetimeGeneral = {
+    instant: 'DD/MM/YY HHmmss.SSS',
+    second: 'DD/MM/YY HHmm:ss',
+    minute: 'DD/MM/YY HH:mm',
+    hour: 'DD/MM/YY HH:mm',
+    timeofday: 'DD/MM/YY HH:mm',                // timofday formatted same as hour
+    day: 'DD/MM/YY',
+    week: 'DD/MM/YY',
+    month: 'DD/MM/YY',
+    quarter: 'DD/MM/YY',
+    year: 'DD/MM/YY',
+    fiveyear: 'DD/MM/YY'
+}

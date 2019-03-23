@@ -327,15 +327,15 @@ function datetimeFormatString(period, compressed) {
 // formats the date-time specifically for the period 
 function datetimeFormat(instant, period) {
 
-    const format = datetimeFormatString(enums.period[period], true);   // get the format string 
-    return moment.utc(instant).format(format);                 // return formatted 
+    const format = consts.periodDatetimeISO[period];                    // get the comnpressed format string 
+    return moment.utc(instant).format(format);                          // return formatted 
 
 }
 
 // returns a formatted string for the title property ("04/02/2019 - 10/02/2019")
 function periodTitle(epoch, end, period) {
 
-    const format = datetimeFormatString(enums.period[period], false);   // get the format string without copmpression
+    const format = consts.periodDatetimeGeneral[period];                // get the format string without copmpression
 
     let epochStr = moment.utc(epoch).format(format);
     let endStr = moment.utc(end).format(format);
