@@ -50,12 +50,12 @@ class Period extends Param {
         this.endInstant = periodEnd(period, this.epochInstant, this.duration, MILLISECOND_FORMAT);   // period end - get the end date-time based on the epoch and duration 
 
         // epoch and end formatted timestamps
-        this.epoch = datetimeFormatISO(this.epochInstant, period);                 // formatted for the period  
+        this.epoch = datetimeFormatISO(this.epochInstant, period);              // format for the period  
         this.end = datetimeFormatISO(this.endInstant, period);
 
         // hypermedia properties 
-        this.rel = enums.linkRelations.self;                                    // default is 'self' this is overwritten for parent, child, etc
-        this.prompt = periodPrompt(period, this.epochInstant);
+        this.rel = enums.linkRelations.self;                                    // default is 'self' this is overwritten for parent, child, etc after construction
+        this.prompt = periodPrompt(this.epochInstant, this.endInstant, period); 
         this.title = periodTitle(this.epochInstant, this.endInstant, period);   // "04/02/2019 - 10/02/2019";
 
     }
@@ -122,14 +122,14 @@ class Period extends Param {
 
             // duration - get the number of child periods in the period 
             if ((periodEnum == enums.period.month) && (childEnum == enums.period.day)) {    // if monthday - number of days changes each month  
-                duration = moment.utc(this.epochInstant).daysInMonth().toString();         // get the days for this month  
+                duration = moment.utc(this.epochInstant).daysInMonth().toString();          // get the days for this month  
             } else {
                 duration = consts.childDurations[`${periodEnum}${childEnum}`];              // eg. childDurations.weekday, returns 7
             }
 
             //col the period and sets its relationship
-            child = new Period(childEnum, this.epochInstant, duration);             // construct with duration  
-            child.context = `${periodEnum}.${childEnum}`                            // e.g. 'week.day' 
+            child = new Period(childEnum, this.epochInstant, duration);             // construct child with a duration  
+            child.context = `${periodEnum}.${childEnum}`                            // context is period to child  e.g. 'week.day' 
             child.rel = enums.linkRelations.collection;                             // collection is the rel for a child
         }
 
@@ -318,64 +318,70 @@ function periodTitle(epoch, end, period) {
 
 }
 
-// returns a string for the prompt property based on the period and epoch ("Week 13 2019")
-function periodPrompt(period, epoch) {
+// returns a formatted string for the prompt property (e.g. "Week 13 2019" or "Week 13 2019 - Week 13 2019" if duration is > 1 )
+function periodPrompt(epoch, end, period) {
 
-    let prompt;
-    let year = moment.utc(epoch).format('YYYY');
+    let epochStr = datetimeLabel(epoch, period);
+    let endStr = datetimeLabel(end, period);
+    let promptStr = (epochStr == endStr) ? epochStr : `${epochStr} - ${endStr}`;
+    return promptStr;                                                    // return formatted title
+
+};
+
+// returns a formatted label for the period and instant  (e.g. "Week 13 2019")
+function datetimeLabel(instant, period) {
+    let label;
+    let year = moment.utc(instant).format('YYYY');
     switch (period) {
 
-        case enums.period.instant:
-            prompt = `Instant ${moment.utc(epoch).format('HHmmss.SSS')}`;
+        case enums.period.instant:              // 'Instant 090623.554'
+            label = `Instant ${moment.utc(instant).format('HHmmss.SSS')}`;
             break;
 
-        case enums.period.second:               // Second 0906:24
-            prompt = `Second ${moment.utc(epoch).format('HHmm:ss')}`;
+        case enums.period.second:               // 'Second 0906:24'
+            label = `Second ${moment.utc(instant).format('HHmm:ss')}`;
             break;
 
-        case enums.period.minute:               // Minute 09:06
-            prompt = `Minute ${moment.utc(epoch).format('HH:mm')}`;
+        case enums.period.minute:               // 'Minute 09:06'
+            label = `Minute ${moment.utc(instant).format('HH:mm')}`;
             break;
 
-        case enums.period.timeofday:            // Jan 1 Morning 
-            prompt = `${moment.utc(epoch).format('MMM')} ${moment.utc(epoch).format('D')} ${utils.capitalise(selectTimeOfDay(epoch))}`;
+        case enums.period.timeofday:            // 'Jan 1 Morning' 
+            label = `${moment.utc(instant).format('MMM')} ${moment.utc(instant).format('D')} ${utils.capitalise(selectTimeOfDay(instant))}`;
             break;
 
         case enums.period.day:                  // 'Mon Jan 1st'
-            prompt = `${moment.utc(epoch).format('ddd')} ${moment.utc(epoch).format('MMM')} ${moment.utc(epoch).format('Do')}`
+            label = `${moment.utc(instant).format('ddd')} ${moment.utc(instant).format('MMM')} ${moment.utc(instant).format('Do')}`
             break;
 
         case enums.period.month:                // 'Mar 2019'
-            prompt = `${moment.utc(epoch).format('MMM')} ${year}`;
+            label = `${moment.utc(instant).format('MMM')} ${year}`;
             break;
 
         case enums.period.quarter:              // 'Quarter 1 2019'
-            prompt = `Quarter ${moment.utc(epoch).quarter()} ${year}`;
+            label = `Qtr ${moment.utc(instant).quarter()} ${year}`;
             break;
 
-        case enums.period.week:                 // Week 27 2019
-            prompt = `Week ${moment.utc(epoch).format('WW')} ${year}`;
+        case enums.period.week:                 // 'Week 27 2019'
+            label = `Week ${moment.utc(instant).format('WW')} ${year}`;
             break;
 
-        case enums.period.hour:                 // Hour 2100     
-            prompt = `Hour ${moment.utc(epoch).format('HH')}00`;
+        case enums.period.hour:                 // 'Hour 2100'
+            label = `Hour ${moment.utc(instant).format('HH')}00`;
             break;
 
-        case enums.period.year:                 // Year 2019
-            prompt = `Year ${year}`;
+        case enums.period.year:                 // 'Year 2019'
+            label = `Year ${year}`;
             break;
 
-        case enums.period.fiveyear:             // 5 Years 2014-2019
-            prompt = `5 Years ${year}-${moment.utc(epoch).add(5, 'years').format('YYYY')}`;
+        case enums.period.fiveyear:             // '5 Years 2014-2019'
+            label = `5 Years ${year}-${moment.utc(instant).add(5, 'years').format('YYYY')}`;
             break;
 
-        default:                                // default is week 
-            prompt = utils.capitalise(period);
+        default:                                
+            label = utils.capitalise(period);
             break;
     }
-
-    return prompt;
-};
-
-
+    return label; 
+}
 module.exports = Period;
