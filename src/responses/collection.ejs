@@ -3,13 +3,15 @@
    "collection": {
        "version": "<%= v %>",
        "href": "http:/<%= h %>/energy/<%= e %>/<%= p[i].value %>/<%= p[i].epoch %>/<%= p[i].duration %>?site=<%= s %>", 
-       "links": [ <% for(var x=0; x < l.length; x++) { %>
+       "links": [<% for(var x=0; x < l.length; x++) { %>
            { "rel": "<%= l[x].rel %>", "name": "<%= l[x].context %>", "prompt": "<%= l[x].prompt %>", "title": "<%= l[x].title %>",
              "href": "http:/<%= h %>/energy/<%= e %>/<%= l[x].value %>/<%= l[x].epoch %>/<%= l[x].duration %>?site=<%= s %>"<% if (l[x].render) { %>, "render": "<%= l[x].render %>"<% } %>
            }<% if (x < (l.length - 1)) { %>,<% } %>
        <% } %>],
-       "items": [
-       ]
+       "items": [<% for(var z=0; z < c.length; z++) { %>
+           { "href": "http:/<%= h %>/energy/<%= e %>/<%= c[z].value %>/<%= c[z].epoch %>/<%= c[z].duration %>?site=<%= s %>"<% if (c[z].render) { %>, "render": "<%= c[z].render %>"<% } %>   
+           }<% if (z < (c.length - 1)) { %>,<% } %>
+       <% } %>]
    }
  }<% if(i < (p.length - 1)) { %>,<% } %>
 <% } %>]

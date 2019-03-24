@@ -29,6 +29,7 @@ class Period extends Param {
      "epoch": "20190204", "end": "20190204",
      "duration": "7",
      "rel": "collection", 
+     "render": "link", 
      "prompt": "Mon Feb 4th-Sun Feb 10th", "title": "04/02/19 - 10/02/19"
     * @param {*} period    // enums.period
     * @param {*} epoch     // date-time 
@@ -147,36 +148,43 @@ class Period extends Param {
         const duration = this.duration;
         const period = this.value;
         
+        const RENDER = enums.linkRender.link;           
+
         // create the first one  
         let newPeriod = new Period(period, this.epochInstant, consts.DEFAULT_DURATION);
+        
 
         let p;
         for (p = 1; p <= duration; p++) {
             
+            newPeriod.render = RENDER;                  // set a consistent render value for the whole array 
             periods.push(newPeriod);                    // add to the array
             newPeriod = newPeriod.getNext();            // get the next 
+
         }
 
         return periods;
 
     }
 
-    // returns the linked periods i.e self, next, previous, parent, and child
+    // returns the linked periods i.e self, child, parent, next, previous 
     getLinks() {
 
         let links = [];
-        
+        let child = this.getChild();                  // e.g. fiveyear has no child
+        let parent = this.getParent();                  // e.g. instant has no parent
+
         // create the links
         links.push(this);                             // self
-        links.push(this.getChild());                  // child
-        links.push(this.getParent());                 // parent
+        if (child) links.push(child);                 // child
+        if (parent) links.push(parent);               // parent
         links.push(this.getNext());                   // next
         links.push(this.getPrev());                   // prev
 
         return links;
     }
 
-    // returns the child of this period including the duration = number of child periods in the period 
+    // returns the child of this period including the duration, which is the number of child periods in the period 
     getChild() {
 
         let child;
@@ -202,6 +210,21 @@ class Period extends Param {
         }
 
         return child;
+    }
+
+    // returns each individual period for the duration of the child period retuirned by getChild. Each period in the array will have a duration of 1, and there will be as many objects in the array as the original child period's duration 
+    getEachChild() {
+
+        let periods;
+        let child = this.getChild();
+
+        // create the first one  
+        if (child) {
+           periods = child.getEach();
+        }
+        
+        return periods;
+
     }
 
 }

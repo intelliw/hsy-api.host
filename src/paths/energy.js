@@ -33,9 +33,10 @@ router.get('/:energy?/periods/:period?/:epoch?/:duration?', (req, res, next) => 
     console.log(energy.value + ',' + period.value + ',' + period.epochInstant + ',' + period.endInstant + ',' + period.duration + ',' + site.value);
 
     // call the operation to get the data objects 
-    let periods = period.getEach();                          // get a period array which will have one for each period in thew duration     
+    let periods = period.getEach();                          // get a period array which will have one for each period in the duration
     let links = period.getLinks();                           // get the linked period
-
+    let children = period.getEachChild();                    // get an array of child periods
+    
     // check the content type -choose the ejs template depending on the type here 
     let contentType = (req.accepts(consts.mimeTypes.textHtml)) ? consts.mimeTypes.textHtml : consts.mimeTypes.applicationCollectionJson;
 
@@ -44,7 +45,7 @@ router.get('/:energy?/periods/:period?/:epoch?/:duration?', (req, res, next) => 
         .status(200)
         .type(contentType)                              // same as res.set('Content-Type', 'text/html')
         .render('collection', {
-            p: periods, l: links, e: energy.value, s: site.value,
+            p: periods, l: links, c: children, e: energy.value, s: site.value,
             v: consts.CURRENT_VERSION, h: consts.HOST_NAME
         });
 
