@@ -10,8 +10,8 @@ const express = require('express');
 const router = express.Router();
 const Buffer = require('safe-buffer').Buffer;
 
-const enums = require('../src/definitions/enums');
-const consts = require('../src/definitions/constants');
+const enums = require('../src/system/enums');
+const consts = require('../src/system/constants');
 const Param = require('../src/parameters');
 
 // @ts-ignore
@@ -23,9 +23,9 @@ router.get('/energy/:energy?/:period?/:epoch?/:duration?', (req, res, next) => {
     let noEnum = global.undefined;
 
     // validate and default all parameters 
-    let site = new Param('site', req.query.site, consts.params.DEFAULT_SITE);
+    let site = new Param('site', req.query.site, consts.DEFAULT_SITE);
     let energy = new Param('energy', req.params.energy, enums.energy.default, enums.energy);
-    let duration = new Param('duration', req.params.duration, consts.params.DEFAULT_DURATION, noEnum);
+    let duration = new Param('duration', req.params.duration, consts.DEFAULT_DURATION, noEnum);
     let period = new Param.Period(req.params.period, req.params.epoch, duration.value);
 
     let msg;

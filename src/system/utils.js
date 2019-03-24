@@ -1,6 +1,6 @@
 //@ts-check
 /**
- * PACKAGE: ./definitions/index.js
+ * PACKAGE: ./system/index.js
  * schemas and constants
  */
 

@@ -7,16 +7,17 @@
 const express = require('express');
 const router = express.Router();
 
-let def = require('../definitions');
+let consts = require('../system/constants');
 
 // [diagnostics.api.versions.get] /api/versions
 router.get('/versions', (req, res, next) => {
 
     res
     .status(200)
-    .json({ versions: def.constants.sys.ACTIVE_VERSIONS })
+    .json({ versions: consts.ACTIVE_VERSIONS })
     .end();
 
 });
 
 module.exports = router;
+ 

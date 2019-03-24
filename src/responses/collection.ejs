@@ -1,0 +1,15 @@
+[
+<% for(var i=0; i < p.length; i++) { %> {
+   "collection": {
+       "version": "<%= v %>",
+       "href": "http:/<%= h %>/energy/<%= e %>/<%= p[i].value %>/<%= p[i].epoch %>/<%= p[i].duration %>?site=<%= s %>", 
+       "links": [ <% for(var x=0; x < l.length; x++) { %>
+           { "rel": "<%= l[x].rel %>", "name": "<%= l[x].context %>", "prompt": "<%= l[x].prompt %>", "title": "<%= l[x].title %>",
+             "href": "http:/<%= h %>/energy/<%= e %>/<%= l[x].value %>/<%= l[x].epoch %>/<%= l[x].duration %>?site=<%= s %>"<% if (l[x].render) { %>, "render": "<%= l[x].render %>"<% } %>
+           }<% if (x < (l.length - 1)) { %>,<% } %>
+       <% } %>],
+       "items": [
+       ]
+   }
+ }<% if(i < (p.length - 1)) { %>,<% } %>
+<% } %>]

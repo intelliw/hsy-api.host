@@ -19,18 +19,6 @@ module.exports.mimeTypes = {
     textPlain : 'text/plain'
 };
 
-// parameter constants 
-module.exports.params = {
-    DEFAULT_DURATION : '1',
-    DEFAULT_SITE : '999'
-};
-
-// system constants
-module.exports.sys = {
-    ACTIVE_VERSIONS : 'v1.0 v1.1',
-    HOST_NAME : 'api.endpoints.sundaya.cloud.goog',
-    DATE_FORMAT : 'YYYYMMDDTHHmmss.SSS±HHmm',
-}
 
 // the starting hour of each timeofday 
 module.exports.timeOfDayStart = {
@@ -41,7 +29,7 @@ module.exports.timeOfDayStart = {
 };
 
 // the number of child periods in a period. 
-module.exports.childDurations = {
+module.exports.periodChildDuration = {
     secondinstant: '1000',                  // e.g there are 1000 milliseconds in a second
     minutesecond: '60',                     // 60 seconds in a minute
     hourminute: '60',
@@ -54,7 +42,7 @@ module.exports.childDurations = {
 };
 
 // parent periods
-module.exports.parentPeriod = {
+module.exports.periodParent = {
     instant: enums.period.second,
     second: enums.period.minute,
     minute: enums.period.hour,
@@ -69,7 +57,7 @@ module.exports.parentPeriod = {
 }
 
 // child periods
-module.exports.childPeriod = {
+module.exports.periodChild = {
     instant: global.undefined,                // instant has no child
     second: enums.period.instant,
     minute: enums.period.second,
@@ -113,3 +101,14 @@ module.exports.periodDatetimeGeneral = {
     year: 'DD/MM/YY',
     fiveyear: 'DD/MM/YY'
 }
+
+
+// system constants
+module.exports.ACTIVE_VERSIONS = '0.1 0.2';
+module.exports.CURRENT_VERSION = '0.2';
+module.exports.HOST_NAME = 'api.endpoints.sundaya.cloud.goog';
+module.exports.DATE_FORMAT = 'YYYYMMDDTHHmmss.SSS±HHmm';
+// parameter constants 
+module.exports.DEFAULT_DURATION = '1';
+module.exports.DEFAULT_SITE = '999';
+

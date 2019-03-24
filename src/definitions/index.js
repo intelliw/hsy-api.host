@@ -1,9 +1,8 @@
 //@ts-check
 /**
- * PACKAGE: ./definitions/index.js
- * schemas and constants
+ * ./parameters/definitions.js
+ * api defintions
+ * 
  */
 
-module.exports.constants = require('./constants');
-module.exports.enums = require('./enums');
-module.exports.utils = require('./utils');
+module.exports.Data = require('./Data');

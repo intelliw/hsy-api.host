@@ -3,7 +3,7 @@
  * ./svc/config.js
  * configuration settings 
  */
-const def = require('../definitions');           // constants and enums
+const def = require('../system');           // constants and enums
 
 module.exports.initialise = function (app) {
     

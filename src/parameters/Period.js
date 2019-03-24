@@ -7,9 +7,9 @@
  */
 const moment = require('moment');
 
-const enums = require('../definitions/enums');
-const consts = require('../definitions/constants');
-const utils = require('../definitions/utils');
+const enums = require('../system/enums');
+const consts = require('../system/constants');
+const utils = require('../system/utils');
 
 const Param = require('./Param');
 const MILLISECOND_FORMAT = consts.periodDatetimeISO.instant;                    // the default format, YYYYMMDDTHHmmss.SSS
@@ -19,23 +19,21 @@ const MILLISECOND_FORMAT = consts.periodDatetimeISO.instant;                    
  * checks to see if value is a valid time and sets default to current time if it is not.
  * the value is formatted according to the specified period (def.enum.period) argument 
  */
-
 class Period extends Param {
     /**
-     * attributes:  
-     * super.name: "period", 
-     * super.value: "week",
-     * "context": "week.day",
-     * "epochInstant": "20190204T000000.000", "endInstant": "20190204T235959.999",
-     * "epoch": "20190204", "end": "20190204",
-     * "duration": "7",
-     * "rel": "collection", 
-     * "prompt": "Mon Feb 4th-Sun Feb 10th", "title": "04/02/19 - 10/02/19"
-     * 
-     * @param {*} period    // enums.period
-     * @param {*} epoch     // date-time 
-     * @param {*} duration  // positive integer
-     */
+    attributes:  
+     super.name: "period", 
+     super.value: "week",
+     "context": "week.day",
+     "epochInstant": "20190204T000000.000", "endInstant": "20190204T235959.999",
+     "epoch": "20190204", "end": "20190204",
+     "duration": "7",
+     "rel": "collection", 
+     "prompt": "Mon Feb 4th-Sun Feb 10th", "title": "04/02/19 - 10/02/19"
+    * @param {*} period    // enums.period
+    * @param {*} epoch     // date-time 
+    * @param {*} duration  // positive integer
+    */
     constructor(period, epoch, duration) {
 
         const PARAM_NAME = 'period';
@@ -43,7 +41,7 @@ class Period extends Param {
         // period and duration 
         period = enums.period[period] ? period : enums.period.default;          // check if period is valid,  set default if it is not
         super(PARAM_NAME, period);                                              // e.g. name='period' value='week';' 
-        this.duration = duration ? duration : consts.params.DEFAULT_DURATION;
+        this.duration = duration ? duration : consts.DEFAULT_DURATION;
         this.context = period;                                                  // by default context=period except in a collection and overwritten by getChild()
 
         // epoch and end millisecond timestamps                                 // validates and normalises the epoch and end for the supplied period and duration
@@ -62,7 +60,7 @@ class Period extends Param {
         this.rel = enums.linkRelations.self;                                    // default is 'self' this is overwritten for parent, child, etc after construction
         this.prompt = periodPrompt(this.epochInstant, this.endInstant, period);
         this.title = periodTitle(this.epochInstant, this.endInstant, period);   // "04/02/2019 - 10/02/2019";
-
+        this.render = enums.linkRender.default;                                 // default is 'none'
     }
 
 
@@ -74,8 +72,9 @@ class Period extends Param {
 
         //create the period and sets its relationship
         const periodEnum = this.value;
-        let next = new Period(periodEnum, epoch, consts.params.DEFAULT_DURATION);
+        let next = new Period(periodEnum, epoch, consts.DEFAULT_DURATION);
         next.rel = enums.linkRelations.next;
+        next.render = enums.linkRender.link;                                    // should be rendered as a link
 
         return next;
 
@@ -89,8 +88,9 @@ class Period extends Param {
 
         //create the period and sets its relationship
         const periodEnum = this.value;
-        let prev = new Period(periodEnum, epoch, consts.params.DEFAULT_DURATION);
+        let prev = new Period(periodEnum, epoch, consts.DEFAULT_DURATION);
         prev.rel = enums.linkRelations.prev;
+        prev.render = enums.linkRender.link;                                    // should be rendered as a link
 
         return prev;
 
@@ -103,12 +103,13 @@ class Period extends Param {
 
         // select the parent period enum
         const periodEnum = this.value;
-        let parentEnum = consts.parentPeriod[periodEnum];
+        let parentEnum = consts.periodParent[periodEnum];
 
         if (parentEnum) {                                                           // fiveyear has no p[arent]    
             //create the period and sets its relationship
-            parent = new Period(parentEnum, this.epochInstant, consts.params.DEFAULT_DURATION);
+            parent = new Period(parentEnum, this.epochInstant, consts.DEFAULT_DURATION);
             parent.rel = enums.linkRelations.up;                                    // up is the rel for the parent
+            parent.render = enums.linkRender.link;                                    // should be rendered as a link
         }
 
         return parent;
@@ -122,7 +123,7 @@ class Period extends Param {
         const periodEnum = this.value;
 
         //create the clone and sets its relationship
-        let clone = new Period(periodEnum, epoch, consts.params.DEFAULT_DURATION);
+        let clone = new Period(periodEnum, epoch, consts.DEFAULT_DURATION);
 
         clone.context = this.context
         clone.epochInstant = this.epochInstant
@@ -147,7 +148,7 @@ class Period extends Param {
         const period = this.value;
         
         // create the first one  
-        let newPeriod = new Period(period, this.epochInstant, consts.params.DEFAULT_DURATION);
+        let newPeriod = new Period(period, this.epochInstant, consts.DEFAULT_DURATION);
 
         let p;
         for (p = 1; p <= duration; p++) {
@@ -160,6 +161,21 @@ class Period extends Param {
 
     }
 
+    // returns the linked periods i.e self, next, previous, parent, and child
+    getLinks() {
+
+        let links = [];
+        
+        // create the links
+        links.push(this);                             // self
+        links.push(this.getChild());                  // child
+        links.push(this.getParent());                 // parent
+        links.push(this.getNext());                   // next
+        links.push(this.getPrev());                   // prev
+
+        return links;
+    }
+
     // returns the child of this period including the duration = number of child periods in the period 
     getChild() {
 
@@ -167,7 +183,7 @@ class Period extends Param {
 
         // select the child period enum
         const periodEnum = this.value;
-        let childEnum = consts.childPeriod[periodEnum];
+        let childEnum = consts.periodChild[periodEnum];
         let duration;
 
         if (childEnum) {                                                            // e.g. instant has no child    
@@ -176,7 +192,7 @@ class Period extends Param {
             if ((periodEnum == enums.period.month) && (childEnum == enums.period.day)) {    // if monthday - number of days changes each month  
                 duration = moment.utc(this.epochInstant).daysInMonth().toString();          // get the days for this month  
             } else {
-                duration = consts.childDurations[`${periodEnum}${childEnum}`];              // eg. childDurations.weekday, returns 7
+                duration = consts.periodChildDuration[`${periodEnum}${childEnum}`];              // eg. childDurations.weekday, returns 7
             }
 
             //col the period and sets its relationship

@@ -1,7 +1,7 @@
 {
     "collection": {
         "version": "0.2",
-        "href": "http:/api.endpoints.<%= title %>.cloud.goog/energy/hse/week/20190204/1?site=9999",
+        "href": "http:/api.endpoints.sundaya.cloud.goog/energy/hse/week/20190204/1?site=9999",
         "links": [
             {   "rel": "self", "name": "week", "prompt": "Week", "title": "04/02/2019 - 10/02/2019",
                 "href": "http:/api.endpoints.sundaya.cloud.goog/energy/hse/week/20190204/1?site=9999"

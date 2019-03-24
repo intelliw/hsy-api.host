@@ -13,6 +13,16 @@ module.exports.energy = {
 };
 module.exports.energy.default = this.energy.hse;
 
+module.exports.energyData = {
+    hse: 'hse',
+    harvest: 'harvest',
+    storein: 'store.in',
+    storeout: 'store.out',
+    enjoy: 'enjoy',
+    gridin: 'grid.in',
+    gridout: 'grid.out'
+};
+
 module.exports.period = {
     instant: 'instant',
     second: 'second',
@@ -31,16 +41,6 @@ module.exports.period.default = this.period.week;
 module.exports.datasets = {
     MPPTSNMP: 'MPPT-SNMP',
     PMSEPACK: 'PMS-EPACK'
-};
-
-module.exports.energyData = {
-    hse: 'hse',
-    harvest: 'harvest',
-    storein: 'store.in',
-    storeout: 'store.out',
-    enjoy: 'enjoy',
-    gridin: 'grid.in',
-    gridout: 'grid.out'
 };
 
 module.exports.datasetsPMSEPACK = {
@@ -97,4 +97,10 @@ module.exports.linkRelations = {
     prev: 'prev'
 };
 
-
+// hypermedia link rendering values
+module.exports.linkRender = {
+    link: 'link',
+    image: 'image',
+    none : global.undefined
+};
+module.exports.linkRender.default = this.linkRender.none;
