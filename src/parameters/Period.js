@@ -29,8 +29,10 @@ class Period extends Param {
      "epoch": "20190204", "end": "20190204",
      "duration": "7",
      "rel": "collection", 
-     "render": "link", 
      "prompt": "Mon Feb 4th-Sun Feb 10th", "title": "04/02/19 - 10/02/19"
+     "render": "link", 
+     "_links: []"
+     "_children: []"
     * @param {*} period    // enums.period
     * @param {*} epoch     // date-time 
     * @param {*} duration  // positive integer
@@ -62,9 +64,33 @@ class Period extends Param {
         this.prompt = periodPrompt(this.epochInstant, this.endInstant, period);
         this.title = periodTitle(this.epochInstant, this.endInstant, period);   // "04/02/2019 - 10/02/2019";
         this.render = enums.linkRender.default;                                 // default is 'none'
+
+        // data arrays
+        this._links = global.undefined;                                         // undefined until requested through links()
+        this._children = global.undefined;                                      // undefined until requested through links()
+
+    }
+    // returns the linked periods i.e self, child, parent, next, previous. Use links() to populate and retrieve these in the _links private variable 
+    links() {
+
+        // get the links for the first time only    
+        if (!this._links) {
+            this._links = periodLinks(this);
+        }
+
+        return this._links;
     }
 
+    // returns the array of children. Use children() function to populate and retrieve these through the _children private variable 
+    children() {
 
+        // get the children for the first time only    
+        if (!this._children) {
+            this._children = periodChildren(this);
+        }
+
+        return this._children;
+    }
     // returns the next period 
     getNext() {
 
@@ -106,11 +132,11 @@ class Period extends Param {
         const periodEnum = this.value;
         let parentEnum = consts.periodParent[periodEnum];
 
-        if (parentEnum) {                                                           // fiveyear has no p[arent]    
+        if (parentEnum) {                                                       // fiveyear has no p[arent]    
             //create the period and sets its relationship
             parent = new Period(parentEnum, this.epochInstant, consts.DEFAULT_DURATION);
-            parent.rel = enums.linkRelations.up;                                    // up is the rel for the parent
-            parent.render = enums.linkRender.link;                                    // should be rendered as a link
+            parent.rel = enums.linkRelations.up;                                // up is the rel for the parent
+            parent.render = enums.linkRender.link;                              // should be rendered as a link
         }
 
         return parent;
@@ -147,16 +173,16 @@ class Period extends Param {
         let periods = [];
         const duration = this.duration;
         const period = this.value;
-        
-        const RENDER = enums.linkRender.link;           
+
+        const RENDER = enums.linkRender.link;
 
         // create the first one  
         let newPeriod = new Period(period, this.epochInstant, consts.DEFAULT_DURATION);
-        
+
 
         let p;
         for (p = 1; p <= duration; p++) {
-            
+
             newPeriod.render = RENDER;                  // set a consistent render value for the whole array 
             periods.push(newPeriod);                    // add to the array
             newPeriod = newPeriod.getNext();            // get the next 
@@ -165,23 +191,6 @@ class Period extends Param {
 
         return periods;
 
-    }
-
-    // returns the linked periods i.e self, child, parent, next, previous 
-    getLinks() {
-
-        let links = [];
-        let child = this.getChild();                  // e.g. fiveyear has no child
-        let parent = this.getParent();                  // e.g. instant has no parent
-
-        // create the links
-        links.push(this);                             // self
-        if (child) links.push(child);                 // child
-        if (parent) links.push(parent);               // parent
-        links.push(this.getNext());                   // next
-        links.push(this.getPrev());                   // prev
-
-        return links;
     }
 
     // returns the child of this period including the duration, which is the number of child periods in the period 
@@ -212,23 +221,40 @@ class Period extends Param {
         return child;
     }
 
-    // returns each individual period for the duration of the child period retuirned by getChild. Each period in the array will have a duration of 1, and there will be as many objects in the array as the original child period's duration 
-    getEachChild() {
+}
 
-        let periods;
-        let child = this.getChild();
+// returns each individual period for the duration of the child period of this period. Each period in the array will have a duration of 1, and there will be as many objects in the array as the original child period's duration 
+function periodChildren(period) {
 
-        // create the first one  
-        if (child) {
-           periods = child.getEach();
-        }
-        
-        return periods;
+    let childperiods = [];
+    let child = period.getChild();
 
+    // if there is a child
+    if (child) {
+        childperiods = child.getEach();
     }
+
+    return childperiods;
 
 }
 
+// returns an array of linked periods i.e self, child, parent, next, previous 
+function periodLinks(period) {
+
+    let links = [];
+
+    let child = period.getChild();                  // e.g. fiveyear has no child
+    let parent = period.getParent();                // e.g. instant has no parent
+
+    // create the links
+    links.push(period);                             // self
+    if (child) links.push(child);                   // child
+    if (parent) links.push(parent);                 // parent
+    links.push(period.getNext());                   // next
+    links.push(period.getPrev());                   // prev
+
+    return links;
+}
 
 // returns an epoch adjusted for the start of the period
 function periodEpoch(period, epoch, format) {
