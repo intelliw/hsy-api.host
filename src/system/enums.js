@@ -88,6 +88,15 @@ module.exports.timeOfDay = {
     night: 'night'
 };
 
+// mime types used in headers
+module.exports.mimeTypes = {
+    applicationCollectionJson : 'application/vnd.collection+json',
+    applicationJson : 'application/json',
+    textHtml : 'text/html',
+    textPlain : 'text/plain'
+};
+module.exports.mimeTypes.default = this.mimeTypes.applicationCollectionJson;
+
 // supported RFC8288 Link-relations for 'rel' property in Response objects
 module.exports.linkRelations = {
     self: 'self',

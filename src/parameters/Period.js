@@ -30,78 +30,51 @@ class Period extends Param {
      "duration": "7",
      "rel": "collection", 
      "prompt": "Mon Feb 4th-Sun Feb 10th", "title": "04/02/19 - 10/02/19"
-     "render": "link", 
-     "_links: []"
-     "_children: []"
-    * @param {*} period    // enums.period
+    * @param {*} periodEnum    // enums.period
     * @param {*} epoch     // date-time 
     * @param {*} duration  // positive integer
     */
-    constructor(period, epoch, duration) {
+    constructor(periodEnum, epoch, duration) {
 
         const PARAM_NAME = 'period';
 
         // period and duration 
-        period = enums.period[period] ? period : enums.period.default;          // check if period is valid,  set default if it is not
-        super(PARAM_NAME, period);                                              // e.g. name='period' value='week';' 
+        periodEnum = enums.period[periodEnum] ? periodEnum : enums.period.default;          // check if period is valid,  set default if it is not
+        super(PARAM_NAME, periodEnum);                                              // e.g. name='period' value='week';' 
         this.duration = duration ? duration : consts.DEFAULT_DURATION;
-        this.context = period;                                                  // by default context=period except in a collection and overwritten by getChild()
+        this.context = periodEnum;                                                  // by default context=period except in a collection and overwritten by getChild()
 
         // epoch and end millisecond timestamps                                 // validates and normalises the epoch and end for the supplied period and duration
         let valid = isEpochValid(epoch, MILLISECOND_FORMAT);                    // make sure epoch is a valid date-time 
         epoch = valid ? epoch : moment.utc().format(MILLISECOND_FORMAT);        // if not valid default to 'now'
-        epoch = periodEpoch(period, epoch, MILLISECOND_FORMAT);                 // normalise the epoch to the exact start of the period
+        epoch = periodEpoch(periodEnum, epoch, MILLISECOND_FORMAT);                 // normalise the epoch to the exact start of the period
         //..
         this.epochInstant = epoch;
-        this.endInstant = periodEnd(period, this.epochInstant, this.duration, MILLISECOND_FORMAT);   // period end - get the end date-time based on the epoch and duration 
+        this.endInstant = periodEnd(periodEnum, this.epochInstant, this.duration, MILLISECOND_FORMAT);   // period end - get the end date-time based on the epoch and duration 
 
         // epoch and end formatted timestamps
-        this.epoch = datetimeFormatISO(this.epochInstant, period);              // format for the period  
-        this.end = datetimeFormatISO(this.endInstant, period);
+        this.epoch = datetimeFormatISO(this.epochInstant, periodEnum);              // format for the period  
+        this.end = datetimeFormatISO(this.endInstant, periodEnum);
 
         // hypermedia properties 
         this.rel = enums.linkRelations.self;                                    // default is 'self' this is overwritten for parent, child, etc after construction
-        this.prompt = periodPrompt(this.epochInstant, this.endInstant, period);
-        this.title = periodTitle(this.epochInstant, this.endInstant, period);   // "04/02/2019 - 10/02/2019";
-        this.render = enums.linkRender.default;                                 // default is 'none'
+        this.prompt = periodPrompt(this.epochInstant, this.endInstant, periodEnum);
+        this.title = periodTitle(this.epochInstant, this.endInstant, periodEnum);   // "04/02/2019 - 10/02/2019";
 
         // data arrays
         this._links = global.undefined;                                         // undefined until requested through links()
-        this._children = global.undefined;                                      // undefined until requested through links()
-
-    }
-    // returns the linked periods i.e self, child, parent, next, previous. Use links() to populate and retrieve these in the _links private variable 
-    links() {
-
-        // get the links for the first time only    
-        if (!this._links) {
-            this._links = periodLinks(this);
-        }
-
-        return this._links;
     }
 
-    // returns the array of children. Use children() function to populate and retrieve these through the _children private variable 
-    children() {
-
-        // get the children for the first time only    
-        if (!this._children) {
-            this._children = periodChildren(this);
-        }
-
-        return this._children;
-    }
     // returns the next period 
     getNext() {
 
-        // add a milisecond to the period end to make it the next period's epoch
+        // add a millisecond to the end of this period to get the start of the next period
         let epoch = moment.utc(this.endInstant).add(1, 'milliseconds').format(MILLISECOND_FORMAT);
 
         //create the period and sets its relationship
         const periodEnum = this.value;
         let next = new Period(periodEnum, epoch, consts.DEFAULT_DURATION);
         next.rel = enums.linkRelations.next;
-        next.render = enums.linkRender.link;                                    // should be rendered as a link
 
         return next;
 
@@ -110,14 +83,13 @@ class Period extends Param {
     // returns the previous period 
     getPrev() {
 
-        // subtract a milisecond from the period epoch to get the previous period's epoch
+        // subtract a milisecond from the period epoch to get an instant from the previous period
         let epoch = moment.utc(this.epochInstant).subtract(1, 'milliseconds').format(MILLISECOND_FORMAT);
 
         //create the period and sets its relationship
         const periodEnum = this.value;
         let prev = new Period(periodEnum, epoch, consts.DEFAULT_DURATION);
         prev.rel = enums.linkRelations.prev;
-        prev.render = enums.linkRender.link;                                    // should be rendered as a link
 
         return prev;
 
@@ -136,7 +108,6 @@ class Period extends Param {
             //create the period and sets its relationship
             parent = new Period(parentEnum, this.epochInstant, consts.DEFAULT_DURATION);
             parent.rel = enums.linkRelations.up;                                // up is the rel for the parent
-            parent.render = enums.linkRender.link;                              // should be rendered as a link
         }
 
         return parent;
@@ -171,26 +142,25 @@ class Period extends Param {
 
 
         let periods = [];
-        const duration = this.duration;
-        const period = this.value;
-
-        const RENDER = enums.linkRender.link;
-
-        // create the first one  
-        let newPeriod = new Period(period, this.epochInstant, consts.DEFAULT_DURATION);
-
+        const periodEnum = this.value;
 
         let p;
+
+        const duration = this.duration;
+        let epoch = this.epoch;
+
         for (p = 1; p <= duration; p++) {
 
-            newPeriod.render = RENDER;                  // set a consistent render value for the whole array 
-            periods.push(newPeriod);                    // add to the array
-            newPeriod = newPeriod.getNext();            // get the next 
+            // create a period object and add it to the array 
+            let period = new Period(periodEnum, epoch, consts.DEFAULT_DURATION);
+            periods.push(period);                    // add to the array
+
+            // get the next epoch - add a millisecond to the end of this period to get the epoch (start) of the next period
+            epoch = moment.utc(period.endInstant).add(1, 'milliseconds').format(MILLISECOND_FORMAT);
 
         }
 
         return periods;
-
     }
 
     // returns the child of this period including the duration, which is the number of child periods in the period 
@@ -221,45 +191,28 @@ class Period extends Param {
         return child;
     }
 
-}
+    // returns each individual period for the duration of this period's child period . Each period in the array will have a duration of 1, and there will be as many objects in the array as the original child period's duration 
+    getEachChild() {
 
-// returns each individual period for the duration of the child period of this period. Each period in the array will have a duration of 1, and there will be as many objects in the array as the original child period's duration 
-function periodChildren(period) {
 
-    let childperiods = [];
-    let child = period.getChild();
+        let childperiods = [];
 
-    // if there is a child
-    if (child) {
-        childperiods = child.getEach();
+        let child = this.getChild();
+
+        // if there is a child
+        if (child) {
+            childperiods = child.getEach();
+        }
+
+        return childperiods;
     }
 
-    return childperiods;
-
-}
-
-// returns an array of linked periods i.e self, child, parent, next, previous 
-function periodLinks(period) {
-
-    let links = [];
-
-    let child = period.getChild();                  // e.g. fiveyear has no child
-    let parent = period.getParent();                // e.g. instant has no parent
-
-    // create the links
-    links.push(period);                             // self
-    if (child) links.push(child);                   // child
-    if (parent) links.push(parent);                 // parent
-    links.push(period.getNext());                   // next
-    links.push(period.getPrev());                   // prev
-
-    return links;
 }
 
 // returns an epoch adjusted for the start of the period
-function periodEpoch(period, epoch, format) {
+function periodEpoch(periodEnum, epoch, format) {
 
-    switch (period) {
+    switch (periodEnum) {
 
         // epoch format YYYYMMDDTHHmmss.SSS -----------------------------------              
         case enums.period.instant:
@@ -299,7 +252,7 @@ function periodEpoch(period, epoch, format) {
         case enums.period.month:
         case enums.period.quarter:
         case enums.period.year:
-            epoch = moment.utc(epoch).startOf(period).format(format);       // get the start of the period 
+            epoch = moment.utc(epoch).startOf(periodEnum).format(format);       // get the start of the period 
             break;
 
     }
@@ -309,12 +262,12 @@ function periodEpoch(period, epoch, format) {
 }
 
 // returns the end of the period based on its epoch and duration 
-function periodEnd(period, epoch, duration, format) {
+function periodEnd(periodEnum, epoch, duration, format) {
 
     let periodEnd;
     let periodsToAdd = (duration - 1);                      // add these periods to the period to get the end of the duration which starts at epoch
 
-    switch (period) {
+    switch (periodEnum) {
 
         case enums.period.instant:
             periodEnd = moment.utc(epoch).add(periodsToAdd, 'milliseconds').format(format);
@@ -345,7 +298,7 @@ function periodEnd(period, epoch, duration, format) {
         case enums.period.quarter:
         case enums.period.year:
             // @ts-ignore
-            periodEnd = moment.utc(epoch).add(periodsToAdd, `${period}s`).endOf(period).format(format);
+            periodEnd = moment.utc(epoch).add(periodsToAdd, `${periodEnum}s`).endOf(periodEnum).format(format);
             break;
     }
 
@@ -410,46 +363,46 @@ function selectTimeOfDay(epoch) {
 }
 
 // formats the instant in compressed ISO datetime format
-function datetimeFormatISO(instant, period) {
+function datetimeFormatISO(instant, periodEnum) {
 
-    const format = consts.periodDatetimeISO[period];                    // get the comnpressed format string 
+    const format = consts.periodDatetimeISO[periodEnum];                    // get the comnpressed format string 
     return moment.utc(instant).format(format);                          // return formatted 
 
 }
 
 // formats the instant in general datetime format
-function datetimeFormatGeneral(instant, period) {
+function datetimeFormatGeneral(instant, periodEnum) {
 
-    const format = consts.periodDatetimeGeneral[period];                // get the format string without copmpression
+    const format = consts.periodDatetimeGeneral[periodEnum];                // get the format string without copmpression
     return moment.utc(instant).format(format);                          // return formatted 
 
 }
 
 // returns a formatted string for the title property ("04/02/2019 - 10/02/2019")
-function periodTitle(epoch, end, period) {
+function periodTitle(epoch, end, periodEnum) {
 
-    let epochStr = datetimeFormatGeneral(epoch, period);
-    let endStr = datetimeFormatGeneral(end, period);
+    let epochStr = datetimeFormatGeneral(epoch, periodEnum);
+    let endStr = datetimeFormatGeneral(end, periodEnum);
     let titleStr = (epochStr == endStr) ? epochStr : `${epochStr} - ${endStr}`;
     return titleStr;                                                    // return formatted title
 
 }
 
 // returns a formatted string for the prompt property (e.g. "Week 13 2019" or "Week 13 2019 - Week 13 2019" if duration is > 1 )
-function periodPrompt(epoch, end, period) {
+function periodPrompt(epoch, end, periodEnum) {
 
-    let epochStr = datetimeLabel(epoch, period);
-    let endStr = datetimeLabel(end, period);
+    let epochStr = datetimeLabel(epoch, periodEnum);
+    let endStr = datetimeLabel(end, periodEnum);
     let promptStr = (epochStr == endStr) ? epochStr : `${epochStr} - ${endStr}`;
     return promptStr;                                                    // return formatted title
 
 };
 
 // returns a formatted label for the period and instant  (e.g. "Week 13 2019")
-function datetimeLabel(instant, period) {
+function datetimeLabel(instant, periodEnum) {
     let label;
     let year = moment.utc(instant).format('YYYY');
-    switch (period) {
+    switch (periodEnum) {
 
         case enums.period.instant:              // 'Instant 090623.554'
             label = `Instant ${moment.utc(instant).format('HHmmss.SSS')}`;
@@ -496,7 +449,7 @@ function datetimeLabel(instant, period) {
             break;
 
         default:
-            label = utils.capitalise(period);
+            label = utils.capitalise(periodEnum);
             break;
     }
     return label;

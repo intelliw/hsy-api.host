@@ -75,7 +75,7 @@ router.get('/allperiods/:epoch?/:duration?', (req, res, next) => {
         .status(200)
         .json({
             params: msg,
-            EACH: timeofdaychild.getEach(),
+            EACHWEEK: week.getEach(),
             INSTANTPREV: instantprev, INSTANT: instant, INSTANTNEXT: instantnext, INSTANTPARENT: instantparent,INSTANTCHILD: instantchild,
             SECONDPREV: secondprev, SECOND: second, SECONDNEXT: secondnext, SECONDPARENT: secondparent,SECONDCHILD: secondchild,
             MINUTEPREV: minuteprev, MINUTE: minute, MINUTENEXT: minutenext, MINUTEPARENT: minuteparent,MINUTECHILD: minutechild,
@@ -109,7 +109,7 @@ router.get('/car', (req, res, next) => {
     //let car = {engine: '2.0L', start: 'proximity'};
 
     // choose the ejs template here and also the response content type, based on the request Accepts header 
-    let contentType = (req.accepts(consts.mimeTypes.textHtml)) ? consts.mimeTypes.textHtml : consts.mimeTypes.applicationCollectionJson;
+    let contentType = (req.accepts(enums.mimeTypes.textHtml)) ? enums.mimeTypes.textHtml : enums.mimeTypes.applicationCollectionJson;
 
     let paramE = new Param.Period('week', '20190321', 1);
     console.log('paramE Name = ' + paramE.name + ', paramE Value = ' + paramE.value);
@@ -118,7 +118,7 @@ router.get('/car', (req, res, next) => {
     res
         .status(200)
         .type(contentType)                              // same as res.set('Content-Type', 'text/html')
-        .render('welcome', { user: 'Any User?', title: 'homepage', car: car, bus: bus });
+        .render('TEST_welcome', { user: 'Any User?', title: 'homepage', car: car, bus: bus });
 
 });
 

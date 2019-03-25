@@ -3,7 +3,6 @@
 /**
  * ./definitions/Link.js
  *  data object for JSON collection link
- * 
  */
 
 // stores data values for a json collection object 

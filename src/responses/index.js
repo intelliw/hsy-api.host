@@ -1,6 +1,6 @@
 //@ts-check
 /**
- * ./response/index.js
+ * ./responses/index.js
  * 
  * view templates  
  */

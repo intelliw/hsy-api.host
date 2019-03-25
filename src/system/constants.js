@@ -11,15 +11,6 @@ module.exports.folders = {
     VIEWS: path.dirname(require.resolve('../responses'))
 };
 
-// mime types used in headers
-module.exports.mimeTypes = {
-    applicationJson : 'application/json',
-    applicationCollectionJson : 'application/vnd.collection+json',
-    textHtml : 'text/html',
-    textPlain : 'text/plain'
-};
-
-
 // the starting hour of each timeofday 
 module.exports.timeOfDayStart = {
     morning: '6',
