@@ -2,5 +2,7 @@
 /**
  * ./responses/index.js
  * 
- * view templates  
+ * view templates and headers 
  */
+module.exports = require('./Response');
+module.exports.Headers = require('./Headers');
