@@ -5,5 +5,8 @@
  * 
  */
 
+module.exports = require('./Definitions');
+module.exports.Collection = require('./Collection');
+module.exports.Items = require('./Items');
+module.exports.Links = require('./Links');
 module.exports.Data = require('./Data');
-module.exports.EnergyData = require('./EnergyData');

@@ -12,7 +12,7 @@ class Headers {
     constructor(request) {
         
         this.contentType = selectMimeType(request.accepts());;
-     
+        
     }
 
 }

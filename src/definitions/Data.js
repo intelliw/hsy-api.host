@@ -1,18 +1,27 @@
 //@ts-check
 "use strict";
 /**
- * ./definitions/Link.js
- *  data object for JSON collection link
+ * ./definitions/Data.js
+ *  object for storing Data elements for a JSON collection 
  */
 
-// stores data values for a json collection object 
-class Data {
-    constructor(name, value) {
+// stores data rows for a json collection  
+const Definitions = require('./Definitions');
 
-        // name and value
-        this.name = name;
-        this.value = value;
+class Data extends Definitions {
+
+    constructor() {
+
+        super();
+
     }
+
+    add(name, value) {
+
+        super.add({ "name": name, "value": value });
+
+    }
+
 }
 
 
