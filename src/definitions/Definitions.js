@@ -7,6 +7,7 @@
 
 // stores data rows for a json collection  
 class Definitions {
+    
     constructor() {
 
         this._elements = [];         // starts with an empy array

@@ -7,6 +7,7 @@
 
 // stores data rows for a json collection  
 const Definitions = require('./Definitions');
+const enums = require('../system/enums');
 
 class Links extends Definitions {
 
@@ -18,12 +19,11 @@ class Links extends Definitions {
 
     add(name, rel, prompt, title, href, render) {
 
+
         // add with or without render (some links do not declare a render attribute)     
-        if (render) {
-            super.add({ "rel": rel, "name": name, "prompt": prompt, "title": title, "href": href, "render": render });
-        } else {
-            super.add({ "rel": rel, "name": name, "prompt": prompt, "title": title, "href": href });
-        }
+        let link = { "name": name, "rel": rel, "prompt": prompt, "title": title, "href": href, "render": render };
+        
+        super.add(link);
 
     }
 }

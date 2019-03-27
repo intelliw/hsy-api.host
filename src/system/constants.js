@@ -3,7 +3,7 @@
  * ./svc/constant.js
  * global constants
  */
-let path = require('path');                     // this is a node package not the '../paths' applicaiton module
+const path = require('path');                     // this is a node package not the '../paths' applicaiton module
 const enums = require('./enums');
 
 // folder locations
