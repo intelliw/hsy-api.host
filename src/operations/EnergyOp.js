@@ -9,7 +9,7 @@ const enums = require('../system/enums');
 const consts = require('../system/constants');
 
 const Definitions = require('../definitions');
-const Collection = require('../definitions/Collection');
+const Collections = require('../definitions/Collections');
 const Response = require('../responses');
 
 const Op = require('./Op');
@@ -25,7 +25,7 @@ class EnergyOp extends Op{
         super();
 
         // perform the operation
-        let collections = [];                // the collections array will store an array of collections, one for  each period in the duration 
+        let collections = new Collections();                // the collections array will store an array of collections, one for  each period in the duration 
         let links; let items; let collection;
         // ..
         // get a collection for each period in the duration
@@ -36,18 +36,15 @@ class EnergyOp extends Op{
             links = new Definitions.Links.EnergyLinks(energy, period, site, enums.linksType.collection);
             items = getItems(energy, period, site);
 
-            // create a collection
-            collection = new Collection(consts.CURRENT_VERSION, links.href, links, items);
-
             // add each collection to the collections array
-            collections.push(collection);
+            collections.add(consts.CURRENT_VERSION, links.href, links, items);
 
         });
 
         // create a response
         let view = 'collections';                                               // todo: this should be selected dynamically
         let headers = new Response.Headers(requestHeaders);                     // the accepts headers should be used to decide on the view
-        this.response = new Response(view, 200, collections, headers);
+        this.response = new Response(view, 200, collections.getElements(), headers);
 
     }
 

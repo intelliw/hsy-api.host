@@ -31,20 +31,22 @@ router.get('/:energy?/periods/:period?/:epoch?/:duration?', (req, res, next) => 
     // call the operation to get the data, also passing in the accepts headers which will be used to rdecide on a view  
     let energyOp = new EnergyOp(energy, period, site, req.accepts());
     let response = energyOp.response;
-
     
-    /* ---------------------------------
+    
+    console.log(response.headers.contentType);
+    // console.log(response.data);
+    
+    // /* ---------------------------------
     res
-        .status(200)
-        .type(contentType)                                  // same as res.set('Content-Type', 'text/html')
-        .render('collection', {
-            p: periods, e: energy.value, s: site.value,
-            v: consts.CURRENT_VERSION, h: consts.API_HOST
+        .status(response.status)
+        .type(response.headers.contentType)
+        .render(response.view, {
+            collections: response.data
         });
-    */
+    // */
 
-    // [debug START] =========================================================
-    let periods = period.getEach();
+
+    /* [debug START] =========================================================---------------------------------
     console.log(`${energy.value}, ${period.value}, ${period.epochInstant}, ${period.endInstant}, ${period.duration}, ${site.value}, ${response.headers.contentType}`);
     let collections = response.data;
     res
@@ -52,8 +54,7 @@ router.get('/:energy?/periods/:period?/:epoch?/:duration?', (req, res, next) => 
         .type(response.headers.contentType)
         .json({ collections })
         .end();
-    // [debug END] ===========================================================
-
+    */ // [debug END] ===========================================================
 
 });
 

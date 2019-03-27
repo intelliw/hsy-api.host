@@ -29,7 +29,8 @@ function selectMimeType(reqAcceptHdrs) {
         header = e.applicationJson;
 
     } else if (reqAcceptHdrs.includes(e.textHtml)) {
-        header = e.textHtml;
+        header = e.textHtml;                               // todo:  develope a viewfor text/html 
+        
 
     } else if (reqAcceptHdrs.includes(e.textPlain)) {
         header = e.textPlain;
