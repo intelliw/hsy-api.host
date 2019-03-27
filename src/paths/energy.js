@@ -28,17 +28,11 @@ router.get('/:energy?/periods/:period?/:epoch?/:duration?', (req, res, next) => 
     let period = new Param.Period(req.params.period, req.params.epoch, req.params.duration);
     let site = new Param('site', req.query.site, consts.DEFAULT_SITE);
 
+    // call the operation to get the data, also passing in the accepts headers which will be used to rdecide on a view  
+    let energyOp = new EnergyOp(energy, period, site, req.accepts());
+    let response = energyOp.response;
 
-    // call the operation to get the data objects 
-    let energyOp = new EnergyOp(energy, period, site);
-
-
-
-    // check the content type -choose the ejs template depending on the type here 
-
-    // render the response
-    let response = new Response(req, 'collections', 200);
-
+    
     /* ---------------------------------
     res
         .status(200)
@@ -51,15 +45,12 @@ router.get('/:energy?/periods/:period?/:epoch?/:duration?', (req, res, next) => 
 
     // [debug START] =========================================================
     let periods = period.getEach();
-    let msg = `${energy.value}, ${period.value}, ${period.epochInstant}, ${period.endInstant}, ${period.duration}, ${site.value}, ${response.headers.contentType}`;
-    console.log(msg);
-    //console.log(data.getElements());
-    // let collections = []; collections.push({ 'collection': periods[0] }); collections.push({ 'collection': periods[1] });
-    let collections = energyOp.collections;
+    console.log(`${energy.value}, ${period.value}, ${period.epochInstant}, ${period.endInstant}, ${period.duration}, ${site.value}, ${response.headers.contentType}`);
+    let collections = response.data;
     res
-        .status(200)
+        .status(response.status)
         .type(response.headers.contentType)
-        .json({ msg, collections})
+        .json({ collections })
         .end();
     // [debug END] ===========================================================
 

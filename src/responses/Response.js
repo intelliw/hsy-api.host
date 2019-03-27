@@ -9,13 +9,12 @@
 const Headers = require('./headers');
 
 class Response {
-    constructor(req, view, status, data) {
-        
+    constructor(view, status, data, responseHeaders) {
+        this.view = view;
         this.status = status;
         this.data = data;
-        this.headers = new Headers(req);
+        this.headers = responseHeaders;
     }
 }
 
 module.exports = Response;
-module.exports.headers = this.headers;

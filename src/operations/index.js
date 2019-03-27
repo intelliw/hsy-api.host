@@ -5,4 +5,5 @@
  * api operations
  * 
  */
+module.exports = require('./Op');
 module.exports.EnergyOp = require('./EnergyOp');

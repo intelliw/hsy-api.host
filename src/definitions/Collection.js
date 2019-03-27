@@ -2,7 +2,7 @@
 "use strict";
 /**
  * ./definitions/Collection.js
- *  generic data object for storing an object array
+ *  generic JSON collection object 
  */
 
 // stores all the elements of a json collection:

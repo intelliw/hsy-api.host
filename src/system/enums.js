@@ -113,3 +113,9 @@ module.exports.linkRender = {
     none : global.undefined
 };
 module.exports.linkRender.default = this.linkRender.none;
+
+// the two types of links in a JSON collection
+module.exports.linksType = {
+    collection: 'collection',      // top level links
+    items: 'items',                // item links
+};

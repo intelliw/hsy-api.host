@@ -1,0 +1,27 @@
+[
+<% for(var i=0; i < p.length; i++) { l=p[i].links(); c=p[i].children(); %> {
+   "collection": {
+       "version": "<%= v %>",
+       "href": "http:/<%= h %>/energy/<%= e %>/<%= p[i].value %>/<%= p[i].epoch %>/<%= p[i].duration %>?site=<%= s %>", 
+       "links": [<% for(var x=0; x < l.length; x++) { %>
+           { "rel": "<%= l[x].rel %>", "name": "<%= l[x].context %>", "prompt": "<%= l[x].prompt %>", "title": "<%= l[x].title %>",
+             "href": "http:/<%= h %>/energy/<%= e %>/<%= l[x].value %>/<%= l[x].epoch %>/<%= l[x].duration %>?site=<%= s %>"<% if (l[x].render) { %>, "render": "<%= l[x].render %>"<% } %>
+           }<% if (x < (l.length - 1)) { %>,<% } %>
+       <% } %>],
+       "items": [<% for(var z=0; z < c.length; z++) { lc=c[i].getChild(); %>
+           { "href": "http:/<%= h %>/energy/<%= e %>/<%= c[z].value %>/<%= c[z].epoch %>/<%= c[z].duration %>?site=<%= s %>"<% if (c[z].render) { %>, "render": "<%= c[z].render %>"<% } %>,
+             "links": [
+                { "rel": "<%= c[z].rel %>", "name": "<%= c[z].context %>", "prompt": "<%= c[z].prompt %>", "title": "<%= c[z].title %>",
+                "href": "http:/<%= h %>/energy/<%= e %>/<%= c[z].value %>/<%= c[z].epoch %>/<%= c[z].duration %>?site=<%= s %>"<% if (c[z].render) { %>, "render": "<%= c[z].render %>"<% } %>
+                },
+                { "rel": "<%= lc.rel %>", "name": "<%= lc.context %>", "prompt": "<%= lc.prompt %>", "title": "<%= lc.title %>",
+                "href": "http:/<%= h %>/energy/<%= e %>/<%= lc.value %>/<%= lc.epoch %>/<%= lc.duration %>?site=<%= s %>"<% if (lc.render) { %>, "render": "<%= lc.render %>"<% } %>
+                }
+             ],          
+             "data": [   
+             ]
+           }<% if (z < (c.length - 1)) { %>,<% } %>
+       <% } %>]
+   }
+ }<% if(i < (p.length - 1)) { %>,<% } %>
+<% } %>]

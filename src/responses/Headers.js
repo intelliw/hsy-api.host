@@ -9,10 +9,9 @@ const enums = require('../system/enums');
 
 // response header class retriueves request headers and stores property values for adding to a response 
 class Headers {
-    constructor(request) {
+    constructor(requestAccepts) {
         
-        this.contentType = selectMimeType(request.accepts());;
-        
+        this.contentType = selectMimeType(requestAccepts);;
     }
 
 }

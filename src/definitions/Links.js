@@ -17,11 +17,11 @@ class Links extends Definitions {
 
     }
 
-    add(name, rel, prompt, title, href, render) {
+    add(rel, name, prompt, title, href, render) {
 
 
         // add with or without render (some links do not declare a render attribute)     
-        let link = { "name": name, "rel": rel, "prompt": prompt, "title": title, "href": href, "render": render };
+        let link = { "rel": rel, "name": name, "prompt": prompt, "title": title, "href": href, "render": render };
         
         super.add(link);
 
@@ -31,3 +31,4 @@ class Links extends Definitions {
 
 
 module.exports = Links;
+module.exports.EnergyLinks = require('./EnergyLinks');;
