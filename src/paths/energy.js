@@ -33,8 +33,8 @@ router.get('/:energy?/periods/:period?/:epoch?/:duration?', (req, res, next) => 
     let response = energyOp.response;
     
     
-    console.log(response.headers.contentType);
-    // console.log(response.data);
+    // console.log(response.headers.contentType);
+    // console.log(response.data[0].collection.items[0]);
     
     // /* ---------------------------------
     res
