@@ -123,7 +123,7 @@ function itemData(energy, period, site) {
         data.add(`${dataName}.${period.context}`, periodValue);
 
     });
-    
+
     // grandchild - space delimited data values
     let periodChild = period.getChild();
     if (periodChild) {
@@ -131,7 +131,7 @@ function itemData(energy, period, site) {
 
         dataNames.forEach(dataName => {
             let periodValue = utils.MOCK_randomValues(minmax.min, minmax.max, periodChild.duration)
-            data.add(`${dataName}.$s{periodChild.context}`, periodValue);
+            data.add(`${dataName}.${periodChild.context}`, periodValue);
         });
 
     }
