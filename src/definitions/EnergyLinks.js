@@ -12,37 +12,26 @@ const consts = require('../system/constants');
 
 class EnergyLinks extends Links {
 
-    constructor(energy, period, site, linksType) {
+    constructor(energy, period, site) {
 
         super();
-        
-        this.href = periodHref(energy, period, site);
-        
-        // top level links
-        if (linksType == enums.linksType.collection) {
-            
-            this.addLink(energy, period, site, enums.linkRender.none);                    // 'self' not rendered as a link
-            this.addLink(energy, period.getChild(), site, enums.linkRender.none);         // 'child ('collection') not rendered as a link
-            this.addLink(energy, period.getParent(), site, enums.linkRender.link);
-            this.addLink(energy, period.getNext(), site, enums.linkRender.link);
-            this.addLink(energy, period.getPrev(), site, enums.linkRender.link);
-            
-            // item links
-        } else if (linksType == enums.linksType.items) {
-            
-            this.addLink(energy, period, site, enums.linkRender.link);                  // the child period ('self') is rendered 
-            this.addLink(energy, period.getChild(), site, enums.linkRender.none);       // the grandchild - not rendered
 
-        }
+        this.energy = energy;                                    // store energy and site in the object for addLink when links are added for more periods
+        this.site = site;
+
+        this.href = periodHref(energy, period, site);            // this href is used for the whole collection 
+
+        // these two links are needed for both collections and for items - add others after construction if needed e.g. for collections
+        this.addLink(period,enums.linkRender.link);                   // 'self' is rendered 
+        this.addLink(period.getChild(), enums.linkRender.none);       // the child - not rendered
 
     }
 
-
     // adds a link if the period exist
-    addLink(energy, period, site, render) {
+    addLink(period, render) {
 
         if (period) {
-            let href = periodHref(energy, period, site);                                     
+            let href = periodHref(this.energy, period, this.site);
             super.add(period.rel, period.context, period.prompt, period.title, href, render);
         }
     }

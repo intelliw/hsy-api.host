@@ -6,14 +6,13 @@
  * 
  */
 // creates a response objectr for rendering and sending. 
-const Headers = require('./headers');
 
 class Response {
-    constructor(view, status, data, responseHeaders) {
+    constructor(view, status, data, mimetype) {
         this.view = view;
         this.status = status;
         this.data = data;
-        this.headers = responseHeaders;
+        this.contentType = mimetype;
     }
 }
 

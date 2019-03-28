@@ -12,9 +12,8 @@ const router = express.Router();
 const enums = require('../system/enums');
 const consts = require('../system/constants');
 
-const Param = require('../parameters');
 const Response = require('../responses');
-const EnergyOp = require('../operations/EnergyOp');
+const Request = require('../operations');
 
 // [energy.type.period.epoch.get] /energy/{energy}/{period}/{epoch}/{number}
 router.get('/:energy?/periods/:period?/:epoch?/:duration?', (req, res, next) => {
@@ -23,23 +22,18 @@ router.get('/:energy?/periods/:period?/:epoch?/:duration?', (req, res, next) => 
     energy, site, period -> including next/prev/parent/child periods, with durations
     param objects have all the data needed for the 
      */
-    // validate and default request parameters and headers (btw Param constructor is name, value, default, enum)
-    let energy = new Param('energy', req.params.energy, enums.energy.default, enums.energy);
-    let period = new Param.Period(req.params.period, req.params.epoch, req.params.duration);
-    let site = new Param('site', req.query.site, consts.DEFAULT_SITE);
 
-    // call the operation to get the data, also passing in the accepts headers which will be used to rdecide on a view  
-    let energyOp = new EnergyOp(energy, period, site, req.accepts());
-    let response = energyOp.response;
+    // setup the request passing in the params, query, and accept headers (which will decide the view)
+    let request = new Request.EnergyRequest(req.accepts());
+    let response = request.execute(req.params, req.query);           // execute the operation and return a response 
     
-    
-    // console.log(response.headers.contentType);
+    // console.log(response.contentType);
     // console.log(response.data[0].collection.items[0]);
     
     // /* ---------------------------------
     res
         .status(response.status)
-        .type(response.headers.contentType)
+        .type(response.contentType)
         .render(response.view, {
             collections: response.data
         });
@@ -47,11 +41,13 @@ router.get('/:energy?/periods/:period?/:epoch?/:duration?', (req, res, next) => 
 
 
     /* [debug START] =========================================================---------------------------------
-    console.log(`${energy.value}, ${period.value}, ${period.epochInstant}, ${period.endInstant}, ${period.duration}, ${site.value}, ${response.headers.contentType}`);
     let collections = response.data;
+    
+    console.log(collections);
+    
     res
         .status(response.status)
-        .type(response.headers.contentType)
+        .type(response.contentType)
         .json({ collections })
         .end();
     */ // [debug END] ===========================================================
