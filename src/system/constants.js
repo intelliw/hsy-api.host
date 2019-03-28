@@ -50,7 +50,7 @@ module.exports.periodParent = {
 // child periods
 module.exports.periodChild = {
     instant: global.undefined,                // instant has no child
-    second: enums.period.instant,
+    second: enums.period.instant,             // to prevent perf issues with the itemdata for instant should only return instants whgich have data ( do not return zero value items)
     minute: enums.period.second,
     hour: enums.period.minute,
     timeofday: enums.period.hour,

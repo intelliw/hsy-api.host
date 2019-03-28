@@ -39,30 +39,32 @@ class Period extends Param {
         const PARAM_NAME = 'period';
 
         // period and duration 
-        periodEnum = enums.period[periodEnum] ? periodEnum : enums.period.default;          // check if period is valid,  set default if it is not
-        super(PARAM_NAME, periodEnum);                                              // e.g. name='period' value='week';' 
-        this.duration = duration ? duration : consts.DEFAULT_DURATION;
-        this.context = periodEnum;                                                  // by default context=period except in a collection and overwritten by getChild()
+        periodEnum = enums.period[periodEnum] ? periodEnum : enums.period.default;      // check if period is valid,  set default if it is not
+        super(PARAM_NAME, periodEnum);                                                  // e.g. name='period' value='week';' 
 
-        // epoch and end millisecond timestamps                                 // validates and normalises the epoch and end for the supplied period and duration
-        let valid = isEpochValid(epoch, MILLISECOND_FORMAT);                    // make sure epoch is a valid date-time 
-        epoch = valid ? epoch : moment.utc().format(MILLISECOND_FORMAT);        // if not valid default to 'now'
-        epoch = periodEpoch(periodEnum, epoch, MILLISECOND_FORMAT);                 // normalise the epoch to the exact start of the period
+        this.duration = duration ? duration : consts.DEFAULT_DURATION;
+
+        this.context = periodEnum;                                                      // by default context=period except in a collection and overwritten by getChild()
+
+        // epoch and end millisecond timestamps                                         // validates and normalises the epoch and end for the supplied period and duration
+        let valid = isEpochValid(epoch, MILLISECOND_FORMAT);                            // make sure epoch is a valid date-time 
+        epoch = valid ? epoch : moment.utc().format(MILLISECOND_FORMAT);                // if not valid default to 'now'
+        epoch = periodEpoch(periodEnum, epoch, MILLISECOND_FORMAT);                     // normalise the epoch to the exact start of the period
         //..
         this.epochInstant = epoch;
         this.endInstant = periodEnd(periodEnum, this.epochInstant, this.duration, MILLISECOND_FORMAT);   // period end - get the end date-time based on the epoch and duration 
 
         // epoch and end formatted timestamps
-        this.epoch = datetimeFormatISO(this.epochInstant, periodEnum);              // format for the period  
+        this.epoch = datetimeFormatISO(this.epochInstant, periodEnum);                  // format for the period  
         this.end = datetimeFormatISO(this.endInstant, periodEnum);
 
         // hypermedia properties 
-        this.rel = enums.linkRelations.self;                                    // default is 'self' this is overwritten for parent, child, etc after construction
+        this.rel = enums.linkRelations.self;                                            // default is 'self' this is overwritten for parent, child, etc after construction
         this.prompt = periodPrompt(this.epochInstant, this.endInstant, periodEnum);
-        this.title = periodTitle(this.epochInstant, this.endInstant, periodEnum);   // "04/02/2019 - 10/02/2019";
+        this.title = periodTitle(this.epochInstant, this.endInstant, periodEnum);       // "04/02/2019 - 10/02/2019";
 
         // data arrays
-        this._links = global.undefined;                                         // undefined until requested through links()
+        this._links = global.undefined;                                                 // undefined until requested through links()
     }
 
     // returns the next period 
@@ -318,24 +320,27 @@ function isEpochValid(epoch, format) {
 
     const ISO8601_TIME_DELIMITER = 'T';
 
+    let isValid;
+
     // check if date is valid. 
-    let date = epoch;
-    if (epoch.indexOf(ISO8601_TIME_DELIMITER) >= 0) {                               // if there is a time component
-        date = epoch.substring(0, epoch.indexOf(ISO8601_TIME_DELIMITER) + 1);       // get the date part
+    if (epoch) {                                                                        // first check if there was a date     
+        let date = epoch;
+        if (epoch.indexOf(ISO8601_TIME_DELIMITER) >= 0) {                               // if there is a time component
+            date = epoch.substring(0, epoch.indexOf(ISO8601_TIME_DELIMITER) + 1);       // get the date part
+        }
+
+        isValid = (moment.utc(date, format).isValid());
+        isValid = isValid && (date.length >= MIN_DATE_LENGTH);                          // enforce minimum length
+
+        //check if time is valid 
+        if (epoch.indexOf(ISO8601_TIME_DELIMITER) >= 0) {                               // if there is a time component
+            let time = epoch.substring(epoch.indexOf(ISO8601_TIME_DELIMITER) + 1);      // get the time part 
+            isValid = isValid && (time.length == HOURS_LENGTH
+                || time.length == MINUTES_LENGTH
+                || time.length == SECONDS_LENGTH
+                || time.length == MILLISECONDS_LENGTH);                                 // enforce minimum length
+        }
     }
-
-    let isValid = (moment.utc(date, format).isValid());
-    isValid = isValid && (date.length >= MIN_DATE_LENGTH);                          // enforce minimum length
-
-    //check if time is valid 
-    if (epoch.indexOf(ISO8601_TIME_DELIMITER) >= 0) {                               // if there is a time component
-        let time = epoch.substring(epoch.indexOf(ISO8601_TIME_DELIMITER) + 1);      // get the time part 
-        isValid = isValid && (time.length == HOURS_LENGTH
-            || time.length == MINUTES_LENGTH
-            || time.length == SECONDS_LENGTH
-            || time.length == MILLISECONDS_LENGTH);                                 // enforce minimum length
-    }
-
     return isValid
 }
 

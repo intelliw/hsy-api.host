@@ -64,9 +64,18 @@ module.exports.MOCK_randomValues = (min, max, duration) => {
     min = min * precision;                                      // adjust before dividing for decimal place
     max = max * precision;
 
+    let numelements = duration;
+
+    // ----------- 
+    // this is to prevent perf issues with the itemdata for instant - in the final implementation the child and grandchild item dats should only return instants whgich have data ( do not return zero value items)
+    const CAP = 60                                              
+    numelements = numelements > CAP ? CAP : numelements;
+    // --------------
+    
     let p; let randomNum; let values;
 
-    for (p = 1; p <= duration; p++) {
+    
+    for (p = 1; p <= numelements; p++) {
         randomNum = (Math.floor(Math.random() * max) + min) / precision;
 
         values = p == 1 ? '' : values + ' ';        // pad a space after the 1st iteration

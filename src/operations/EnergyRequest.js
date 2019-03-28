@@ -31,8 +31,8 @@ class EnergyRequest extends Request {
     // perform the energy data operation
     execute(reqParams, reqQuery) {
 
-        let links; 
-        let items; 
+        let links;
+        let items;
         let collections = new Collections();                    // the collections array will store an array of collections, one for  each period in the duration 
 
         // call super
@@ -42,7 +42,7 @@ class EnergyRequest extends Request {
         let energy = new Param('energy', reqParams.energy, enums.energy.default, enums.energy);
         let period = new Param.Period(reqParams.period, reqParams.epoch, reqParams.duration);
         let site = new Param('site', reqQuery.site, consts.DEFAULT_SITE);
-                        //console.log(`${energy.value}, ${period.value}, ${period.epochInstant}, ${period.endInstant}, ${period.duration}, ${site.value}, ${this.accept}`);
+        // console.log(`${energy.value}, ${period.value}, ${period.epochInstant}, ${period.endInstant}, ${period.duration}, ${site.value}, ${this.accept}`);
 
         // get a collection for each period in the duration
         let periods = period.getEach();                         // break up the period duration into individual periods
@@ -52,7 +52,7 @@ class EnergyRequest extends Request {
             links = new Definitions.Links.EnergyLinks(energy, period, site);            // this creates the 'self' and 'Collection' links
             links.addLink(period.getParent(), enums.linkRender.link);                   // add the other links needed for the collection
             links.addLink(period.getNext(), enums.linkRender.link);
-            links.addLink( period.getPrev(), enums.linkRender.link);
+            links.addLink(period.getPrev(), enums.linkRender.link);
 
 
             items = getItems(energy, period, site);
@@ -64,7 +64,7 @@ class EnergyRequest extends Request {
 
         // create a response
         let view = 'collections';                                                       // todo: this should be selected dynamically
-        let response = new Response(view, 200, collections.getElements(), this.accept);     
+        let response = new Response(view, 200, collections.getElements(), this.accept);
 
         return response;
 
@@ -83,17 +83,21 @@ function getItems(energy, period, site) {
 
     periods.forEach(childPeriod => {
 
-        // get data
-        data = itemData(energy, childPeriod, site);
-        if (data) {
+        if (childPeriod) {
 
-            // make the item links
-            let links = new Definitions.Links.EnergyLinks(energy, childPeriod, site);   
+            // get data
+            data = itemData(energy, childPeriod, site);
+            if (data) {
 
-            // add an item to the list
-            items.add(links.href, links, data);
+                // make the item links - child and granchild of the containing collection 
+                let links = new Definitions.Links.EnergyLinks(energy, childPeriod, site);
+
+                // add an item to the list
+                items.add(links.href, links, data);
+            }
+            data = global.undefined;
+
         }
-        data = global.undefined;
     });
 
     return items;
@@ -103,29 +107,33 @@ function getItems(energy, period, site) {
 // gets energy data for this period and site. if there is no data returns an empty data object 
 function itemData(energy, period, site) {
 
-    const dailyHigh = (20 * 3.6); 
+    const dailyHigh = (20 * 3.6);
     const dailyLow = (3 * 3.6);                                                     // kwh => megajoules
 
     let data = new Definitions.Data();
 
-    
+
     let dataNames = energyDataNames(energy);                                        // these are prefixes (e.g. 'store.in') which will be prepended to the period context e.g. store.in.day
 
     let minmax = utils.MOCK_periodMinMax(period, dailyHigh, dailyLow);              // get an adjusted minmax for this period
 
+    // for each child of the containing collection - prvide a single total for each energy type
     dataNames.forEach(dataName => {
         let periodValue = utils.MOCK_randomValues(minmax.min, minmax.max, period.duration)
         data.add(`${dataName}.${period.context}`, periodValue);
+
     });
-
+    
+    // grandchild - space delimited data values
     let periodChild = period.getChild();
-    minmax = utils.MOCK_periodMinMax(periodChild, dailyHigh, dailyLow);             // get an adjusted minmax for the childperiod
-
     if (periodChild) {
+        minmax = utils.MOCK_periodMinMax(periodChild, dailyHigh, dailyLow);           // get an adjusted minmax for the childperiod
+
         dataNames.forEach(dataName => {
             let periodValue = utils.MOCK_randomValues(minmax.min, minmax.max, periodChild.duration)
-            data.add(`${dataName}.${periodChild.context}`, periodValue);
+            data.add(`${dataName}.$s{periodChild.context}`, periodValue);
         });
+
     }
 
     return data;
