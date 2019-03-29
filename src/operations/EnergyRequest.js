@@ -3,13 +3,13 @@
 /**
  * ./operations/EnergyRequest.js
  * prepares data and response for the energy path 
- *  
  */
 const enums = require('../system/enums');
 const consts = require('../system/constants');
 const utils = require('../system/utils');
 
 const Definitions = require('../definitions');
+const Links = require('../definitions/Links');
 const Collections = require('../definitions/Collections');
 const Response = require('../responses');
 
@@ -22,14 +22,14 @@ const Param = require('../parameters');
 class EnergyRequest extends Request {
 
     //  energy period and site are all Param objects. 
-    constructor(reqAccepts) {
+    constructor(reqParams, reqQuery, reqBody, reqAccepts) {
 
         super(reqAccepts);                                      // super selects the mimetype and sets this.accept 
 
     }
 
     // perform the energy data operation
-    execute(reqParams, reqQuery) {
+    execute() {
 
         let links;
         let items;
@@ -39,9 +39,9 @@ class EnergyRequest extends Request {
         super.execute();
 
         // validate and default request parameters and headers (Param constructor is name, value, default, enum)
-        let energy = new Param('energy', reqParams.energy, enums.energy.default, enums.energy);
-        let period = new Param.Period(reqParams.period, reqParams.epoch, reqParams.duration);
-        let site = new Param('site', reqQuery.site, consts.DEFAULT_SITE);
+        let energy = new Param('energy', this.reqParams.energy, enums.energy.default, enums.energy);
+        let period = new Param.Period(this.reqParams.period, this.reqParams.epoch, this.reqParams.duration);
+        let site = new Param('site', this.reqQuery.site, consts.DEFAULT_SITE);
         // console.log(`${energy.value}, ${period.value}, ${period.epochInstant}, ${period.endInstant}, ${period.duration}, ${site.value}, ${this.accept}`);
 
         // get a collection for each period in the duration
@@ -49,7 +49,7 @@ class EnergyRequest extends Request {
         periods.forEach(period => {
 
             // create the collection links  
-            links = new Definitions.Links.EnergyLinks(energy, period, site);            // this creates the 'self' and 'Collection' links
+            links = new Links.EnergyLinks(energy, period, site);            // this creates the 'self' and 'Collection' links
             links.addLink(period.getParent(), enums.linkRender.link);                   // add the other links needed for the collection
             links.addLink(period.getNext(), enums.linkRender.link);
             links.addLink(period.getPrev(), enums.linkRender.link);

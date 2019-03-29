@@ -11,9 +11,17 @@ const enums = require('../system/enums');
  */
 class Request {
 
-    // base constructor selects and sets the mime type for all requests
-    constructor(reqAcceptHeaders) {
-        this.accept = selectMimeType(reqAcceptHeaders);
+    /**
+     * base constructor selects and sets the mime type for all requests
+     */
+    constructor(reqParams, reqQuery, reqBody, reqAccepts) {
+        this.accept = selectMimeType(reqAccepts);
+        
+        this.reqParams = reqParams;
+        this.reqQuery = reqQuery; 
+        this.reqBody = reqBody;
+        this.reqAccepts = reqAccepts;
+        
     }
     
     // subtype implements the execute method to return a Response 

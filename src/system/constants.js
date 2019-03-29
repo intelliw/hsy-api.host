@@ -30,6 +30,7 @@ module.exports.periodChildDuration = {
     quartermonth: '3',                      // 3 months in a quarter
     yearquarter: '4',
     fiveyearyear: '5'
+    // monthday is derived dynamically
 };
 
 // parent periods

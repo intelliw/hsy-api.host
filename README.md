@@ -11,22 +11,17 @@ docker build -f local.Dockerfile -t axc-hse .
 
 ## Package structure 
 
-app                 // root 
-    - svc           // common services and tools. modules in this package can only access app and other svc modules
-        - config
-        - constant
-        - enum 
-        - security
-        - util
-    - api           // path-specific implementations. modules can access svc and app but cannot access other api modules
-        - model
-        - route
-        - view
-        - validate
+The API packages more or less mirror the OpenAPI specificaiton structure.
+    - sandbox               // ignore - this package contains stashed or transient content which will eventually be deleted   
+    - src                 
+        - definitions
+        - host
+        - operations 
+        - parameters
+        - paths
+        - responses
+        - system            // shared utilities and tools.
 
-each module stores its path relative to the app root. 
-all child modules are exported through api and svc
-    - api and svc modules pass their path to each child when requiring it 
 
 ## Sending authenticated requests
 

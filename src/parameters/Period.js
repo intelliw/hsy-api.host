@@ -181,7 +181,7 @@ class Period extends Param {
             if ((periodEnum == enums.period.month) && (childEnum == enums.period.day)) {    // if monthday - number of days changes each month  
                 duration = moment.utc(this.epochInstant).daysInMonth().toString();          // get the days for this month  
             } else {
-                duration = consts.periodChildDuration[`${periodEnum}${childEnum}`];              // eg. childDurations.weekday, returns 7
+                duration = consts.periodChildDuration[`${periodEnum}${childEnum}`];         // eg. childDurations.weekday, returns 7
             }
 
             //col the period and sets its relationship
