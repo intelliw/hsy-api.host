@@ -15,13 +15,15 @@ class Param {
         this.name = name;
         
         // value
+        let isValid = value ? true :false;                        // value must be provided 
         if (enumList) {                             // if an enum was provided the value must exist in it
-            value = Object.values(enumList).indexOf(value) == MISSING ? defaultValue :  value;
-            //value = enumList[value] ? value : defaultValue;
+            
+            isValid = Object.values(enumList).indexOf(value) != MISSING;
+            
         }
-        value = value ? value : defaultValue;       // set default if value is missing 
-        //    
-        this.value = value;
+        this.value = value ? value : defaultValue;       // set default if value if missing or not valid 
+        this.isValid = isValid;                          // flag if valid or not
+
     }
 }
 

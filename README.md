@@ -12,16 +12,17 @@ docker build -f local.Dockerfile -t axc-hse .
 ## Package structure 
 
 The API packages more or less mirror the OpenAPI specificaiton structure.
-    - sandbox               // ignore - this package contains stashed or transient content which will eventually be deleted   
+    - sandbox               // ignore - this package contains stashed or transient content which will eventually be deleted.   
     - src                 
-        - definitions
-        - host
-        - operations 
-        - parameters
-        - paths
-        - responses
+        - definitions       // data objects
+        - host              // setup and configuration for the app runtime
+        - operations        // request handlers, these select request headers and validate params  
+        - parameters        // generic class for simple params, specialised classes for complex params such as Period
+        - paths             // handlers for each top level path  
+        - responses         // view and response handlers for data and errors. Each response is constructed with a data objectand selects a view based on headers
         - system            // shared utilities and tools.
 
+Package associations are  
 
 ## Sending authenticated requests
 

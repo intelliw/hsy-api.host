@@ -22,10 +22,17 @@ const Param = require('../parameters');
 class EnergyRequest extends Request {
 
     //  energy period and site are all Param objects. 
-    constructor(reqParams, reqQuery, reqBody, reqAccepts) {
+    constructor(reqPath, reqQuery, reqBody, reqAccepts) {
+        
+        // validate and default request parameters and headers 
+        let energy = new Param('energy', reqPath.energy, enums.energy.default, enums.energy);     // Param constructor is name, value, default, enum
+        let period = new Param.Period(reqPath.period, reqPath.epoch, reqPath.duration);
+        let site = new Param('site', reqQuery.site, consts.DEFAULT_SITE);
 
-        super(reqAccepts);                                      // super selects the mimetype and sets this.accept 
-
+        // super constructor 
+        let params = [energy, period, site];
+        super(reqAccepts, params);                                                              // sets accepts header and checks if params valid
+        
     }
 
     // perform the energy data operation
@@ -33,29 +40,23 @@ class EnergyRequest extends Request {
 
         let links;
         let items;
-        let collections = new Collections();                    // the collections array will store an array of collections, one for  each period in the duration 
-
+        let collections = new Collections();                                                    // the collections array will store an array of collections, one for  each period in the duration 
+        
         // call super
         super.execute();
 
-        // validate and default request parameters and headers (Param constructor is name, value, default, enum)
-        let energy = new Param('energy', this.reqParams.energy, enums.energy.default, enums.energy);
-        let period = new Param.Period(this.reqParams.period, this.reqParams.epoch, this.reqParams.duration);
-        let site = new Param('site', this.reqQuery.site, consts.DEFAULT_SITE);
-        // console.log(`${energy.value}, ${period.value}, ${period.epochInstant}, ${period.endInstant}, ${period.duration}, ${site.value}, ${this.accept}`);
-
         // get a collection for each period in the duration
-        let periods = period.getEach();                         // break up the period duration into individual periods
+        let periods = this.params.period.getEach();                                             // break up the period duration into individual periods
         periods.forEach(period => {
 
             // create the collection links  
-            links = new Links.EnergyLinks(energy, period, site);            // this creates the 'self' and 'Collection' links
-            links.addLink(period.getParent(), enums.linkRender.link);                   // add the other links needed for the collection
+            links = new Links.EnergyLinks(this.params.energy, period, this.params.site);        // this creates the 'self' and 'Collection' links
+            links.addLink(period.getGrandchild(), enums.linkRender.none);                       // add the other links needed for the collection
+            links.addLink(period.getParent(), enums.linkRender.link);                           
             links.addLink(period.getNext(), enums.linkRender.link);
             links.addLink(period.getPrev(), enums.linkRender.link);
 
-
-            items = getItems(energy, period, site);
+            items = getItems(this.params.energy, period, this.params.site);
 
             // add each collection to the collections array
             collections.add(consts.CURRENT_VERSION, links.href, links, items);
@@ -63,7 +64,7 @@ class EnergyRequest extends Request {
         });
 
         // create a response
-        let view = 'collections';                                                       // todo: this should be selected dynamically
+        let view = 'collections';                                                               // todo: this should be selected dynamically
         let response = new Response(view, 200, collections.getElements(), this.accept);
 
         return response;
@@ -90,7 +91,7 @@ function getItems(energy, period, site) {
             if (data) {
 
                 // make the item links - child and granchild of the containing collection 
-                let links = new Definitions.Links.EnergyLinks(energy, childPeriod, site);
+                let links = new Links.EnergyLinks(energy, childPeriod, site);
 
                 // add an item to the list
                 items.add(links.href, links, data);
