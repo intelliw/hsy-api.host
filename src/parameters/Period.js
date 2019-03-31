@@ -12,7 +12,7 @@ const consts = require('../system/constants');
 const utils = require('../system/utils');
 
 const Param = require('./Param');
-const MILLISECOND_FORMAT = consts.periodDatetimeISO.instant;                    // the default format, YYYYMMDDTHHmmss.SSS
+const MILLISECOND_FORMAT = consts.periodDatetimeISO.instant;                        // the default format, YYYYMMDDTHHmmss.SSS
 
 /**
  * expects a date-time value in utc format. period is required (as a string) and must contain a complete date (isEpochValid())
@@ -24,6 +24,7 @@ class Period extends Param {
     attributes:  
      super.name: "period", 
      super.value: "week",
+     super.isValid: true,
      "context": "week.day",
      "epochInstant": "20190204T000000.000", "endInstant": "20190204T235959.999",
      "epoch": "20190204", "end": "20190204",
@@ -37,17 +38,17 @@ class Period extends Param {
     constructor(value, epoch, duration) {
 
         // period 
-        super('period', value, enums.period.default, enums.period);                // e.g. name='period' value='week';' 
+        super('period', value, enums.period.default, enums.period);                 // e.g. name='period' value='week';' 
 
         // duration     
         this.duration = duration ? duration : consts.DEFAULT_DURATION;
 
-        this.context = value;                                                      // by default context=period except in a collection and overwritten by getChild()
+        this.context = value;                                                       // by default context=period except in a collection and overwritten by getChild()
 
-        // epoch and end millisecond timestamps                                         // validates and normalises the epoch and end for the supplied period and duration
-        let valid = isEpochValid(epoch, MILLISECOND_FORMAT);                            // make sure epoch is a valid date-time 
-        epoch = valid ? epoch : moment.utc().format(MILLISECOND_FORMAT);                // if not valid default to 'now'
-        epoch = periodEpoch(value, epoch, MILLISECOND_FORMAT);                     // normalise the epoch to the exact start of the period
+        // epoch and end millisecond timestamps                                     // validates and normalises the epoch and end for the supplied period and duration
+        let valid = isEpochValid(epoch, MILLISECOND_FORMAT);                        // make sure epoch is a valid date-time 
+        epoch = valid ? epoch : moment.utc().format(MILLISECOND_FORMAT);            // if not valid default to 'now'
+        epoch = periodEpoch(value, epoch, MILLISECOND_FORMAT);                      // normalise the epoch to the exact start of the period
         //..
         this.epochInstant = epoch;
         this.endInstant = periodEnd(value, this.epochInstant, this.duration, MILLISECOND_FORMAT);   // period end - get the end date-time based on the epoch and duration 
@@ -174,7 +175,7 @@ class Period extends Param {
 
         if (childEnum) {                                                            // e.g. instant has no child    
 
-            let duration = periodChildDuration(periodEnum);
+            let duration = periodChildDuration(periodEnum, this.epochInstant);
 
             //col the period and sets its relationship
             child = new Period(childEnum, this.epochInstant, duration);             // construct child with a duration  
@@ -216,13 +217,13 @@ class Period extends Param {
             if (grandchildEnum) {                                                           // if there is a grandchild for this period
 
                 // get the two durations for child and grandchild   
-                let childDuration = periodChildDuration(periodEnum);                        // e.g. 7 for 'week' period child 'day'
-                let grandchildDuration = periodChildDuration(childEnum);                    // e.g. 4 for 'day' period child 'timeofday'
+                let childDuration = periodChildDuration(periodEnum, this.epochInstant);     // e.g. 7 for 'week' period child 'day'
+                let grandchildDuration = periodChildDuration(childEnum, this.epochInstant); // e.g. 4 for 'day' period child 'timeofday'
                 let totalDuration = Number(childDuration) * Number(grandchildDuration)      // total is 28
 
                 //create the grandchild with the total duration 
                 grandchild = new Period(grandchildEnum, this.epochInstant, totalDuration);   // construct grandchild with total duration  
-                grandchild.context = `${childEnum}.${grandchildEnum}`                        // context is child to grandchild  e.g. 'day.timeofday' 
+                grandchild.context = `${periodEnum}.${childEnum}.${grandchildEnum}`          // context is parent to child to grandchild  e.g. 'day.week.timeofday' 
                 grandchild.rel = enums.linkRelations.collection;                             // collection is the rel for a grandchild
             }
         }
@@ -330,7 +331,7 @@ function periodEnd(periodEnum, epoch, duration, format) {
 }
 
 // returns the number (as a string) of child periods in the period 
-function periodChildDuration(periodEnum) {
+function periodChildDuration(periodEnum, epochInstant) {
 
     const NONE = '0';
     const childEnum = consts.periodChild[periodEnum];
@@ -339,7 +340,7 @@ function periodChildDuration(periodEnum) {
 
     if (childEnum) {
         if ((periodEnum == enums.period.month) && (childEnum == enums.period.day)) {    // if monthday - number of days changes each month  
-            duration = moment.utc(this.epochInstant).daysInMonth().toString();          // get the days for this month  
+            duration = moment.utc(epochInstant).daysInMonth().toString();          // get the days for this month  
         } else {
             duration = consts.periodChildDuration[`${periodEnum}${childEnum}`];         // eg. childDurations.weekday, returns 7
         }

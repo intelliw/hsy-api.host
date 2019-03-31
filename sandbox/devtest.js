@@ -68,7 +68,7 @@ router.get('/allperiods/:epoch?/:duration?', (req, res, next) => {
     let quarter = new Param.Period(enums.period.quarter, req.params.epoch, req.params.duration); let quarternext = quarter.getNext(); let quarterprev = quarter.getPrev(); let quarterparent = quarter.getParent();let quarterchild = quarter.getChild();
     let year = new Param.Period(enums.period.year, req.params.epoch, req.params.duration); let yearnext = year.getNext(); let yearprev = year.getPrev(); let yearparent = year.getParent();let yearchild = year.getChild();
     let fiveyear = new Param.Period(enums.period.fiveyear, req.params.epoch, req.params.duration); let fiveyearnext = fiveyear.getNext(); let fiveyearprev = fiveyear.getPrev(); let fiveyearparent = fiveyear.getParent();let fiveyearchild = fiveyear.getChild();
-
+    
     let msg;
     msg = `epoch ${req.params.epoch}, duration ${req.params.duration}`
     res

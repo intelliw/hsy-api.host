@@ -16,9 +16,18 @@ class Data extends Definitions {
 
     }
 
+    // single level 
     add(name, value) {
 
         super.add({ "name": name, "value": value });
+
+    }
+
+    // two-tiered - adds a nested Data object
+    addNested(name, value, itemData) {
+
+        let data = itemData.getElements();          
+        super.add({ "name": name, "value": value, "data": data });
 
     }
 

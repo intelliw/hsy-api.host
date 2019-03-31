@@ -8,6 +8,37 @@ const enums = require('./enums');
 
 module.exports.capitalise = (str) => {return str.charAt(0).toUpperCase() + str.slice(1)};       // capitalise first letter
 
+// returns the name of the property for the first matching value in the object
+module.exports.propertyKeyFromValue = (obj, value) => {
+    
+    const EXITFOR = 99;
+    let n; let key;
+    let values = Object.values(obj);
+    for(n=0; n < values.length; n++) {
+        if (values[n] === value) {                  // if the value matches    
+            key = Object.keys(obj)[n];              // set the key 
+            n = EXITFOR;                            // exit the loop
+        } 
+    }
+
+    return key;
+
+}
+
+// returns a random number between min and max with decimal places based on precision 
+module.exports.randomFloat = (min, max, decimalPlaces) => {
+    
+    const precision = 1 * Math.pow(10, decimalPlaces);        // e.g. 3 decimals = 1000000
+    min = min * precision;                                      // adjust before dividing for decimal place
+    max = max * precision;
+
+    let randomFloat = (Math.floor(Math.random() * max) + min) / precision;
+
+    return randomFloat;
+
+}
+
+
 // returns a min and max value for the average energy consumed in this period
 module.exports.MOCK_periodMinMax = (period, dailyHigh, dailyLow) => {
 
@@ -57,31 +88,48 @@ module.exports.MOCK_periodMinMax = (period, dailyHigh, dailyLow) => {
 }
 
 
-// returns a space delimited list containing as many values as the duration
-module.exports.MOCK_randomValues = (min, max, duration) => {
+// returns a space delimited list containing as many values as the duration. if skip is true this will randsomly skips some to limit the output
+module.exports.MOCK_randomValues = (min, max, duration, skip) => {
     
-    const precision = 1000000;                                  // 3 decimals
-    min = min * precision;                                      // adjust before dividing for decimal place
-    max = max * precision;
+    const decimalPlaces = 3;                                  // 3 decimals
+    const SPACE_DELIMITER = ' ';
 
+    let MOCK_skip;
+
+    // number of elements based on duration 
     let numelements = duration;
 
-    // ----------- 
-    // this is to prevent perf issues with the itemdata for instant - in the final implementation the child and grandchild item dats should only return instants whgich have data ( do not return zero value items)
-    const CAP = 60                                              
-    numelements = numelements > CAP ? CAP : numelements;
-    // --------------
-    
+
+
+    // random number or array of space delimited random numbers if child
     let p; let randomNum; let values;
-
-    
     for (p = 1; p <= numelements; p++) {
-        randomNum = (Math.floor(Math.random() * max) + min) / precision;
+        
+        // randomly skip if requested - needed to limit periods outputted to suimulate real-life data logging for isntant
+        MOCK_skip = skip ? this.MOCK_randomSkip() : false;
+        if (!MOCK_skip) {
 
-        values = p == 1 ? '' : values + ' ';        // pad a space after the 1st iteration
-        values = values + randomNum.toString();
+            randomNum = this.randomFloat(min, max, decimalPlaces);  // get a random number
+
+            values = p == 1 ? '' : values + SPACE_DELIMITER;        // pad a space after the 1st iteration
+            values = values + randomNum.toString();
+        }
     }
 
     return values;
+
+}
+
+// returns true at random. This is needed to limit the periods which are outputted fior 'instant' to simulate real-life data logging
+module.exports.MOCK_randomSkip = () => {
+    
+    let MOCK_skip; let MOCK_randomnum; 
+    const MOCK_max = 30;                                                   // the larger this nuymber the more skips there will be  
+    const MOCK_match = 5;                                                  // this can be any number less than MOCK_max
+
+    MOCK_randomnum = this.randomFloat(1, MOCK_max, 0)                      // get a random number between 1 and MOCK_max
+    MOCK_skip = (MOCK_randomnum == MOCK_match) ? false : true;               // skip unless there is a match
+
+    return MOCK_skip;                                                      // return whether to skip  
 
 }

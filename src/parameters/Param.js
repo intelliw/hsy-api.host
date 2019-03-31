@@ -8,6 +8,12 @@
 
 // parameter class stores a parameter and optionally validates against an enum
 class Param {
+    /**
+     * attributes:  
+     * name: "period", 
+     * value: "week",
+     * isValid: true,
+     */
     constructor(name, value, defaultValue, enumList) {
         const MISSING = -1;
 

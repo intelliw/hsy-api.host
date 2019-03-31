@@ -28,7 +28,7 @@ router.get('/:energy?/periods/:period?/:epoch?/:duration?', (req, res, next) => 
 
     //  execute if valid
     let response = request.execute();                       // execute the operation and return a response 
-    
+    // console.log(response.data[0].collection.items[0].data[0]); 
     // /* ---------------------------------
     res
         .status(response.status)

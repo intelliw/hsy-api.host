@@ -1,197 +1,259 @@
 [
-    {
-      "collection": {
-         "version": "0.2",
-         "href": "http://localhost:8080/energy/hse/periods/week/20190204/1?site=999",
-         "links": [
-           { "rel": "self", "name": "week", "prompt": "Week 06 2019", "title": "04/02/19 - 10/02/19",
-             "href": "http://localhost:8080/energy/hse/periods/week/20190204/1?site=999"
+  {
+    "collection": {
+       "version": "0.2",
+       "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/week/20190304/1?site=999",
+       "links": [
+         { "rel": "self", "name": "week", "prompt": "Week 10 2019", "title": "04/03/19 - 10/03/19",
+           "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/week/20190304/1?site=999", "render": "link"
+         },
+         { "rel": "collection", "name": "week.day", "prompt": "Mon Mar 4th - Sun Mar 10th", "title": "04/03/19 - 10/03/19",
+           "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/day/20190304/7?site=999"
+         },
+         { "rel": "collection", "name": "week.day.timeofday", "prompt": "Mar 4 Night - Mar 10 Evening", "title": "04/03/19 00:00 - 10/03/19 23:59",
+           "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/timeofday/20190304T0000/28?site=999"
+         },
+         { "rel": "up", "name": "month", "prompt": "Mar 2019", "title": "01/03/19 - 31/03/19",
+           "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/month/20190301/1?site=999", "render": "link"
+         },
+         { "rel": "next", "name": "week", "prompt": "Week 11 2019", "title": "11/03/19 - 17/03/19",
+           "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/week/20190311/1?site=999", "render": "link"
+         },
+         { "rel": "prev", "name": "week", "prompt": "Week 09 2019", "title": "25/02/19 - 03/03/19",
+           "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/week/20190225/1?site=999", "render": "link"
+         }
+      ],
+      "items": [
+        { "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/day/20190304/1?site=999",
+          "links": [
+           { "rel": "self", "name": "day", "prompt": "Mon Mar 4th", "title": "04/03/19",
+             "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/day/20190304/1?site=999", "render": "link"
            },
-           { "rel": "collection", "name": "week.day", "prompt": "Mon Feb 4th - Sun Feb 10th", "title": "04/02/19 - 10/02/19",
-             "href": "http://localhost:8080/energy/hse/periods/day/20190204/7?site=999"
-           },
-           { "rel": "up", "name": "month", "prompt": "Feb 2019", "title": "01/02/19 - 28/02/19",
-             "href": "http://localhost:8080/energy/hse/periods/month/20190201/1?site=999", "render": "link"
-           },
-           { "rel": "next", "name": "week", "prompt": "Week 07 2019", "title": "11/02/19 - 17/02/19",
-             "href": "http://localhost:8080/energy/hse/periods/week/20190211/1?site=999", "render": "link"
-           },
-           { "rel": "prev", "name": "week", "prompt": "Week 05 2019", "title": "28/01/19 - 03/02/19",
-             "href": "http://localhost:8080/energy/hse/periods/week/20190128/1?site=999", "render": "link"
+           { "rel": "collection", "name": "day.timeofday", "prompt": "Mar 4 Night - Mar 4 Evening", "title": "04/03/19 00:00 - 04/03/19 23:59",
+             "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/timeofday/20190304T0000/4?site=999"
            }
-        ],
-        "items": [
-          { "href": "http://localhost:8080/energy/hse/periods/day/20190204/1?site=999",
-            "links": [
-             { "rel": "self", "name": "day", "prompt": "Mon Feb 4th", "title": "04/02/19",
-               "href": "http://localhost:8080/energy/hse/periods/day/20190204/1?site=999", "render": "link"
-             },
-             { "rel": "collection", "name": "day.timeofday", "prompt": "Feb 4 Night - Feb 4 Evening", "title": "04/02/19 00:00 - 04/02/19 23:59",
-               "href": "http://localhost:8080/energy/hse/periods/timeofday/20190204T0000/4?site=999"
-             }
-           ],          
-            "data": [
-             { "name": "harvest.day", "value": "21.133881" },
-             { "name": "store.in.day", "value": "26.500302" },
-             { "name": "store.out.day", "value": "46.664185" },
-             { "name": "enjoy.day", "value": "21.965303" },
-             { "name": "grid.in.day", "value": "22.92243" },
-             { "name": "grid.out.day", "value": "72.374014" },
-             { "name": "harvest.day.timeofday", "value": "20.227483 6.297591 18.853748 8.047184" },
-             { "name": "store.in.day.timeofday", "value": "4.986878 17.92982 10.781232 7.655939" },
-             { "name": "store.out.day.timeofday", "value": "14.488899 3.26788 5.645879 12.476284" },
-             { "name": "enjoy.day.timeofday", "value": "12.986113 13.379268 13.032179 13.859057" },
-             { "name": "grid.in.day.timeofday", "value": "10.679414 17.290549 8.281113 9.166056" },
-             { "name": "grid.out.day.timeofday", "value": "15.205374 12.402503 12.635302 13.723077" }
-           ]
-          },
-       
-          { "href": "http://localhost:8080/energy/hse/periods/day/20190205/1?site=999",
-            "links": [
-             { "rel": "self", "name": "day", "prompt": "Tue Feb 5th", "title": "05/02/19",
-               "href": "http://localhost:8080/energy/hse/periods/day/20190205/1?site=999", "render": "link"
-             },
-             { "rel": "collection", "name": "day.timeofday", "prompt": "Feb 5 Night - Feb 5 Evening", "title": "05/02/19 00:00 - 05/02/19 23:59",
-               "href": "http://localhost:8080/energy/hse/periods/timeofday/20190205T0000/4?site=999"
-             }
-           ],          
-            "data": [
-             { "name": "harvest.day", "value": "11.039792" },
-             { "name": "store.in.day", "value": "81.717935" },
-             { "name": "store.out.day", "value": "14.860573" },
-             { "name": "enjoy.day", "value": "55.103325" },
-             { "name": "grid.in.day", "value": "72.07423" },
-             { "name": "grid.out.day", "value": "11.997864" },
-             { "name": "harvest.day.timeofday", "value": "12.191019 8.02447 7.558786 8.075648" },
-             { "name": "store.in.day.timeofday", "value": "16.603728 11.46813 16.972553 12.162093" },
-             { "name": "store.out.day.timeofday", "value": "15.143538 17.554213 17.520763 14.94898" },
-             { "name": "enjoy.day.timeofday", "value": "15.365327 4.875735 6.437416 12.907601" },
-             { "name": "grid.in.day.timeofday", "value": "19.551429 16.185555 3.222114 17.667317" },
-             { "name": "grid.out.day.timeofday", "value": "17.093486 9.621871 17.99346 7.610456" }
-           ]
-          },
-          { "href": "http://localhost:8080/energy/hse/periods/day/20190206/1?site=999",
-            "links": [
-             { "rel": "self", "name": "day", "prompt": "Wed Feb 6th", "title": "06/02/19",
-               "href": "http://localhost:8080/energy/hse/periods/day/20190206/1?site=999", "render": "link"
-             },
-             { "rel": "collection", "name": "day.timeofday", "prompt": "Feb 6 Night - Feb 6 Evening", "title": "06/02/19 00:00 - 06/02/19 23:59",
-               "href": "http://localhost:8080/energy/hse/periods/timeofday/20190206T0000/4?site=999"
-             }
-           ],          
-            "data": [
-             { "name": "harvest.day", "value": "23.152329" },
-             { "name": "store.in.day", "value": "35.660656" },
-             { "name": "store.out.day", "value": "71.771244" },
-             { "name": "enjoy.day", "value": "62.261981" },
-             { "name": "grid.in.day", "value": "19.449194" },
-             { "name": "grid.out.day", "value": "76.236531" },
-             { "name": "harvest.day.timeofday", "value": "12.516541 10.049257 19.858797 7.300562" },
-             { "name": "store.in.day.timeofday", "value": "15.328287 14.817654 7.47053 4.625065" },
-             { "name": "store.out.day.timeofday", "value": "17.995133 10.049335 19.918784 7.382297" },
-             { "name": "enjoy.day.timeofday", "value": "9.371441 8.220574 3.776384 6.484257" },
-             { "name": "grid.in.day.timeofday", "value": "4.621802 11.150176 11.875279 4.386746" },
-             { "name": "grid.out.day.timeofday", "value": "8.321272 7.791462 3.881439 14.652837" }
-           ]
-          },
-          { "href": "http://localhost:8080/energy/hse/periods/day/20190207/1?site=999",
-            "links": [
-             { "rel": "self", "name": "day", "prompt": "Thu Feb 7th", "title": "07/02/19",
-               "href": "http://localhost:8080/energy/hse/periods/day/20190207/1?site=999", "render": "link"
-             },
-             { "rel": "collection", "name": "day.timeofday", "prompt": "Feb 7 Night - Feb 7 Evening", "title": "07/02/19 00:00 - 07/02/19 23:59",
-               "href": "http://localhost:8080/energy/hse/periods/timeofday/20190207T0000/4?site=999"
-             }
-           ],          
-            "data": [
-             { "name": "harvest.day", "value": "74.541264" },
-             { "name": "store.in.day", "value": "48.260928" },
-             { "name": "store.out.day", "value": "53.096994" },
-             { "name": "enjoy.day", "value": "52.178096" },
-             { "name": "grid.in.day", "value": "52.894455" },
-             { "name": "grid.out.day", "value": "21.451133" },
-             { "name": "harvest.day.timeofday", "value": "14.106008 17.124244 17.590686 17.935181" },
-             { "name": "store.in.day.timeofday", "value": "8.653198 8.267208 12.275318 13.308442" },
-             { "name": "store.out.day.timeofday", "value": "16.94193 6.060651 17.37325 11.900468" },
-             { "name": "enjoy.day.timeofday", "value": "14.65374 9.89641 3.196515 19.634621" },
-             { "name": "grid.in.day.timeofday", "value": "17.775864 6.955405 6.863084 4.095699" },
-             { "name": "grid.out.day.timeofday", "value": "10.010593 9.620064 9.747363 20.59841" }
-           ]
-          },
-          { "href": "http://localhost:8080/energy/hse/periods/day/20190208/1?site=999",
-            "links": [
-             { "rel": "self", "name": "day", "prompt": "Fri Feb 8th", "title": "08/02/19",
-               "href": "http://localhost:8080/energy/hse/periods/day/20190208/1?site=999", "render": "link"
-             },
-             { "rel": "collection", "name": "day.timeofday", "prompt": "Feb 8 Night - Feb 8 Evening", "title": "08/02/19 00:00 - 08/02/19 23:59",
-               "href": "http://localhost:8080/energy/hse/periods/timeofday/20190208T0000/4?site=999"
-             }
-           ],          
-            "data": [
-             { "name": "harvest.day", "value": "71.85934" },
-             { "name": "store.in.day", "value": "16.730765" },
-             { "name": "store.out.day", "value": "17.784198" },
-             { "name": "enjoy.day", "value": "67.56808" },
-             { "name": "grid.in.day", "value": "80.506569" },
-             { "name": "grid.out.day", "value": "82.091402" },
-             { "name": "harvest.day.timeofday", "value": "12.843441 6.937956 6.878024 2.743876" },
-             { "name": "store.in.day.timeofday", "value": "18.868205 12.351783 5.351746 3.083962" },
-             { "name": "store.out.day.timeofday", "value": "3.350201 13.785468 15.996737 9.794333" },
-             { "name": "enjoy.day.timeofday", "value": "18.184508 8.763629 7.499887 13.31969" },
-             { "name": "grid.in.day.timeofday", "value": "6.184032 19.764243 19.968035 6.687072" },
-             { "name": "grid.out.day.timeofday", "value": "10.41211 4.892776 9.835627 12.92249" }
-           ]
-          },
-          { "href": "http://localhost:8080/energy/hse/periods/day/20190209/1?site=999",
-            "links": [
-             { "rel": "self", "name": "day", "prompt": "Sat Feb 9th", "title": "09/02/19",
-               "href": "http://localhost:8080/energy/hse/periods/day/20190209/1?site=999", "render": "link"
-             },
-             { "rel": "collection", "name": "day.timeofday", "prompt": "Feb 9 Night - Feb 9 Evening", "title": "09/02/19 00:00 - 09/02/19 23:59",
-               "href": "http://localhost:8080/energy/hse/periods/timeofday/20190209T0000/4?site=999"
-             }
-           ],          
-            "data": [
-             { "name": "harvest.day", "value": "46.057653" },
-             { "name": "store.in.day", "value": "82.332075" },
-             { "name": "store.out.day", "value": "20.558368" },
-             { "name": "enjoy.day", "value": "39.512444" },
-             { "name": "grid.in.day", "value": "31.375409" },
-             { "name": "grid.out.day", "value": "28.011426" },
-             { "name": "harvest.day.timeofday", "value": "3.105644 16.107461 16.145148 10.541794" },
-             { "name": "store.in.day.timeofday", "value": "11.665631 16.227515 10.227591 20.568639" },
-             { "name": "store.out.day.timeofday", "value": "10.205591 2.940063 8.69389 3.716086" },
-             { "name": "enjoy.day.timeofday", "value": "8.558258 7.300411 14.124559 7.674574" },
-             { "name": "grid.in.day.timeofday", "value": "18.39727 18.452236 13.985479 2.946567" },
-             { "name": "grid.out.day.timeofday", "value": "13.317777 10.721167 15.230591 10.863962" }
-           ]
-          },
-          { "href": "http://localhost:8080/energy/hse/periods/day/20190210/1?site=999",
-            "links": [
-             { "rel": "self", "name": "day", "prompt": "Sun Feb 10th", "title": "10/02/19",
-               "href": "http://localhost:8080/energy/hse/periods/day/20190210/1?site=999", "render": "link"
-             },
-             { "rel": "collection", "name": "day.timeofday", "prompt": "Feb 10 Night - Feb 10 Evening", "title": "10/02/19 00:00 - 10/02/19 23:59",
-               "href": "http://localhost:8080/energy/hse/periods/timeofday/20190210T0000/4?site=999"
-             }
-           ],          
-            "data": [
-             { "name": "harvest.day", "value": "31.231499" },
-             { "name": "store.in.day", "value": "46.881011" },
-             { "name": "store.out.day", "value": "66.939857" },
-             { "name": "enjoy.day", "value": "24.705035" },
-             { "name": "grid.in.day", "value": "55.216595" },
-             { "name": "grid.out.day", "value": "54.768807" },
-             { "name": "harvest.day.timeofday", "value": "19.002456 5.073383 11.479933 14.086283" },
-             { "name": "store.in.day.timeofday", "value": "4.632091 4.679907 8.214744 18.165258" },
-             { "name": "store.out.day.timeofday", "value": "16.033444 16.986144 17.859252 8.370705" },
-             { "name": "enjoy.day.timeofday", "value": "4.889902 16.643386 20.3145 6.904358" },
-             { "name": "grid.in.day.timeofday", "value": "18.204944 14.541631 6.105331 7.351056" },
-             { "name": "grid.out.day.timeofday", "value": "3.139811 4.778908 3.729571 18.143747" }
-           ]
-          }
-       ] 
-      }
+         ],          
+          "data": [
+           { "name": "day", "value": "20190304/1",
+             "data": [
+               { "name": "harvest", "value": "66.22849" },
+               { "name": "store.in", "value": "58.514396" },
+               { "name": "store.out", "value": "68.799968" },
+               { "name": "enjoy", "value": "11.50717" },
+               { "name": "grid.in", "value": "64.885491" },
+               { "name": "grid.out", "value": "37.994182" }
+             ]
+           },
+           { "name": "day.timeofday", "value": "20190304T0000/4",
+             "data": [
+               { "name": "harvest", "value": "3.176898 7.2012 15.628647 10.042905" },
+               { "name": "store.in", "value": "13.129662 13.186528 16.55937 8.149107" },
+               { "name": "store.out", "value": "12.975158 11.931583 12.944902 20.53711" },
+               { "name": "enjoy", "value": "8.477666 17.046609 16.842825 4.249814" },
+               { "name": "grid.in", "value": "11.766934 7.712132 10.934318 20.614763" },
+               { "name": "grid.out", "value": "14.374344 12.54626 5.215394 20.051709" }
+             ]
+           }
+         ]
+        },
+        { "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/day/20190305/1?site=999",
+          "links": [
+           { "rel": "self", "name": "day", "prompt": "Tue Mar 5th", "title": "05/03/19",
+             "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/day/20190305/1?site=999", "render": "link"
+           },
+           { "rel": "collection", "name": "day.timeofday", "prompt": "Mar 5 Night - Mar 5 Evening", "title": "05/03/19 00:00 - 05/03/19 23:59",
+             "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/timeofday/20190305T0000/4?site=999"
+           }
+         ],          
+          "data": [
+           { "name": "day", "value": "20190305/1",
+             "data": [
+               { "name": "harvest", "value": "26.436251" },
+               { "name": "store.in", "value": "63.909699" },
+               { "name": "store.out", "value": "12.457034" },
+               { "name": "enjoy", "value": "59.145589" },
+               { "name": "grid.in", "value": "82.166283" },
+               { "name": "grid.out", "value": "55.174077" }
+             ]
+           },
+           { "name": "day.timeofday", "value": "20190305T0000/4",
+             "data": [
+               { "name": "harvest", "value": "20.615137 7.326639 12.46651 9.254191" },
+               { "name": "store.in", "value": "8.564526 10.939749 11.391637 7.367083" },
+               { "name": "store.out", "value": "19.796106 10.931281 16.385781 3.157805" },
+               { "name": "enjoy", "value": "9.741077 6.190103 18.031921 17.934737" },
+               { "name": "grid.in", "value": "3.191509 18.346396 16.372902 19.490546" },
+               { "name": "grid.out", "value": "7.132912 9.320653 6.571962 15.075899" }
+             ]
+           }
+         ]
+        },
+        { "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/day/20190306/1?site=999",
+          "links": [
+           { "rel": "self", "name": "day", "prompt": "Wed Mar 6th", "title": "06/03/19",
+             "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/day/20190306/1?site=999", "render": "link"
+           },
+         
+           { "rel": "collection", "name": "day.timeofday", "prompt": "Mar 6 Night - Mar 6 Evening", "title": "06/03/19 00:00 - 06/03/19 23:59",
+             "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/timeofday/20190306T0000/4?site=999"
+           }
+         ],          
+          "data": [
+           { "name": "day", "value": "20190306/1",
+             "data": [
+               { "name": "harvest", "value": "30.926496" },
+               { "name": "store.in", "value": "74.783501" },
+               { "name": "store.out", "value": "32.297718" },
+               { "name": "enjoy", "value": "34.386959" },
+               { "name": "grid.in", "value": "79.446243" },
+               { "name": "grid.out", "value": "44.384287" }
+             ]
+           },
+           { "name": "day.timeofday", "value": "20190306T0000/4",
+             "data": [
+               { "name": "harvest", "value": "18.391145 19.950918 9.293566 6.706101" },
+               { "name": "store.in", "value": "18.652257 10.304759 18.669559 20.573746" },
+               { "name": "store.out", "value": "20.21856 14.617149 9.202237 17.11726" },
+               { "name": "enjoy", "value": "6.472653 5.783513 10.16323 12.631774" },
+               { "name": "grid.in", "value": "8.522498 8.621227 20.553783 8.711874" },
+               { "name": "grid.out", "value": "12.702724 4.628987 17.164084 15.074929" }
+             ]
+           }
+         ]
+        },
+        { "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/day/20190307/1?site=999",
+          "links": [
+           { "rel": "self", "name": "day", "prompt": "Thu Mar 7th", "title": "07/03/19",
+             "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/day/20190307/1?site=999", "render": "link"
+           },
+         
+           { "rel": "collection", "name": "day.timeofday", "prompt": "Mar 7 Night - Mar 7 Evening", "title": "07/03/19 00:00 - 07/03/19 23:59",
+             "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/timeofday/20190307T0000/4?site=999"
+           }
+         ],          
+          "data": [
+           { "name": "day", "value": "20190307/1",
+             "data": [
+               { "name": "harvest", "value": "15.444935" },
+               { "name": "store.in", "value": "62.301678" },
+               { "name": "store.out", "value": "47.274096" },
+               { "name": "enjoy", "value": "14.127181" },
+               { "name": "grid.in", "value": "80.53107" },
+               { "name": "grid.out", "value": "74.244653" }
+             ]
+           },
+           { "name": "day.timeofday", "value": "20190307T0000/4",
+             "data": [
+               { "name": "harvest", "value": "10.703824 9.914132 17.000571 9.897278" },
+               { "name": "store.in", "value": "7.60888 5.212308 18.386099 3.628459" },
+               { "name": "store.out", "value": "11.347071 9.069319 9.991322 14.170555" },
+               { "name": "enjoy", "value": "19.390523 7.634764 15.970957 14.710604" },
+               { "name": "grid.in", "value": "14.105133 12.056239 6.095306 11.818765" },
+               { "name": "grid.out", "value": "15.580144 12.738289 15.42021 13.406179" }
+             ]
+           }
+         ]
+        },
+        { "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/day/20190308/1?site=999",
+          "links": [
+           { "rel": "self", "name": "day", "prompt": "Fri Mar 8th", "title": "08/03/19",
+             "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/day/20190308/1?site=999", "render": "link"
+           },
+         
+           { "rel": "collection", "name": "day.timeofday", "prompt": "Mar 8 Night - Mar 8 Evening", "title": "08/03/19 00:00 - 08/03/19 23:59",
+             "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/timeofday/20190308T0000/4?site=999"
+           }
+         ],          
+          "data": [
+           { "name": "day", "value": "20190308/1",
+             "data": [
+               { "name": "harvest", "value": "12.719724" },
+               { "name": "store.in", "value": "73.263752" },
+               { "name": "store.out", "value": "38.71842" },
+               { "name": "enjoy", "value": "23.884102" },
+               { "name": "grid.in", "value": "52.534576" },
+               { "name": "grid.out", "value": "31.597264" }
+             ]
+           },
+           { "name": "day.timeofday", "value": "20190308T0000/4",
+             "data": [
+               { "name": "harvest", "value": "18.729289 17.914527 20.059188 8.140313" },
+               { "name": "store.in", "value": "9.924167 5.087406 8.770273 9.617282" },
+               { "name": "store.out", "value": "5.675334 19.075555 16.116441 19.688873" },
+               { "name": "enjoy", "value": "13.133929 15.522048 5.122403 7.841037" },
+               { "name": "grid.in", "value": "11.502622 3.11603 15.729893 17.543545" },
+               { "name": "grid.out", "value": "8.100806 9.409088 3.73809 20.159826" }
+             ]
+           }
+         ]
+        },
+        { "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/day/20190309/1?site=999",
+          "links": [
+           { "rel": "self", "name": "day", "prompt": "Sat Mar 9th", "title": "09/03/19",
+             "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/day/20190309/1?site=999", "render": "link"
+           },
+         
+           { "rel": "collection", "name": "day.timeofday", "prompt": "Mar 9 Night - Mar 9 Evening", "title": "09/03/19 00:00 - 09/03/19 23:59",
+             "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/timeofday/20190309T0000/4?site=999"
+           }
+         ],          
+          "data": [
+           { "name": "day", "value": "20190309/1",
+             "data": [
+               { "name": "harvest", "value": "74.552949" },
+               { "name": "store.in", "value": "68.642359" },
+               { "name": "store.out", "value": "74.137932" },
+               { "name": "enjoy", "value": "11.864298" },
+               { "name": "grid.in", "value": "29.030307" },
+               { "name": "grid.out", "value": "23.022573" }
+             ]
+           },
+           { "name": "day.timeofday", "value": "20190309T0000/4",
+             "data": [
+               { "name": "harvest", "value": "14.382511 9.487058 9.232671 7.22704" },
+               { "name": "store.in", "value": "4.707961 18.4667 17.184756 16.477832" },
+               { "name": "store.out", "value": "12.762247 9.276065 14.986351 15.378647" },
+               { "name": "enjoy", "value": "9.705695 6.837791 6.804945 4.925647" },
+               { "name": "grid.in", "value": "9.709284 17.573599 8.243218 3.082698" },
+               { "name": "grid.out", "value": "16.157007 16.682969 14.981557 12.980072" }
+             ]
+           }
+         ]
+        },
+        { "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/day/20190310/1?site=999",
+          "links": [
+           { "rel": "self", "name": "day", "prompt": "Sun Mar 10th", "title": "10/03/19",
+             "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/day/20190310/1?site=999", "render": "link"
+           },
+         
+           { "rel": "collection", "name": "day.timeofday", "prompt": "Mar 10 Night - Mar 10 Evening", "title": "10/03/19 00:00 - 10/03/19 23:59",
+             "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/periods/timeofday/20190310T0000/4?site=999"
+           }
+         ],          
+          "data": [
+           { "name": "day", "value": "20190310/1",
+             "data": [
+               { "name": "harvest", "value": "48.782865" },
+               { "name": "store.in", "value": "25.013671" },
+               { "name": "store.out", "value": "81.93385" },
+               { "name": "enjoy", "value": "31.095812" },
+               { "name": "grid.in", "value": "78.628968" },
+               { "name": "grid.out", "value": "25.389898" }
+             ]
+           },
+           { "name": "day.timeofday", "value": "20190310T0000/4",
+             "data": [
+               { "name": "harvest", "value": "2.875021 14.529194 7.434935 8.899906" },
+               { "name": "store.in", "value": "5.782927 15.90789 3.302618 14.765098" },
+               { "name": "store.out", "value": "14.352198 8.286343 13.003692 13.351521" },
+               { "name": "enjoy", "value": "14.479015 20.074154 7.317592 14.283507" },
+               { "name": "grid.in", "value": "6.1719 18.515942 16.878188 5.766506" },
+               { "name": "grid.out", "value": "9.734833 8.137267 17.634835 10.106176" }
+             ]
+           }
+         ]
+        }
+     ] 
     }
-   ]
-   
+  }
+ ]

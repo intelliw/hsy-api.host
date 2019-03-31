@@ -98,11 +98,10 @@ module.exports.periodDatetimeGeneral = {
 // system constants
 module.exports.ACTIVE_VERSIONS = '0.1 0.2';
 module.exports.CURRENT_VERSION = '0.2';
-module.exports.API_HOST = 'api.endpoints.sundaya.cloud.goog';
-// module.exports.API_HOST = 'localhost:8080';
-module.exports.API_SCHEME = 'http';
 module.exports.DATE_FORMAT = 'YYYYMMDDTHHmmss.SSS±HHmm';
 // parameter constants 
 module.exports.DEFAULT_DURATION = '1';
 module.exports.DEFAULT_SITE = '999';
-
+module.exports.API_HOST = 'api.endpoints.sundaya.cloud.goog';
+// module.exports.API_HOST = 'localhost:8080';
+module.exports.API_SCHEME = 'http';
