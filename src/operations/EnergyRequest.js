@@ -134,7 +134,9 @@ function itemData(energy, period, site) {
     energyNames.forEach(energyName => {
 
         let periodValue = utils.MOCK_randomValues(minmax.min, minmax.max, period.duration, false)
-        childData.add(energyName, periodValue);                                       // e.g. harvest  21.133882
+        if (periodValue) {
+            childData.add(energyName, periodValue);                                       // e.g. harvest  21.133882
+        }
     });
     //
     if (childData._elements.length > 0) {                                             // add the 
@@ -156,7 +158,9 @@ function itemData(energy, period, site) {
             MOCK_skip = periodChild.value == enums.period.instant ? utils.MOCK_randomSkip() : false;
 
             let periodValue = utils.MOCK_randomValues(minmax.min, minmax.max, periodChild.duration, MOCK_skip)
-            grandchildData.add(energyName, periodValue);
+            if (periodValue) {
+                grandchildData.add(energyName, periodValue);
+            }
 
         });
         // 

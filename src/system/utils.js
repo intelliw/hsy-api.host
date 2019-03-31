@@ -28,7 +28,7 @@ module.exports.propertyKeyFromValue = (obj, value) => {
 // returns a random number between min and max with decimal places based on precision 
 module.exports.randomFloat = (min, max, decimalPlaces) => {
     
-    const precision = 1000 * Math.pow(10, decimalPlaces);        // e.g. 3 decimals = 1000000
+    const precision = 10 * Math.pow(10, decimalPlaces);        // e.g. 3 decimals = 1000000
     min = min * precision;                                      // adjust before dividing for decimal place
     max = max * precision;
 
