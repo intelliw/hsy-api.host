@@ -90,7 +90,7 @@ function getItems(energy, period, site) {
 
         if (childPeriod) {
 
-            // randomly skip if instant - needed to limit periods outputted to suimulate real-life data logging for isntant
+            // randomly skip if instant - to limit output
             MOCK_skip = childPeriod.value == enums.period.instant ? utils.MOCK_randomSkip() : false;
 
             if (!MOCK_skip) {                                                           // skips only if instant and no match
@@ -124,15 +124,16 @@ function itemData(energy, period, site) {
 
     let energyNames = energyDataNames(energy);                                        // these are the 6 energy names (e.g. 'store.in')
 
-    const MOCK_skip_SOME = true;
-    const MOCK_skip_NONE = false;
+    let MOCK_skip;
+
 
     // for each child of the containing collection - provide a single total for each energy type
     let childData = new Definitions.Data();
     let minmax = utils.MOCK_periodMinMax(period, dailyHigh, dailyLow);                // get an adjusted minmax for this period
     //
     energyNames.forEach(energyName => {
-        let periodValue = utils.MOCK_randomValues(minmax.min, minmax.max, period.duration, MOCK_skip_NONE)
+
+        let periodValue = utils.MOCK_randomValues(minmax.min, minmax.max, period.duration, false)
         childData.add(energyName, periodValue);                                       // e.g. harvest  21.133882
     });
     //
@@ -145,13 +146,16 @@ function itemData(energy, period, site) {
     if (periodChild) {
 
         let grandchildData = new Definitions.Data();
-        
+
 
         minmax = utils.MOCK_periodMinMax(periodChild, dailyHigh, dailyLow);           // get an adjusted minmax for the childperiod
         //
         energyNames.forEach(energyName => {
 
-            let periodValue = utils.MOCK_randomValues(minmax.min, minmax.max, periodChild.duration, MOCK_skip_SOME)
+            // randomly skip if instant - to limit output
+            MOCK_skip = periodChild.value == enums.period.instant ? utils.MOCK_randomSkip() : false;
+
+            let periodValue = utils.MOCK_randomValues(minmax.min, minmax.max, periodChild.duration, MOCK_skip)
             grandchildData.add(energyName, periodValue);
 
         });

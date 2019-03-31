@@ -28,7 +28,7 @@ module.exports.propertyKeyFromValue = (obj, value) => {
 // returns a random number between min and max with decimal places based on precision 
 module.exports.randomFloat = (min, max, decimalPlaces) => {
     
-    const precision = 1 * Math.pow(10, decimalPlaces);        // e.g. 3 decimals = 1000000
+    const precision = 1000 * Math.pow(10, decimalPlaces);        // e.g. 3 decimals = 1000000
     min = min * precision;                                      // adjust before dividing for decimal place
     max = max * precision;
 
@@ -99,25 +99,24 @@ module.exports.MOCK_randomValues = (min, max, duration, skip) => {
     // number of elements based on duration 
     let numelements = duration;
 
-
-
     // random number or array of space delimited random numbers if child
     let p; let randomNum; let values;
+
     for (p = 1; p <= numelements; p++) {
         
-        // randomly skip if requested - needed to limit periods outputted to suimulate real-life data logging for isntant
+        // randomly skip if requested - needed to limit output to suimulate real-life data logging for isntant
         MOCK_skip = skip ? this.MOCK_randomSkip() : false;
         if (!MOCK_skip) {
 
-            randomNum = this.randomFloat(min, max, decimalPlaces);  // get a random number
+            randomNum = this.randomFloat(min, max, decimalPlaces);          // get a random number
 
-            values = p == 1 ? '' : values + SPACE_DELIMITER;        // pad a space after the 1st iteration
+            values = p == 1 ? '' : values + SPACE_DELIMITER;                // pad a space after the 1st iteration
             values = values + randomNum.toString();
         }
     }
-
+    
     return values;
-
+    
 }
 
 // returns true at random. This is needed to limit the periods which are outputted fior 'instant' to simulate real-life data logging
@@ -127,8 +126,8 @@ module.exports.MOCK_randomSkip = () => {
     const MOCK_max = 30;                                                   // the larger this nuymber the more skips there will be  
     const MOCK_match = 5;                                                  // this can be any number less than MOCK_max
 
-    MOCK_randomnum = this.randomFloat(1, MOCK_max, 0)                      // get a random number between 1 and MOCK_max
-    MOCK_skip = (MOCK_randomnum == MOCK_match) ? false : true;               // skip unless there is a match
+    MOCK_randomnum = this.randomFloat(1, MOCK_max, 0).toFixed(0)           // get a random integer between 1 and MOCK_max
+    MOCK_skip = (MOCK_randomnum == MOCK_match) ? false : true;             // skip unless there is a match
 
     return MOCK_skip;                                                      // return whether to skip  
 
