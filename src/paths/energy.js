@@ -15,17 +15,16 @@ const consts = require('../system/constants');
 const Response = require('../responses');
 const Request = require('../operations');
 
-// /energy 
+/*
+'/energy' path
+create parameter objects for creating the links and collections
+energy, site, period -> including next/prev/parent/child periods, with durations
+param objects have all the data needed for the 
+ */
 router.get(['/',
-            '/:energy?', 
-            '/:energy?/periods/:period?',
-            '/:energy?/periods/:period?/:epoch?/:duration?'], (req, res, next) => {
-
-    /*
-    create parameter objects for creating the links and collections
-    energy, site, period -> including next/prev/parent/child periods, with durations
-    param objects have all the data needed for the 
-     */
+    '/:energy?',
+    '/:energy?/periods/:period?',
+    '/:energy?/periods/:period?/:epoch?/:duration?'], (req, res, next) => {
 
         // request
         let request = new Request.EnergyRequest(req.params, req.query, req.body, req.accepts());
@@ -33,9 +32,9 @@ router.get(['/',
         //  execute if valid
         let response = request.execute();                       // execute the operation and return a response 
         let collections = response.data;
-                    // console.log(collections[0].collection.items[0].data[0]); 
+        // console.log(collections[0].collection.items[0].data[0]); 
 
-        
+
         // /* =======================================================================
         res
             .status(response.status)
@@ -43,18 +42,20 @@ router.get(['/',
             .render(response.view, {
                 collections: response.data
             });
+
         // /* =======================================================================
-    
-    
+
+
         /* [debug START] ============================================================
         res
             .status(response.status)
             .type(response.contentType)
             .json({ collections })
             .end();
+    
         */ // [debug END] ===========================================================
 
-});
+    });
 
 
 
