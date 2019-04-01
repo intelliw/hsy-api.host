@@ -99,6 +99,7 @@ module.exports.periodDatetimeGeneral = {
 module.exports.ACTIVE_VERSIONS = '0.1 0.2';
 module.exports.CURRENT_VERSION = '0.2';
 module.exports.DATE_FORMAT = 'YYYYMMDDTHHmmss.SSS±HHmm';
+module.exports.NOTHING = global.undefined; 
 // parameter constants 
 module.exports.DEFAULT_DURATION = '1';
 module.exports.DEFAULT_SITE = '999';

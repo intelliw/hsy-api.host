@@ -28,7 +28,6 @@ app.use('/api', path.diagnostics);          // endpoint tag: Diagnostics
 // for testing and troubleshooting only
 app.use('/devtest', sandbox.devtest);
 
-
 // handle error
 app.use((err, req, res, next) => {
     console.log('Unexpected ' + err);

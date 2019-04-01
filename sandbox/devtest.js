@@ -75,19 +75,19 @@ router.get('/allperiods/:epoch?/:duration?', (req, res, next) => {
         .status(200)
         .json({
             params: msg,
-            EACHSECONDSINSTANTS: second.getEachChild(),
-            EACHMINUTESECONDS: minute.getEachChild(),
-            INSTANTPREV: instantprev, INSTANT: instant, INSTANTNEXT: instantnext, INSTANTPARENT: instantparent,INSTANTCHILD: instantchild,
-            SECONDPREV: secondprev, SECOND: second, SECONDNEXT: secondnext, SECONDPARENT: secondparent,SECONDCHILD: secondchild,
-            MINUTEPREV: minuteprev, MINUTE: minute, MINUTENEXT: minutenext, MINUTEPARENT: minuteparent,MINUTECHILD: minutechild,
-            HOURPREV: hourprev, HOUR: hour, HOURNEXT: hournext, HOURPARENT: hourparent,HOURCHILD: hourchild,
-            TIMEOFDAYPREV: timeofdayprev, TIMEOFDAY: timeofday, TIMEOFDAYNEXT: timeofdaynext, TIMEOFDAYPARENT: timeofdayparent,TIMEOFDAYCHILD: timeofdaychild,
-            DAYPREV: dayprev, DAY: day, DAYNEXT: daynext, DAYPARENT: dayparent,DAYCHILD: daychild,
-            WEEKPREV: weekprev, WEEK: week, WEEKNEXT: weeknext, WEEKPARENT: weekparent,WEEKCHILD: weekchild,
-            MONTHPREV: monthprev, MONTH: month, MONTHNEXT: monthnext, MONTHPARENT: monthparent,MONTHCHILD: monthchild,
-            QUARTERPREV: quarterprev, QUARTER: quarter, QUARTERNEXT: quarternext, QUARTERPARENT: quarterparent,QUARTERCHILD: quarterchild,
-            YEARPREV: yearprev, YEAR: year, YEARNEXT: yearnext, YEARPARENT: yearparent,YEARCHILD: yearchild,
-            FIVEYEARPREV: fiveyearprev, FIVEYEAR: fiveyear, FIVEYEARNEXT: fiveyearnext, FIVEYEARPARENT: fiveyearparent, FIVEYEARCHILD: fiveyearchild,
+            // EACHSECONDSINSTANTS: second.getEachChild(),
+            // EACHMINUTESECONDS: minute.getEachChild(),
+            INSTANTS : { INSTANTPREV: instantprev, INSTANT: instant, INSTANTNEXT: instantnext, INSTANTPARENT: instantparent,INSTANTCHILD: instantchild },
+            SECONDS : { SECONDPREV: secondprev, SECOND: second, SECONDNEXT: secondnext, SECONDPARENT: secondparent,SECONDCHILD: secondchild },
+            MINUTES : { MINUTEPREV: minuteprev, MINUTE: minute, MINUTENEXT: minutenext, MINUTEPARENT: minuteparent,MINUTECHILD: minutechild },
+            HOURS : { HOURPREV: hourprev, HOUR: hour, HOURNEXT: hournext, HOURPARENT: hourparent,HOURCHILD: hourchild },
+            TIMEOFDAYS : { TIMEOFDAYPREV: timeofdayprev, TIMEOFDAY: timeofday, TIMEOFDAYNEXT: timeofdaynext, TIMEOFDAYPARENT: timeofdayparent,TIMEOFDAYCHILD: timeofdaychild },
+            DAYS : { DAYPREV: dayprev, DAY: day, DAYNEXT: daynext, DAYPARENT: dayparent,DAYCHILD: daychild },
+            WEEKS : { WEEKPREV: weekprev, WEEK: week, WEEKNEXT: weeknext, WEEKPARENT: weekparent,WEEKCHILD: weekchild },
+            MONTHS : { MONTHPREV: monthprev, MONTH: month, MONTHNEXT: monthnext, MONTHPARENT: monthparent,MONTHCHILD: monthchild },
+            QUARTERS : { QUARTERPREV: quarterprev, QUARTER: quarter, QUARTERNEXT: quarternext, QUARTERPARENT: quarterparent,QUARTERCHILD: quarterchild },
+            YEARS : { YEARPREV: yearprev, YEAR: year, YEARNEXT: yearnext, YEARPARENT: yearparent,YEARCHILD: yearchild },
+            FIVEYEARS : { FIVEYEARPREV: fiveyearprev, FIVEYEAR: fiveyear, FIVEYEARNEXT: fiveyearnext, FIVEYEARPARENT: fiveyearparent, FIVEYEARCHILD: fiveyearchild },
         })
         .end();
 });

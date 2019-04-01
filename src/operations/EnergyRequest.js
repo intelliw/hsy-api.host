@@ -23,6 +23,7 @@ class EnergyRequest extends Request {
 
     //  energy period and site are all Param objects. 
     constructor(reqPath, reqQuery, reqBody, reqAccepts) {
+        
 
         // validate and default request parameters and headers 
         let energy = new Param('energy', reqPath.energy, enums.energy.default, enums.energy);       // Param constructor is name, value, default, enum
@@ -41,7 +42,7 @@ class EnergyRequest extends Request {
         let links;
         let items;
         let collections = new Collections();                                                        // the collections array will store an array of collections, one for  each period in the duration 
-
+        
         // call super
         super.execute();
 

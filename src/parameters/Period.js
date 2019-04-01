@@ -15,7 +15,7 @@ const Param = require('./Param');
 const MILLISECOND_FORMAT = consts.periodDatetimeISO.instant;                        // the default format, YYYYMMDDTHHmmss.SSS
 
 /**
- * expects a date-time value in utc format. period is required (as a string) and must contain a complete date (isEpochValid())
+ * expects a date-time value in utc format. period.value is required (as a string) and must contain a complete date (isEpochValid() === true)
  * checks to see if value is a valid time and sets default to current time if it is not.
  * the value is formatted according to the specified period (def.enum.period) argument 
  */
@@ -31,39 +31,38 @@ class Period extends Param {
      "duration": "7",
      "rel": "collection", 
      "prompt": "Mon Feb 4th-Sun Feb 10th", "title": "04/02/19 - 10/02/19"
-    * @param {*} value    // enums.period
+    * @param {*} reqPeriod    // enums.period
     * @param {*} epoch     // date-time 
     * @param {*} duration  // positive integer
     */
-    constructor(value, epoch, duration) {
+    constructor(reqPeriod, epoch, duration) {
 
-        // period 
-        super('period', value, enums.period.default, enums.period);                 // e.g. name='period' value='week';' 
-
+        // period, context
+        super('period', reqPeriod, enums.period.default, enums.period);             // e.g. reqPeriod' ='week';' 
+        this.context = this.value;                                                  // by default context=period except in a collection and overwritten by getChild()
+        
         // duration     
         this.duration = duration ? duration : consts.DEFAULT_DURATION;
-
-        this.context = value;                                                       // by default context=period except in a collection and overwritten by getChild()
-
+        
         // epoch and end millisecond timestamps                                     // validates and normalises the epoch and end for the supplied period and duration
         let valid = isEpochValid(epoch, MILLISECOND_FORMAT);                        // make sure epoch is a valid date-time 
         epoch = valid ? epoch : moment.utc().format(MILLISECOND_FORMAT);            // if not valid default to 'now'
-        epoch = periodEpoch(value, epoch, MILLISECOND_FORMAT);                      // normalise the epoch to the exact start of the period
+        epoch = periodEpoch(this.value, epoch, MILLISECOND_FORMAT);                      // normalise the epoch to the exact start of the period
         //..
         this.epochInstant = epoch;
-        this.endInstant = periodEnd(value, this.epochInstant, this.duration, MILLISECOND_FORMAT);   // period end - get the end date-time based on the epoch and duration 
-
+        this.endInstant = periodEnd(this.value, this.epochInstant, this.duration, MILLISECOND_FORMAT);   // period end - get the end date-time based on the epoch and duration 
+        
         // epoch and end formatted timestamps
-        this.epoch = datetimeFormatISO(this.epochInstant, value);                  // format for the period  
-        this.end = datetimeFormatISO(this.endInstant, value);
+        this.epoch = datetimeFormatISO(this.epochInstant, this.value);              // format for the period  
+        this.end = datetimeFormatISO(this.endInstant, this.value);
 
         // hypermedia properties 
-        this.rel = enums.linkRelations.self;                                            // default is 'self' this is overwritten for parent, child, etc after construction
-        this.prompt = periodPrompt(this.epochInstant, this.endInstant, value);
-        this.title = periodTitle(this.epochInstant, this.endInstant, value);       // "04/02/2019 - 10/02/2019";
+        this.rel = enums.linkRelations.self;                                        // default is 'self' this is overwritten for parent, child, etc after construction
+        this.prompt = periodPrompt(this.epochInstant, this.endInstant, this.value);
+        this.title = periodTitle(this.epochInstant, this.endInstant, this.value);   // "04/02/2019 - 10/02/2019";
 
         // data arrays
-        this._links = global.undefined;                                                 // undefined until requested through links()
+        this._links = consts.NOTHING;                                               // undefined until requested through links()
     }
 
     // returns the next period 
@@ -235,7 +234,7 @@ class Period extends Param {
 
 // returns an epoch adjusted for the start of the period
 function periodEpoch(periodEnum, epoch, format) {
-
+        
     switch (periodEnum) {
 
         // epoch format YYYYMMDDTHHmmss.SSS -----------------------------------              

@@ -15,14 +15,13 @@ class Request {
      * base constructor selects and sets mime type and checks if params are valid
      */
     constructor(reqAccepts, params) {
-
         this.accept = chooseMimeType(reqAccepts);
         
         // params
         let paramsObj = {};
         let isValid = true;                                         
         if (params) {
-
+            
             params.forEach(param => {
 
                 isValid = isValid && param.isValid;                 // check if param was valid during its construction 

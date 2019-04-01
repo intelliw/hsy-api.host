@@ -15,41 +15,47 @@ const consts = require('../system/constants');
 const Response = require('../responses');
 const Request = require('../operations');
 
-// [energy.type.period.epoch.get] /energy/{energy}/{period}/{epoch}/{number}
-router.get('/:energy?/periods/:period?/:epoch?/:duration?', (req, res, next) => {
+// /energy 
+router.get(['/',
+            '/:energy?', 
+            '/:energy?/periods/:period?',
+            '/:energy?/periods/:period?/:epoch?/:duration?'], (req, res, next) => {
+
     /*
-    get the parameter objects - for creating the links and collections
+    create parameter objects for creating the links and collections
     energy, site, period -> including next/prev/parent/child periods, with durations
     param objects have all the data needed for the 
      */
-    
-    // request
-    let request = new Request.EnergyRequest(req.params, req.query, req.body, req.accepts());
 
-    //  execute if valid
-    let response = request.execute();                       // execute the operation and return a response 
-    // console.log(response.data[0].collection.items[0].data[0]); 
-    // /* ---------------------------------
-    res
-        .status(response.status)
-        .type(response.contentType)
-        .render(response.view, {
-            collections: response.data
-        });
-    // */
+        // request
+        let request = new Request.EnergyRequest(req.params, req.query, req.body, req.accepts());
 
+        //  execute if valid
+        let response = request.execute();                       // execute the operation and return a response 
+        let collections = response.data;
+                    // console.log(collections[0].collection.items[0].data[0]); 
 
-    /* [debug START] =========================================================---------------------------------
-    let collections = response.data;
+        
+        // /* =======================================================================
+        res
+            .status(response.status)
+            .type(response.contentType)
+            .render(response.view, {
+                collections: response.data
+            });
+        // /* =======================================================================
     
     
-    res
-        .status(response.status)
-        .type(response.contentType)
-        .json({ collections })
-        .end();
-    */ // [debug END] ===========================================================
+        /* [debug START] ============================================================
+        res
+            .status(response.status)
+            .type(response.contentType)
+            .json({ collections })
+            .end();
+        */ // [debug END] ===========================================================
 
 });
+
+
 
 module.exports = router;
