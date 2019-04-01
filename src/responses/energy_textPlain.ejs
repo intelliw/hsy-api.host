@@ -1,0 +1,30 @@
+[
+  <% for(var n_cols=0; n_cols < collections.length; n_cols++) { col=collections[n_cols].collection; links=col.links; items=col.items; %> {
+     "collection": {
+        "version": "<%= col.version %>",
+        "href": "<%= col.href %>",
+        "links": [<% for(var n_links=0; n_links < links.length; n_links++) { link=links[n_links]; %>
+          { "rel": "<%= link.rel %>", "name": "<%= link.name %>", "prompt": "<%= link.prompt %>", "title": "<%= link.title %>",
+            "href": "<%= link.href %>"<% if (link.render) { %>, "render": "<%= link.render %>"<% } %>
+          }<% if (n_links < (links.length - 1)) { %>,<% } %>
+       <% } %>],
+       "items": [<% for(var n_items=0; n_items < items.length; n_items++) { item=items[n_items]; itemlinks=item.links; itemdatas=item.data; %>
+         { "href": "<%= item.href %>"<% if (item.render) { %>, "render": "<%= item.render %>"<% } %>,
+           "links": [<% for(var n_itemlinks=0; n_itemlinks < itemlinks.length; n_itemlinks++) { itemlink=itemlinks[n_itemlinks]; %>
+            { "rel": "<%= itemlink.rel %>", "name": "<%= itemlink.name %>", "prompt": "<%= itemlink.prompt %>", "title": "<%= itemlink.title %>",
+              "href": "<%= itemlink.href %>"<% if (itemlink.render) { %>, "render": "<%= itemlink.render %>"<% } %>
+            }<% if (n_itemlinks < (itemlinks.length - 1)) { %>,<% } %>
+          <% } %>],          
+           "data": [<% for(var n_itemdatas=0; n_itemdatas < itemdatas.length; n_itemdatas++) { itemdata=itemdatas[n_itemdatas]; %>
+            { "name": "<%= itemdata.name %>", "value": "<%= itemdata.value %>"<% if (itemdata.data) { innerdatas=itemdata.data %>,
+              "data": [<% for(var n_innerdatas=0; n_innerdatas < innerdatas.length; n_innerdatas++) { innerdata=innerdatas[n_innerdatas]; %>
+                { "name": "<%= innerdata.name %>", "value": "<%= innerdata.value %>" }<% if (n_innerdatas < (innerdatas.length - 1)) { %>,<% } %>
+              <% } %>]<% } %>
+            }<% if (n_itemdatas < (itemdatas.length - 1)) { %>,<% } %>
+          <% } %>]
+         }<% if (n_items < (items.length - 1)) { %>,<% } %>
+      <% } %>] 
+     }
+   }<% if(n_cols < (collections.length - 1)) { %>,<% } %>
+  <% } %>]
+  

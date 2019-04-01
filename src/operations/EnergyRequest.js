@@ -65,9 +65,8 @@ class EnergyRequest extends Request {
         });
 
         // create a response - the view is named by convention as energy_<contentType enum key name>
-        //let contentTypeEnumKey = utils.propertyKeyFromValue(enums.mimeTypes, this.accept);
-        // let view = `energy_${contentTypeEnumKey}`;                                            // e.g. energy.applicationCollectionJson todo: this should be selected dynamically
-        let view = 'energy_applicationCollectionJson';
+        let contentTypeEnumKey = utils.propertyKeyFromValue(enums.mimeTypes, this.accept);
+        let view = `energy_${contentTypeEnumKey}`;                                            // e.g. energy.applicationCollectionJson todo: this should be selected dynamically
         let response = new Response(view, 200, collections.getElements(), this.accept);
 
         return response;
