@@ -7,6 +7,8 @@
  * 
  */
 const consts = require('../system/constants');
+const utils = require('../system/utils');
+
 class Param {
     /**
      * attributes:  
@@ -21,23 +23,18 @@ class Param {
      */
     constructor(name, value, defaultValue, enumList) {
 
-        const ENUM_MISSING = -1;
-        const VALUE_PROVIDED = value ? true : false;                        // true if a value was provided 
-
         // name
         this.name = name;
 
         // value
-        value = VALUE_PROVIDED ? value : defaultValue;                      // use default if value not provided  
-        
-        let enumValid = true;
-        if (enumList) {                                                     // if an enum was provided the value (or default if used) must exist in it
-            enumValid = Object.values(enumList).indexOf(value) == ENUM_MISSING ? false : true;     
-        }
-        this.value = enumValid ? value : defaultValue;                      // use default if enum not valid  
+        value = value ? value : defaultValue;                                   // use default if value was not provided  
+
+        // enum 
+        let enumValid = enumList ? utils.valueExists(enumList, value) : true;   // if an enum was provided the value (or default if used) must exist in it
 
         // isValid 
-        this.isValid = enumValid ;                                          // valid if validation passed 
+        this.value = enumValid ? value : defaultValue;                          // use default if enum not valid  
+        this.isValid = enumValid;                                               // valid if validation passed 
 
     }
 }

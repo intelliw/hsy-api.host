@@ -62,7 +62,7 @@ class Period extends Param {
         this.title = periodTitle(this.epochInstant, this.endInstant, this.value);   // "04/02/2019 - 10/02/2019";
 
         // data arrays
-        this._links = consts.NOTHING;                                               // undefined until requested through links()
+        this._links = consts.NONE;                                                  // undefined until requested through links()
     }
 
     // returns the next period 

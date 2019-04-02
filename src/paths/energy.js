@@ -47,6 +47,7 @@ router.get(['/',
 
 
         /* [debug START] ============================================================
+        // console.log(`${}`);
         res
             .status(response.status)
             .type(response.contentType)

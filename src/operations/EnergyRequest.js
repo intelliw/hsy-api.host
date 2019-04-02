@@ -29,7 +29,7 @@ class EnergyRequest extends Request {
         let energy = new Param('energy', reqPath.energy, enums.energy.default, enums.energy);       // Param constructor is name, value, default, enum
         let period = new Param.Period(reqPath.period, reqPath.epoch, reqPath.duration);
         let site = new Param('site', reqQuery.site, consts.DEFAULT_SITE);
-
+        
         // super constructor 
         let params = [energy, period, site];
         super(reqAccepts, params);                                                                  // sets accepts header and checks if params valid
@@ -65,7 +65,8 @@ class EnergyRequest extends Request {
         });
 
         // create a response - the view is named by convention as energy_<contentType enum key name>
-        let contentTypeEnumKey = utils.propertyKeyFromValue(enums.mimeTypes, this.accept);
+        let contentTypeEnumKey = utils.keynameFromValue(enums.mimeTypes, this.accept);
+        
         let view = `energy_${contentTypeEnumKey}`;                                            // e.g. energy.applicationCollectionJson todo: this should be selected dynamically
         let response = new Response(view, 200, collections.getElements(), this.accept);
 
@@ -105,7 +106,7 @@ function getItems(energy, period, site) {
                     items.add(links.href, links, data);
                 }
             }
-            data = global.undefined;
+            data = consts.NONE;
 
         }
     });

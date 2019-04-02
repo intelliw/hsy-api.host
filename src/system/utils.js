@@ -8,33 +8,42 @@ const enums = require('./enums');
 
 module.exports.capitalise = (str) => {return str.charAt(0).toUpperCase() + str.slice(1)};       // capitalise first letter
 
-// returns the name of the property for the first matching value in the object
-module.exports.propertyKeyFromValue = (obj, value) => {
+// returns the key name of the first property with a matching value. Can be used to retrieve an enum key from its value
+module.exports.keynameFromValue = (obj, value) => {
     
-    const EXITFOR = 99;
-    let n; let key;
-    let values = Object.values(obj);
-    for(n=0; n < values.length; n++) {
-        if (values[n] === value) {                  // if the value matches    
-            key = Object.keys(obj)[n];              // set the key 
-            n = EXITFOR;                            // exit the loop
-        } 
-    }
+    const keyname = Object.keys(obj)[this.indexFromValue(obj, value)];
+    return keyname;    
 
-    return key;
+}
+
+// returns the index of the first property with a matching value. Returns -1 if missing. 
+module.exports.indexFromValue = (obj, value) => {
+
+    const index = Object.values(obj).indexOf(value);
+    return index;    
+
+}
+// returns true if a property with a matching value exists in the object. Can be used to check if a value exists in an enum
+module.exports.valueExists = (obj, value) => {
+    
+    const MISSING = -1;
+
+    const exists = this.indexFromValue(obj, value) != MISSING;     
+    return exists;    
 
 }
 
 // returns a random number between min and max with decimal places based on precision 
 module.exports.randomFloat = (min, max, decimalPlaces) => {
     
-    const precision = 10 * Math.pow(10, decimalPlaces);        // e.g. 3 decimals = 1000000
-    min = min * precision;                                      // adjust before dividing for decimal place
+    const precision = 1 * Math.pow(10, decimalPlaces);                      // e.g. 3 decimals = 1000000
+    min = min * precision;                                                  // adjust before dividing for decimal place
     max = max * precision;
 
-    let randomFloat = (Math.floor(Math.random() * max) + min) / precision;
+    let random = (Math.floor(Math.random() * max) + min) / precision;       //generate a random number with the required precision
+    let randomFixed = random.toFixed(decimalPlaces);                        // fix the decimal places including trailing zeros which may be missing in 'random'
 
-    return randomFloat;
+    return randomFixed;
 
 }
 

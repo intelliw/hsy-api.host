@@ -3,7 +3,7 @@
  * ./svc/constant.js
  * global constants
  */
-const path = require('path');                     // this is a node package not the '../paths' applicaiton module
+const path = require('path');                   // this is a node package not the '../paths' applicaiton module
 const enums = require('./enums');
 
 // folder locations
@@ -21,13 +21,13 @@ module.exports.timeOfDayStart = {
 
 // the number of child periods in a period. 
 module.exports.periodChildDuration = {
-    secondinstant: '1000',                  // e.g there are 1000 milliseconds in a second
-    minutesecond: '60',                     // 60 seconds in a minute
+    secondinstant: '1000',                      // e.g there are 1000 milliseconds in a second
+    minutesecond: '60',                         // 60 seconds in a minute
     hourminute: '60',
     timeofdayhour: '6',
     daytimeofday: '4',
-    weekday: '7',                           // 7 days in a week
-    quartermonth: '3',                      // 3 months in a quarter
+    weekday: '7',                               // 7 days in a week
+    quartermonth: '3',                          // 3 months in a quarter
     yearquarter: '4',
     fiveyearyear: '5'
     // monthday is derived dynamically
@@ -45,19 +45,19 @@ module.exports.periodParent = {
     month: enums.period.quarter,
     quarter: enums.period.year,
     year: enums.period.fiveyear,
-    fiveyear: global.undefined                // fiveyear has no parent  
+    fiveyear: this.NONE                         // fiveyear has no parent  
 }
 
 // child periods
 module.exports.periodChild = {
-    instant: global.undefined,                // instant has no child
-    second: enums.period.instant,             // to prevent perf issues with the itemdata for instant should only return instants whgich have data ( do not return zero value items)
+    instant: this.NONE,                         // instant has no child
+    second: enums.period.instant,               // to prevent perf issues with the itemdata for instant should only return instants whgich have data ( do not return zero value items)
     minute: enums.period.second,
     hour: enums.period.minute,
     timeofday: enums.period.hour,
     day: enums.period.timeofday,
     week: enums.period.day,
-    month: enums.period.day,                  // we've decided to go with child of month as day as 4 weeks do not make a month
+    month: enums.period.day,                    // we've decided to go with child of month as day as 4 weeks do not make a month
     quarter: enums.period.month,
     year: enums.period.quarter,
     fiveyear: enums.period.year
@@ -99,7 +99,7 @@ module.exports.periodDatetimeGeneral = {
 module.exports.ACTIVE_VERSIONS = '0.1 0.2';
 module.exports.CURRENT_VERSION = '0.2';
 module.exports.DATE_FORMAT = 'YYYYMMDDTHHmmss.SSS±HHmm';
-module.exports.NOTHING = global.undefined; 
+module.exports.NONE = global.undefined; 
 // parameter constants 
 module.exports.DEFAULT_DURATION = '1';
 module.exports.DEFAULT_SITE = '999';

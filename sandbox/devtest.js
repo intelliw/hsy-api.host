@@ -20,7 +20,7 @@ const vehicle = require('./vehicle');
 
 // [energy.type.period.epoch.get] /energy/{energy}/{period}/{epoch}/{number}
 router.get('/energy/:energy?/:period?/:epoch?/:duration?', (req, res, next) => {
-    let noEnum = global.undefined;
+    let noEnum = consts.NONE;
 
     // validate and default all parameters 
     let site = new Param('site', req.query.site, consts.DEFAULT_SITE);
