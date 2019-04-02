@@ -1,13 +1,14 @@
 //@ts-check
 "use strict";
 /**
- * ./responses/Response.js
- *  base type for view responses  
+ * ./responses/EnergyResponse.js
  * 
  */
-// creates a response objectr for rendering and sending. 
+// creates a response for the /energy path. 
 
-class Response {
+const enums = require('../system/enums');
+
+class EnergyResponse {
 
     constructor(view, status, content, mimetype) {
         this.view = view;
@@ -23,10 +24,14 @@ class Response {
      */
     produces() { 
         
-        // SUBCLASS MUST OVERRIDE
-       
+        const mimeTypesList =  [enums.mimeTypes.applicationCollectionJson, 
+                               enums.mimeTypes.applicationJson,
+                               enums.mimeTypes.textHtml, 
+                               enums.mimeTypes.textPlain];
+        
+        return mimeTypesList;
     }
 
 }
 
-module.exports = Response;
+module.exports = EnergyResponse;

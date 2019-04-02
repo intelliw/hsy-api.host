@@ -47,7 +47,6 @@ module.exports.randomFloat = (min, max, decimalPlaces) => {
 
 }
 
-
 // returns a min and max value for the average energy consumed in this period
 module.exports.MOCK_periodMinMax = (period, dailyHigh, dailyLow) => {
 

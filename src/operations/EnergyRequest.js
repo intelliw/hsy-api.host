@@ -32,7 +32,7 @@ class EnergyRequest extends Request {
         
         // super constructor 
         let params = [energy, period, site];
-        super(reqAccepts, params);                                                                  // sets accepts header and checks if params valid
+        super(params, reqAccepts);                                                                  // sets this.accepts header and checks if params valid
 
     }
 
@@ -68,7 +68,7 @@ class EnergyRequest extends Request {
         let contentTypeEnumKey = utils.keynameFromValue(enums.mimeTypes, this.accept);
         
         let view = `energy_${contentTypeEnumKey}`;                                            // e.g. energy.applicationCollectionJson todo: this should be selected dynamically
-        let response = new Response(view, 200, collections.getElements(), this.accept);
+        let response = new Response.EnergyResponse(view, 200, collections.getElements(), this.accept);
 
         return response;
 
@@ -174,7 +174,7 @@ function itemData(energy, period, site) {
 
 }
 
-// returns an array of item names for the specified energy argument
+// returns an array of property names for the specified energy argument
 function energyDataNames(energy) {
 
     let names = [];
@@ -189,11 +189,11 @@ function energyDataNames(energy) {
         case enums.energy.enjoy:
             names.push(enums.energyData.enjoy);
             break;
-        case enums.energy.grid:
+        case enums.energy.grid:                                          //
             names.push(enums.energyData.gridin);
             names.push(enums.energyData.gridout);
             break;
-        case enums.energy.hse:
+        case enums.energy.hse:                                           // hse returns all names               
             names.push(enums.energyData.harvest);
             names.push(enums.energyData.storein);
             names.push(enums.energyData.storeout);
@@ -206,3 +206,4 @@ function energyDataNames(energy) {
 }
 
 module.exports = EnergyRequest;
+

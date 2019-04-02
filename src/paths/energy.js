@@ -31,8 +31,9 @@ router.get(['/',
 
         //  execute if valid
         let response = request.execute();                       // execute the operation and return a response 
-        let collections = response.data;
-        // console.log(collections[0].collection.items[0].data[0]); 
+        let collections = response.content;
+        //let collections = JSON.stringify(response.content, replacer, 2);
+        // console.log(collections); 
 
 
         // /* =======================================================================
@@ -40,10 +41,10 @@ router.get(['/',
             .status(response.status)
             .type(response.contentType)
             .render(response.view, {
-                collections: response.data
+                collections: collections
             });
 
-        // /* =======================================================================
+        // */ // =======================================================================
 
 
         /* [debug START] ============================================================
@@ -51,13 +52,10 @@ router.get(['/',
         res
             .status(response.status)
             .type(response.contentType)
-            .json({ collections })
-            .end();
+            .json({ collections });                     // no need to call .end() as .json calls end
     
         */ // [debug END] ===========================================================
 
     });
-
-
 
 module.exports = router;

@@ -14,7 +14,7 @@ class Request {
     /**
      * base constructor selects and sets mime type and checks if params are valid
      */
-    constructor(reqAccepts, params) {
+    constructor(params, reqAccepts) {
         this.accept = chooseMimeType(reqAccepts);
         
         // params
