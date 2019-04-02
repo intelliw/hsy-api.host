@@ -22,59 +22,62 @@ const Param = require('../parameters');
 class EnergyRequest extends Request {
 
     //  energy period and site are all Param objects. 
-    constructor(reqPath, reqQuery, reqBody, reqAccepts) {
-        
+    constructor(reqPath, reqQuery, reqBody) {
 
-        // validate and default request parameters and headers 
-        let energy = new Param('energy', reqPath.energy, enums.energy.default, enums.energy);       // Param constructor is name, value, default, enum
+
+        // parameters  
+        let energy = new Param('energy', reqPath.energy, enums.energy.default, enums.energy);
         let period = new Param.Period(reqPath.period, reqPath.epoch, reqPath.duration);
         let site = new Param('site', reqQuery.site, consts.DEFAULT_SITE);
-        
+
         // super constructor 
-        let params = [energy, period, site];
-        super(params, reqAccepts);                                                                  // sets this.accepts header and checks if params valid
+        super([energy, period, site]);                               // sets this.accepts header and checks if params valid
 
     }
 
     // perform the energy data operation
-    execute() {
+    execute(reqAccepts) {
 
         let links;
         let items;
         let collections = new Collections();                                                        // the collections array will store an array of collections, one for  each period in the duration 
-        
-        // call super
-        super.execute();
 
-        // get a collection for each period in the duration
-        let periods = this.params.period.getEach();                                                 // break up the period duration into individual periods
-        periods.forEach(period => {
+        // super executes 400 and 401
+        let response = super.execute();                                                             // super executes 400 and 401 if needed
 
-            // create the collection links  
-            links = new Links.EnergyLinks(this.params.energy, period, this.params.site);            // this creates the 'self' and 'Collection' links
-            links.addLink(period.getGrandchild(), enums.linkRender.none);                           // add the other links needed for the collection
-            links.addLink(period.getParent(), enums.linkRender.link);
-            links.addLink(period.getNext(), enums.linkRender.link);
-            links.addLink(period.getPrev(), enums.linkRender.link);
+        // execute 200 
+        if (!response) {
 
-            items = getItems(this.params.energy, period, this.params.site);
+            // get a collection for each period in the duration
+            let periods = this.params.period.getEach();                                                 // break up the period duration into individual periods
+            periods.forEach(period => {
 
-            // add each collection to the collections array
-            collections.add(consts.CURRENT_VERSION, links.href, links, items);
+                // create the collection links  
+                links = new Links.EnergyLinks(this.params.energy, period, this.params.site);            // this creates the 'self' and 'Collection' links
+                links.addLink(period.getGrandchild(), enums.linkRender.none);                           // add the other links needed for the collection
+                links.addLink(period.getParent(), enums.linkRender.link);
+                links.addLink(period.getNext(), enums.linkRender.link);
+                links.addLink(period.getPrev(), enums.linkRender.link);
 
-        });
+                items = getItems(this.params.energy, period, this.params.site);
 
-        // create a response - the view is named by convention as energy_<contentType enum key name>
-        let contentTypeEnumKey = utils.keynameFromValue(enums.mimeTypes, this.accept);
-        
-        let view = `energy_${contentTypeEnumKey}`;                                            // e.g. energy.applicationCollectionJson todo: this should be selected dynamically
-        let response = new Response.EnergyResponse(view, 200, collections.getElements(), this.accept);
+                // add each collection to the collections array
+                collections.add(consts.CURRENT_VERSION, links.href, links, items);
+
+            });
+
+            response = new Response.EnergyResponse(collections.getElements(), reqAccepts);
+            
+        }
+
 
         return response;
 
     }
 
 }
+
+
 
 // gets links and data for each child period 
 function getItems(energy, period, site) {

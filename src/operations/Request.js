@@ -6,63 +6,46 @@
  *  
  */
 const enums = require('../system/enums');
+const utils = require('../system/utils');
+const consts = require('../system/constants');
 /**
 * stores data and status for an operation in a Response object, and the headers
 */
 class Request {
 
     /**
-     * base constructor selects and sets mime type and checks if params are valid
+     * base constructor validates params and checks authorisation
+     * selects a Accept header based on the content types supported by the response 
      */
-    constructor(params, reqAccepts) {
-        this.accept = chooseMimeType(reqAccepts);
-        
-        // params
-        let paramsObj = {};
-        let isValid = true;                                         
-        if (params) {
-            
-            params.forEach(param => {
+    constructor(requestParams) {
 
-                isValid = isValid && param.isValid;                 // check if param was valid during its construction 
-                paramsObj[param.name] = param;                      // assign the param to an object  
+        // params
+        let params = {};
+        let isValid = true;
+        if (requestParams) {
+
+            requestParams.forEach(param => {                     // Request.isValid is true only if *all* params are valid
+
+                isValid = isValid && param.isValid;              // check if param was valid during its construction 
+                params[param.name] = param;                      // assign the param to an object  e.g. params.energy
 
             });
             this.isValid = isValid;
         }
-        this.params = paramsObj;                                    // assign the object as an instance property e.g this.params.energy
+        this.params = params;                                    // assign the object as an instance property e.g this.params.energy
 
     }
 
-    // subtype implements xecute method 
+    // super implements generic response for 400s and 401s. subtype implements execute method for each specific 200 response 
     execute() {
 
-    }
+        let response = consts.NONE;
+        // 2DO: implement 400 foiir isValid = false
+        // 2DO: implement 401 for isAuthorised = false
 
-}
-
-//prioritises and selects a mime type from the list of request Accept headers 
-function chooseMimeType(reqAcceptHeaders) {
-
-    const e = enums.mimeTypes;
-    let header = e.default;                                 // start with the default - if no match this will be returned 
-
-    if (reqAcceptHeaders.includes(e.applicationCollectionJson)) {
-        header = e.applicationCollectionJson;
-
-    } else if (reqAcceptHeaders.includes(e.applicationJson)) {
-        header = e.applicationJson;
-
-    } else if (reqAcceptHeaders.includes(e.textHtml)) {
-        header = e.textHtml;                               // todo:  develope a viewfor text/html 
-
-
-    } else if (reqAcceptHeaders.includes(e.textPlain)) {
-        header = e.textPlain;
+        return response;
 
     }
-
-    return header;
 
 }
 

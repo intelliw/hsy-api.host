@@ -6,13 +6,13 @@
 
 const enums = require('./enums');
 
-module.exports.capitalise = (str) => {return str.charAt(0).toUpperCase() + str.slice(1)};       // capitalise first letter
+module.exports.capitalise = (str) => { return str.charAt(0).toUpperCase() + str.slice(1) };       // capitalise first letter
 
 // returns the key name of the first property with a matching value. Can be used to retrieve an enum key from its value
 module.exports.keynameFromValue = (obj, value) => {
-    
+
     const keyname = Object.keys(obj)[this.indexFromValue(obj, value)];
-    return keyname;    
+    return keyname;
 
 }
 
@@ -20,22 +20,48 @@ module.exports.keynameFromValue = (obj, value) => {
 module.exports.indexFromValue = (obj, value) => {
 
     const index = Object.values(obj).indexOf(value);
-    return index;    
+    return index;
 
 }
 // returns true if a property with a matching value exists in the object. Can be used to check if a value exists in an enum
 module.exports.valueExists = (obj, value) => {
-    
+
     const MISSING = -1;
 
-    const exists = this.indexFromValue(obj, value) != MISSING;     
-    return exists;    
+    const exists = this.indexFromValue(obj, value) != MISSING;
+    return exists;
 
+}
+
+/**
+ * searches the findIn array for the first occurrence of an item in the find array. 
+ * The items in the find array need to be in order of preference. The first match wil be returned.
+ * if there are no matches and defaultIfNotFound is true, the first item in the findIn array will be returned as the default. 
+ */
+module.exports.selectFirstMatch = (findInCVL, find, defaultIfNotFound) => {
+
+    let selectedItem;
+
+    if (findInCVL && find) {
+
+        const EXITFOR = findInCVL.length;
+
+        let n; 
+        for (n = 0; n < findInCVL.length; n++) {
+            if (find.includes(findInCVL[n])) {             // if the value matches    
+                selectedItem = findInCVL[n];               // set the found item 
+                n = EXITFOR;                            // exit the loop
+            }
+        }
+
+        selectedItem = !selectedItem && defaultIfNotFound ? findInCVL[0] : selectedItem;        // if the item was not found set default to first item in findIn
+    }
+    return selectedItem;
 }
 
 // returns a random number between min and max with decimal places based on precision 
 module.exports.randomFloat = (min, max, decimalPlaces) => {
-    
+
     const precision = 1 * Math.pow(10, decimalPlaces);                      // e.g. 3 decimals = 1000000
     min = min * precision;                                                  // adjust before dividing for decimal place
     max = max * precision;
@@ -98,7 +124,7 @@ module.exports.MOCK_periodMinMax = (period, dailyHigh, dailyLow) => {
 
 // returns a space delimited list containing as many values as the duration. if skip is true this will randsomly skips some to limit the output
 module.exports.MOCK_randomValues = (min, max, duration, skip) => {
-    
+
     const decimalPlaces = 3;                                  // 3 decimals
     const SPACE_DELIMITER = ' ';
 
@@ -111,7 +137,7 @@ module.exports.MOCK_randomValues = (min, max, duration, skip) => {
     let p; let randomNum; let values;
 
     for (p = 1; p <= numelements; p++) {
-        
+
         // randomly skip if requested - needed to limit output to suimulate real-life data logging for isntant
         MOCK_skip = skip ? this.MOCK_randomSkip() : false;
         if (!MOCK_skip) {
@@ -122,15 +148,15 @@ module.exports.MOCK_randomValues = (min, max, duration, skip) => {
             values = values + randomNum.toString();
         }
     }
-    
+
     return values;
-    
+
 }
 
 // returns true at random. This is needed to limit the periods which are outputted fior 'instant' to simulate real-life data logging
 module.exports.MOCK_randomSkip = () => {
-    
-    let MOCK_skip; let MOCK_randomnum; 
+
+    let MOCK_skip; let MOCK_randomnum;
     const MOCK_max = 30;                                                   // the larger this nuymber the more skips there will be  
     const MOCK_match = 5;                                                  // this can be any number less than MOCK_max
 

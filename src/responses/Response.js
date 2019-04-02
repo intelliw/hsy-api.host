@@ -3,28 +3,31 @@
 /**
  * ./responses/Response.js
  *  base type for view responses  
- * 
+ *  creates a response object for rendering and sending. 
  */
-// creates a response objectr for rendering and sending. 
+const enums = require('../system/enums');
+const utils = require('../system/utils');
 
 class Response {
 
-    constructor(view, status, content, mimetype) {
-        this.view = view;
-        this.status = status;
-        this.content = content;
-        this.contentType = mimetype;
-    }
-
     /**
-     * returns a list of mimetypes which this response is able to produce. 
-     * the default mimetype must be the first item
-     * this list must match the list specified in the 'produces' property in the openapi spec
+     * base constructor sets response properties 
      */
-    produces() { 
+    constructor(requestAccepts, responseContentTypes, responseStatus, viewPrefix) {
+
+        // contentType
+        let contentTypeValue = utils.selectFirstMatch(responseContentTypes, requestAccepts, true);        // if request had multiple Accept headers this will select a header supported by the response  
+        this.contentType = contentTypeValue;
         
-        // SUBCLASS MUST OVERRIDE
-       
+        // view
+        let contentTypeKeyname = utils.keynameFromValue(enums.mimeTypes,contentTypeValue); 
+        this.view = `${viewPrefix}${contentTypeKeyname}`;       // e.g. energy.applicationCollectionJson todo: this should be selected dynamically
+        
+        // status    
+        this.status = responseStatus;                           // e.g. 200 
+
+        // content (the data) is set by the subclass 
+
     }
 
 }

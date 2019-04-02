@@ -27,15 +27,12 @@ router.get(['/',
     '/:energy?/periods/:period?/:epoch?/:duration?'], (req, res, next) => {
 
         // request
-        let request = new Request.EnergyRequest(req.params, req.query, req.body, req.accepts());
+        let request = new Request.EnergyRequest(req.params, req.query, req.body);
 
         //  execute if valid
-        let response = request.execute();                       // execute the operation and return a response 
+        let response = request.execute(req.accepts());                       // execute the operation and return a response 
         let collections = response.content;
-        //let collections = JSON.stringify(response.content, replacer, 2);
-        // console.log(collections); 
-
-
+        
         // /* =======================================================================
         res
             .status(response.status)
@@ -48,7 +45,7 @@ router.get(['/',
 
 
         /* [debug START] ============================================================
-        // console.log(`${}`);
+        // console.log(`''${}`);
         res
             .status(response.status)
             .type(response.contentType)
