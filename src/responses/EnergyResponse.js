@@ -15,14 +15,14 @@ const viewPrefix = 'energy_';
   * the default mimetype must be the first item
   * this list must match the list specified in the 'produces' property in the openapi spec
   */
-const producesContentTypes = [enums.mimeTypes.applicationCollectionJson, enums.mimeTypes.applicationJson, enums.mimeTypes.textHtml, enums.mimeTypes.textPlain];
-const responseStatus = 200;
+const PRODUCES_CONTENT_TYPES = [enums.mimeTypes.applicationCollectionJson, enums.mimeTypes.applicationJson, enums.mimeTypes.textHtml, enums.mimeTypes.textPlain];
+const RESPONSE_STATUS = enums.responseStatus.OK;
 
 class EnergyResponse extends Response  {
 
     constructor(executedData, requestAccepts) {
         
-        super(requestAccepts, producesContentTypes, responseStatus, viewPrefix);
+        super(requestAccepts, PRODUCES_CONTENT_TYPES, RESPONSE_STATUS, viewPrefix);
         
         this.content = executedData;
     }
