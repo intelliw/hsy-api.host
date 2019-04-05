@@ -35,7 +35,6 @@ class Param {
         // isValid 
         this.value = enumValid ? value : defaultValue;                          // use default if enum not valid  
         this.isValid = enumValid;                                               // valid if validation passed 
-
     }
 }
 

@@ -103,6 +103,8 @@ module.exports.NONE = global.undefined;
 // parameter constants 
 module.exports.DEFAULT_DURATION = '1';
 module.exports.DEFAULT_SITE = '999';
+module.exports.DEFAULT_APIKEY = 'AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0';
+module.exports.API_KEY_PARAM_NAME = 'api_key';
 module.exports.API_HOST = 'api.endpoints.sundaya.cloud.goog';
 // module.exports.API_HOST = 'localhost:8080';
 module.exports.API_SCHEME = 'http';

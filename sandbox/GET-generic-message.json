@@ -1,0 +1,14 @@
+{
+    "code": "400", 
+    "status": "Illegal input for operation.", 
+    "details": [
+        {
+            "message": "NullValue",
+            "target": "period"
+        },
+        {
+            "message": "Not a valid value",
+            "target": "energy"
+        }
+    ]
+}

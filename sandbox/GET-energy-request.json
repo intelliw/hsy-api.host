@@ -1,0 +1,12 @@
+{
+    "product-catalogue-items": [
+        {
+            "product-category": "Solutions",
+            "product-subcategory": "Solar Home Kits",
+            "product-type": "JouleBox"
+        },
+        {
+            "product-category": "Solutions & Components"
+        }
+    ]
+}

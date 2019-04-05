@@ -115,11 +115,11 @@ module.exports.linkRender = {
 module.exports.linkRender.default = this.linkRender.none;
 
 module.exports.responseStatus = {
-    OK: 200,
-    Created: 201,
-    BadRequest: 400,
-    Unauthorized: 401,
-    NotFound: 404,
-    UnsupportedMediaType: 415,
-    InternalServerError: 500
+    '200': 'OK',
+    '201': 'Created',
+    '400': 'Bad Request',
+    '401': 'Unauthorized',
+    '404' :'Not Found',
+    '415' :'Unsupported Media Type',
+    '500' :'Internal Server Error', 
 }

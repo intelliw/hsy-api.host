@@ -11,24 +11,40 @@ const utils = require('../system/utils');
 class Response {
 
     /**
-     * base constructor sets response properties 
-     */
-    constructor(requestAccepts, responseContentTypes, responseStatus, viewPrefix) {
+    instance attributes:  
+     "status": "Bad Request",
+     "code": "400",
+     "contentType": enums.mimeTypes.applicationJson,
+     "view": "message_applicationJson"
+     "content": "{}",
+    constructor arguments 
+    * @param {*} status             //  "Bad Request"
+    * @param {*} contentType        //  enums.mimeTypes.applicationJson
+    * @param {*} viewPrefix         // "message_"
+    * @param {*} content            // { .. }
+    */
+    constructor(status, contentType, viewPrefix, content) {
+
 
         // contentType
-        let contentTypeValue = utils.selectFirstMatch(responseContentTypes, requestAccepts, true);        // if request had multiple Accept headers this will select a header supported by the response  
-        this.contentType = contentTypeValue;
+        this.contentType = contentType;
         
         // view
-        let contentTypeKeyname = utils.keynameFromValue(enums.mimeTypes,contentTypeValue); 
-        this.view = `${viewPrefix}${contentTypeKeyname}`;       // e.g. energy.applicationCollectionJson todo: this should be selected dynamically
+        let contentTypeKeyname = utils.keynameFromValue(enums.mimeTypes,contentType);
         
+        this.view = `${viewPrefix}${contentTypeKeyname}`;       // e.g. energy.applicationCollectionJson todo: this should be selected dynamically
+
         // status    
-        this.status = responseStatus;                           // e.g. 200 
+        let code = utils.keynameFromValue(enums.responseStatus,status);
+        
+        this.code = code;                               // "400"
+        this.status = status;                           // "Bad Request"
 
-        // content (the data) is set by the subclass 
-
+        // content 
+        this.content = content;
+        
     }
+
 
 }
 
