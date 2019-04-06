@@ -191,4 +191,10 @@ function energyDataNames(energy) {
 
 module.exports = EnergyResponse;
 
+/**
+  * a list of mimetypes which this responder's request (EnergyRequest) is able to support. 
+  * the default mimetype must be the first item
+  * this list must match the list specified in the 'produces' property in the openapi spec
+  */
+module.exports.produces = [enums.mimeTypes.applicationCollectionJson, enums.mimeTypes.applicationJson, enums.mimeTypes.textHtml, enums.mimeTypes.textPlain];
 

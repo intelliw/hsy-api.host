@@ -11,19 +11,19 @@ const bodyParser = require('body-parser');
 const Buffer = require('safe-buffer').Buffer;
 
 const host = require('./src/host');                 // common services
-const path = require('./src/paths');                // routes
+const paths = require('./src/paths');                // routes
 const sandbox = require('./sandbox');
 
 // [START setup]------------------------------
 
-host.config.initialise(app);                // configuration settings
+host.config.initialise(app);                        // configuration settings
 
 app.use(bodyParser.json());
 
 // initialise routes - each tag has a route handler
-app.use('/energy', path.energy);            // endpoint tag: Energy 
-app.use('/devices', path.devices);          // endpoint tag: Devices
-app.use('/api', path.diagnostics);          // endpoint tag: Diagnostics
+app.use('/energy', paths.energy);                    // endpoint tag: Energy 
+app.use('/devices', paths.devices);                  // endpoint tag: Devices
+app.use('/api', paths.diagnostics);                  // endpoint tag: Diagnostics
 
 // for testing and troubleshooting only
 app.use('/devtest', sandbox.devtest);
