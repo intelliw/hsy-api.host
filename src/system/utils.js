@@ -48,9 +48,9 @@ module.exports.selectFirstMatch = (findInCVL, find, defaultIfNotFound) => {
 
         let n;
         for (n = 0; n < findInCVL.length; n++) {
-            if (find.includes(findInCVL[n])) {             // if the value matches    
-                selectedItem = findInCVL[n];               // set the found item 
-                n = EXITFOR;                            // exit the loop
+            if (find.includes(findInCVL[n])) {                              // if the value matches    
+                selectedItem = findInCVL[n];                                // set the found item 
+                n = EXITFOR;                                                // exit the loop
             }
         }
 
@@ -76,7 +76,7 @@ module.exports.randomFloat = (min, max, decimalPlaces) => {
 // returns a min and max value for the average energy consumed in this period
 module.exports.MOCK_periodMinMax = (period, dailyHigh, dailyLow) => {
 
-    const DAY_DECIMAL_PLACES = 3;                                                         // 3 decimals
+    const DAY_DECIMAL_PLACES = 3;                                           // 3 decimals
     let minmax = { min: dailyHigh, max: dailyLow,  precision: DAY_DECIMAL_PLACES};
     
     let multiplier = 1; let decimalPlaces = DAY_DECIMAL_PLACES;

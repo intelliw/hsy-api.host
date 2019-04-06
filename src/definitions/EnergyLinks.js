@@ -6,24 +6,24 @@
  */
 
 // stores data rows for a json collection  
-const Links = require('./Links');
 const enums = require('../system/enums');
 const consts = require('../system/constants');
 
+const Links = require('./Links');
 class EnergyLinks extends Links {
 
     constructor(energy, period, site) {
 
         super();
 
-        this.energy = energy;                                    // store energy and site in the object for addLink when links are added for more periods
+        this.energy = energy;                                           // store energy and site in the object for addLink when links are added for more periods
         this.site = site;
 
-        this.href = periodHref(energy, period, site);            // this href is used for the whole collection 
+        this.href = periodHref(energy, period, site);                   // this href is used for the whole collection 
 
         // these two links are needed for both collections and for items - add others after construction if needed e.g. for collections
-        this.addLink(period,enums.linkRender.link);                   // 'self' is rendered 
-        this.addLink(period.getChild(), enums.linkRender.none);       // the child - not rendered
+        this.addLink(period,enums.linkRender.link);                     // 'self' is rendered 
+        this.addLink(period.getChild(), enums.linkRender.none);         // the child - not rendered
 
     }
 

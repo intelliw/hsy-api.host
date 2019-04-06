@@ -28,7 +28,7 @@ class EnergyRequest extends Request {
      response : set if super does not set it                            
     
      constructor arguments 
-    * @param {*} req                    // express req
+    * @param {*} req                                                    // express req
     */
     constructor(req) {
 

@@ -10,7 +10,7 @@ class Definitions {
     
     constructor() {
 
-        this._elements = [];         // starts with an empty array
+        this._elements = [];                                // starts with an empty array
 
     }
 

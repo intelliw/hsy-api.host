@@ -20,7 +20,7 @@ class GenericMessageDetail extends Definitions {
         target = 'Accept header'
 
     constructor arguments 
-    * @param {*} statusEnums             //  [] array of statusEnums one for each invalid status 
+    * @param {*} statusEnums                                        //  [] array of statusEnums one for each invalid status 
     */
     constructor(statusEnums) {
 
@@ -44,17 +44,17 @@ function getDetail(statusEnum) {
     let target;
 
     switch (statusEnum) {
-        case enums.responseStatus[401]:                               // Unauthorized
+        case enums.responseStatus[401]:                             // Unauthorized
             message = 'The client does not have sufficient permission.';
             target = 'api_key parameter'
             break;
 
-        case enums.responseStatus[415]:                               // Unsupported Media Type
+        case enums.responseStatus[415]:                             // Unsupported Media Type
             message = 'The requested Accept header type is not supported.';
             target = 'Accept header'
             break;
 
-        case enums.responseStatus[400]:                               // Bad Request
+        case enums.responseStatus[400]:                             // Bad Request
             message = 'The client specified an invalid argument.';
             target = 'parameters'
             break;

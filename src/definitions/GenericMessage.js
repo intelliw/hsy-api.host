@@ -15,14 +15,14 @@ class GenericMessage extends Definitions {
     * 
     instance attributes:  
      super.getElements().. => []
-        status      // 'Accept header'
-        message     // 'The requested Accept header type is not supported.';
-        details     // [] 
+    status                              // 'Accept header'
+    message                             // 'The requested Accept header type is not supported.';
+    details                             // [    ] 
 
-    constructor arguments 
-    * @param {*} statusCode          // 415  
-    * @param {*} messageText         // Unsupported Media Type   
-    * @param {*} details             // GeenricMessageDetail.getElements() []
+    constructor argumen ts 
+    * @param {*} statusCode             // 415  
+    * @param {*} messageText            // Unsupported Media Type   
+    * @param {*} details                // GeenricMessageDetail.getElements() []
     */
     constructor(statusCode, messageText, details) {
 

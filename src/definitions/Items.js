@@ -18,7 +18,7 @@ class Items extends Definitions {
 
     add(href, itemLinks, itemData) {
 
-        let links = itemLinks.getElements();        // need getElements so that the _elements does not appear in the output JSON
+        let links = itemLinks.getElements();                // need getElements so that the _elements does not appear in the output JSON
         let data = itemData.getElements();          
 
         super.add({ "href": href, "links": links, "data": data });

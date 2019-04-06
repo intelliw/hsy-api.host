@@ -6,9 +6,9 @@
  */
 
 // stores data rows for a json collection  
-const Definitions = require('./Definitions');
 const enums = require('../system/enums');
 
+const Definitions = require('./Definitions');
 class Links extends Definitions {
 
     constructor() {
