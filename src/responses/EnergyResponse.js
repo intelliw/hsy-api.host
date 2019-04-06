@@ -24,11 +24,10 @@ class EnergyResponse extends Response {
   constructor(reqParams, reqContentType) {
 
     let content = getContent(reqParams);
-    
+
     super(RESPONSE_STATUS, reqContentType, VIEW_PREFIX, content);
 
   }
-
 }
 
 // perform the energy data operation and return a collections array
@@ -49,7 +48,7 @@ function getContent(params) {
     links.addLink(period.getNext(), enums.linkRender.link);
     links.addLink(period.getPrev(), enums.linkRender.link);
 
-    items = getItems(params.energy, period, params.site);
+    items = createItemsObject(params.energy, period, params.site);
 
     // add each collection to the collections array
     collections.add(consts.CURRENT_VERSION, links.href, links, items);
@@ -59,10 +58,10 @@ function getContent(params) {
 
 }
 
-// gets links and data for each child period 
-function getItems(energy, period, site) {
+// returns an items object with href, links and data for each child period 
+function createItemsObject(energy, period, site) {
 
-  let links; let data; let href;
+  let links; let itemData; let href;
 
   let items = new Definitions.Items();
 
@@ -74,22 +73,17 @@ function getItems(energy, period, site) {
 
     if (childPeriod) {
 
-      // randomly skip if instant - to limit output
-      MOCK_skip = childPeriod.value == enums.period.instant ? utils.MOCK_randomSkip() : false;
+      // get data
+      itemData = createItemDataObject(energy, childPeriod, site);
+      if (itemData) {
 
-      if (!MOCK_skip) {                                                       // skips only if instant and no match
-        // get data
-        data = itemData(energy, childPeriod, site);
-        if (data) {
+        // make the item links 
+        let itemLinks = new Links.EnergyLinks(energy, childPeriod, site);       // constructor creates a child and grandchild link
 
-          // make the item links 
-          let links = new Links.EnergyLinks(energy, childPeriod, site);       // constructor creates a child and grandchild link
-
-          // add an item to the list
-          items.add(links.href, links, data);
-        }
+        // add an item to the list
+        items.add(itemLinks.href, itemLinks, itemData);
       }
-      data = consts.NONE;
+      itemData = consts.NONE;
 
     }
   });
@@ -97,65 +91,87 @@ function getItems(energy, period, site) {
   return items;
 }
 
+/*
+ * returns a data object with two elements for this child period 
+  - an element for the child data and an element for the grandchildren data.  
+  if there is no data returns an empty data object 
+ */
+function createItemDataObject(energy, childPeriod, site) {
 
-// gets energy data for this period. if there is no data returns an empty data object 
-function itemData(energy, period, site) {
+  // set daily high-low to 3-20 KwH                                                // kwh => megajoules 
+  const dailyHigh = (20 * 3.6);                                                    // dailyHigh =72 MJ 
+  const dailyLow = (3 * 3.6);                                                      // dailyLow  =10.8 MJ 
 
-  const dailyHigh = (20 * 3.6);
-  const dailyLow = (3 * 3.6);                                                     // kwh => megajoules
+  const SPACE_DELIMITER = ' ';
 
   let dataWrapper = new Definitions.Data();
 
   let energyNames = energyDataNames(energy);                                        // these are the 6 energy names (e.g. 'store.in')
 
-  let MOCK_skip;
-
-
-  // for each child of the containing collection - provide a single total for each energy type
   let childData = new Definitions.Data();
-  let minmax = utils.MOCK_periodMinMax(period, dailyHigh, dailyLow);                // get an adjusted minmax for this period
-  //
+  let childMinMax = utils.MOCK_periodMinMax(childPeriod, dailyHigh, dailyLow);      // get an adjusted minmax for the childperiod
+
+  let grandChildData = new Definitions.Data();
+
+  let grandChildPeriod = childPeriod.getChild();
+
+  let p; let randomNum; let energyNameValues; let energyNameTotal; let grandChildMinMax; 
+
+  // grandchild - create data for grandchild and child
   energyNames.forEach(energyName => {
 
-    let periodValue = utils.MOCK_randomValues(minmax.min, minmax.max, period.duration, false)
-    if (periodValue) {
-      childData.add(energyName, periodValue);                                       // e.g. harvest  21.133882
-    }
-  });
-  //
-  if (childData._elements.length > 0) {                                             // add the 
-    dataWrapper.addNested(period.context, `${period.epoch}/${period.duration}`, childData);
-  }
+    // create space delimited value list 
+    energyNameValues = '';
+    energyNameTotal = 0;
 
-  // grandchild - space delimited data values
-  let periodChild = period.getChild();
-  if (periodChild) {
+    if (grandChildPeriod) {
 
-    let grandchildData = new Definitions.Data();
+      grandChildMinMax = utils.MOCK_periodMinMax(grandChildPeriod, dailyHigh, dailyLow);        // get an adjusted minmax for the childperiod
 
+      // for each energy type.. harvest, store.in etc
+      for (p = 1; p <= grandChildPeriod.duration; p++) {
 
-    minmax = utils.MOCK_periodMinMax(periodChild, dailyHigh, dailyLow);           // get an adjusted minmax for the childperiod
-    //
-    energyNames.forEach(energyName => {
+        // get the number 
+        randomNum = utils.randomFloat(grandChildMinMax.min, grandChildMinMax.max, grandChildMinMax.precision);      // get a random number
 
-      // randomly skip if instant - to limit output
-      MOCK_skip = periodChild.value == enums.period.instant ? utils.MOCK_randomSkip() : false;
+        // ..add it to the total 
+        energyNameTotal = energyNameTotal + parseFloat(randomNum);                              // keep a total for the child period to use with this energy type
 
-      let periodValue = utils.MOCK_randomValues(minmax.min, minmax.max, periodChild.duration, MOCK_skip)
-      if (periodValue) {
-        grandchildData.add(energyName, periodValue);
+        // ..add it to the space-delimited list  
+        energyNameValues = p == 1 ? '' : energyNameValues + SPACE_DELIMITER;                    // pad a space after the 1st iteration
+        energyNameValues = energyNameValues + randomNum.toString();
       }
 
-    });
-    // 
-    if (grandchildData._elements.length > 0) {
-      dataWrapper.addNested(periodChild.context, `${periodChild.epoch}/${periodChild.duration}`, grandchildData);
+      // add the data for this energyName for both child and grandchild  
+      if (energyNameValues !== '') {
+        childData.add(energyName, energyNameTotal.toFixed(childMinMax.precision).toString());                                  // child has the total
+        grandChildData.add(energyName, energyNameValues);                                       // grandchild has the SSV values
+      }
+
+    // if there was no grandchild for this period - create data for child only  
+    } else {
+      
+      randomNum = utils.randomFloat(childMinMax.min, childMinMax.max,childMinMax.precision);    // get a random number
+      childData.add(energyName, randomNum.toString());                                          
+
     }
+
+  });
+
+
+  // add the nested child and grandchild data items to the wrapper 
+  if (childData._elements.length > 0) {
+    dataWrapper.addNested(childPeriod.context, `${childPeriod.epoch}/${childPeriod.duration}`, childData);
+  }
+
+  if (grandChildData._elements.length > 0) {
+    dataWrapper.addNested(grandChildPeriod.context, `${grandChildPeriod.epoch}/${grandChildPeriod.duration}`, grandChildData);
   }
 
   return dataWrapper;
 
 }
+
 
 // returns an array of property names for the specified energy argument
 function energyDataNames(energy) {
