@@ -11,15 +11,15 @@ const utils = require('../system/utils');
 
 class Param {
     /**
-     * attributes:  
-     * name: "period", 
-     * value: "week",
-     * isValid: true,
-     * 
+     * instance attributes:  
+        "name": "period", 
+        "value": "week",
+        "isValid": true,
+       
      * constructor validates and stores parameter name and value. 
      * if the value is missing the default is used and isValid is true.
      * if the value was provided it will be validated against the enum 
-     * the default value is used if the provided value is missing or not valid
+     * the default value is used if the provided value is missing 
      */
     constructor(name, value, defaultValue, enumList) {
 
@@ -27,14 +27,15 @@ class Param {
         this.name = name;
 
         // value
-        value = value ? value : defaultValue;                                   // use default if value was not provided  
+        this.value = value ? value : defaultValue;                                  // use default if value was not provided  
 
         // enum 
-        let enumValid = enumList ? utils.valueExists(enumList, value) : true;   // if an enum was provided the value (or default if used) must exist in it
+        let enumValid = enumList ? utils.valueExists(enumList, this.value) : true;  // if an enum was provided the value (or default if used) must exist in it
 
         // isValid 
-        this.value = enumValid ? value : defaultValue;                          // use default if enum not valid  
-        this.isValid = enumValid;                                               // valid if validation passed 
+        this.isValid = enumValid;                                                   // valid if validation passed 
+        
+        
     }
 }
 

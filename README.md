@@ -16,9 +16,9 @@ The API packages more or less mirror the OpenAPI specificaiton structure.
     - src                 
         - definitions       // data objects
         - host              // setup and configuration for the app runtime
-        - operations        // request handlers, these select request headers and validate params  
+        - operations        // 
         - parameters        // generic class for simple params, specialised classes for complex params such as Period
-        - paths             // handlers for each top level path  
+        - paths             // routers and request handlers, these handle top level routes and validate params, headers, and authorisation 
         - responses         // view and response handlers for data and errors. Each response is constructed with a data objectand selects a view based on headers
         - system            // shared utilities and tools.
 

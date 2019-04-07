@@ -1,6 +1,6 @@
 //@ts-check
 /**
- * ./route/devices.js
+ * ./paths/DevicesRequest.js
  * handlers for /devices path  
  * basepath /devices
  */

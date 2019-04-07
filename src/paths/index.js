@@ -1,11 +1,12 @@
 //@ts-check
 /**
- * ./path/index.js   
+ * ./paths/index.js   
  */
 
-module.exports.energy = require('./energy');
+module.exports = require('./Request');
+module.exports.EnergyRequest = require('./EnergyRequest');
+
 module.exports.devices = require('./devices');
 module.exports.diagnostics = require('./diagnostics');
-
 
 

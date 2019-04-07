@@ -15,7 +15,7 @@ class GenericMessage extends Definitions {
     * 
     instance attributes:  
      super.getElements().. => []
-    status                              // 'Accept header'
+    status                              // 415
     message                             // 'The requested Accept header type is not supported.';
     details                             // [    ] 
 
@@ -27,8 +27,12 @@ class GenericMessage extends Definitions {
     constructor(statusCode, messageText, details) {
 
         super();
+        
+        this.status = statusCode;
+        this.message = messageText;
+        this.details = details;
 
-        let message = { "status": statusCode, "message": messageText, "details": details };
+        let message = { "status": this.status, "message": this.message, "details": this.details };
 
         super.add(message);
 

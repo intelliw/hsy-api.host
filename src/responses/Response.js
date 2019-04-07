@@ -18,7 +18,7 @@ class Response {
      "content": "{}",
     
      constructor arguments 
-    * @param {*} statusEnum             //  "Bad Request"
+    * @param {*} statusEnum         //  "Bad Request"
     * @param {*} contentType        //   enums.mimeTypes.applicationJson
     * @param {*} viewPrefix         //  "message_"
     * @param {*} content            //  { .. }
