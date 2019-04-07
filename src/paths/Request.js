@@ -57,7 +57,7 @@ class Request {
         this.response = this.isValid ? consts.NONE : new ErrorResponse(
             this.isAuthorised,
             this.isContentType,
-            this.isParamsValid, 
+            this.isParamsValid,
             this.errors
         );         // ErrorResponse contains a generic error message as specified by the swagger genericMessage definition
 
@@ -71,8 +71,9 @@ class Request {
     selectContentType(req, responseContentTypes) {
 
         let requestAcceptsType = req.accepts(responseContentTypes);        // returns false if request had Accept headers which do not match any of the responseContentTypes
-
-        let contentTypeValue = requestAcceptsType == false ? consts.NONE : requestAcceptsType;
+        
+        let contentTypeValue = (requestAcceptsType == false) ? consts.NONE : requestAcceptsType;
+        console.log(`requestAcceptsType ${requestAcceptsType}`);
 
         return contentTypeValue;
 
@@ -83,7 +84,7 @@ class Request {
 
         const ERROR_MESSAGE = 'The client specified an invalid argument.';
 
-        let param; let message; let target;
+        let param;
 
         let allValid = true;
         if (this.params) {
@@ -94,9 +95,9 @@ class Request {
                 param = this.params[key];
 
                 if (!param.isValid) {                                                   // check if param was declared valid during construction 
-                    message = `${ERROR_MESSAGE} | ${param.value} | ${req.path}`;
-                    target = `parameter: ${param.name}`;
-                    this.errors.add(message, target);                         // add the message detail to the errors
+                    this.errors.add(
+                        `${ERROR_MESSAGE} | ${param.value} | ${req.path}`,
+                        `parameter: ${param.name}`);                                    // add the message detail to the errors
                 }
                 allValid = allValid && param.isValid;
             });
@@ -111,8 +112,6 @@ class Request {
 
         const ERROR_MESSAGE = 'The client does not have sufficient permission.';
 
-        let message; let target;
-
         let isAuth = false;
         if (this.params) {
 
@@ -120,9 +119,10 @@ class Request {
             isAuth = api_key ? api_key.isValid : true;                              // 2DO: current logic allows no key as valid. in future need to call gcloud REST api to check if key is valid and has access to this API          
 
             if (!isAuth) {                                                          // check if param was declared valid during construction 
-                message = `${ERROR_MESSAGE} | ${req.path}`;
-                target = `parameter: ${consts.API_KEY_PARAM_NAME}`;
-                this.errors.add(message, target);                         // add the message detail to the errors
+
+                this.errors.add(
+                    `${ERROR_MESSAGE} | ${req.path}`,
+                    `parameter: ${consts.API_KEY_PARAM_NAME}`);                     // add the message detail to the errors
             }
 
         }
@@ -135,15 +135,12 @@ class Request {
 
         const ERROR_MESSAGE = 'The requested Accept header type is not supported.';
 
-        let message; let target;
-
         let isContentType = this.contentType != consts.NONE;                    // if content type is undefined if it was not valid
 
         if (!isContentType) {
-            message = `${ERROR_MESSAGE} | ${req.accepts()}`;
-            target = `Accept header `;
-            this.errors.add(message, target);                         // add the message detail to the errors
-
+            this.errors.add(
+                `${ERROR_MESSAGE} | ${req.accepts()}`,
+                `Accept header`);                                               // add the message detail to the errors
         }
 
         return isContentType;
