@@ -10,8 +10,8 @@ const express = require('express');
 const router = express.Router();
 const Buffer = require('safe-buffer').Buffer;
 
-const enums = require('../src/system/enums');
-const consts = require('../src/system/constants');
+const enums = require('../src/host/enums');
+const consts = require('../src/host/constants');
 const Param = require('../src/parameters');
 
 // @ts-ignore

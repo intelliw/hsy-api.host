@@ -123,3 +123,11 @@ module.exports.responseStatus = {
     '415' :'Unsupported Media Type',
     '500' :'Internal Server Error', 
 }
+
+module.exports.apiKey = {
+    APIKey4 :'AIzaSyAosx2bIR7K5uyXJeEuwJrFZEpbFYliZ3Y',
+    APIKey3 :'AIzaSyDq97s15fdM99swOJuUIFtW8ifgQSBnymo',
+    APIKey2 :'AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0',
+    HokuappsKey1 :'AIzaSyASFQxf4PmOutVS1Dt99TPcZ4IQ8PDUMqY'
+}
+module.exports.apiKey.default = this.apiKey.AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0; 

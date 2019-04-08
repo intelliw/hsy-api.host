@@ -6,8 +6,8 @@
  *  parameter class validates the value in the constructor and stores the parameter name and value
  * 
  */
-const consts = require('../system/constants');
-const utils = require('../system/utils');
+const consts = require('../host/constants');
+const utils = require('../host/utils');
 
 class Param {
     /**
@@ -21,7 +21,7 @@ class Param {
      * if the value was provided it will be validated against the enum 
      * the default value is used if the provided value is missing 
      */
-    constructor(name, value, defaultValue, enumList) {
+    constructor(name, value, defaultValue, enumsList) {
 
         // name
         this.name = name;
@@ -30,11 +30,10 @@ class Param {
         this.value = value ? value : defaultValue;                                  // use default if value was not provided  
 
         // enum 
-        let enumValid = enumList ? utils.valueExists(enumList, this.value) : true;  // if an enum was provided the value (or default if used) must exist in it
-
+        let enumValid = enumsList ? utils.valueExists(enumsList, this.value) : true;  // if an enum was provided the value (or default if used) must exist in it
+        
         // isValid 
         this.isValid = enumValid;                                                   // valid if validation passed 
-        
         
     }
 }

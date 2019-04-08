@@ -4,8 +4,8 @@
  * ./responses/ErrorResponse.js
  * creates a generic response with a JSON message as defined in the openapi genericMessage definition
  */
-const enums = require('../system/enums');
-const utils = require('../system/utils');
+const enums = require('../host/enums');
+const utils = require('../host/utils');
 
 const Response = require('./Response');
 const GenericMessage = require('../definitions/GenericMessage');
@@ -18,16 +18,16 @@ const DEFAULT_RESPONSE_STATUS = enums.responseStatus[400];
 class ErrorResponse extends Response {
 
   /**
-  * creates a generic response bassed on standard properties of a Request supertype passed into the constructor 
+  * creates a generic response based on the validation results sent to the contructor 
   */
-  constructor(requestIsAuthorised, requestIsContentType, requestIsParamsValid, requestErrors) {
+  constructor(validation) {
 
-    if (requestErrors.getElements().length > 0) {
-      
+    if (validation.errors.getElements().length > 0) {
+
       // create the error message
-      let statusEnum = selectResponseStatus(requestIsAuthorised, requestIsContentType, requestIsParamsValid);
+      let statusEnum = selectResponseStatus(validation);
       let statusCode = utils.keynameFromValue(enums.responseStatus, statusEnum);     // '400'
-      let genericMessage = new GenericMessage(statusCode, statusEnum, requestErrors.getElements());
+      let genericMessage = new GenericMessage(statusCode, statusEnum, validation.errors.getElements());
 
       // create the Response including the message content
       super(statusEnum, RESPONSE_CONTENT_TYPE, RESPONSE_VIEW_PREFIX, genericMessage.getElements())
@@ -37,24 +37,28 @@ class ErrorResponse extends Response {
   }
 }
 
-// returns a status enum based on the request validation flags  
-function selectResponseStatus(requestIsAuthorised, requestIsContentType, requestIsParamsValid) {
+// returns a status enum based on validation results  
+function selectResponseStatus(validation) {
 
   let messageStatusEnum;
 
-  // Bad Request
-  if (!requestIsParamsValid) {
-    messageStatusEnum = enums.responseStatus[400];              
-  
-    // Unauthorized
-  } else if (!requestIsAuthorised) {
+  // Unauthorized
+  if (!validation.isAuthorised) {
 
-    messageStatusEnum = enums.responseStatus[401];              
-  
+    messageStatusEnum = enums.responseStatus[401];
+
     // Unsupported Media Type
-  } else if (!requestIsContentType) {
-    messageStatusEnum =  enums.responseStatus[415];              
-    
+  } else if (!validation.isContentType) {
+    messageStatusEnum = enums.responseStatus[415];
+
+    // Bad Request
+  } else if (!validation.isParamsValid) {
+    messageStatusEnum = enums.responseStatus[400];
+
+    // default 400
+  } else {
+    messageStatusEnum = enums.responseStatus[400];
+
   };
 
   return messageStatusEnum;

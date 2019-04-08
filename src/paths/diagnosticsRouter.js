@@ -7,7 +7,7 @@
 const express = require('express');
 const router = express.Router();
 
-let consts = require('../system/constants');
+let consts = require('../host/constants');
 
 // [diagnostics.api.versions.get] /api/versions
 router.get('/versions', (req, res, next) => {

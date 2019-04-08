@@ -3,7 +3,7 @@
  * ./svc/config.js
  * configuration settings 
  */
-const consts = require('../system/constants');                       
+const consts = require('../host/constants');                       
 
 module.exports.initialise = function (app) {
     

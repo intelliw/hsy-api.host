@@ -6,7 +6,8 @@
 module.exports = require('./Request');
 module.exports.EnergyRequest = require('./EnergyRequest');
 
-module.exports.devices = require('./devices');
-module.exports.diagnostics = require('./diagnostics');
+module.exports.energyRouter = require('./energyRouter');
+module.exports.devicesRouter = require('./devicesRouter');
+module.exports.diagnosticsRouter = require('./diagnosticsRouter');
 
 

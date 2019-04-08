@@ -4,9 +4,9 @@
  * ./responses/EnergyResponse.js
  * creates a response for the /energy path. 
  */
-const enums = require('../system/enums');
-const utils = require('../system/utils');
-const consts = require('../system/constants');
+const enums = require('../host/enums');
+const utils = require('../host/utils');
+const consts = require('../host/constants');
 
 const Response = require('./Response');
 const Collections = require('../definitions/Collections');
@@ -21,14 +21,15 @@ class EnergyResponse extends Response {
   /**
   * creates energy data collections and stores cotnent and status in a Response object
   */
-  constructor(reqParams, reqContentType) {
+  constructor(params, contentType) {
 
-    let content = getContent(reqParams);
+    let content = getContent(params);
 
-    super(RESPONSE_STATUS, reqContentType, VIEW_PREFIX, content);
+    super(RESPONSE_STATUS, contentType, VIEW_PREFIX, content);
 
   }
 }
+
 
 // perform the energy data operation and return a collections array
 function getContent(params) {

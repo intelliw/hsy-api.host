@@ -7,9 +7,9 @@
  */
 const moment = require('moment');
 
-const enums = require('../system/enums');
-const consts = require('../system/constants');
-const utils = require('../system/utils');
+const enums = require('../host/enums');
+const consts = require('../host/constants');
+const utils = require('../host/utils');
 
 const Param = require('./Param');
 const MILLISECOND_FORMAT = consts.periodDatetimeISO.instant;                                    // the default format, YYYYMMDDTHHmmss.SSS

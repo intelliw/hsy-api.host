@@ -6,8 +6,8 @@
  */
 
 // stores data rows for a json collection  
-const enums = require('../system/enums');
-const consts = require('../system/constants');
+const enums = require('../host/enums');
+const consts = require('../host/constants');
 
 const Links = require('./Links');
 class EnergyLinks extends Links {
@@ -35,7 +35,6 @@ class EnergyLinks extends Links {
             super.add(period.rel, period.context, period.prompt, period.title, href, render);
         }
     }
-
 
 }
 

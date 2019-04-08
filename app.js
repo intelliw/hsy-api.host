@@ -13,9 +13,7 @@ const Buffer = require('safe-buffer').Buffer;
 const host = require('./src/host');                 // common services
 const sandbox = require('./sandbox');
 
-const EnergyRequest = require('./src/paths/EnergyRequest');                
-const devicesPath = require('./src/paths/devices');                
-const diagnosticsPath = require('./src/paths/diagnostics');                
+const Request = require('./src/paths');                
 
 // [START setup]------------------------------
 
@@ -24,9 +22,9 @@ host.config.initialise(app);                        // configuration settings
 app.use(bodyParser.json());
 
 // initialise routes - each tag has a route handler
-app.use('/energy', EnergyRequest);                 // endpoint tag: Energy 
-app.use('/devices', devicesPath);                  // endpoint tag: Devices
-app.use('/api', diagnosticsPath);                  // endpoint tag: Diagnostics
+app.use('/energy', Request.energyRouter);           // openapi tag: Energy 
+app.use('/devices', Request.devicesRouter);         // openapi tag: Devices
+app.use('/api', Request.diagnosticsRouter);         // openapi tag: Diagnostics
 
 // for testing and troubleshooting only
 app.use('/devtest', sandbox.devtest);
