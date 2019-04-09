@@ -28,7 +28,7 @@ class Request {
      "apiKey": AIzaSyASFQxf4PmOutVS1Dt99TPcZ4IQ8PDUMqY 
      "validation": {
         "isValid": true if isTypeValid, isAuthorised, and isParamsValid
-        "isTypeValid": true if one of the accepts is supported 
+        "isTypeValid": true if a mimetypes in an Accepts header is supported 
         "isAuthorised": true,
         "isParamsValid" : true if all params are valid
         "errors": { GenericMessageDetail }  

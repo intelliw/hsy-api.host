@@ -2,7 +2,7 @@
 /**
  * ./responses/index.js
  * 
- * view templates and headers 
+ * responses  
  */
 module.exports = require('./Response');
 module.exports.EnergyGetResponse = require('./EnergyGetResponse');
