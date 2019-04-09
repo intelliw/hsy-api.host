@@ -27,8 +27,8 @@ class Request {
      "contentType": enums.mimeTypes.applicationJson, or undefined if req.accepts are not supported 
      "apiKey": AIzaSyASFQxf4PmOutVS1Dt99TPcZ4IQ8PDUMqY 
      "validation": {
-        "isValid": true if isContentType, isAuthorised, and isParamsValid
-        "isContentType": true if one of the accepts is supported 
+        "isValid": true if isTypeValid, isAuthorised, and isParamsValid
+        "isTypeValid": true if one of the accepts is supported 
         "isAuthorised": true,
         "isParamsValid" : true if all params are valid
         "errors": { GenericMessageDetail }  
@@ -65,13 +65,13 @@ class Request {
         validation = validateAuthorisation(req, apiKey, validation);                    // updates validation.errors and validation.isAuthorised
         
         // validate contentype 
-        validation = validateContentType(req, this.contentType, validation);            // updates validation.errors and validation.isContentType
+        validation = validateContentType(req, this.contentType, validation);            // updates validation.errors and validation.isTypeValid
 
         // validate params 
         validation = validateParams(req, params, validation);                      // updates validation.errors and validation.isParamsValid
 
         // summarise and rteturn validation  
-        validation.isValid = validation.isContentType && validation.isParamsValid && validation.isAuthorised;   // must have valid parameters and accept header and must be authorised
+        validation.isValid = validation.isTypeValid && validation.isParamsValid && validation.isAuthorised;   // must have valid parameters and accept header and must be authorised
         
         return validation;
     }
@@ -108,20 +108,20 @@ function validateParams(req, params, validation) {
 
 }
 
-// validate content type and return validation.isContentType. Provides error details in validation.errors
+// validate content type and return validation.isTypeValid. Provides error details in validation.errors
 function validateContentType(req, contentType, validation) {
 
     const ERROR_MESSAGE = 'The requested Accept header type is not supported.';
 
-    let isContentType = contentType != consts.NONE;                                 // if content type is undefined if it was not valid
+    let isTypeValid = contentType != consts.NONE;                                 // if content type is undefined if it was not valid
 
-    if (!isContentType) {
+    if (!isTypeValid) {
         validation.errors.add(
             `${ERROR_MESSAGE} | ${req.accepts()}`,
             `Accept header`);                                                       // add the message detail to the errors
     }
 
-    validation.isContentType = isContentType
+    validation.isTypeValid = isTypeValid
     return validation;
 }
 

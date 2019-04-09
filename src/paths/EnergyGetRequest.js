@@ -1,27 +1,27 @@
 //@ts-check
 "use strict";
 /**
- * ./paths/EnergyRequest.js
+ * ./paths/EnergyGetRequest.js
  * prepares data and response for the energy path 
  */
 const enums = require('../host/enums');
 const consts = require('../host/constants');
 
 const Response = require('../responses');
-const EnergyResponse = require('../responses/EnergyResponse');
+const EnergyGetResponse = require('../responses/EnergyGetResponse');
 
 const Request = require('../paths/Request');
 const Param = require('../parameters');
 
 /**
- * class EnergyRequest validatess parameters and accept headers
+ * class EnergyGetRequest validatess parameters and accept headers
  */
-class EnergyRequest extends Request {
+class EnergyGetRequest extends Request {
 
     /**
      * extracts parameters and content type and calls super to validate  
      * if not valid super will create a generic error response
-     * if valid this EnergyRequest will construct a EnergyResponse to produce the response content
+     * if valid this EnergyGetRequest will construct a EnergyGetResponse to produce the response content
     
      instance attributes:  
      super ..
@@ -40,17 +40,17 @@ class EnergyRequest extends Request {
         let params = { "energy": energy, "period": period, "site": site };
 
         // super - validate params, auth, accept header
-        let responseContentTypes = EnergyResponse.produces;
+        let responseContentTypes = EnergyGetResponse.produces;
         super(req, params, responseContentTypes);                    // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
         
         // execute the response only if super isValid                   // if not isValid  super constuctor would have created a this.response = ErrorResponse 
-        this.response = this.validation.isValid ? new Response.EnergyResponse(this.params, this.contentType) : this.response;
+        this.response = this.validation.isValid ? new Response.EnergyGetResponse(this.params, this.contentType) : this.response;
         
     }
 
 }
 
 
-module.exports = EnergyRequest;
+module.exports = EnergyGetRequest;
 
 

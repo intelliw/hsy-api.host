@@ -1,7 +1,7 @@
 //@ts-check
 "use strict";
 /**
- * ./paths/EnergyRequest.js
+ * ./paths/EnergyGetRequest.js
  * prepares data and response for the energy path 
  */
 const express = require('express');
@@ -20,7 +20,7 @@ router.get(['/',
     '/:energy?/periods/:period?/:epoch?/:duration?'], (req, res, next) => {
         
         // request ---------------------
-        let request = new Request.EnergyRequest(req);
+        let request = new Request.EnergyGetRequest(req);
 
         //  execute if valid
         let response = request.response;                       // execute the operation and return a response 

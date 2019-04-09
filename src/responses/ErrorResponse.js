@@ -9,7 +9,6 @@ const utils = require('../host/utils');
 
 const Response = require('./Response');
 const GenericMessage = require('../definitions/GenericMessage');
-const GenericMessageDetail = require('../definitions/GenericMessageDetail');
 
 const RESPONSE_VIEW_PREFIX = 'message_';
 const RESPONSE_CONTENT_TYPE = enums.mimeTypes.applicationJson;       // standard content type for generic message
@@ -48,7 +47,7 @@ function selectResponseStatus(validation) {
     messageStatusEnum = enums.responseStatus[401];
 
     // Unsupported Media Type
-  } else if (!validation.isContentType) {
+  } else if (!validation.isTypeValid) {
     messageStatusEnum = enums.responseStatus[415];
 
     // Bad Request

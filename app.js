@@ -13,7 +13,7 @@ const Buffer = require('safe-buffer').Buffer;
 const host = require('./src/host');                 // common services
 const sandbox = require('./sandbox');
 
-const Request = require('./src/paths');                
+const paths = require('./src/paths');                
 
 // [START setup]------------------------------
 
@@ -22,9 +22,9 @@ host.config.initialise(app);                        // configuration settings
 app.use(bodyParser.json());
 
 // initialise routes - each tag has a route handler
-app.use('/energy', Request.energyRouter);           // openapi tag: Energy 
-app.use('/devices', Request.devicesRouter);         // openapi tag: Devices
-app.use('/api', Request.diagnosticsRouter);         // openapi tag: Diagnostics
+app.use('/energy', paths.energyRouter);           // openapi tag: Energy 
+app.use('/devices', paths.devicesRouter);         // openapi tag: Devices
+app.use('/api', paths.diagnosticsRouter);         // openapi tag: Diagnostics
 
 // for testing and troubleshooting only
 app.use('/devtest', sandbox.devtest);

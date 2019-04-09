@@ -1,6 +1,6 @@
 {
-    "code": "400", 
-    "status": "Illegal input for operation.", 
+    "status": "400", 
+    "message": "Illegal input for operation.", 
     "details": [
         {
             "message": "NullValue",

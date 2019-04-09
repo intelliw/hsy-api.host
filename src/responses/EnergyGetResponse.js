@@ -1,7 +1,7 @@
 //@ts-check
 "use strict";
 /**
- * ./responses/EnergyResponse.js
+ * ./responses/EnergyGetResponse.js
  * creates a response for the /energy path. 
  */
 const enums = require('../host/enums');
@@ -16,7 +16,7 @@ const Definitions = require('../definitions');
 const VIEW_PREFIX = 'energy_';
 const RESPONSE_STATUS = enums.responseStatus[200];
 
-class EnergyResponse extends Response {
+class EnergyGetResponse extends Response {
 
   /**
   * creates energy data collections and stores cotnent and status in a Response object
@@ -189,7 +189,7 @@ function energyDataNames(energy) {
     case enums.energy.enjoy:
       names.push(enums.energyData.enjoy);
       break;
-    case enums.energy.grid:                                          //
+    case enums.energy.grid:                                          
       names.push(enums.energyData.gridin);
       names.push(enums.energyData.gridout);
       break;
@@ -206,10 +206,10 @@ function energyDataNames(energy) {
 }
 
 
-module.exports = EnergyResponse;
+module.exports = EnergyGetResponse;
 
 /**
-  * a list of mimetypes which this responder's request (EnergyRequest) is able to support. 
+  * a list of mimetypes which this responder's request (EnergyGetRequest) is able to support. 
   * the default mimetype must be the first item
   * this list must match the list specified in the 'produces' property in the openapi spec
   */
