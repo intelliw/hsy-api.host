@@ -8,15 +8,15 @@ const enums = require('../host/enums');
 const consts = require('../host/constants');
 
 const Response = require('../responses');
-const DatasetsPostResponse = require('../responses/DatasetsPostResponse');
+const DatasetsPostResponse = require('../responses/DevicesDatasetsPostResponse');
 
-const Request = require('../paths/Request');
+const Request = require('./Request');
 const Param = require('../parameters');
 
 /**
- * class EnergyGetRequest validatess parameters and accept headers
+ * 
  */
-class DatasetsPostRequest extends Request {
+class DevicesDatasetsPost extends Request {
 
     /**
      * extracts parameters and content type and calls super to validate  
@@ -43,13 +43,13 @@ class DatasetsPostRequest extends Request {
         super(req, params, responseContentTypes);                    // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
         
         // execute the response only if super isValid                   // if not isValid  super constuctor would have created a this.response = ErrorResponse 
-        this.response = this.validation.isValid ? new Response.DatasetsPostResponse(this.params, this.contentType) : this.response;
+        this.response = this.validation.isValid ? new Response.DevicesDatasetsPostResponse(this.params, this.contentType) : this.response;
         
     }
 
 }
 
 
-module.exports = DatasetsPostRequest;
+module.exports = DevicesDatasetsPost;
 
 

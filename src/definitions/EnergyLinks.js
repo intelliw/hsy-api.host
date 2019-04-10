@@ -41,7 +41,7 @@ class EnergyLinks extends Links {
 // creates href for the energy resource path (
 function periodHref(energy, period, site) {
 
-    let href = `${consts.API_SCHEME}://${consts.API_HOST}/energy/${energy.value}/periods/${period.value}/${period.epoch}/${period.duration}?site=${site.value}`;
+    let href = `${consts.API_SCHEME}://${consts.API_HOST}/energy/${energy.value}/period/${period.value}/${period.epoch}/${period.duration}?site=${site.value}`;
 
     return href;
 

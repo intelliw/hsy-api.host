@@ -93,7 +93,7 @@ module.exports.MOCK_periodMinMax = (period, dailyHigh, dailyLow) => {
             multiplier = 0.0006944444;
             decimalPlaces = 9;
             break;
-        case enums.period.hour:
+        case enums.period.hour:s
             multiplier = 0.0416666667;
             decimalPlaces = 6;
             break;
@@ -138,10 +138,10 @@ module.exports.MOCK_periodMinMax = (period, dailyHigh, dailyLow) => {
 module.exports.randomTrue = () => {
 
     let randomTrue; let randomnum;
-    const max = 30;                                                     // the larger this nuymber the more skips there will be  
+    const max = 30;                                                     // the larger this number the more skips there will be  
     const random_match = 5;                                             // this can be any number less than MOCK_max
 
-    randomnum = this.randomFloat(1, max, 0).toFixed(0)                  // get a random integer between 1 and MOCK_max
+    randomnum = Number(this.randomFloat(1, max, 0));         // get a random integer between 1 and MOCK_max
     randomTrue = (randomnum == random_match) ? false : true;            // skip unless there is a match
 
     return randomTrue;                                                  // return whether to skip  

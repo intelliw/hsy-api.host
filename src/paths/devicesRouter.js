@@ -9,13 +9,11 @@ const router = express.Router();
 
 const Request = require('../paths');
 
-// [devices.device.dataset.post] /devices/{device}/datasets/{dataset} ---------------
-router.post(['/',
-        '/:device?',
-        '/:device?/datasets/:dataset?'], (req, res, next) => {
+// [devices.datasets.post] ---------------
+router.post('/devices/datasets', (req, res, next) => {
 
     // request ---------------------
-    let request = new Request.DatasetsPostRequest(req);
+    let request = new Request.DevicesDatasetsPost(req);
 
     //  execute if valid
     let response = request.response;                            // execute the operation and return a response 
@@ -30,6 +28,29 @@ router.post(['/',
         });
 
 });
+
+// [device.dataset.period.epoch.duration.get]
+router.get(['/:device?/dataset/:dataset?',
+    '/:device?/dataset/:dataset?/period/:period?',
+    '/:device?/dataset/:dataset?/period/:period?/:epoch?/:duration?'],
+    (req, res, next) => {
+
+        // request ---------------------
+        let request = new Request.DeviceDatasetGet(req);
+
+        //  execute if valid
+        let response = request.response;                            // execute the operation and return a response 
+        let items = response.content;
+
+        // response
+        res
+            .status(response.statusCode)
+            .type(response.contentType)
+            .render(response.view, {
+                collections: items
+            });
+
+    });
 
 // [devices.device.config.epoch.get] /devices/{device}/config/{epoch}
 router.get('/:device?/config/:epoch?', (req, res, next) => {

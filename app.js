@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 
 // initialise routes - each tag has a route handler
 app.use('/energy', paths.energyRouter);           // openapi tag: Energy 
-app.use('/devices', paths.devicesRouter);         // openapi tag: Devices
+app.use(['/devices', '/device'], paths.devicesRouter);         // openapi tag: Devices
 app.use('/api', paths.diagnosticsRouter);         // openapi tag: Diagnostics
 
 // for testing and troubleshooting only

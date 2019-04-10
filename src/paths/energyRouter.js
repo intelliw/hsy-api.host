@@ -13,11 +13,12 @@ const Request = require('../paths');
 create parameter objects for creating the links and collections
 energy, site, period -> including next/prev/parent/child periods, with durations
 param objects have all the data needed for the 
+[energy.period.epoch.duration.get]
  */
 router.get(['/',
     '/:energy?',
-    '/:energy?/periods/:period?',
-    '/:energy?/periods/:period?/:epoch?/:duration?'], (req, res, next) => {
+    '/:energy?/period/:period?',
+    '/:energy?/period/:period?/:epoch?/:duration?'], (req, res, next) => {
         
         // request ---------------------
         let request = new Request.EnergyGetRequest(req);

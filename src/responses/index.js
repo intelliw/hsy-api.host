@@ -6,4 +6,5 @@
  */
 module.exports = require('./Response');
 module.exports.EnergyGetResponse = require('./EnergyGetResponse');
-module.exports.DatasetsPostResponse = require('./DatasetsPostResponse');
+module.exports.DevicesDatasetsPostResponse = require('./DevicesDatasetsPostResponse');
+module.exports.DeviceDatasetGetResponse =require('./DeviceDatasetGetResponse');

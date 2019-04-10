@@ -1,27 +1,27 @@
 //@ts-check
 "use strict";
 /**
- * ./paths/EnergyGetRequest.js
- * prepares data and response for the energy path 
+ * ./paths/DatasetsPostRequest.js
+ * prepares data and response for the devices datasets post path 
  */
 const enums = require('../host/enums');
 const consts = require('../host/constants');
 
 const Response = require('../responses');
-const EnergyGetResponse = require('../responses/EnergyGetResponse');
+const DatasetsPostResponse = require('../responses/DevicesDatasetsPostResponse');
 
-const Request = require('../paths/Request');
+const Request = require('./Request');
 const Param = require('../parameters');
 
 /**
- * class EnergyGetRequest validatess parameters and accept headers
+ * 
  */
-class EnergyGetRequest extends Request {
+class DeviceDatasetGet extends Request {
 
     /**
      * extracts parameters and content type and calls super to validate  
      * if not valid super will create a generic error response
-     * if valid this EnergyGetRequest will construct a EnergyGetResponse to produce the response content
+     * if valid this class will construct a DatasetsPostResponse to produce the response content
     
      instance attributes:  
      super ..
@@ -33,24 +33,24 @@ class EnergyGetRequest extends Request {
     constructor(req) {
 
         // parameters                                                   // validate and default all parameters
-        let energy = new Param('energy', req.params.energy, enums.energy.default, enums.energy);
+        let device = new Param('device', req.params.device);
+        let dataset = new Param('dataset', req.params.dataset, enums.datasets);
         let period = new Param.Period(req.params.period, req.params.epoch, req.params.duration);
-        let site = new Param('site', req.query.site, consts.DEFAULT_SITE);
         
-        let params = { "energy": energy, "period": period, "site": site };
-
+        let params = { "device": device, "dataset": dataset, "period": period };
+        
         // super - validate params, auth, accept header
-        let responseContentTypes = EnergyGetResponse.produces;
+        let responseContentTypes = DatasetsPostResponse.produces;
         super(req, params, responseContentTypes);                    // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
         
         // execute the response only if super isValid                   // if not isValid  super constuctor would have created a this.response = ErrorResponse 
-        this.response = this.validation.isValid ? new Response.EnergyGetResponse(this.params, this.contentType) : this.response;
+        this.response = this.validation.isValid ? new Response.DeviceDatasetGetResponse(this.params, this.contentType) : this.response;
         
     }
 
 }
 
 
-module.exports = EnergyGetRequest;
+module.exports = DeviceDatasetGet;
 
 

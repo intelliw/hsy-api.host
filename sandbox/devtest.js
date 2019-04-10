@@ -37,7 +37,7 @@ router.get('/energy/:energy?/:period?/:epoch?/:duration?', (req, res, next) => {
 });
 
 // period object test
-router.get('/periods/:period?/:epoch?/:duration?', (req, res, next) => {
+router.get('/period/:period?/:epoch?/:duration?', (req, res, next) => {
 
     console.log(req.params.period);
 
