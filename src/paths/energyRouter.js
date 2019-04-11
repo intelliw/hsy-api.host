@@ -21,8 +21,8 @@ router.get(['/',
     '/:energy?/period/:period?/:epoch?/:duration?'], (req, res, next) => {
         
         // request ---------------------
-        let request = new Request.EnergyGetRequest(req);
-
+        let request = new Request.EnergyGet(req);
+        
         //  execute if valid
         let response = request.response;                       // execute the operation and return a response 
         let collections = response.content;

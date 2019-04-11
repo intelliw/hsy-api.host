@@ -17,11 +17,11 @@ class Links extends Definitions {
 
     }
 
-    add(rel, name, prompt, title, href, render) {
+    add(rel, name, prompt, title, description, href, render) {
 
 
         // add with or without render (some links do not declare a render attribute)     
-        let link = { "rel": rel, "name": name, "prompt": prompt, "title": title, "href": href, "render": render };
+        let link = { "rel": rel, "name": name, "prompt": prompt, "title": title, "description": description, "href": href, "render": render };
         
         super.add(link);
 

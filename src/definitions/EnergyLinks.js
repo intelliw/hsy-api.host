@@ -22,17 +22,17 @@ class EnergyLinks extends Links {
         this.href = periodHref(energy, period, site);                   // this href is used for the whole collection 
 
         // these two links are needed for both collections and for items - add others after construction if needed e.g. for collections
-        this.addLink(period,enums.linkRender.link);                     // 'self' is rendered 
-        this.addLink(period.getChild(), enums.linkRender.none);         // the child - not rendered
-
+        this.addLink(period, enums.linkRender.link);                    // 'self' is rendered 
+        this.addLink(period.getChild(), enums.linkRender.none);         // the child collection link - not rendered
+        
     }
 
     // adds a link if the period exist
     addLink(period, render) {
-
+        
         if (period) {
             let href = periodHref(this.energy, period, this.site);
-            super.add(period.rel, period.context, period.prompt, period.title, href, render);
+            super.add(period.rel, period.context, period.prompt, period.title, period.description, href, render);
         }
     }
 

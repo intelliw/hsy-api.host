@@ -42,37 +42,39 @@ class Request {
     */
     constructor(req, params, responseContentTypes) {
 
+        // update instance properties before validation 
         this.params = params;
-        this.apiKey = new Param(consts.API_KEY_PARAM_NAME, req.query[consts.API_KEY_PARAM_NAME], enums.apiKey.default, enums.apiKey);
-        
+        this.apiKey = new Param(consts.API_KEY_PARAM_NAME, req.headers[consts.API_KEY_PARAM_NAME], enums.apiKey.default, enums.apiKey);
         this.contentType = selectContentType(req, responseContentTypes);
         
-        this.validation = this.validate(req, this.params, this.apiKey, this.contentType, responseContentTypes);
+        
+        //validate                      // validates.. this.params, this.apikey, and this.contentType
+        this.validation = this.validate(req, responseContentTypes);
         
         // response
         this.response = this.validation.isValid ? consts.NONE : new ErrorResponse(this.validation);       // ErrorResponse contains a generic error message as specified by the swagger genericMessage definition
-
+        
     }
 
-    // validates request and returns a validation object 
-    validate(req, params, apiKey, contentType, responseContentTypes) {
+    // validates request and return a validation object 
+    validate(req, responseContentTypes) {
 
 
-        this.errors = new GenericMessageDetail();                                       // request errors store a detail elemeent for each validation error
+        this.errors = new GenericMessageDetail();                               // request errors store a detail elemeent for each validation error
         let validation = { "isValid": false, "errors": this.errors };
 
         // validate authorisation 
-        validation = validateAuthorisation(req, apiKey, validation);                    // updates validation.errors and validation.isAuthorised
-        
+        validation = validateAuthorisation(req, this.apiKey, validation);                    // updates validation.errors and validation.isAuthorised
+
         // validate contentype 
-        validation = validateContentType(req, this.contentType, validation);            // updates validation.errors and validation.isTypeValid
+        validation = validateContentType(req, this.contentType, validation);                      // updates validation.errors and validation.isTypeValid
 
         // validate params 
-        validation = validateParams(req, params, validation);                      // updates validation.errors and validation.isParamsValid
+        validation = validateParams(req, this.params, validation);                           // updates validation.errors and validation.isParamsValid
 
         // summarise and rteturn validation  
         validation.isValid = validation.isTypeValid && validation.isParamsValid && validation.isAuthorised;   // must have valid parameters and accept header and must be authorised
-        
+
         return validation;
     }
 
@@ -148,7 +150,7 @@ function validateAuthorisation(req, apiKey, validation) {
     let isAuth = false;                                                         // 2DO: current logic allows no key as valid. in future need to call gcloud REST api to check if key is valid and has access to this API          
     if (apiKey) {
 
-        isAuth = apiKey ? apiKey.isValid : true;                                
+        isAuth = apiKey ? apiKey.isValid : true;
 
         if (!isAuth) {                                                          // check if param was declared valid during construction 
 
@@ -160,7 +162,7 @@ function validateAuthorisation(req, apiKey, validation) {
     }
 
     validation.isAuthorised = isAuth;
-    
+
     return validation;
 }
 

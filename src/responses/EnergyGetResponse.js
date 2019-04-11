@@ -109,8 +109,8 @@ function createItemDataObject(energy, childPeriod, site) {
 
   let energyNames = energyDataNames(energy);                                        // these are the 6 energy names (e.g. 'store.in')
 
-  let childData = new Definitions.Data();
-  let childMinMax = utils.MOCK_periodMinMax(childPeriod, dailyHigh, dailyLow);      // get an adjusted minmax for the childperiod
+  let childData = new Definitions.Data(); 
+  let childMinMax = utils.MOCK_periodMinMax(childPeriod, dailyHigh, dailyLow);      // get an adjusted minmax for the childperiod 
 
   let grandChildData = new Definitions.Data();
 

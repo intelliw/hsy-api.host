@@ -26,11 +26,15 @@ class Period extends Param {
      super.value: "week",
      super.isValid: true,
      "context": "week.day",
-     "epochInstant": "20190204T000000.000", "endInstant": "20190204T235959.999",
-     "epoch": "20190204", "end": "20190204",
+     "epochInstant": "20190204T000000.000", 
+     "endInstant": "20190204T235959.999",
+     "epoch": "20190204", 
+     "end": "20190204",
      "duration": "7",
      "rel": "collection", 
-     "prompt": "Mon Feb 4th-Sun Feb 10th", "title": "04/02/19 - 10/02/19"
+     "prompt": "Mon Feb 4th-Sun Feb 10th", 
+     "title": "04/02/19 - 10/02/19"
+     "description": "Mon Tue Wed Thu Fri Sat Sun"         ..if period retrieved through getChild() otherwise undefined
     
      constructor arguments  
     * @param {*} reqPeriod    // enums.period
@@ -41,11 +45,11 @@ class Period extends Param {
 
         // period, context
         super('period', reqPeriod, enums.period.default, enums.period);                         // e.g. reqPeriod' ='week';' 
-        this.context = this.value;                                                              // by default context=period except in a collection and overwritten by getChild()
-        
+        this.context = this.value;                                                              // by default context=period except in a collection and overwritten by getChild() after construction        
+
         // duration     
         this.duration = duration ? duration : consts.DEFAULT_DURATION;
-        
+
         // epoch and end millisecond timestamps                                                 // validates and normalises the epoch and end for the supplied period and duration
         let valid = isEpochValid(epoch, MILLISECOND_FORMAT);                                    // make sure epoch is a valid date-time 
         epoch = valid ? epoch : moment.utc().format(MILLISECOND_FORMAT);                        // if not valid default to 'now'
@@ -53,7 +57,7 @@ class Period extends Param {
         //..
         this.epochInstant = epoch;
         this.endInstant = periodEnd(this.value, this.epochInstant, this.duration, MILLISECOND_FORMAT);   // period end - get the end date-time based on the epoch and duration 
-        
+
         // epoch and end formatted timestamps
         this.epoch = datetimeFormatISO(this.epochInstant, this.value);                          // format for the period  
         this.end = datetimeFormatISO(this.endInstant, this.value);
@@ -62,6 +66,7 @@ class Period extends Param {
         this.rel = enums.linkRelations.self;                                                    // default is 'self' this is overwritten for parent, child, etc after construction
         this.prompt = periodPrompt(this.epochInstant, this.endInstant, this.value);
         this.title = periodTitle(this.epochInstant, this.endInstant, this.value);               // "04/02/2019 - 10/02/2019";
+        this.description = consts.NONE;                                                         // by default label is undefined except in a collection and overwritten by getChild() after construction
 
         // data arrays
         this._links = consts.NONE;                                                              // undefined until requested through links()
@@ -177,13 +182,15 @@ class Period extends Param {
         if (childEnum) {                                                                    // e.g. instant has no child    
 
             let duration = periodChildDuration(periodEnum, this.epochInstant);
+            let descr = periodChildDescription(periodEnum, this.epochInstant);                    // get the description label e.g.  'Mon Tue Wed Thu Fri Sat Sun'
 
             //col the period and sets its relationship
             child = new Period(childEnum, this.epochInstant, duration);                     // construct child with a duration  
             child.context = `${periodEnum}.${childEnum}`                                    // context is period to child  e.g. 'week.day' 
             child.rel = enums.linkRelations.collection;                                     // collection is the rel for a child
-        }
+            child.description = descr;
 
+        }
         return child;
     }
 
@@ -203,7 +210,7 @@ class Period extends Param {
         return childperiods;
     }
 
-    // returns the grandchil of this period including the total duration of its child periods 
+    // returns the grandchild of this period including the total duration of its child periods 
     getGrandchild() {
 
         let grandchild;
@@ -236,7 +243,7 @@ class Period extends Param {
 
 // returns an epoch adjusted for the start of the period
 function periodEpoch(periodEnum, epoch, format) {
-        
+
     switch (periodEnum) {
 
         // epoch format YYYYMMDDTHHmmss.SSS -----------------------------------              
@@ -247,7 +254,7 @@ function periodEpoch(periodEnum, epoch, format) {
 
         case enums.period.timeofday:                                                        // adjust to the start of the last 6hr block in the day (morning=6, afternoon=12, evening-18, night=00)   
 
-            let hr = consts.timeOfDayStart[selectTimeOfDay(epoch)];                         // get the starting hour for the timeofday     
+            let hr = consts.timeOfDayStart[selectTimeOfDayEnum(epoch)];                         // get the starting hour for the timeofday     
             epoch = moment.utc(epoch).set('hour', hr).format(format);                       // set hour to 0,6,12,or 18
 
             epoch = moment.utc(epoch).set('minute', 0).format(format);                      // set minute, second, millisecond to zero
@@ -350,6 +357,67 @@ function periodChildDuration(periodEnum, epochInstant) {
 
 }
 
+// returns the labels to diisplay as headers for child periods 
+function periodChildDescription(periodEnum, epochInstant) {
+
+    const childEnum = consts.periodChild[periodEnum];
+    let descr;
+    const SPACE_DELIMITER = ' ';
+
+    if (childEnum) {
+        
+        descr = consts.periodChildLabel[`${periodEnum}${childEnum}`];               // e.g. periodChildLabel.weekday  
+
+        switch (periodEnum) {
+
+            // literals from constants for these period/children
+            case enums.period.day:                  // daytimeofday         // 'Morning Afternoon Evening Night'
+            case enums.period.minute:               // minutesecond
+            case enums.period.hour:                 // hourminute
+            case enums.period.week:                 // weekday              // 'Mon Tue Wed Thu Fri Sat Sun'
+            case enums.period.year:                 // yearquarter
+                break;
+
+            // custom lookups for these period/children
+            case enums.period.timeofday:           // timeofdayhour         // '{ 'morning': '06 07 08 09 10 11', 'afternoon': '12 13 ... 
+                
+                let todLbl = selectTimeOfDayEnum(epochInstant);             //  enums.timeOfDay.morning     
+                descr = descr[todLbl];                                      //  extract subvalue from label e.g. '06 07 08 09 10 11'
+                break;
+
+            case enums.period.month:                // monthday
+                
+                let duration = moment.utc(epochInstant).daysInMonth();       // get the days for this month  
+                descr = utils.numberSequenceString(1, duration, SPACE_DELIMITER);
+                
+                break;
+
+            case enums.period.quarter:              // quartermonth         // { 'Q1': 'Jan Feb Mar', 'Q2': 'Apr May ...
+                
+                let qtrLbl = selectQuarterLabel(epochInstant);              //  Q1
+                descr = descr[qtrLbl];                                      //  extract subvalue from label e.g. 'Jan Feb Mar'
+
+                break;
+            case enums.period.fiveyear:             // fiveyearyear
+                
+                let year = moment.utc(epochInstant).format('YYYY');
+                descr = utils.numberSequenceString(year, 5, SPACE_DELIMITER);
+                break;
+
+            // no labels for these period/children
+            case enums.period.instant:              // no child
+            case enums.period.second:               // secondinstant    
+            default:
+                descr = consts.NONE;
+                break;
+
+        }
+    }
+    return descr;
+    
+
+}
+
 // returns a formatted string for the title property ("04/02/2019 - 10/02/2019")
 function periodTitle(epoch, end, periodEnum) {
 
@@ -407,27 +475,38 @@ function isEpochValid(epoch, format) {
     return isValid
 }
 
-// select the timeofday enum for the epoch
-function selectTimeOfDay(epoch) {
+// select the quarter label (eg 'Q1' for the year of the epoch
+function selectQuarterLabel(epoch) {
 
-    let tod;
+    const QUARTER_PREFIX = 'Q';
+
+    let qtrNum = moment.utc(epoch).quarter();
+    let qtrLbl = `${QUARTER_PREFIX}${qtrNum}`;          // Q1
+
+    return qtrLbl;
+}
+
+// select the timeofday enum for the epoch
+function selectTimeOfDayEnum(epoch) {
+
+    let todEnum;
     let hr = moment.utc(epoch).get('hour');                                             // get the hour of the epoch
 
     const hrTod = consts.timeOfDayStart;                                                // hour constants
 
     if (hr >= parseInt(hrTod.night) && hr < parseInt(hrTod.morning)) {
-        tod = enums.timeOfDay.night;
+        todEnum = enums.timeOfDay.night;
 
     } else if (hr >= parseInt(hrTod.morning) && hr < parseInt(hrTod.afternoon)) {
-        tod = enums.timeOfDay.morning;
+        todEnum = enums.timeOfDay.morning;
 
     } else if (hr >= parseInt(hrTod.afternoon) && hr < parseInt(hrTod.evening)) {
-        tod = enums.timeOfDay.afternoon;
+        todEnum = enums.timeOfDay.afternoon;
 
     } else {
-        tod = enums.timeOfDay.evening;
+        todEnum = enums.timeOfDay.evening;
     }
-    return tod;
+    return todEnum;
 }
 
 // formats the instant in compressed ISO datetime format
@@ -466,7 +545,7 @@ function datetimePromptStr(instant, periodEnum) {
             break;
 
         case enums.period.timeofday:            // 'Jan 1 Morning' 
-            label = `${moment.utc(instant).format('MMM')} ${moment.utc(instant).format('D')} ${utils.capitalise(selectTimeOfDay(instant))}`;
+            label = `${moment.utc(instant).format('MMM')} ${moment.utc(instant).format('D')} ${utils.capitalise(selectTimeOfDayEnum(instant))}`;
             break;
 
         case enums.period.day:                  // 'Mon Jan 1st'
@@ -477,8 +556,8 @@ function datetimePromptStr(instant, periodEnum) {
             label = `${moment.utc(instant).format('MMM')} ${year}`;
             break;
 
-        case enums.period.quarter:              // 'Quarter 1 2019'
-            label = `Qtr ${moment.utc(instant).quarter()} ${year}`;
+        case enums.period.quarter:              // 'Q1 2019'
+            label = `${selectQuarterLabel(instant)} ${year}`;
             break;
 
         case enums.period.week:                 // 'Week 27 2019'

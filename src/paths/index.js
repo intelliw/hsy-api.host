@@ -4,7 +4,7 @@
  */
 
 module.exports = require('./Request');
-module.exports.EnergyGetRequest = require('./EnergyGet');
+module.exports.EnergyGet = require('./EnergyGet');
 module.exports.DevicesDatasetsPost = require('./DevicesDatasetsPost');
 module.exports.DeviceDatasetGet = require('./DeviceDatasetGet');
 

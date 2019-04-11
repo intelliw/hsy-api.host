@@ -27,10 +27,24 @@ module.exports.periodChildDuration = {
     timeofdayhour: '6',
     daytimeofday: '4',
     weekday: '7',                               // 7 days in a week
+    monthday: this.NONE,                        // monthday is derived dynamically
     quartermonth: '3',                          // 3 months in a quarter
     yearquarter: '4',
     fiveyearyear: '5'
-    // monthday is derived dynamically
+};
+
+// space delimited labels to diisplay as headers for child periods. 
+module.exports.periodChildLabel = {
+    secondinstant: this.NONE,
+    minutesecond: '01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60',
+    hourminute: '01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60',
+    timeofdayhour: { 'morning': '06 07 08 09 10 11', 'afternoon': '12 13 14 15 16 17', 'evening': '18 19 20 21 22 23', 'night': '00 01 02 03 04 05' },
+    daytimeofday: 'Morning Afternoon Evening Night',
+    weekday: 'Mon Tue Wed Thu Fri Sat Sun',
+    monthday: this.NONE,                        // monthday is derived dynamically
+    quartermonth: { 'Q1': 'Jan Feb Mar', 'Q2': 'Apr May Jun', 'Q3': 'Jul Aug Sep', 'Q4': 'Oct Nov Dec' },
+    yearquarter: 'Q1 Q2 Q3 Q4',
+    fiveyearyear: this.NONE                     // fiveyearyear is derived dynamically
 };
 
 // parent periods
@@ -40,7 +54,7 @@ module.exports.periodParent = {
     minute: enums.period.hour,
     hour: enums.period.timeofday,
     timeofday: enums.period.day,
-    day: enums.period.week,
+    day: enums.period.week,                     // choose week even though day has two parents (month and week)
     week: enums.period.month,
     month: enums.period.quarter,
     quarter: enums.period.year,
@@ -65,7 +79,7 @@ module.exports.periodChild = {
 
 // returns a format string for UTC compresed datetime for use in links and identifiers
 module.exports.periodDatetimeISO = {
-    instant: 'YYYYMMDDTHHmmss.SSS', 
+    instant: 'YYYYMMDDTHHmmss.SSS',
     second: 'YYYYMMDDTHHmmss',
     minute: 'YYYYMMDDTHHmm',
     hour: 'YYYYMMDDTHHmm',
@@ -77,7 +91,6 @@ module.exports.periodDatetimeISO = {
     year: 'YYYYMMDD',
     fiveyear: 'YYYYMMDD'
 }
-
 
 // returns a format string for uncompressed date time for use in display properties  
 module.exports.periodDatetimeGeneral = {
@@ -99,7 +112,7 @@ module.exports.periodDatetimeGeneral = {
 module.exports.ACTIVE_VERSIONS = '0.1 0.2';
 module.exports.CURRENT_VERSION = '0.2';
 module.exports.DATE_FORMAT = 'YYYYMMDDTHHmmss.SSS±HHmm';
-module.exports.NONE = global.undefined; 
+module.exports.NONE = global.undefined;
 // parameter constants 
 module.exports.DEFAULT_DURATION = '1';
 module.exports.DEFAULT_SITE = '999';

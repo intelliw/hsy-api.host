@@ -34,6 +34,32 @@ module.exports.valueExists = (obj, value) => {
 }
 
 /**
+ * returns a number sequence (e.g. days of the month '01 02 ..' etc) in a delimited string with zero padding
+ * howMany is the number of numbers to output including the startNum 
+ * e.g. startNum = 1, howMany = 10, delimiter = " "
+ *  ->  '01 02 03 04 05 06 07 08 09 10'
+  */
+module.exports.numberSequenceString = (startNum, howMany, delimiter) => {
+    const ZERO = "0";
+    
+    let seqStr = ""; let zerosToPad; let digits; let num;
+    
+    let maxNum = Number(startNum) + (howMany - 1);
+    let maxDigits = maxNum.toString().length;
+
+    let i;
+    for (i = startNum; i <= maxNum; i++) {
+
+        num = i.toString();
+        zerosToPad = maxDigits - num.length;
+        seqStr += ZERO.repeat(zerosToPad) + num + (i <= maxNum - 1 ? delimiter : "");
+    }
+
+    return seqStr;
+
+}
+
+/**
  * searches the findIn array for the first occurrence of an item in the find array. 
  * The items in the find array need to be in order of preference. The first match wil be returned.
  * if there are no matches and defaultIfNotFound is true, the first item in the findIn array will be returned as the default. 
@@ -77,8 +103,8 @@ module.exports.randomFloat = (min, max, decimalPlaces) => {
 module.exports.MOCK_periodMinMax = (period, dailyHigh, dailyLow) => {
 
     const DAY_DECIMAL_PLACES = 3;                                           // 3 decimals
-    let minmax = { min: dailyHigh, max: dailyLow,  precision: DAY_DECIMAL_PLACES};
-    
+    let minmax = { min: dailyHigh, max: dailyLow, precision: DAY_DECIMAL_PLACES };
+
     let multiplier = 1; let decimalPlaces = DAY_DECIMAL_PLACES;
     switch (period.value) {
         case enums.period.instant:
@@ -93,7 +119,7 @@ module.exports.MOCK_periodMinMax = (period, dailyHigh, dailyLow) => {
             multiplier = 0.0006944444;
             decimalPlaces = 9;
             break;
-        case enums.period.hour:s
+        case enums.period.hour:
             multiplier = 0.0416666667;
             decimalPlaces = 6;
             break;
