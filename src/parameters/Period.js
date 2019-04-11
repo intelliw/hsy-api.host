@@ -366,7 +366,7 @@ function periodChildDescription(periodEnum, epochInstant) {
 
     if (childEnum) {
         
-        descr = consts.periodChildLabel[`${periodEnum}${childEnum}`];               // e.g. periodChildLabel.weekday  
+        descr = consts.periodChildLabel[`${periodEnum}${childEnum}`];       // e.g. periodChildLabel.weekday  
 
         switch (periodEnum) {
 
@@ -437,6 +437,12 @@ function periodPrompt(epoch, end, periodEnum) {
     return prompt;                                                                      // return formatted title
 
 };
+// checks if the period epochis in the future
+function isEpochInFuture(epochInstant) {
+    
+    let isFuture = moment.utc(epochInstant).isAfter()                                                  // leave the args for IsAfter blank -- that'll default to now.
+    return isFuture;
+}
 
 
 // checks if the epoch is a valid date-time

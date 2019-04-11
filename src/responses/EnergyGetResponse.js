@@ -30,7 +30,6 @@ class EnergyGetResponse extends Response {
   }
 }
 
-
 // perform the energy data operation and return a collections array
 function getContent(params) {
 
@@ -49,7 +48,7 @@ function getContent(params) {
     links.addLink(period.getNext(), enums.linkRender.link);
     links.addLink(period.getPrev(), enums.linkRender.link);
 
-    items = createItemsObject(params.energy, period, params.site);
+    items = createItems(params.energy, period, params.site);
 
     // add each collection to the collections array
     collections.add(consts.CURRENT_VERSION, links.href, links, items);
@@ -60,7 +59,7 @@ function getContent(params) {
 }
 
 // returns an items object with href, links and data for each child period 
-function createItemsObject(energy, period, site) {
+function createItems(energy, period, site) {
 
   let links; let itemData; let href;
 
@@ -75,7 +74,7 @@ function createItemsObject(energy, period, site) {
     if (childPeriod) {
 
       // get data
-      itemData = createItemDataObject(energy, childPeriod, site);
+      itemData = createItemData(energy, childPeriod, site);
       if (itemData) {
 
         // make the item links 
@@ -97,7 +96,7 @@ function createItemsObject(energy, period, site) {
   - an element for the child data and an element for the grandchildren data.  
   if there is no data returns an empty data object 
  */
-function createItemDataObject(energy, childPeriod, site) {
+function createItemData(energy, childPeriod, site) {
 
   // set daily high-low to 3-20 KwH                                                // kwh => megajoules 
   const dailyHigh = (20 * 3.6);                                                    // dailyHigh =72 MJ 
@@ -107,16 +106,16 @@ function createItemDataObject(energy, childPeriod, site) {
 
   let dataWrapper = new Definitions.Data();
 
-  let energyNames = energyDataNames(energy);                                        // these are the 6 energy names (e.g. 'store.in')
+  let energyNames = getEnergyDataNames(energy);                                        // these are the 6 energy names (e.g. 'store.in')
 
-  let childData = new Definitions.Data(); 
+  let childData = new Definitions.Data();
   let childMinMax = utils.MOCK_periodMinMax(childPeriod, dailyHigh, dailyLow);      // get an adjusted minmax for the childperiod 
 
   let grandChildData = new Definitions.Data();
 
   let grandChildPeriod = childPeriod.getChild();
 
-  let p; let randomNum; let energyNameValues; let energyNameTotal; let grandChildMinMax; 
+  let p; let randomNum; let energyNameValues; let energyNameTotal; let grandChildMinMax;
 
   // grandchild - create data for grandchild and child
   energyNames.forEach(energyName => {
@@ -151,9 +150,9 @@ function createItemDataObject(energy, childPeriod, site) {
 
     // if there was no grandchild for this period - create data for child only  
     } else {
-      
-      randomNum = utils.randomFloat(childMinMax.min, childMinMax.max,childMinMax.precision);    // get a random number
-      childData.add(energyName, randomNum.toString());                                          
+
+      randomNum = utils.randomFloat(childMinMax.min, childMinMax.max, childMinMax.precision);    // get a random number
+      childData.add(energyName, randomNum.toString());
 
     }
 
@@ -175,7 +174,7 @@ function createItemDataObject(energy, childPeriod, site) {
 
 
 // returns an array of property names for the specified energy argument
-function energyDataNames(energy) {
+function getEnergyDataNames(energy) {
 
   let names = [];
   switch (energy.value) {
@@ -189,7 +188,7 @@ function energyDataNames(energy) {
     case enums.energy.enjoy:
       names.push(enums.energyData.enjoy);
       break;
-    case enums.energy.grid:                                          
+    case enums.energy.grid:
       names.push(enums.energyData.gridin);
       names.push(enums.energyData.gridout);
       break;
