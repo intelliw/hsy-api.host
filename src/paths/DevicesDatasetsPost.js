@@ -5,7 +5,6 @@
  * prepares data and response for the devices datasets post path 
  */
 const enums = require('../host/enums');
-const consts = require('../host/constants');
 
 const Response = require('../responses');
 const DatasetsPostResponse = require('../responses/DevicesDatasetsPostResponse');
@@ -31,7 +30,11 @@ class DevicesDatasetsPost extends Request {
     * @param {*} req                                                    // express req
     */
     constructor(req) {
-
+        
+        let reqItems = req.body.deviceDatasetItems;
+    
+        console.log(` @@@@ ${reqItems[0].dataset}`);  /////////////////////////////////
+    
         // parameters                                                   // validate and default all parameters
         let device = new Param('device', req.params.device);
         let dataset = new Param('dataset', req.params.dataset, enums.datasets);

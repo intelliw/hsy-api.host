@@ -15,7 +15,7 @@ const GenericMessageDetail = require('../definitions/GenericMessageDetail');
 const VIEW_PREFIX = 'message_';
 const RESPONSE_STATUS = enums.responseStatus[201];
 
-class DatasetsPostResponse extends Response {
+class DevicesDatasetsPostResponse extends Response {
 
   /**
   * posts dataset data and responds with a generic 201 response
@@ -36,7 +36,7 @@ class DatasetsPostResponse extends Response {
 }
 
 
-module.exports = DatasetsPostResponse;
+module.exports = DevicesDatasetsPostResponse;
 
 /**
   * a list of mimetypes which this responder's request (DeviceDataPost) is able to support. 

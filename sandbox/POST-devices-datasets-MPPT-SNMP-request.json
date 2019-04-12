@@ -1,5 +1,5 @@
 {
-  "device-dataset-items": [
+  "deviceDatasetItems": [
     { "device": "BBC-PR1202-999",
       "dataset": "MPPT-SNMP",
       "data": [

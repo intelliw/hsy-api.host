@@ -10,8 +10,8 @@ const router = express.Router();
 const Request = require('../paths');
 
 // [devices.datasets.post] ---------------
-router.post('/devices/datasets', (req, res, next) => {
-
+router.post('/datasets', (req, res, next) => {
+    
     // request ---------------------
     let request = new Request.DevicesDatasetsPost(req);
 

@@ -1,5 +1,5 @@
 {
-  "device-dataset-items": [
+  "deviceDatasetItems": [
     { "device": "BBC-PMS-999",
       "dataset": "PMS-EPACK",
       "data": [

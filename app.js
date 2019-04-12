@@ -5,9 +5,6 @@
 'use strict';
 
 const express = require('express');
-const app = express();
-
-const bodyParser = require('body-parser');
 const Buffer = require('safe-buffer').Buffer;
 
 const host = require('./src/host');                 // common services
@@ -16,15 +13,15 @@ const sandbox = require('./sandbox');
 const paths = require('./src/paths');                
 
 // [START setup]------------------------------
+const app = express();
+app.use(express.json());
 
 host.config.initialise(app);                        // configuration settings
 
-app.use(bodyParser.json());
-
 // initialise routes - each tag has a route handler
-app.use('/energy', paths.energyRouter);           // openapi tag: Energy 
+app.use('/energy', paths.energyRouter);             // openapi tag: Energy 
 app.use(['/devices', '/device'], paths.devicesRouter);         // openapi tag: Devices
-app.use('/api', paths.diagnosticsRouter);         // openapi tag: Diagnostics
+app.use('/api', paths.diagnosticsRouter);           // openapi tag: Diagnostics
 
 // for testing and troubleshooting only
 app.use('/devtest', sandbox.devtest);
