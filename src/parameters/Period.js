@@ -72,6 +72,12 @@ class Period extends Param {
         this._links = consts.NONE;                                                              // undefined until requested through links()
     }
 
+    // checks if the period epoch is in the future
+    isFutureEpoch() {
+        let isFuture = moment.utc(this.epochInstant).isAfter()     // leave the args for IsAfter blank -- that'll default to now.
+        return isFuture;
+    }
+
     // returns the next period 
     getNext() {
 
@@ -365,43 +371,49 @@ function periodChildDescription(periodEnum, epochInstant) {
     const SPACE_DELIMITER = ' ';
 
     if (childEnum) {
-        
-        descr = consts.periodChildLabel[`${periodEnum}${childEnum}`];       // e.g. periodChildLabel.weekday  
+
+        descr = consts.periodChildDescription[`${periodEnum}${childEnum}`];             // e.g. periodChildLabel.weekday  
 
         switch (periodEnum) {
 
             // literals from constants for these period/children
-            case enums.period.day:                  // daytimeofday         // 'Morning Afternoon Evening Night'
-            case enums.period.minute:               // minutesecond
-            case enums.period.hour:                 // hourminute
-            case enums.period.week:                 // weekday              // 'Mon Tue Wed Thu Fri Sat Sun'
-            case enums.period.year:                 // yearquarter
+            case enums.period.day:                  // daytimeofday                     // 'Morning Afternoon Evening Night'
+            case enums.period.minute:               // minutesecond         
+            case enums.period.hour:                 // hourminute           
+            case enums.period.week:                 // weekday                          // 'Mon Tue Wed Thu Fri Sat Sun'
+            case enums.period.year:                 // yearquarter          
                 break;
 
-            // custom lookups for these period/children
-            case enums.period.timeofday:           // timeofdayhour         // '{ 'morning': '06 07 08 09 10 11', 'afternoon': '12 13 ... 
-                
-                let todLbl = selectTimeOfDayEnum(epochInstant);             //  enums.timeOfDay.morning     
-                descr = descr[todLbl];                                      //  extract subvalue from label e.g. '06 07 08 09 10 11'
+            // custom lookups for these period/children         
+            case enums.period.timeofday:           // timeofdayhour                     // '{ 'morning': '06 07 08 09 10 11', 'afternoon': '12 13 ... 
+
+                let todLbl = selectTimeOfDayEnum(epochInstant);                         //  enums.timeOfDay.morning     
+                descr = descr[todLbl];                                                  //  extract subvalue from label e.g. '06 07 08 09 10 11'
                 break;
 
-            case enums.period.month:                // monthday
+            case enums.period.month:                // monthday         
+
+                const DEFAULT_START = 1;
+
+                let duration = moment.utc(epochInstant).daysInMonth();                  // get the days for this month  
+                let start = descr ? (descr.split(SPACE_DELIMITER).length) + 1 : DEFAULT_START; // get the days in the constant - this should be 28
+
+                let hoWMany = (duration - start) + 1;
                 
-                let duration = moment.utc(epochInstant).daysInMonth();       // get the days for this month  
-                descr = utils.numberSequenceString(1, duration, SPACE_DELIMITER);
+                descr = utils.createSequence(start, hoWMany, SPACE_DELIMITER, descr);
                 
                 break;
 
-            case enums.period.quarter:              // quartermonth         // { 'Q1': 'Jan Feb Mar', 'Q2': 'Apr May ...
-                
-                let qtrLbl = selectQuarterLabel(epochInstant);              //  Q1
-                descr = descr[qtrLbl];                                      //  extract subvalue from label e.g. 'Jan Feb Mar'
+            case enums.period.quarter:              // quartermonth                     // { 'Q1': 'Jan Feb Mar', 'Q2': 'Apr May ...
+
+                let qtrLbl = selectQuarterLabel(epochInstant);                          //  Q1
+                descr = descr[qtrLbl];                                                  //  extract subvalue from label e.g. 'Jan Feb Mar'
 
                 break;
             case enums.period.fiveyear:             // fiveyearyear
-                
+
                 let year = moment.utc(epochInstant).format('YYYY');
-                descr = utils.numberSequenceString(year, 5, SPACE_DELIMITER);
+                descr = utils.createSequence(year, 5, SPACE_DELIMITER);
                 break;
 
             // no labels for these period/children
@@ -414,7 +426,7 @@ function periodChildDescription(periodEnum, epochInstant) {
         }
     }
     return descr;
-    
+
 
 }
 
@@ -437,12 +449,7 @@ function periodPrompt(epoch, end, periodEnum) {
     return prompt;                                                                      // return formatted title
 
 };
-// checks if the period epochis in the future
-function isEpochInFuture(epochInstant) {
-    
-    let isFuture = moment.utc(epochInstant).isAfter()                                                  // leave the args for IsAfter blank -- that'll default to now.
-    return isFuture;
-}
+
 
 
 // checks if the epoch is a valid date-time
@@ -588,4 +595,5 @@ function datetimePromptStr(instant, periodEnum) {
     }
     return label;
 }
+
 module.exports = Period;

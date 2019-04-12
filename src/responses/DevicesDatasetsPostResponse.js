@@ -11,6 +11,7 @@ const Response = require('./Response');
 const GenericMessage = require('../definitions/GenericMessage');
 const GenericMessageDetail = require('../definitions/GenericMessageDetail');
 
+// REQUEST constants
 const VIEW_PREFIX = 'message_';
 const RESPONSE_STATUS = enums.responseStatus[201];
 

@@ -8,6 +8,37 @@ const enums = require('./enums');
 
 module.exports.capitalise = (str) => { return str.charAt(0).toUpperCase() + str.slice(1) };       // capitalise first letter
 
+/**
+ * returns a number sequence (e.g. days of the month '01 02 ..' etc) in a delimited string with zero padding
+ * howMany is the number of numbers to output including the startNum 
+ * prefix is an optional lead string 
+ *  if provided it is prepended to the sequence to optimise performance by reducing the iterations needed 
+ * e.g. startNum = 1, howMany = 10, delimiter = " ", prefix = '01 02 03 04 05 06 07'
+ *  ->  '01 02 03 04 05 06 07 08 09 10'
+  */
+ module.exports.createSequence = (startNum, howMany, delimiter, prefix) => {
+    
+    const PAD_ZERO = "0";
+    
+    let zerosToPad; let digits; let num; 
+    
+    let seqStr = prefix ? prefix.trim(): "";                      // prepend prefix if provided
+    let maxNum = Number(startNum) + (howMany - 1);
+    let maxDigits = maxNum.toString().length;
+
+    let i;
+    seqStr+= howMany > 0 ? delimiter : "";
+    for (i = startNum; i <= maxNum; i++) {
+
+        num = i.toString();
+        zerosToPad = maxDigits - num.length;
+        seqStr += PAD_ZERO.repeat(zerosToPad) + num + (i <= maxNum - 1 ? delimiter : "");
+    }
+
+    return seqStr;
+
+}
+
 // returns the key name of the first property with a matching value. Can be used to retrieve an enum key from its value
 module.exports.keynameFromValue = (obj, value) => {
 
@@ -33,29 +64,33 @@ module.exports.valueExists = (obj, value) => {
 
 }
 
-/**
- * returns a number sequence (e.g. days of the month '01 02 ..' etc) in a delimited string with zero padding
- * howMany is the number of numbers to output including the startNum 
- * e.g. startNum = 1, howMany = 10, delimiter = " "
- *  ->  '01 02 03 04 05 06 07 08 09 10'
-  */
-module.exports.numberSequenceString = (startNum, howMany, delimiter) => {
-    const ZERO = "0";
-    
-    let seqStr = ""; let zerosToPad; let digits; let num;
-    
-    let maxNum = Number(startNum) + (howMany - 1);
-    let maxDigits = maxNum.toString().length;
 
-    let i;
-    for (i = startNum; i <= maxNum; i++) {
+// returns a random number between min and max with decimal places based on precision 
+module.exports.randomFloat = (min, max, decimalPlaces) => {
 
-        num = i.toString();
-        zerosToPad = maxDigits - num.length;
-        seqStr += ZERO.repeat(zerosToPad) + num + (i <= maxNum - 1 ? delimiter : "");
-    }
+    const precision = 1 * Math.pow(10, decimalPlaces);                      // e.g. 3 decimals = 1000000
+    min = min * precision;                                                  // adjust before dividing for decimal place
+    max = max * precision;
 
-    return seqStr;
+    let random = (Math.floor(Math.random() * max) + min) / precision;       //generate a random number with the required precision
+    let randomFixed = random.toFixed(decimalPlaces);                        // fix the decimal places including trailing zeros which may be missing in 'random'
+
+    return randomFixed;
+
+}
+
+
+// returns true at random. This was needed to limit the periods which are outputted fior 'instant' to simulate real-life data logging
+module.exports.randomTrue = () => {
+
+    let randomTrue; let randomnum;
+    const max = 30;                                                     // the larger this number the more skips there will be  
+    const random_match = 5;                                             // this can be any number less than MOCK_max
+
+    randomnum = Number(this.randomFloat(1, max, 0));         // get a random integer between 1 and MOCK_max
+    randomTrue = (randomnum == random_match) ? false : true;            // skip unless there is a match
+
+    return randomTrue;                                                  // return whether to skip  
 
 }
 
@@ -85,19 +120,6 @@ module.exports.selectFirstMatch = (findInCVL, find, defaultIfNotFound) => {
     return selectedItem;
 }
 
-// returns a random number between min and max with decimal places based on precision 
-module.exports.randomFloat = (min, max, decimalPlaces) => {
-
-    const precision = 1 * Math.pow(10, decimalPlaces);                      // e.g. 3 decimals = 1000000
-    min = min * precision;                                                  // adjust before dividing for decimal place
-    max = max * precision;
-
-    let random = (Math.floor(Math.random() * max) + min) / precision;       //generate a random number with the required precision
-    let randomFixed = random.toFixed(decimalPlaces);                        // fix the decimal places including trailing zeros which may be missing in 'random'
-
-    return randomFixed;
-
-}
 
 // returns a min and max value for the average energy consumed in this period
 module.exports.MOCK_periodMinMax = (period, dailyHigh, dailyLow) => {
@@ -158,18 +180,4 @@ module.exports.MOCK_periodMinMax = (period, dailyHigh, dailyLow) => {
     minmax.precision = decimalPlaces;
 
     return minmax;
-}
-
-// returns true at random. This was needed to limit the periods which are outputted fior 'instant' to simulate real-life data logging
-module.exports.randomTrue = () => {
-
-    let randomTrue; let randomnum;
-    const max = 30;                                                     // the larger this number the more skips there will be  
-    const random_match = 5;                                             // this can be any number less than MOCK_max
-
-    randomnum = Number(this.randomFloat(1, max, 0));         // get a random integer between 1 and MOCK_max
-    randomTrue = (randomnum == random_match) ? false : true;            // skip unless there is a match
-
-    return randomTrue;                                                  // return whether to skip  
-
 }
