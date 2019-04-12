@@ -5,7 +5,7 @@
  *  object for storing Data elements for a JSON collection 
  */
 
-// stores data rows for a json collection  
+// stores single and two-level data data elements    
 const Definitions = require('./Definitions');
 
 class Data extends Definitions {
@@ -23,7 +23,7 @@ class Data extends Definitions {
 
     }
 
-    // two-tiered - adds a nested Data object
+    // two-level - adds a nested Data object
     addNested(name, value, itemData) {
 
         let data = itemData.getElements();          

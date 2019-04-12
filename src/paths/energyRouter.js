@@ -26,7 +26,8 @@ router.get(['/',
         //  execute if valid
         let response = request.response;                       // execute the operation and return a response 
         let collections = response.content;
-
+        
+        
         // /* response
         res
             .status(response.statusCode)
@@ -35,9 +36,10 @@ router.get(['/',
                 collections: collections
             });
         // */ // 
-
+        
         /* // debug START
         // console.log(` ${}`);
+        console.log(` ${JSON.stringify()}`);
         res
             .status(response.status)
             .type(response.contentType)

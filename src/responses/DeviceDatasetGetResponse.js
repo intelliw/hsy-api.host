@@ -20,7 +20,7 @@ class DeviceDatasetGetResponse extends Response {
   /**
   * posts dataset data and responds with a generic 201 response
   */
-  constructor(params, contentType) {
+  constructor(params, acceptType) {
 
     let content = "";   // 2DO
     
@@ -30,7 +30,7 @@ class DeviceDatasetGetResponse extends Response {
     let statusCode = utils.keynameFromValue(enums.responseStatus, RESPONSE_STATUS);
     let genericMessage = new GenericMessage(statusCode, RESPONSE_STATUS, detail.getElements());
 
-    super(RESPONSE_STATUS, contentType, VIEW_PREFIX, genericMessage.getElements());
+    super(RESPONSE_STATUS, acceptType, VIEW_PREFIX, genericMessage.getElements());
 
   }
 }

@@ -12,6 +12,9 @@ const Request = require('../paths');
 // [devices.datasets.post] ---------------
 router.post('/datasets', (req, res, next) => {
     
+    console.log(` content type@ ${req.is('*/json')}`);  /////////////////////////////////
+    console.log(` has body@ ${req.body}`);  /////////////////////////////////
+
     // request ---------------------
     let request = new Request.DevicesDatasetsPost(req);
 

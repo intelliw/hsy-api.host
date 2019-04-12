@@ -6,13 +6,14 @@
  */
 const enums = require('../host/enums');
 const utils = require('../host/utils');
+const consts = require('../host/constants');
 
 const Response = require('./Response');
 const GenericMessage = require('../definitions/GenericMessage');
+const Param = require('../parameters');
 
 const RESPONSE_VIEW_PREFIX = 'message_';
-const RESPONSE_CONTENT_TYPE = enums.mimeTypes.applicationJson;       // standard content type for generic message
-const DEFAULT_RESPONSE_STATUS = enums.responseStatus[400];
+const RESPONSE_CONTENT_TYPE = new Param(consts.ACCEPT_TYPE_PARAM_NAME, enums.mimeTypes.applicationJson);     // standard content type for generic message
 
 class ErrorResponse extends Response {
 
@@ -25,7 +26,7 @@ class ErrorResponse extends Response {
 
       // create the error message
       let statusEnum = selectResponseStatus(validation);
-      let statusCode = utils.keynameFromValue(enums.responseStatus, statusEnum);     // '400'
+      let statusCode = utils.keynameFromValue(enums.responseStatus, statusEnum);     // '415'
       let genericMessage = new GenericMessage(statusCode, statusEnum, validation.errors.getElements());
 
       // create the Response including the message content
@@ -47,7 +48,7 @@ function selectResponseStatus(validation) {
     messageStatusEnum = enums.responseStatus[401];
 
     // Unsupported Media Type
-  } else if (!validation.isTypeValid) {
+  } else if (!validation.isAcceptTypeValid) {
     messageStatusEnum = enums.responseStatus[415];
 
     // Bad Request

@@ -44,7 +44,7 @@ class EnergyGet extends Request {
         super(req, params, responseContentTypes);                    // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
         
         // execute the response only if super isValid                   // if not isValid  super constuctor would have created a this.response = ErrorResponse 
-        this.response = this.validation.isValid ? new Response.EnergyGetResponse(this.params, this.contentType) : this.response;
+        this.response = this.validation.isValid ? new Response.EnergyGetResponse(this.params, this.acceptType) : this.response;
         
     }
 

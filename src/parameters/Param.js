@@ -26,14 +26,14 @@ class Param {
         // name
         this.name = name;
 
-        // value
-        this.value = value ? value : defaultValue;                                  // use default if value was not provided  
+        // value            // use default if value was not provided  
+        this.value = value ? value : defaultValue;                                  
 
-        // enum 
-        let enumValid = enumsList ? utils.valueExists(enumsList, this.value) : true;  // if an enum was provided the value (or default if used) must exist in it
+        // enum             // if an enum was provided the value (or default if used) must exist in it
+        let enumValid = enumsList ? utils.valueExists(enumsList, this.value) : true;  
         
-        // isValid 
-        this.isValid = enumValid;                                                   // valid if validation passed 
+        // isValid          // valid if enumValid passed and there must be a value 
+        this.isValid = enumValid && this.value;                                                   
         
     }
 }

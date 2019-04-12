@@ -6,7 +6,6 @@
  *  
  */
 const enums = require('../host/enums');
-const utils = require('../host/utils');
 const consts = require('../host/constants');
 
 const GenericMessageDetail = require('../definitions/GenericMessageDetail');
@@ -24,11 +23,11 @@ class Request {
     
      instance attributes:  
      "params": { Param }
-     "contentType": enums.mimeTypes.applicationJson, or undefined if req.accepts are not supported 
+     "acceptType": enums.mimeTypes.applicationJson, or undefined if req.accepts are not supported 
      "apiKey": AIzaSyASFQxf4PmOutVS1Dt99TPcZ4IQ8PDUMqY 
      "validation": {
-        "isValid": true if isTypeValid, isAuthorised, and isParamsValid
-        "isTypeValid": true if a mimetypes in an Accepts header is supported 
+        "isValid": true if isAcceptTypeValid, isAuthorised, and isParamsValid
+        "isAcceptTypeValid": true if a mimetypes in an Accepts header is supported 
         "isAuthorised": true,
         "isParamsValid" : true if all params are valid
         "errors": { GenericMessageDetail }  
@@ -45,11 +44,10 @@ class Request {
         // update instance properties before validation 
         this.params = params;
         this.apiKey = new Param(consts.API_KEY_PARAM_NAME, req.headers[consts.API_KEY_PARAM_NAME], enums.apiKey.default, enums.apiKey);
-        this.contentType = selectContentType(req, responseContentTypes);
+        this.acceptType = new Param(consts.ACCEPT_TYPE_PARAM_NAME, selectAcceptType(req, responseContentTypes));
         
-        
-        //validate                      // validates.. this.params, this.apikey, and this.contentType
-        this.validation = this.validate(req, responseContentTypes);
+        //validate                      // validates.. this.params, this.apikey, and this.acceptType
+        this.validation = this.validate(req);
         
         // response
         this.response = this.validation.isValid ? consts.NONE : new ErrorResponse(this.validation);       // ErrorResponse contains a generic error message as specified by the swagger genericMessage definition
@@ -57,7 +55,7 @@ class Request {
     }
 
     // validates request and return a validation object 
-    validate(req, responseContentTypes) {
+    validate(req) {
 
 
         this.errors = new GenericMessageDetail();                               // request errors store a detail elemeent for each validation error
@@ -66,14 +64,14 @@ class Request {
         // validate authorisation 
         validation = validateAuthorisation(req, this.apiKey, validation);                    // updates validation.errors and validation.isAuthorised
 
-        // validate contentype 
-        validation = validateContentType(req, this.contentType, validation);                      // updates validation.errors and validation.isTypeValid
+        // validate acceptType 
+        validation = validateAcceptType(req, this.acceptType, validation);                      // updates validation.errors and validation.isAcceptTypeValid
 
         // validate params 
         validation = validateParams(req, this.params, validation);                           // updates validation.errors and validation.isParamsValid
 
         // summarise and rteturn validation  
-        validation.isValid = validation.isTypeValid && validation.isParamsValid && validation.isAuthorised;   // must have valid parameters and accept header and must be authorised
+        validation.isValid = validation.isAcceptTypeValid && validation.isParamsValid && validation.isAuthorised;   // must have valid parameters and accept header and must be authorised
 
         return validation;
     }
@@ -110,20 +108,20 @@ function validateParams(req, params, validation) {
 
 }
 
-// validate content type and return validation.isTypeValid. Provides error details in validation.errors
-function validateContentType(req, contentType, validation) {
+// validate accept type and return validation.isAcceptTypeValid. Provides error details in validation.errors
+function validateAcceptType(req, acceptType, validation) {
 
     const ERROR_MESSAGE = 'The requested Accept header type is not supported.';
 
-    let isTypeValid = contentType != consts.NONE;                                 // if content type is undefined if it was not valid
+    let isAcceptTypeValid = acceptType.isValid;                                     // if content type is undefined if it was not valid
 
-    if (!isTypeValid) {
+    if (!isAcceptTypeValid) {
         validation.errors.add(
             `${ERROR_MESSAGE} | ${req.accepts()}`,
             `Accept header`);                                                       // add the message detail to the errors
     }
 
-    validation.isTypeValid = isTypeValid
+    validation.isAcceptTypeValid = isAcceptTypeValid
     return validation;
 }
 
@@ -132,13 +130,13 @@ function validateContentType(req, contentType, validation) {
  If multiple Accept headers are sent the response will select one from the list of media types shown above, in the order shown.
  If the request Accept headers do not contain a type from the list above return 'undefined'
  */
-function selectContentType(req, responseContentTypes) {
+function selectAcceptType(req, responseContentTypes) {
 
     let requestAcceptsType = req.accepts(responseContentTypes);                     // returns false if request had Accept headers which do not match any of the responseContentTypes
 
-    let contentTypeValue = (requestAcceptsType == false) ? consts.NONE : requestAcceptsType;
+    requestAcceptsType = (requestAcceptsType == false) ? consts.NONE : requestAcceptsType;
 
-    return contentTypeValue;
+    return requestAcceptsType;
 
 }
 
@@ -147,16 +145,16 @@ function validateAuthorisation(req, apiKey, validation) {
 
     const ERROR_MESSAGE = 'The client does not have sufficient permission.';
 
-    let isAuth = false;                                                         // 2DO: current logic allows no key as valid. in future need to call gcloud REST api to check if key is valid and has access to this API          
+    let isAuth = false;                                                             // 2DO: current logic allows no key as valid. in future need to call gcloud REST api to check if key is valid and has access to this API          
     if (apiKey) {
 
         isAuth = apiKey ? apiKey.isValid : true;
 
-        if (!isAuth) {                                                          // check if param was declared valid during construction 
+        if (!isAuth) {                                                              // check if param was declared valid during construction 
 
             validation.errors.add(
                 `${ERROR_MESSAGE} | ${apiKey.value} | ${req.url}`,
-                `parameter: ${apiKey.name}`);                                   // add the message detail to the errors
+                `parameter: ${apiKey.name}`);                                       // add the message detail to the errors
         }
 
     }

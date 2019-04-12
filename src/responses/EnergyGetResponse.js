@@ -22,17 +22,17 @@ class EnergyGetResponse extends Response {
   /**
   * creates energy data collections and stores cotnent and status in a Response object
   */
-  constructor(params, contentType) {
+  constructor(params, acceptType) {
 
-    let content = getContent(params);
+    let content = executeEnergyGet(params);        // perform the data retrieval operation 
 
-    super(RESPONSE_STATUS, contentType, VIEW_PREFIX, content);
+    super(RESPONSE_STATUS, acceptType, VIEW_PREFIX, content);
 
   }
 }
 
 // perform the energy data operation and return a collections array
-function getContent(params) {
+function executeEnergyGet(params) {
 
   let links;
   let items;

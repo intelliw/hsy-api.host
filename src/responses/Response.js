@@ -19,16 +19,16 @@ class Response {
     
      constructor arguments 
     * @param {*} statusEnum         //  "Bad Request"
-    * @param {*} contentType        //   enums.mimeTypes.applicationJson
+    * @param {*} acceptType         //   enums.mimeTypes.applicationJson
     * @param {*} viewPrefix         //  "message_"
     * @param {*} content            //  { .. }
     */
-    constructor(statusEnum, contentType, viewPrefix, content) {
+    constructor(statusEnum, acceptType, viewPrefix, content) {
 
 
         // contentType
-        this.contentType = contentType;
-        let contentTypeKeyname = utils.keynameFromValue(enums.mimeTypes,contentType);
+        this.contentType = acceptType.value;
+        let contentTypeKeyname = utils.keynameFromValue(enums.mimeTypes,acceptType.value);
 
         // view
         this.view = `${viewPrefix}${contentTypeKeyname}`;       // e.g. energy.applicationCollectionJson todo: this should be selected dynamically
