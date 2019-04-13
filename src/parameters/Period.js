@@ -13,6 +13,7 @@ const utils = require('../host/utils');
 
 const Param = require('./Param');
 const MILLISECOND_FORMAT = consts.periodDatetimeISO.instant;                                    // the default format, YYYYMMDDTHHmmss.SSS
+const THIS_PARAM_NAME = 'period';
 
 /**
  * expects a date-time value in utc format. period.value is required (as a string) and must contain a complete date (isEpochValid() === true)
@@ -44,7 +45,7 @@ class Period extends Param {
     constructor(reqPeriod, epoch, duration) {
 
         // period, context
-        super('period', reqPeriod, enums.period.default, enums.period);                         // e.g. reqPeriod' ='week';' 
+        super(THIS_PARAM_NAME, reqPeriod, enums.period.default, enums.period);                         // e.g. reqPeriod' ='week';' 
         this.context = this.value;                                                              // by default context=period except in a collection and overwritten by getChild() after construction        
 
         // duration     
@@ -53,7 +54,7 @@ class Period extends Param {
         // epoch and end millisecond timestamps                                                 // validates and normalises the epoch and end for the supplied period and duration
         let valid = isEpochValid(epoch, MILLISECOND_FORMAT);                                    // make sure epoch is a valid date-time 
         epoch = valid ? epoch : moment.utc().format(MILLISECOND_FORMAT);                        // if not valid default to 'now'
-        epoch = periodEpoch(this.value, epoch, MILLISECOND_FORMAT);                      // normalise the epoch to the exact start of the period
+        epoch = periodEpoch(this.value, epoch, MILLISECOND_FORMAT);                             // normalise the epoch to the exact start of the period
         //..
         this.epochInstant = epoch;
         this.endInstant = periodEnd(this.value, this.epochInstant, this.duration, MILLISECOND_FORMAT);   // period end - get the end date-time based on the epoch and duration 

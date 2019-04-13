@@ -24,10 +24,12 @@ class Request {
      instance attributes:  
      "params": { Param }
      "apiKey": AIzaSyASFQxf4PmOutVS1Dt99TPcZ4IQ8PDUMqY 
-     "acceptType": enums.mimeTypes.applicationJson, or undefined if req.accepts are not supported 
+     "accept": Param.Accept  defaults to first value in response.produces, or undefined if req.accepts is provided and not supported by the response
+     "contentType": Param.ContentType  defaults to response.consumes, or undefined if req['content-type'] is provided and not supported by the response
      "validation": {
         "isValid": true if isAcceptTypeValid, isAuthorised, and isParamsValid
         "isAcceptTypeValid": true if a mimetypes in an Accepts header is supported 
+        "isContentTypeValid": true if the mimetypes in the Content-Type header is supported 
         "isAuthorised": true,
         "isParamsValid" : true if all params are valid
         "errors": { GenericMessageDetail }  
@@ -39,19 +41,20 @@ class Request {
     * @param {*} responseProduces   // list of mimetypes which this request's responder (EnergyResponder) is able to produce 
     * @param {*} params                 // list of validated params { }
     */
-    constructor(req, params, responseProduces) {
+    constructor(req, params, responseProduces, responseConsumes) {
 
         // update instance properties before validation 
         this.params = params;
         this.apiKey = new Param(consts.API_KEY_PARAM_NAME, req.headers[consts.API_KEY_PARAM_NAME], enums.apiKey.default, enums.apiKey);
-        this.acceptType = new Param(consts.ACCEPT_TYPE_PARAM_NAME, selectAcceptType(req, responseProduces));
-        
-        //validate                      // validates.. this.params, this.apikey, and this.acceptType
+        this.accept = new Param.Accept(req, responseProduces);
+        this.contentType = new Param.ContentType(req, responseConsumes);
+
+        //validate                                                                          // validates.. this.params, this.apikey, and this.accept
         this.validation = this.validate(req);
-        
+
         // response
         this.response = this.validation.isValid ? consts.NONE : new ErrorResponse(this.validation);       // ErrorResponse contains a generic error message as specified by the swagger genericMessage definition
-        
+
     }
 
     // validates request and return a validation object 
@@ -63,14 +66,20 @@ class Request {
         // validate authorisation 
         validation = validateAuthorisation(req, this.apiKey, validation);                   // updates validation.errors and validation.isAuthorised
 
-        // validate acceptType 
-        validation = validateAcceptType(req, this.acceptType, validation);                  // updates validation.errors and validation.isAcceptTypeValid
+        // validate accept Type 
+        validation = validateAcceptType(req, this.accept, validation);                      // updates validation.errors and validation.isAcceptTypeValid
+
+        // validate content-type 
+        validation = validateContentType(req, this.contentType, validation);                // updates validation.errors and validation.isContentTypeValid
 
         // validate params 
         validation = validateParams(req, this.params, validation);                          // updates validation.errors and validation.isParamsValid
 
-        // summarise and rteturn validation  
-        validation.isValid = validation.isAcceptTypeValid && validation.isParamsValid && validation.isAuthorised;   // must have valid parameters and accept header and must be authorised
+        // summarise and rteturn validation                                                 // must have valid parameters and accept header and must be authorised
+        validation.isValid = validation.isAcceptTypeValid 
+                    && validation.isContentTypeValid
+                    && validation.isParamsValid 
+                    && validation.isAuthorised;   
 
         return validation;
     }
@@ -107,12 +116,30 @@ function validateParams(req, params, validation) {
 
 }
 
+// validate content type and returns validation.isContentTypeValid. Provides error details in validation.errors
+function validateContentType(req, contentTypeParam, validation) {
+
+    const ERROR_MESSAGE = 'The requested Content-Type is not supported.';
+    const CONTENT_TYPE_HEADER = 'content-type';
+
+    let isContentTypeValid = contentTypeParam.isValid;                                     // if content type is undefined if it was not valid
+
+    if (!isContentTypeValid) {
+        validation.errors.add(
+            `${ERROR_MESSAGE} | ${req.headers[CONTENT_TYPE_HEADER]}`,
+            `Content-Type header`);                                                       // add the message detail to the errors
+    }
+
+    validation.isContentTypeValid = isContentTypeValid
+    return validation;
+}
+
 // validate accept type and return validation.isAcceptTypeValid. Provides error details in validation.errors
-function validateAcceptType(req, acceptType, validation) {
+function validateAcceptType(req, acceptParam, validation) {
 
-    const ERROR_MESSAGE = 'The requested Accept header type is not supported.';
+    const ERROR_MESSAGE = 'The requested Accept type is not supported.';
 
-    let isAcceptTypeValid = acceptType.isValid;                                     // if content type is undefined if it was not valid
+    let isAcceptTypeValid = acceptParam.isValid;                                     // if content type is undefined if it was not valid
 
     if (!isAcceptTypeValid) {
         validation.errors.add(
@@ -124,36 +151,21 @@ function validateAcceptType(req, acceptType, validation) {
     return validation;
 }
 
-/*
- Selects an Accepts header. If an Accept header has not beem specified the default application/vnd.collection+json media type will be returned.
- If multiple Accept headers are sent the response will select one from the list of media types shown above, in the order shown.
- If the request Accept headers do not contain a type from the list above return 'undefined'
- */
-function selectAcceptType(req, responseContentTypes) {
-
-    let requestAcceptsType = req.accepts(responseContentTypes);                     // returns false if request had Accept headers which do not match any of the responseContentTypes
-
-    requestAcceptsType = (requestAcceptsType == false) ? consts.NONE : requestAcceptsType;
-
-    return requestAcceptsType;
-
-}
-
 // validate if authorised and return validation.isAuthorised. Provides error details in validation.errors
-function validateAuthorisation(req, apiKey, validation) {
+function validateAuthorisation(req, apiKeyParam, validation) {
 
     const ERROR_MESSAGE = 'The client does not have sufficient permission.';
 
     let isAuth = false;                                                             // 2DO: current logic allows no key as valid. in future need to call gcloud REST api to check if key is valid and has access to this API          
-    if (apiKey) {
+    if (apiKeyParam) {
 
-        isAuth = apiKey ? apiKey.isValid : true;
+        isAuth = apiKeyParam.value ? apiKeyParam.isValid : true;                    // if apiKey is missing defaults to true for now 
 
         if (!isAuth) {                                                              // check if param was declared valid during construction 
 
             validation.errors.add(
-                `${ERROR_MESSAGE} | ${apiKey.value} | ${req.url}`,
-                `parameter: ${apiKey.name}`);                                       // add the message detail to the errors
+                `${ERROR_MESSAGE} | ${apiKeyParam.value} | ${req.url}`,
+                `parameter: ${apiKeyParam.name}`);                                       // add the message detail to the errors
         }
 
     }

@@ -11,10 +11,9 @@ const Request = require('../requests');
 
 // [devices.datasets.post] ---------------
 router.post('/datasets', (req, res, next) => {
-    
-    console.log(` content type@ ${req.is('*/json')}`);  ///////////////////////////////// req.is(‘*/json’)
-    console.log(` has body@ ${req.body}`);  /////////////////////////////////
 
+    console.log(`BODY ${JSON.stringify(req.body)}`); //////////////////////////////  update portal docs to requrie content-type = app/json//// update validation to require content type - cannot be blank
+    
     // request ---------------------
     let request = new Request.DevicesDatasetsPost(req);
 
@@ -40,7 +39,7 @@ router.get(['/:device?/dataset/:dataset?',
 
         // request ---------------------
         let request = new Request.DeviceDatasetGet(req);
-
+        
         //  execute if valid
         let response = request.response;                            // execute the operation and return a response 
         let items = response.content;

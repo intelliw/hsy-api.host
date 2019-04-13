@@ -67,4 +67,3 @@ function selectResponseStatus(validation) {
 
 module.exports = ErrorResponse;
 
-

@@ -4,7 +4,6 @@
  * ./parameters/Param.js
  *  supertype for all parameters
  *  parameter class validates the value in the constructor and stores the parameter name and value
- * 
  */
 const consts = require('../host/constants');
 const utils = require('../host/utils');
@@ -32,11 +31,10 @@ class Param {
         // enum             // if an enum was provided the value (or default if used) must exist in it
         let enumValid = enumsList ? utils.valueExists(enumsList, this.value) : true;  
         
-        // isValid          // valid if enumValid passed and there must be a value 
+        // isValid          // valid if enumValid passed and there IS a value 
         this.isValid = enumValid && this.value;                                                   
         
     }
 }
-
 
 module.exports = Param;

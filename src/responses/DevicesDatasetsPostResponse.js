@@ -20,17 +20,17 @@ class DevicesDatasetsPostResponse extends Response {
   /**
   * posts dataset data and responds with a generic 201 response
   */
-  constructor(params, acceptType) {
+  constructor(params, acceptParam) {
 
     let content = "";   // 2DO
     
     let detail = new GenericMessageDetail();
-    detail.add('New datasets created', `device:${params.device.value} | dataset:${params.dataset.value}`);
+    detail.add('New datasets created', `device:${params.deviceDatasetItems.value[0].device} | dataset:${params.deviceDatasetItems.value[0].dataset}`);
 
     let statusCode = utils.keynameFromValue(enums.responseStatus, RESPONSE_STATUS);
     let genericMessage = new GenericMessage(statusCode, RESPONSE_STATUS, detail.getElements());
 
-    super(RESPONSE_STATUS, acceptType, VIEW_PREFIX, genericMessage.getElements());
+    super(RESPONSE_STATUS, acceptParam, VIEW_PREFIX, genericMessage.getElements());
 
   }
 }
@@ -44,4 +44,4 @@ module.exports = DevicesDatasetsPostResponse;
   * this list must match the list specified in the 'produces' property in the openapi spec
   */
 module.exports.produces = [enums.mimeTypes.applicationJson];
-
+module.exports.consumes = enums.mimeTypes.applicationJson;

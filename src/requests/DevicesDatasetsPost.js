@@ -24,27 +24,23 @@ class DevicesDatasetsPost extends Request {
     
      instance attributes:  
      super ..
-     response : set byu thgis class only if super does not set it 
+     response : this class sets response only if super does not set it with an error
     
      constructor arguments 
     * @param {*} req                                                    // express req
     */
     constructor(req) {
         
-        let reqItems = req.body.deviceDatasetItems;
-    
-        console.log(` @@@@ ${reqItems[0].dataset}`);  /////////////////////////////////
-    
+        
         // parameters                                                   // validate and default all parameters
         let params = {};
-        params.device = new Param('device', req.params.device);
-        params.dataset = new Param('dataset', req.params.dataset, enums.datasets);
+        params.deviceDatasetItems = new Param('deviceDatasetItems', req.body.deviceDatasetItems);
         
         // super - validate params, auth, accept header
-        super(req, params, DatasetsPostResponse.produces);                    // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
+        super(req, params, DatasetsPostResponse.produces, DatasetsPostResponse.consumes);                    // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
         
         // execute the response only if super isValid                   // if not isValid  super constuctor would have created a this.response = ErrorResponse 
-        this.response = this.validation.isValid ? new Response.DevicesDatasetsPostResponse(this.params, this.acceptType) : this.response;
+        this.response = this.validation.isValid ? new Response.DevicesDatasetsPostResponse(this.params, this.accept) : this.response;
         
     }
 

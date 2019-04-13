@@ -22,11 +22,11 @@ class EnergyGetResponse extends Response {
   /**
   * creates energy data collections and stores cotnent and status in a Response object
   */
-  constructor(params, acceptType) {
+  constructor(params, acceptParam) {
 
     let content = executeEnergyGet(params);        // perform the data retrieval operation 
 
-    super(RESPONSE_STATUS, acceptType, VIEW_PREFIX, content);
+    super(RESPONSE_STATUS, acceptParam, VIEW_PREFIX, content);
 
   }
 }
@@ -212,4 +212,4 @@ module.exports = EnergyGetResponse;
   * this list must match the list specified in the 'produces' property in the openapi spec
   */
 module.exports.produces = [enums.mimeTypes.applicationCollectionJson, enums.mimeTypes.applicationJson, enums.mimeTypes.textHtml, enums.mimeTypes.textPlain];
-
+module.exports.consumes = enums.mimeTypes.applicationJson;

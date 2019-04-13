@@ -25,7 +25,7 @@ class EnergyGet extends Request {
     
      instance attributes:  
      super ..
-     response : set byu thgis class only if super does not set it 
+     response : this class sets response only if super does not set it with an error
     
      constructor arguments 
     * @param {*} req                                                    // express req
@@ -39,10 +39,10 @@ class EnergyGet extends Request {
         params.site = new Param('site', req.query.site, consts.DEFAULT_SITE);
          
         // super - validate params, auth, accept header
-        super(req, params, EnergyGetResponse.produces);                 // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
+        super(req, params, EnergyGetResponse.produces, EnergyGetResponse.consumes);                 // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
         
         // execute the response only if super isValid                   // if not isValid  super constuctor would have created a this.response = ErrorResponse 
-        this.response = this.validation.isValid ? new Response.EnergyGetResponse(this.params, this.acceptType) : this.response;
+        this.response = this.validation.isValid ? new Response.EnergyGetResponse(this.params, this.accept) : this.response;
         
     }
 
