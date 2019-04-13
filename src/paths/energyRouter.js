@@ -1,13 +1,13 @@
 //@ts-check
 "use strict";
 /**
- * ./paths/EnergyGetRequest.js
+ * ./requests/EnergyGetRequest.js
  * prepares data and response for the energy path 
  */
 const express = require('express');
 const router = express.Router();
 
-const Request = require('../paths');
+const Request = require('../requests');
 /*
 '/energy' path
 create parameter objects for creating the links and collections

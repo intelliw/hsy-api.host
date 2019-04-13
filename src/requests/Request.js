@@ -1,7 +1,7 @@
 //@ts-check
 "use strict";
 /**
- * ./paths/Request.js
+ * ./requests/Request.js
  * base class for operation classes
  *  
  */
@@ -23,8 +23,8 @@ class Request {
     
      instance attributes:  
      "params": { Param }
-     "acceptType": enums.mimeTypes.applicationJson, or undefined if req.accepts are not supported 
      "apiKey": AIzaSyASFQxf4PmOutVS1Dt99TPcZ4IQ8PDUMqY 
+     "acceptType": enums.mimeTypes.applicationJson, or undefined if req.accepts are not supported 
      "validation": {
         "isValid": true if isAcceptTypeValid, isAuthorised, and isParamsValid
         "isAcceptTypeValid": true if a mimetypes in an Accepts header is supported 
@@ -36,15 +36,15 @@ class Request {
     
      constructor arguments 
     * @param {*} req                    // express request
-    * @param {*} responseContentTypes   // list of mimetypes which this request's responder (EnergyResponder) is able to produce 
+    * @param {*} responseProduces   // list of mimetypes which this request's responder (EnergyResponder) is able to produce 
     * @param {*} params                 // list of validated params { }
     */
-    constructor(req, params, responseContentTypes) {
+    constructor(req, params, responseProduces) {
 
         // update instance properties before validation 
         this.params = params;
         this.apiKey = new Param(consts.API_KEY_PARAM_NAME, req.headers[consts.API_KEY_PARAM_NAME], enums.apiKey.default, enums.apiKey);
-        this.acceptType = new Param(consts.ACCEPT_TYPE_PARAM_NAME, selectAcceptType(req, responseContentTypes));
+        this.acceptType = new Param(consts.ACCEPT_TYPE_PARAM_NAME, selectAcceptType(req, responseProduces));
         
         //validate                      // validates.. this.params, this.apikey, and this.acceptType
         this.validation = this.validate(req);
@@ -57,18 +57,17 @@ class Request {
     // validates request and return a validation object 
     validate(req) {
 
-
-        this.errors = new GenericMessageDetail();                               // request errors store a detail elemeent for each validation error
-        let validation = { "isValid": false, "errors": this.errors };
+        // // create validation object 
+        let validation = { "isValid": false, "errors": new GenericMessageDetail() };        // validation.errors store a detail elemeent for each validation error                
 
         // validate authorisation 
-        validation = validateAuthorisation(req, this.apiKey, validation);                    // updates validation.errors and validation.isAuthorised
+        validation = validateAuthorisation(req, this.apiKey, validation);                   // updates validation.errors and validation.isAuthorised
 
         // validate acceptType 
-        validation = validateAcceptType(req, this.acceptType, validation);                      // updates validation.errors and validation.isAcceptTypeValid
+        validation = validateAcceptType(req, this.acceptType, validation);                  // updates validation.errors and validation.isAcceptTypeValid
 
         // validate params 
-        validation = validateParams(req, this.params, validation);                           // updates validation.errors and validation.isParamsValid
+        validation = validateParams(req, this.params, validation);                          // updates validation.errors and validation.isParamsValid
 
         // summarise and rteturn validation  
         validation.isValid = validation.isAcceptTypeValid && validation.isParamsValid && validation.isAuthorised;   // must have valid parameters and accept header and must be authorised

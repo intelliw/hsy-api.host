@@ -1,18 +1,18 @@
 //@ts-check
 /**
- * ./paths/DevicesRequest.js
+ * ./requests/DevicesRequest.js
  * handlers for /devices path  
  * basepath /devices
  */
 const express = require('express');
 const router = express.Router();
 
-const Request = require('../paths');
+const Request = require('../requests');
 
 // [devices.datasets.post] ---------------
 router.post('/datasets', (req, res, next) => {
     
-    console.log(` content type@ ${req.is('*/json')}`);  /////////////////////////////////
+    console.log(` content type@ ${req.is('*/json')}`);  ///////////////////////////////// req.is(‘*/json’)
     console.log(` has body@ ${req.body}`);  /////////////////////////////////
 
     // request ---------------------

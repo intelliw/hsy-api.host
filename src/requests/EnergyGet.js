@@ -1,7 +1,7 @@
 //@ts-check
 "use strict";
 /**
- * ./paths/EnergyGetRequest.js
+ * ./requests/EnergyGetRequest.js
  * prepares data and response for the energy path 
  */
 const enums = require('../host/enums');
@@ -33,15 +33,13 @@ class EnergyGet extends Request {
     constructor(req) {
 
         // parameters                                                   // validate and default all parameters
-        let energy = new Param('energy', req.params.energy, enums.energy.default, enums.energy);
-        let period = new Param.Period(req.params.period, req.params.epoch, req.params.duration);
-        let site = new Param('site', req.query.site, consts.DEFAULT_SITE);
-        
-        let params = { "energy": energy, "period": period, "site": site };
-
+        let params = {};
+        params.energy = new Param('energy', req.params.energy, enums.energy.default, enums.energy);
+        params.period = new Param.Period(req.params.period, req.params.epoch, req.params.duration);
+        params.site = new Param('site', req.query.site, consts.DEFAULT_SITE);
+         
         // super - validate params, auth, accept header
-        let responseContentTypes = EnergyGetResponse.produces;
-        super(req, params, responseContentTypes);                    // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
+        super(req, params, EnergyGetResponse.produces);                 // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
         
         // execute the response only if super isValid                   // if not isValid  super constuctor would have created a this.response = ErrorResponse 
         this.response = this.validation.isValid ? new Response.EnergyGetResponse(this.params, this.acceptType) : this.response;
