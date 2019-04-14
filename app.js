@@ -27,7 +27,7 @@ host.config.initialise(app);                                                    
     // if (buf && buf.length) { req.rawBody = buf.toString(encoding || 'utf8');}
 }
 app.use(bodyParser.json({ verify: rawBodySaver }));
-app.use(bodyParser.raw({ verify: rawBodySaver, type: function () { return true } }));   // the request is parsed if function returns true
+app.use(bodyParser.raw({ verify: rawBodySaver, type: function () { return true } }));   // for raw body parse function must return true
 
 
 // routes - each tag has a route handler
