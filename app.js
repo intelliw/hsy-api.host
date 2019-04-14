@@ -5,26 +5,36 @@
 'use strict';
 
 const express = require('express');
+const bodyParser = require('body-parser')
 const Buffer = require('safe-buffer').Buffer;
 
 const host = require('./src/host');                 // common services
+const paths = require('./src/paths');
 const sandbox = require('./sandbox');
-
-const paths = require('./src/paths');                
 
 // [START setup]------------------------------
 const app = express();
-app.use(express.json());
 
-host.config.initialise(app);                        // configuration settings
 
-// initialise routes - each tag has a route handler
-app.use('/energy', paths.energyRouter);             // openapi tag: Energy 
-app.use(['/devices', '/device'], paths.devicesRouter);         // openapi tag: Devices
-app.use('/api', paths.diagnosticsRouter);           // openapi tag: Diagnostics
+// initialise 
+host.config.initialise(app);                                                            // configuration settings
 
-// for testing and troubleshooting only
-app.use('/devtest', sandbox.devtest);
+
+/* body parser
+ * use  verify function to get raw body - bodyParser.raw applies if bodyParser.json fails due to incorrect content-type header
+ * this allows us to check if body is empty when validating the content-type header in ContentType constructor   */
+ var rawBodySaver = function (req, res, buf, encoding) {
+    // if (buf && buf.length) { req.rawBody = buf.toString(encoding || 'utf8');}
+}
+app.use(bodyParser.json({ verify: rawBodySaver }));
+app.use(bodyParser.raw({ verify: rawBodySaver, type: function () { return true } }));   // the request is parsed if function returns true
+
+
+// routes - each tag has a route handler
+app.use('/energy', paths.energyRouter);                                                 // openapi tag: Energy 
+app.use(['/devices', '/device'], paths.devicesRouter);                                  // openapi tag: Devices
+app.use('/api', paths.diagnosticsRouter);                                               // openapi tag: Diagnostics
+app.use('/devtest', sandbox.devtest);                                                   // for testing and troubleshooting only    
 
 // handle error
 app.use((err, req, res, next) => {
@@ -33,7 +43,6 @@ app.use((err, req, res, next) => {
 });
 
 // [END setup]-------------------------------
-
 
 // listen for requests---------------------------
 if (module === require.main) {

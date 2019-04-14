@@ -11,9 +11,9 @@ const Param = require('./Param');
 const THIS_PARAM_NAME = 'contentType';
 
 /** 
- * Confirms the Content Type decalred in the request Content-Type header for the request body.  
- * If the request Content-Type header is provided it must match the content type expected by the response (as stated in the responseConsumes constructor argument)
- * If the request Content-Type header is missing the responseConsumes Content-Type is used as the default.
+ * Confirms the request Content-Type header for parsing the request body. 
+ * if body is empty any Content-Type is allowed. if missing the responseConsumes Content-Type is used as a default placeholder.
+ * if body is not empty Content-Type must be a supported type ( req.is(responseConsumes) ) 
  */
 class ContentType extends Param {
     /**
@@ -27,16 +27,20 @@ class ContentType extends Param {
     * @param {*} responseConsumes       // a single enum.mimeTyypes value which is supported by the response/producer for reading the request body
     */
     constructor(req, responseConsumes) {
-        
-        const CONTENT_TYPE_HEADER = 'content-type';
 
-        // check request 'content-type' or default to responseConsumes if missing 
-        let requestContentType = req.headers[CONTENT_TYPE_HEADER] ? req.is(responseConsumes) : responseConsumes;     // returns false if request had Content-Type headers which do not match any of the responseContentTypes
+        const CONTENT_TYPE_HEADER = 'content-type';
+        const NO_BODY = 0;
+
+        
+        // isSupported  
+        let requestContentType = req.headers[CONTENT_TYPE_HEADER];                                        // get the Content-Type header   
+        let hasBody =  req.body ? Object.keys(req.body).length > NO_BODY : false;                         // check if there is a body
+        let isSupported = requestContentType ? req.is(responseConsumes) : !hasBody;                       // isSupported if header is in responseConsumes, or if there is no body 
 
         // call super
-        requestContentType = (requestContentType == false) ? consts.NONE : requestContentType;  // if there  is no value super wil set isValid to false./.
+        requestContentType = isSupported ? responseConsumes : consts.NONE;                                // if not supported set requestContentType to NONE
         super(THIS_PARAM_NAME, requestContentType);
-        
+
     }
 
 }

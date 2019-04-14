@@ -15,10 +15,12 @@ energy, site, period -> including next/prev/parent/child periods, with durations
 param objects have all the data needed for the 
 [energy.period.epoch.duration.get]
  */
-router.get(['/',
+router.route(['/',
     '/:energy?',
     '/:energy?/period/:period?',
-    '/:energy?/period/:period?/:epoch?/:duration?'], (req, res, next) => {
+    '/:energy?/period/:period?/:epoch?/:duration?'])
+    
+    .get((req, res, next) => {
         
         // request ---------------------
         let request = new Request.EnergyGet(req);

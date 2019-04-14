@@ -119,10 +119,10 @@ function validateParams(req, params, validation) {
 // validate content type and returns validation.isContentTypeValid. Provides error details in validation.errors
 function validateContentType(req, contentTypeParam, validation) {
 
-    const ERROR_MESSAGE = 'The requested Content-Type is not supported.';
+    const ERROR_MESSAGE = 'Content-Type not supported.';
     const CONTENT_TYPE_HEADER = 'content-type';
 
-    let isContentTypeValid = contentTypeParam.isValid;                                     // if content type is undefined if it was not valid
+    let isContentTypeValid = contentTypeParam.isValid;                                     // if content type is undefined it is not valid
 
     if (!isContentTypeValid) {
         validation.errors.add(
