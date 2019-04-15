@@ -26,24 +26,27 @@ class EnergyGet extends Request {
      instance attributes:  
      super ..
      response : this class sets response only if super does not set it with an error
-    
+     
      constructor arguments 
     * @param {*} req                                                    // express req
     */
     constructor(req) {
+        
+        const MANDATORY = true;
 
         // parameters                                                   // validate and default all parameters
         let params = {};
         params.energy = new Param('energy', req.params.energy, enums.energy.default, enums.energy);
         params.period = new Param.Period(req.params.period, req.params.epoch, req.params.duration);
         params.site = new Param('site', req.query.site, consts.DEFAULT_SITE);
-         
+        params.productCatalogItems = new Param('productCatalogItems', req.body.productCatalogItems, consts.NONE, consts.NONE, !MANDATORY);
+
         // super - validate params, auth, accept header
         super(req, params, EnergyGetResponse.produces, EnergyGetResponse.consumes);                 // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
-        
+
         // execute the response only if super isValid                   // if not isValid  super constuctor would have created a this.response = ErrorResponse 
         this.response = this.validation.isValid ? new Response.EnergyGetResponse(this.params, this.accept) : this.response;
-        
+
     }
 
 }

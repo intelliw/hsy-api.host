@@ -12,19 +12,9 @@ const Request = require('../requests');
 // [devices.datasets.post] ---------------
 router.post('/datasets', (req, res, next) => {
 
-    //res.setHeader('Content-Type', 'application/json')
-
-    // console.log(`BODY ${JSON.stringify(req.body).length}`); //////////////////////////////  update portal docs to requrie content-type = app/json//// update validation to require content type - cannot be blank
-    // console.log(`BODY ${req.body}`);
-    // console.log(`HEADERS ${JSON.stringify(req.headers)}`);
-    // console.log(`BODY ${req.body}`);
-    // console.log(`RAWBODY ${req.body}`);
     console.log(`body length ${req.body.length}`);
     console.log(`deviceDatasetItems ${req.body.deviceDatasetItems}`);
     
-    // console.log(`BODY is EMPTY req.body.constructor ${req.body.constructor === Object}`);
-    // console.log(`BODY is EMPTY Object.keys(req.body).length ${Object.keys(req.body).length}`);
-
     // request ---------------------
     let request = new Request.DevicesDatasetsPost(req);
 

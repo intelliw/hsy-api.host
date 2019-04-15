@@ -41,7 +41,7 @@ router.route(['/',
         
         /* // debug START
         // console.log(` ${}`);
-        console.log(` ${JSON.stringify()}`);
+        // console.log(` ${JSON.stringify()}`);
         res
             .status(response.status)
             .type(response.contentType)

@@ -31,7 +31,6 @@ class DevicesDatasetsPost extends Request {
     */
     constructor(req) {
         
-        
         // parameters                                                   // validate and default all parameters
         let params = {};
         params.deviceDatasetItems = new Param('deviceDatasetItems', req.body.deviceDatasetItems);

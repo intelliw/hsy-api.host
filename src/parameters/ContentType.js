@@ -29,8 +29,7 @@ class ContentType extends Param {
     constructor(req, responseConsumes) {
 
         const CONTENT_TYPE_HEADER = 'content-type';
-        const NO_BODY = 0;
-
+        const NO_BODY = 0;              // zero keys if no body
         
         // isSupported  
         let requestContentType = req.headers[CONTENT_TYPE_HEADER];                                        // get the Content-Type header   
