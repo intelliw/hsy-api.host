@@ -45,7 +45,7 @@ class Period extends Param {
     constructor(reqPeriod, epoch, duration) {
 
         // period, context
-        super(THIS_PARAM_NAME, reqPeriod, enums.period.default, enums.period);                         // e.g. reqPeriod' ='week';' 
+        super(THIS_PARAM_NAME, reqPeriod, enums.period.default, enums.period);                  // e.g. reqPeriod' ='week';' 
         this.context = this.value;                                                              // by default context=period except in a collection and overwritten by getChild() after construction        
 
         // duration     
@@ -75,7 +75,7 @@ class Period extends Param {
 
     // checks if the period epoch is in the future
     isFutureEpoch() {
-        let isFuture = moment.utc(this.epochInstant).isAfter()     // leave the args for IsAfter blank -- that'll default to now.
+        let isFuture = moment.utc(this.epochInstant).isAfter()                                  // leave the args for IsAfter blank -- that'll default to now.
         return isFuture;
     }
 
@@ -189,7 +189,7 @@ class Period extends Param {
         if (childEnum) {                                                                    // e.g. instant has no child    
 
             let duration = periodChildDuration(periodEnum, this.epochInstant);
-            let descr = periodChildDescription(periodEnum, this.epochInstant);                    // get the description label e.g.  'Mon Tue Wed Thu Fri Sat Sun'
+            let descr = periodChildDescription(periodEnum, this.epochInstant);              // get the description label e.g.  'Mon Tue Wed Thu Fri Sat Sun'
 
             //col the period and sets its relationship
             child = new Period(childEnum, this.epochInstant, duration);                     // construct child with a duration  
@@ -549,47 +549,36 @@ function datetimePromptStr(instant, periodEnum) {
         case enums.period.instant:              // 'Instant 090623.554'
             label = `Instant ${moment.utc(instant).format('HHmmss.SSS')}`;
             break;
-
         case enums.period.second:               // 'Second 0906:24'
             label = `Second ${moment.utc(instant).format('HHmm:ss')}`;
             break;
-
         case enums.period.minute:               // 'Minute 09:06'
             label = `Minute ${moment.utc(instant).format('HH:mm')}`;
             break;
-
         case enums.period.timeofday:            // 'Jan 1 Morning' 
             label = `${moment.utc(instant).format('MMM')} ${moment.utc(instant).format('D')} ${utils.capitalise(selectTimeOfDayEnum(instant))}`;
             break;
-
         case enums.period.day:                  // 'Mon Jan 1st'
             label = `${moment.utc(instant).format('ddd')} ${moment.utc(instant).format('MMM')} ${moment.utc(instant).format('Do')}`
             break;
-
         case enums.period.month:                // 'Mar 2019'
             label = `${moment.utc(instant).format('MMM')} ${year}`;
             break;
-
         case enums.period.quarter:              // 'Q1 2019'
             label = `${selectQuarterLabel(instant)} ${year}`;
             break;
-
         case enums.period.week:                 // 'Week 27 2019'
             label = `Week ${moment.utc(instant).format('WW')} ${year}`;
             break;
-
         case enums.period.hour:                 // 'Hour 2100'
             label = `Hour ${moment.utc(instant).format('HH')}00`;
             break;
-
         case enums.period.year:                 // 'Year 2019'
             label = `Year ${year}`;
             break;
-
         case enums.period.fiveyear:             // '5 Years 2014-2019'
             label = `5 Years ${year}-${moment.utc(instant).add(5, 'years').format('YYYY')}`;
             break;
-
         default:
             label = utils.capitalise(periodEnum);
             break;

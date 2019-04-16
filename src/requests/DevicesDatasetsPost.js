@@ -4,8 +4,6 @@
  * ./requests/DatasetsPostRequest.js
  * prepares data and response for the devices datasets post path 
  */
-const enums = require('../host/enums');
-
 const Response = require('../responses');
 const DatasetsPostResponse = require('../responses/DevicesDatasetsPostResponse');
 

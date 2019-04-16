@@ -62,7 +62,7 @@ function validateAuthorisation(req, apiKeyParam, errors) {
 
             errors.add(
                 `${ERROR_MESSAGE} | ${apiKeyParam.value} | ${req.url}`,
-                `parameter: ${apiKeyParam.name}`);                                       // add the message detail to the errors
+                `parameter: ${apiKeyParam.name}`);                                  // add the message detail to the errors
         }
 
     }
@@ -77,7 +77,7 @@ function validateParams(req, params, errors) {
 
     let param;
 
-    let allValid = true;
+    let allParamsValid = true;
     if (params) {
 
         let paramKeys = Object.keys(params);
@@ -90,12 +90,12 @@ function validateParams(req, params, errors) {
                     `${ERROR_MESSAGE} | ${param.value} | ${req.path}`,
                     `${(param.isMandatory && !param.value ? 'mandatory ' : 'invalid')} parameter: ${param.name}`);                                    // add the message detail to the errors
             }
-            allValid = allValid && param.isValid;
+            allParamsValid = allParamsValid && param.isValid;
         });
 
     }
 
-    return allValid;
+    return allParamsValid;
 
 }
 
@@ -105,12 +105,12 @@ function validateContentType(req, contentTypeParam, errors) {
     const ERROR_MESSAGE = 'Content-Type not supported.';
     const CONTENT_TYPE_HEADER = 'content-type';
 
-    let isContentTypeValid = contentTypeParam.isValid;                                     // if content type is undefined it is not valid
+    let isContentTypeValid = contentTypeParam.isValid;                              // if content type is undefined it is not valid
 
     if (!isContentTypeValid) {
         errors.add(
             `${ERROR_MESSAGE} | ${req.headers[CONTENT_TYPE_HEADER]}`,
-            `Content-Type header`);                                                       // add the message detail to the errors
+            `Content-Type header`);                                                 // add the message detail to the errors
     }
 
     return isContentTypeValid;
@@ -121,7 +121,7 @@ function validateAcceptType(req, acceptParam, errors) {
 
     const ERROR_MESSAGE = 'The requested Accept type is not supported.';
 
-    let isAcceptTypeValid = acceptParam.isValid;                                     // if content type is undefined if it was not valid
+    let isAcceptTypeValid = acceptParam.isValid;                                    // if content type is undefined if it was not valid
 
     if (!isAcceptTypeValid) {
         errors.add(

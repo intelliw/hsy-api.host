@@ -8,7 +8,6 @@
 const enums = require('../host/enums');
 const consts = require('../host/constants');
 
-const GenericMessageDetail = require('../definitions/GenericMessageDetail');
 const ErrorResponse = require('../responses/ErrorResponse');
 const Param = require('../parameters');
 const Validate = require('./Validate');
@@ -27,19 +26,13 @@ class Request {
      "apiKey": AIzaSyASFQxf4PmOutVS1Dt99TPcZ4IQ8PDUMqY 
      "accept": Param.Accept  defaults to first value in response.produces, or undefined if req.accepts is provided and not supported by the response
      "contentType": Param.ContentType  defaults to response.consumes, or undefined if req['content-type'] is provided and not supported by the response
-     "validation": {
-        "isValid": true if isAcceptTypeValid, isAuthorised, and isParamsValid
-        "isAcceptTypeValid": true if a mimetypes in an Accepts header is supported 
-        "isContentTypeValid": true if the mimetypes in the Content-Type header is supported 
-        "isAuthorised": true,
-        "isParamsValid" : true if all params are valid
-        "errors": { GenericMessageDetail }  
+     "validation": { }  
      }  
      "response":{Response}              // set if not valid else subclass sets it    
     
      constructor arguments 
     * @param {*} req                    // express request
-    * @param {*} responseProduces   // list of mimetypes which this request's responder (EnergyResponder) is able to produce 
+    * @param {*} responseProduces       // list of mimetypes which this request's responder (EnergyResponder) is able to produce 
     * @param {*} params                 // list of validated params { }
     */
     constructor(req, params, responseProduces, responseConsumes) {
@@ -54,7 +47,7 @@ class Request {
         this.validation = new Validate(req, this);
 
         // response
-        this.response = this.validation.isValid ? consts.NONE : new ErrorResponse(this.validation);       // ErrorResponse contains a generic error message as specified by the swagger genericMessage definition
+        this.response = this.validation.isValid ? consts.NONE : new ErrorResponse(this.validation);    // ErrorResponse contains a generic error message as specified by the swagger genericMessage definition
 
     }
 

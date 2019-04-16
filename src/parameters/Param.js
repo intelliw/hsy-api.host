@@ -13,7 +13,7 @@ class Param {
      * instance attributes:  
         "name": "period", 
         "value": "week",
-        "isMandatory": true,
+        "isOptional": true,
         "isValid": true,
        
      * constructor validates and stores parameter name and value. 
@@ -23,9 +23,9 @@ class Param {
      * if the value was provided it will be validated against the enum 
      * the default value is used if the provided value is missing 
      */
-    constructor(name, value, defaultValue, enumsList, isMandatory) {
+    constructor(name, value, defaultValue, enumsList, optional) {
 
-        const ISMANDATORY_DEFAULT = true;
+        const OPTIONAL_DEFAULT = false;                   // by default parameters are mandatory   
         
         // name & value                                   // use default if value not provided                                      
         this.name = name;
@@ -35,9 +35,9 @@ class Param {
         let enumTest = enumsList ? utils.valueExists(enumsList, this.value) : true;
 
 
-        // isMandatory & isValid                          // isValid if 1) enumTest passes and 2) there must be a value if isMandatory
-        this.isMandatory = (isMandatory != consts.NONE? isMandatory: ISMANDATORY_DEFAULT);
-        this.isValid = enumTest && (this.isMandatory ? this.value : true);
+        // isOptional & isValid                          // isValid if 1) enumTest passes and 2) there must be a value unless isOptional
+        this.isOptional = (optional != consts.NONE? optional: OPTIONAL_DEFAULT);
+        this.isValid = enumTest && (this.isOptional ? true : this.value);       // there must be a value unless isOptional    
 
     }
 }

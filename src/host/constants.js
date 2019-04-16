@@ -8,7 +8,8 @@ const enums = require('./enums');
 
 // folder locations
 module.exports.folders = {
-    VIEWS: path.dirname(require.resolve('../views'))
+    VIEWS: path.dirname(require.resolve('../views')),
+    STATIC: path.dirname(require.resolve('../../static'))
 };
 
 // the starting hour of each timeofday 

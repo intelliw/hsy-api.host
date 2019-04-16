@@ -30,11 +30,15 @@ app.use(bodyParser.json({ verify: rawBodySaver }));
 app.use(bodyParser.raw({ verify: rawBodySaver, type: function () { return true } }));   // for raw body parse function must return true
 
 
-// routes - each tag has a route handler
+// routes                                                                               // each openapi tag has a route handler 
 app.use('/energy', paths.energyRouter);                                                 // openapi tag: Energy 
 app.use(['/devices', '/device'], paths.devicesRouter);                                  // openapi tag: Devices
 app.use('/api', paths.diagnosticsRouter);                                               // openapi tag: Diagnostics
 app.use('/devtest', sandbox.devtest);                                                   // for testing and troubleshooting only    
+
+// public static folder 
+app.use('/static', express.static(host.constants.folders.STATIC));
+
 
 // handle error
 app.use((err, req, res, next) => {
