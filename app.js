@@ -36,7 +36,7 @@ app.use(['/devices', '/device'], paths.devicesRouter);                          
 app.use('/api', paths.diagnosticsRouter);                                               // openapi tag: Diagnostics
 app.use('/devtest', sandbox.devtest);                                                   // for testing and troubleshooting only    
 
-// public static folder 
+// static folders 
 app.use('/static', express.static(host.constants.folders.STATIC));
 
 

@@ -24,7 +24,7 @@ class EnergyGetResponse extends Response {
   */
   constructor(params, acceptParam) {
 
-    let content = executeEnergyGet(params);        // perform the data retrieval operation 
+    let content = executeEnergyGet(params);                                     // perform the data retrieval operation 
 
     super(RESPONSE_STATUS, acceptParam, VIEW_PREFIX, content);
 
@@ -33,18 +33,21 @@ class EnergyGetResponse extends Response {
 
 // perform the energy data operation and return a collections array
 function executeEnergyGet(params) {
+  
+  const CHILD_DESCRIPTION = true;
+  const GRANDCHILD_DESCRIPTION = true;
 
   let links;
   let items;
   let collections = new Collections();                                         // the collections array will store an array of collections, one for  each period in the duration 
 
   // get a collection for each period in the duration
-  let periods = params.period.getEach();                                       // break up the period duration into individual periods
+  let periods = params.period.getEach();                                       // break up the period duration into individual periods (though typically there is only 1 period) 
   periods.forEach(period => {
 
     // create the collection links  
-    links = new Links.EnergyLinks(params.energy, period, params.site);         // this creates the 'self' and 'Collection' links
-    links.addLink(period.getGrandchild(), enums.linkRender.none);              // add the other links needed for the collection
+    links = new Links.EnergyLinks(params.energy, period, params.site, CHILD_DESCRIPTION);      // this creates the 'self' and 'Collection' links
+    links.addLink(period.getGrandchild(GRANDCHILD_DESCRIPTION), enums.linkRender.none);        // create granndchild with a description
     links.addLink(period.getParent(), enums.linkRender.link);
     links.addLink(period.getNext(), enums.linkRender.link);
     links.addLink(period.getPrev(), enums.linkRender.link);
@@ -66,11 +69,11 @@ function createItems(energy, period, site) {
 
   let items = new Definitions.Items();
 
-  let periods = period.getEachChild();                        // gets the child periods for this period         
+  let periods = period.getEachChild();                                          // gets the child periods for this period         
 
   let MOCK_skip;
 
-  periods.forEach(childPeriod => {                            // this can be upto 1000 if child is instant
+  periods.forEach(childPeriod => {                                              // this can be upto 1000 if child is instant
 
     if (childPeriod) {
 
@@ -107,10 +110,10 @@ function createItemData(energy, childPeriod, site) {
   const FUTURE_UNKNOWN = '0';
 
   let dataWrapper = new Definitions.Data();
-  let energyNames = getEnergyDataNames(energy);                                        // these are the 6 energy names (e.g. 'store.in')
+  let energyNames = getEnergyDataNames(energy);                                    // these are the 6 energy names (e.g. 'store.in')
 
   let childData = new Definitions.Data();
-  let childMinMax = utils.MOCK_periodMinMax(childPeriod, dailyHigh, dailyLow);      // get an adjusted minmax for the childperiod 
+  let childMinMax = utils.MOCK_periodMinMax(childPeriod, dailyHigh, dailyLow);     // get an adjusted minmax for the childperiod 
 
   let grandChildData = new Definitions.Data();
   let grandChildPeriod = childPeriod.getChild();

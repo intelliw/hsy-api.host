@@ -52,7 +52,7 @@ class Collections extends Definitions  {
 
     add(version, href, colLinks, colItems) {
 
-        let links = colLinks.getElements();             // need getElements so that the _elements does not appear in the output JSON
+        let links = colLinks.getElements();             // use getElements to get the array 
         let items = colItems.getElements();
         
         let collection = { "collection" : { "href": href, "version": version, links, items } };

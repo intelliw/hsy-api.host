@@ -177,8 +177,10 @@ class Period extends Param {
         return periods;
     }
 
-    // returns the child of this period including the duration, which is the number of child periods in the period 
-    getChild() {
+    /* returns the child of this period including the duration, which is the number of child periods in the period 
+    *  if isDescription is true the child period will be created with a description (if one has been configured for it in consts.periodChildDescription)
+    */
+    getChild(isDescription) {
 
         let child;
 
@@ -189,7 +191,9 @@ class Period extends Param {
         if (childEnum) {                                                                    // e.g. instant has no child    
 
             let duration = periodChildDuration(periodEnum, this.epochInstant);
-            let descr = periodChildDescription(periodEnum, this.epochInstant);              // get the description label e.g.  'Mon Tue Wed Thu Fri Sat Sun'
+
+            // get the description label e.g.  'Mon Tue Wed Thu Fri Sat Sun'
+            let descr = isDescription ? periodChildDescription(periodEnum, this.epochInstant) : consts.NONE;
 
             //col the period and sets its relationship
             child = new Period(childEnum, this.epochInstant, duration);                     // construct child with a duration  
@@ -217,8 +221,11 @@ class Period extends Param {
         return childperiods;
     }
 
-    // returns the grandchild of this period including the total duration of its child periods 
-    getGrandchild() {
+
+    /* returns the grandchild of this period including the total duration of its child periods 
+    *  if isDescription is true the grandchild period is created with a description (if one has been configured for it in consts.periodChildDescription)
+    */
+    getGrandchild(isDescription) {
 
         let grandchild;
 
@@ -236,10 +243,14 @@ class Period extends Param {
                 let grandchildDuration = periodChildDuration(childEnum, this.epochInstant); // e.g. 4 for 'day' period child 'timeofday'
                 let totalDuration = Number(childDuration) * Number(grandchildDuration)      // total is 28
 
+                // get the description label e.g.  'Mon Tue Wed Thu Fri Sat Sun'
+                let descr = isDescription ? periodChildDescription(childEnum, this.epochInstant) : consts.NONE;
+
                 //create the grandchild with the total duration 
                 grandchild = new Period(grandchildEnum, this.epochInstant, totalDuration);   // construct grandchild with total duration  
-                grandchild.context = `${periodEnum}.${childEnum}.${grandchildEnum}`          // context is parent to child to grandchild  e.g. 'day.week.timeofday' 
+                grandchild.context = `${childEnum}.${grandchildEnum}`          // context is parent to child to grandchild  e.g. 'week.timeofday' 
                 grandchild.rel = enums.linkRelations.collection;                             // collection is the rel for a grandchild
+                grandchild.description = descr;
             }
         }
 
@@ -400,9 +411,9 @@ function periodChildDescription(periodEnum, epochInstant) {
                 let start = descr ? (descr.split(SPACE_DELIMITER).length) + 1 : DEFAULT_START; // get the days in the constant - this should be 28
 
                 let hoWMany = (duration - start) + 1;
-                
+
                 descr = utils.createSequence(start, hoWMany, SPACE_DELIMITER, descr);
-                
+
                 break;
 
             case enums.period.quarter:              // quartermonth                     // { 'Q1': 'Jan Feb Mar', 'Q2': 'Apr May ...
