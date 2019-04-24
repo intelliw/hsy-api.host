@@ -34,20 +34,20 @@ class EnergyGetResponse extends Response {
 // perform the energy data operation and return a collections array
 function executeEnergyGet(params) {
   
-  const CHILD_DESCRIPTION = true;
-  const GRANDCHILD_DESCRIPTION = true;
+  const ADD_CHILD_DESCRIPTION = true;
+  const ADD_GRANDCHILD_DESCRIPTION = true;
 
   let links;
   let items;
-  let collections = new Collections();                                         // the collections array will store an array of collections, one for  each period in the duration 
+  let collections = new Collections();                                         // stores an array of collections, one for each period in the duration 
 
   // get a collection for each period in the duration
   let periods = params.period.getEach();                                       // break up the period duration into individual periods (though typically there is only 1 period) 
   periods.forEach(period => {
 
     // create the collection links  
-    links = new Links.EnergyLinks(params.energy, period, params.site, CHILD_DESCRIPTION);      // this creates the 'self' and 'Collection' links
-    links.addLink(period.getGrandchild(GRANDCHILD_DESCRIPTION), enums.linkRender.none);        // create granndchild with a description
+    links = new Links.EnergyLinks(params.energy, period, params.site, ADD_CHILD_DESCRIPTION);      // this creates the 'self' and 'Collection' links
+    links.addLink(period.getGrandchild(ADD_GRANDCHILD_DESCRIPTION), enums.linkRender.none);        // create granndchild with a description
     links.addLink(period.getParent(), enums.linkRender.link);
     links.addLink(period.getNext(), enums.linkRender.link);
     links.addLink(period.getPrev(), enums.linkRender.link);
@@ -69,11 +69,11 @@ function createItems(energy, period, site) {
 
   let items = new Definitions.Items();
 
-  let periods = period.getEachChild();                                          // gets the child periods for this period         
+  let periods = period.getEachChild();                                            // gets the child periods for this period         
 
   let MOCK_skip;
 
-  periods.forEach(childPeriod => {                                              // this can be upto 1000 if child is instant
+  periods.forEach(childPeriod => {                                                // this can be upto 1000 if child is instant
 
     if (childPeriod) {
 
@@ -82,7 +82,7 @@ function createItems(energy, period, site) {
       if (itemData) {
 
         // make the item links 
-        let itemLinks = new Links.EnergyLinks(energy, childPeriod, site);       // constructor creates a child and grandchild link
+        let itemLinks = new Links.EnergyLinks(energy, childPeriod, site);         // constructor creates a child and grandchild link
 
         // add an item to the list
         items.add(itemLinks.href, itemLinks, itemData);

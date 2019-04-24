@@ -15,88 +15,78 @@
 <body>
     <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
 
-        <a class="navbar-brand" href="http://api.endpoints.sundaya.cloud.goog/energy/hse">Sundaya</a>
+        <a class="navbar-brand" href="https://endpointsportal.sundaya.cloud.goog/" data-toggle="tooltip" title="Developer Portal">Sundaya</a>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent`">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mt-auto">
 
-                <li class="nav-item dropdown">
-                    <a id="energyDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Energy <span class="badge badge-light">hse</span>
+                <li class="nav-item dropdown select-parent">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+                        Energy <span id="navEnergy" class="badge badge-light select-value">hse</span>
                     </a>
 
-                    <div class="dropdown-menu py-0" aria-labelledby="energyDropdown">
-                        <a class="dropdown-item active" href="#"><span class="badge badge-light">hse</span></a>
-                        <a class="dropdown-item" href="#"><span class="badge badge-success">harvest</span></a>
-                        <a class="dropdown-item" href="#"><span class="badge badge-primary">store</span>
-                            </a>
-                        <a class="dropdown-item" href="#"><span class="badge badge-danger">enjoy</span> </a>
-                        <a class="dropdown-item" href="#"><span class="badge badge-dark">grid</span></a>
+                    <div class="dropdown-menu p-0 select-list">
+                        <a class="dropdown-item px-2" href="#"><span class="badge badge-light">hse</span></a>
+                        <a class="dropdown-item px-2" href="#"><span class="badge badge-success">harvest</span></a>
+                        <a class="dropdown-item px-2" href="#"><span class="badge badge-primary">store</span></a>
+                        <a class="dropdown-item px-2" href="#"><span class="badge badge-danger">enjoy</span> </a>
+                        <a class="dropdown-item px-2" href="#"><span class="badge badge-dark">grid</span></a>
                     </div>
                 </li>
 
-                <li class="nav-item dropdown">
-                    <a id="periodDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Period <span class="badge badge-light">week</span>
+                <li class="nav-item dropdown select-parent">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+                        Period <span id="navPeriod" class="badge badge-light select-value">week</span>
                     </a>
 
-                    <div class="dropdown-menu py-0" aria-labelledby="periodDropdown">
-                        <a class="dropdown-item" href="#">day</a>
-                        <a class="dropdown-item active" href="#">week</a>
-                        <a class="dropdown-item" href="#">month</a>
-                        <a class="dropdown-item" href="#">quarter</a>
-                        <a class="dropdown-item" href="#">year</a>
-                        <a class="dropdown-item" href="#">fiveyear</a>
+                    <div class="dropdown-menu p-0 select-list" id="periodDropdownList">
+                        <a class="dropdown-item px-2" href="#">day</a>
+                        <a class="dropdown-item px-2" href="#">week</a>
+                        <a class="dropdown-item px-2" href="#">month</a>
+                        <a class="dropdown-item px-2" href="#">quarter</a>
+                        <a class="dropdown-item px-2" href="#">year</a>
+                        <a class="dropdown-item px-2" href="#">fiveyear</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item disabled" href="#">timeofday</a>
-                        <a class="dropdown-item disabled" href="#">hour</a>
-                        <a class="dropdown-item disabled" href="#">minute</a>
-                        <a class="dropdown-item disabled" href="#">second</a>
-                        <a class="dropdown-item disabled" href="#">instant</a>
+                        <a class="dropdown-item px-2 disabled" href="#">timeofday</a>
+                        <a class="dropdown-item px-2 disabled" href="#">hour</a>
+                        <a class="dropdown-item px-2 disabled" href="#">minute</a>
+                        <a class="dropdown-item px-2 disabled" href="#">second</a>
+                        <a class="dropdown-item px-2 disabled" href="#">instant</a>
                     </div>
                 </li>
 
-                <div class="btn-group btn-group-sm btn-sm px-1" role="group" aria-label="Period epoch">
+                <div class="btn-group btn-group-sm btn-sm px-1" role="group">
 
-                    <div class="btn-group btn-group-sm" role="group">
-                        <button id="epochYearDropdown" type="button" class="btn btn-outline-light dropdown-toggle px-1"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="badge badge-primary">2019</span>
+                    <div class="btn-group btn-group-sm select-parent" role="group">
+                        <button id="epochYearDropdown" type="button" class="btn btn-outline-light dropdown-toggle px-1" data-toggle="dropdown">
+                            <span id="navEpochYear" class="badge badge-primary select-value">2019</span>
                         </button>
 
-                        <div class="dropdown-menu py-0" aria-labelledby="epochYearDropdown">
+                        <div class="dropdown-menu py-0 select-list">
                             <a class="dropdown-item" href="#">2015</a>
                             <a class="dropdown-item" href="#">2016</a>
                             <a class="dropdown-item" href="#">2017</a>
                             <a class="dropdown-item" href="#">2018</a>
-                            <a class="dropdown-item active" href="#">2019</a>
+                            <a class="dropdown-item" href="#">2019</a>
                             <a class="dropdown-item" href="#">2020</a>
-                            <a class="dropdown-item" href="#">2021</a>
-                            <a class="dropdown-item" href="#">2022</a>
-                            <a class="dropdown-item" href="#">2023</a>
-                            <a class="dropdown-item" href="#">2024</a>
-                            <a class="dropdown-item" href="#">2025</a>
                         </div>
                     </div>
 
-                    <div class="btn-group btn-group-sm" role="group">
+                    <div class="btn-group btn-group-sm select-parent" role="group">
                         <button id="epochMonthDropdown" type="button" class="btn btn-outline-light dropdown-toggle px-1"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="badge badge-primary">04</span>
+                            data-toggle="dropdown">
+                            <span id="navEpochMonth" class="badge badge-primary select-value">04</span>
                         </button>
 
-                        <div class="dropdown-menu py-0" aria-labelledby="epochMonthDropdown">
+                        <div class="dropdown-menu py-0 select-list">
                             <a class="dropdown-item py-0" href="#">01</a>
                             <a class="dropdown-item py-0" href="#">02</a>
                             <a class="dropdown-item py-0" href="#">03</a>
-                            <a class="dropdown-item py-0 active" href="#">04</a>
+                            <a class="dropdown-item py-0" href="#">04</a>
                             <a class="dropdown-item py-0" href="#">05</a>
                             <a class="dropdown-item py-0" href="#">06</a>
                             <a class="dropdown-item py-0" href="#">07</a>
@@ -108,13 +98,12 @@
                         </div>
                     </div>
 
-                    <div class="btn-group btn-group-sm" role="group">
-                        <button id="epochDayDropdown" type="button" class="btn btn-outline-light dropdown-toggle px-1"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="badge badge-primary">22</span>
+                    <div class="btn-group btn-group-sm select-parent" role="group">
+                        <button id="epochDayDropdown" type="button" class="btn btn-outline-light dropdown-toggle px-1" data-toggle="dropdown">
+                            <span id="navEpochDay" class="badge badge-primary select-value">22</span>
                         </button>
 
-                        <div class="dropdown-menu py-0" aria-labelledby="epochDayDropdown">
+                        <div class="dropdown-menu py-0 select-list">
                             <a class="dropdown-item py-0" href="#">01</a>
                             <a class="dropdown-item py-0" href="#">02</a>
                             <a class="dropdown-item py-0" href="#">03</a>
@@ -135,7 +124,7 @@
                             <a class="dropdown-item py-0" href="#">18</a>
                             <a class="dropdown-item py-0" href="#">19</a>
                             <a class="dropdown-item py-0" href="#">21</a>
-                            <a class="dropdown-item py-0 active" href="#">22</a>
+                            <a class="dropdown-item py-0" href="#">22</a>
                             <a class="dropdown-item py-0" href="#">23</a>
                             <a class="dropdown-item py-0" href="#">24</a>
                             <a class="dropdown-item py-0" href="#">25</a>
@@ -150,12 +139,11 @@
                     </div>
 
                     <div class="btn-group btn-group-sm" role="group">
-                        <button id="epochDayDropdown" type="button" class="btn px-3" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                            <span class="badge badge-warning py-1">today</span>
+                        <button id="epochDayDropdown" href="http://api.endpoints.sundaya.cloud.goog/energy"
+                            type="button" class="btn px-3" data-toggle="dropdown">
+                            <span id="today" class="badge badge-warning py-1">today</span>
                         </button>
                     </div>
-
 
                 </div>
 
@@ -171,31 +159,28 @@
             <div class="card-header mt-n1 px-0" id="collectionCollapse_1">
 
                 <h2 class="mb-0">
-                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse_1"
-                        aria-expanded="false" aria-controls="collectionCollapse_1">
-                        Week 06 2019
+                    <button class="btn btn-link pr-0" type="button" data-toggle="collapse" data-target="#collapse_1">
+                        <span data-toggle="tooltip" title="04/02/19 - 10/02/19">Week 06 2019</span>
                     </button>
 
-                    <div class="btn-group btn-group-sm btn-sm" role="group" aria-label="Period epoch">
-                        <button type="button" class="btn btn-outline-primary">
-                            Prev
+                    <div class="btn-group btn-group-sm btn-sm px-0" role="group">
+                        <button type="button" class="btn btn-outline-primary" data-toggle="tooltip"
+                            title="11/02/19 - 17/02/19">Prev
                         </button>
-                        <button type="button" class="btn btn-outline-primary">
-                            Next
+                        <button type="button" class="btn btn-outline-primary" data-toggle="tooltip"
+                            title="28/01/19 - 03/02/19">Next
                         </button>
-                        <button type="button" class="btn btn-link px-3">
-                            <span class="badge badge-warning py-1"> month </span>
-                        </button>
-
                     </div>
+                    <button type="button" class="btn btn-link px-1" data-toggle="tooltip" title="Feb 2019">
+                        <span class="badge badge-warning py-1 px-1">month</span>
+                    </button>
 
 
                 </h2>
 
             </div>
 
-            <div id="collapse_1" class="collapse show" aria-labelledby="collectionCollapse_1"
-                data-parent="#collectionsAccordion">
+            <div id="collapse_1" class="collapse show" data-parent="#collectionsAccordion">
 
                 <button class="btn">
                     <span class="badge badge-default">Days 04/02/19 - 10/02/19</span>
@@ -217,13 +202,12 @@
         <div class="card">
             <div class="card-header mt-n1 px-0" id="collectionCollapse_2">
                 <h2 class="mb-0">
-                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
-                        data-target="#collapse_2" aria-expanded="false" aria-controls="collectionCollapse_2">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse_2">
                         Week 07 2019
                     </button>
                 </h2>
             </div>
-            <div id="collapse_2" class="collapse" aria-labelledby="headingTwo" data-parent="#collectionsAccordion">
+            <div id="collapse_2" class="collapse" data-parent="#collectionsAccordion">
                 <div class="card-body">
                     Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
                     wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
@@ -238,13 +222,12 @@
         <div class="card">
             <div class="card-header mt-n1 px-0" id="collectionCollapse_3">
                 <h2 class="mb-0">
-                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
-                        data-target="#collapse_3" aria-expanded="false" aria-controls="collectionCollapse_3">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse_3">
                         Week 08 2019
                     </button>
                 </h2>
             </div>
-            <div id="collapse_3" class="collapse" aria-labelledby="headingThree" data-parent="#collectionsAccordion">
+            <div id="collapse_3" class="collapse" data-parent="#collectionsAccordion">
                 <div class="card-body">
                     Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
                     wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
@@ -257,17 +240,17 @@
             </div>
         </div>
     </div>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    
+    <!-- JavaScript: jQuery first, then Popper.js, then Bootstrap JS, app scripts must be last -->
+    <script src="//code.jquery.com/jquery-3.3.1.slim.min.js"        
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
-    <script src="/static/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/energy.js"></script>
+
 </body>
 
 </html>

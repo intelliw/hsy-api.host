@@ -39,6 +39,7 @@ const Definitions = require('./Definitions');
        prompt: 'Feb 4 Night - Feb 4 Evening',
        title: '04/02/19 00:00 - 04/02/19 23:59',
        href: 'http://localhost:8080/energy/harvest/period/timeofday/20190204T0000/4?site=900',
+       description: undefined,
        render: undefined } ],
    data:
     [ { name: 'harvest.day', value: '26.558364' },
