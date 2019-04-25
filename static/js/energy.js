@@ -4,7 +4,7 @@ $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
 });
 
-// display the selected 'select-list' item in the 'select-value' control;
+// put the selected 'select-list' item into the 'select-value' control;
 $(".select-list a").click(function () {
     var selText = $(this).justtext();
     $(this).parents('.select-parent').find('.select-value').html(selText);
@@ -26,14 +26,16 @@ $("#btnDone").click(function () {
 /** 
  * functions
  */
-// get just the text without child element text  
+// get just the text without child element's text  
 jQuery.fn.justtext = function() {
-  
-	return $(this)	.clone()
+    let txt = $(this)	
+            .clone()
 			.children()
 			.remove()
 			.end()
-			.text();
-
+            .text();
+    
+    // if no text get text by the default method (e.g if <a> has no text and contains a badge with text)
+    return jQuery.trim(txt) ? txt : $(this).text();
 };
 
