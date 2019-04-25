@@ -15,11 +15,12 @@ $("#btnDone").click(function () {
     let apiUrl = "http://api.endpoints.sundaya.cloud.goog" 
         + "/energy/" + $("#navEnergy").html() 
         + "/period/" + $("#navPeriod").html()
-        + "/" + $("#navEpochYear").html() + $("#navEpochMonth").html() + $("#navEpochDay").html()
+        + "/" + $("#navEpochYear").html() + $("#navEpochMonth").html() + $("#navEpochDay").html() 
+        + "T" + $("#navEpochHour").html() + $("#navEpochMinute").html()
         + "/" + $("#navDuration").html()
 
-    window.location = apiUrl;
-    //alert(apiUrl);
+    //window.location = apiUrl;
+    alert(apiUrl);
 });
 
 /** 
@@ -35,3 +36,4 @@ jQuery.fn.justtext = function() {
 			.text();
 
 };
+
