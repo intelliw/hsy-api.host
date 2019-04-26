@@ -14,18 +14,19 @@
 
 <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-primary">
-        <a class="navbar-brand" href="https://endpointsportal.sundaya.cloud.goog/" data-toggle="tooltip"
-            title="Developer Portal">Sundaya Energy API
+        <a id="btnAPI" class="navbar-brand pl-1" href="#navbarAPI" data-toggle="collapse">Sundaya Energy API
+            <i class="material-icons"
+                style="font-size:12px;color:white;text-shadow:2px 2px 4px #000000;">chevron_right</i>
         </a>
 
         <!-- Collapse hamburger  -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMain">
+        <button id="btnHamburger" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMain">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <!-- NAVBAR ------------------------------------------------------------------------------------------------------------->
         <div class="collapse navbar-collapse" id="navbarMain">
-            <ul class="navbar-nav mt-auto">
+            <ul id="navbarAPI" class="navbar-nav mt-auto collapse">
 
                 <!-- Energy -->
                 <li class="nav-item dropdown select-parent">
@@ -234,7 +235,7 @@
 
                         <!-- Duration-->
                         <div class="btn-group btn-group-sm select-parent" role="group" data-toggle="tooltip"
-                            data-placement="left" title="# of periods">
+                            data-placement="left" title="# periods">
                             <button type="button" class="btn btn-outline-light dropdown-toggle px-1 pl-0"
                                 data-toggle="dropdown">
                                 <span id="navDuration" class="badge badge-primary select-value">3</span>
@@ -288,23 +289,28 @@
     <div class="accordion">
         <div class="card">
 
-            <div class="card-header mt-n1 px-0">
+            <div class="card-header mt-n1 py-2 px-0">
 
-                <h2 class="mb-0">
-                    <button class="btn btn-link pr-0" type="button" data-toggle="collapse" data-target="#collapse_1">
+                <h2 class="mb-0 pl-3 ">
+                    <button class="btn btn-sm btn-secondary px-1 py-0" type="button" data-toggle="collapse"
+                        data-target="#panelCollection_1">Week 06 2019
                         <span data-toggle="tooltip" title="04/02/19 - 10/02/19">
-                            Week 06 2019</span>
+                            <i class="material-icons"
+                                style="font-size:12px;color:white;text-shadow:2px 2px 4px #000000;">expand_more</i>
+                        </span>
                     </button>
 
-                    <div class="btn-group btn-group-sm btn-sm px-0" role="group">
-                        <button type="button" class="btn btn-outline-primary" data-toggle="tooltip"
-                            title="11/02/19 - 17/02/19">
-                            Prev
-                        </button>
-                        <button type="button" class="btn btn-outline-primary" data-toggle="tooltip"
-                            title="28/01/19 - 03/02/19">
-                            Next</button>
-                    </div>
+                    <button type="button" class="btn btn-sm btn-secondary py-0" data-toggle="tooltip"
+                        title="11/02/19 - 17/02/19">
+                        <i class="material-icons"
+                            style="font-size:12px;color:white;text-shadow:2px 2px 4px #000000;">navigate_before</i>
+                    </button>
+
+                    <button type="button" class="btn btn-sm btn-secondary py-0" data-toggle="tooltip"
+                        title="28/01/19 - 03/02/19">
+                        <i class="material-icons"
+                            style="font-size:12px;color:white;text-shadow:2px 2px 4px #000000;">navigate_next</i>
+                    </button>
 
                     <button type="button" class="btn btn-link px-0" data-toggle="tooltip" title="Feb 2019">
                         <span class="badge badge-warning py-1 px-1">
@@ -316,7 +322,7 @@
 
             </div>
 
-            <div id="collapse_1" class="collapse show">
+            <div id="panelCollection_1" class="collapse show">
 
                 <button class="btn">
                     <span class="badge badge-default">Days 04/02/19 - 10/02/19</span>
@@ -341,15 +347,15 @@
         </div>
 
         <div class="card">
-            <div class="card-header mt-n1 px-0" id="collectionCollapse_2">
+            <div class="card-header mt-n1 px-0" id="collectionpanelCollection_2">
                 <h2 class="mb-0">
                     <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
-                        data-target="#collapse_2">
+                        data-target="#panelCollection_2">
                         Week 07 2019
                     </button>
                 </h2>
             </div>
-            <div id="collapse_2" class="collapse show">
+            <div id="panelCollection_2" class="collapse show">
                 <div class="card-body">
                     Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
                     wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
@@ -362,15 +368,15 @@
             </div>
         </div>
         <div class="card">
-            <div class="card-header mt-n1 px-0" id="collectionCollapse_3">
+            <div class="card-header mt-n1 px-0" id="collectionpanelCollection_3">
                 <h2 class="mb-0">
                     <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
-                        data-target="#collapse_3">
+                        data-target="#panelCollection_3">
                         Week 08 2019
                     </button>
                 </h2>
             </div>
-            <div id="collapse_3" class="collapse">
+            <div id="panelCollection_3" class="collapse">
                 <div class="card-body">
                     Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
                     wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
