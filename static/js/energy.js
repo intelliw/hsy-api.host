@@ -17,13 +17,24 @@ $(document).ready(function () {
         $(this).parents('.select-parent').find('.select-value').html(selText);
     });
 
+    // toggle the child/grandchild card 
+    $(".select-toggle").click(function () {
+        let isActive = $(this).find('.btn-toggle').hasClass('active');
+        let ch = $(this).parents('.card').find('.panel-child');
+        let gch = $(this).parents('.card').find('.panel-grandchild');
+
+        (isActive ? gch : ch).collapse('hide');  // (isActive ? gch : ch).hide();
+        (isActive ? ch : gch).collapse('show');  // (isActive ? ch : gch).show();
+        
+    });
+
     // 'done' button calls the API. Strip colon and space from the hour with regex
     $("#btnDone").click(function () {
         let apiUrl = "http://api.endpoints.sundaya.cloud.goog"
             + "/energy/" + $("#navEnergy").html()
             + "/period/" + $("#navPeriod").html()
             + "/" + $("#navEpochYear").html() + $("#navEpochMonth").html() + $("#navEpochDay").html()
-            + "T" + $("#navEpochHour").html().replace(/\s: /g, '') 
+            + "T" + $("#navEpochHour").html().replace(/\s: /g, '')
             + "/" + $("#navDuration").html()
 
         // alert(apiUrl);
