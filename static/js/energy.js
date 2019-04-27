@@ -1,52 +1,44 @@
 
-// activate tooltips
+
 $(document).ready(function () {
+
+    // activate bs tooltips
     $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
-});
 
-// put the selected item into the 'select-value' control (without child element's text);
-$(".select-justtext a").click(function () {
-    var selText = $(this).justtext();
-    $(this).parents('.select-parent').find('.select-value').html(selText);
-});
+    // put the selected item into the 'select-value' control (without child element's text);
+    $(".select-justtext a").click(function () {
+        var selText = $(this).justtext();
+        $(this).parents('.select-parent').find('.select-value').html(selText);
+    });
 
-// put the selected child element into the 'select-value' control;
-$(".select-text a").click(function () {
-    var selText = $(this).text();
-    $(this).parents('.select-parent').find('.select-value').html(selText);
-});
+    // put the selected child element into the 'select-value' control;
+    $(".select-text a").click(function () {
+        var selText = $(this).text();
+        $(this).parents('.select-parent').find('.select-value').html(selText);
+    });
 
-// 'done' button  click 
-$("#btnDone").click(function () {
-    let apiUrl = "http://api.endpoints.sundaya.cloud.goog"
-        + "/energy/" + $("#navEnergy").html()
-        + "/period/" + $("#navPeriod").html()
-        + "/" + $("#navEpochYear").html() + $("#navEpochMonth").html() + $("#navEpochDay").html()
-        + "T" + $("#navEpochHour").html() + $("#navEpochMinute").html()
-        + "/" + $("#navDuration").html()
+    // 'done' button calls the API. Strip colon and space from the hour with regex
+    $("#btnDone").click(function () {
+        let apiUrl = "http://api.endpoints.sundaya.cloud.goog"
+            + "/energy/" + $("#navEnergy").html()
+            + "/period/" + $("#navPeriod").html()
+            + "/" + $("#navEpochYear").html() + $("#navEpochMonth").html() + $("#navEpochDay").html()
+            + "T" + $("#navEpochHour").html().replace(/\s: /g, '') 
+            + "/" + $("#navDuration").html()
 
-    // alert(apiUrl);
-    window.location = apiUrl;
+        // alert(apiUrl);
+        window.location = apiUrl;
+    });
 
-});
+    // 'today' button  click 
+    $("#btnToday").click(function () {
+        let apiUrl = "http://api.endpoints.sundaya.cloud.goog"
+            + "/energy/" + $("#navEnergy").html()
+            + "/period/" + $("#navPeriod").html()
+        // alert(apiUrl);
+        window.location = apiUrl;
+    });
 
-// 'today' button  click 
-$("#btnToday").click(function () {
-    let apiUrl = "http://api.endpoints.sundaya.cloud.goog"
-        + "/energy/" + $("#navEnergy").html()
-        + "/period/" + $("#navPeriod").html()
-    // alert(apiUrl);
-    window.location = apiUrl;
-});
-
-$("#btnAPI").click(function () {
-    if ($("#btnHamburger").is(":visible")) {
-        $("#navbarMain").collapse('show');
-    }
-});
-
-$("#btnHamburger").click(function () {
-    $("#navbarAPI").collapse('show');
 });
 
 
