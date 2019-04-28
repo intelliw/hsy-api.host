@@ -1,39 +1,3 @@
-.example {
-  margin: 4rem auto;
-}
-.example > .row {
-  margin-top: 2rem;
-  height: 5rem;
-  vertical-align: middle;
-  text-align: center;
-  border: 1px solid rgba(189, 193, 200, 0.5);
-}
-.example > .row:first-of-type {
-  border: none;
-  height: auto;
-  text-align: left;
-}
-.example h3 {
-  font-weight: 400;
-}
-.example h3 > small {
-  font-weight: 200;
-  font-size: 0.75em;
-  color: #939aa5;
-}
-.example h6 {
-  font-weight: 700;
-  font-size: 0.65rem;
-  letter-spacing: 3.32px;
-  text-transform: uppercase;
-  color: #bdc1c8;
-  margin: 0;
-  line-height: 5rem;
-}
-.example .btn-toggle {
-  top: 50%;
-  transform: translateY(-50%);
-}
 .btn-toggle {
   margin: 0 4rem;
   padding: 0;
@@ -214,13 +178,13 @@
   display: none;
 }
 .btn-toggle.btn-sm {
-  margin: 0 0.5rem;
+  margin: 0 0.2rem;
   padding: 0;
   position: relative;
   border: none;
-  height: 1.5rem;
-  width: 3rem;
-  border-radius: 1.5rem;
+  height: 1.0rem;
+  width: 3.2rem;
+  border-radius: 1.0rem;
 }
 .btn-toggle.btn-sm:focus,
 .btn-toggle.btn-sm.focus,
@@ -230,7 +194,7 @@
 }
 .btn-toggle.btn-sm:before,
 .btn-toggle.btn-sm:after {
-  line-height: 1.5rem;
+  line-height: 1.0rem;
   width: 0.5rem;
   text-align: center;
   font-weight: 600;
@@ -242,21 +206,21 @@
   transition: opacity 0.25s;
 }
 .btn-toggle.btn-sm:before {
-  content: "Off";
+  content: "Hide";
   left: -0.5rem;
 }
 .btn-toggle.btn-sm:after {
-  content: "On";
+  content: "Show";
   right: -0.5rem;
   opacity: 0.5;
 }
 .btn-toggle.btn-sm > .handle {
   position: absolute;
-  top: 0.1875rem;
-  left: 0.1875rem;
-  width: 1.125rem;
-  height: 1.125rem;
-  border-radius: 1.125rem;
+  top: 0.11rem;
+  left: 0.17rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 0.8rem;
   background: #fff;
   transition: left 0.25s;
 }
@@ -264,7 +228,7 @@
   transition: background-color 0.25s;
 }
 .btn-toggle.btn-sm.active > .handle {
-  left: 1.6875rem;
+  left: 2.3rem;
   transition: left 0.25s;
 }
 .btn-toggle.btn-sm.active:before {
@@ -394,3 +358,4 @@
 .btn-toggle.btn-secondary.active {
   background-color: #ff8300;
 }
+

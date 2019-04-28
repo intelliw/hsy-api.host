@@ -20,6 +20,7 @@ $(document).ready(function () {
     // toggle the child/grandchild card 
     $(".select-toggle").click(function () {
         let isActive = $(this).find('.btn-toggle').hasClass('active');
+        
         let ch = $(this).parents('.card').find('.panel-child');
         let gch = $(this).parents('.card').find('.panel-grandchild');
 
