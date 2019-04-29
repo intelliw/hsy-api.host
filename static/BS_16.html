@@ -15,9 +15,10 @@
 
 <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+
         <a class="navbar-brand pl-1" href="#navbarAPI, #navbarMain" data-toggle="collapse">Sundaya Energy API</a>
 
-        <!-- Collapse hamburger  -->
+        <!-- collapse HAMBURGER  -->
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarAPI, #navbarMain">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -266,13 +267,16 @@
 
     <!-- ACCORDION (without exclusive open)  ------------------------------------------------------------------------------------------------------------->
     <div class="accordion">
+
+        <!-- PERIOD n CARD -->
         <div class="card">
 
-            <div class="card-header mt-n1 py-2 px-0 d-flex bd-highlight">
+            <!-- PERIOD n NAV row -->
+            <div class="card-header mt-n1 py-2 px-0 d-flex">
 
-                <h2 class="mb-0 pl-3 flex-grow-1 bd-highlight">
+                <h2 class="mb-0 pl-3 flex-grow-1">
 
-                    <span class="btn pb-2 px-0" data-toggle="collapse" data-target="#panel_1">
+                    <span class="btn pb-2 pl-1 pr-0" data-toggle="collapse" data-target="#panel_1">
                         <button class="btn btn-sm btn-secondary px-1 py-0" type="button" data-toggle="tooltip"
                             title="04/02/19 - 10/02/19">Week 06 2019</button>
                     </span>
@@ -297,9 +301,9 @@
 
                 </h2>
 
-                <h2 class="mb-0 pr-3 bd-highlight">
+                <h2 class="mb-0 pr-3">
 
-                    <span class="btn select-toggle px-0" data-toggle="button">
+                    <span class="btn select-toggle pl-0 pr-1" data-toggle="button">
                         <button type="button" class="btn btn-xs btn-secondary btn-toggle" data-toggle="tooltip"
                             title="day | timeofday" autocomplete="off">
                             <div class="handle"></div>
@@ -310,88 +314,207 @@
 
             </div>
 
+            <!-- PERIOD n BODY row -->
             <div id="panel_1" class="p-0 collapse show">
-                <div class="card-body panel-child pt-0 pb-3 collapse show">
 
-                    <ul class="nav d-flex bd-highlight">
-                        <li class="nav-item flex-grow-1 bd-highlight">
+                <!-- PERIOD n CHILD panel -->
+                <div class="card-body panel-child pt-0 pb-2 collapse show">
+
+                    <!-- PERIOD n CHILD panel HEADER row -->
+                    <div class="d-flex flex-nowrap">
+                        <div class="flex-grow-1">
                             <h3 class="display-5 text-secondary"><small data-toggle="tooltip"
                                     title="04/02/19 - 10/02/19" autocomplete="off">Mon Feb 4th - Sun Feb 10th</small>
                             </h3>
-                        </li>
-                        <li class="nav-item bd-highlight px-2">
-                            <h3 class="display-5 text-secondary text-capitalize"><small>day</small></h3>
-                        </li>
-                        <li class="nav-item bd-highlight pt-2">
-                            <span class="badge badge-secondary p-1" data-toggle="tooltip" title="# days"
-                                autocomplete="off">7</span>
-                        </li>
-                    </ul>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua.
+                        </div>
+                        <div class="px-0">
+                            <h3 class="display-5 text-secondary text-capitalize"><small>days</small></h3>
+                        </div>
+                    </div>
 
-                    <!-- fixed width buttons -->
-                    <div class="card-body px-0" style="width: 8.125rem">
-                        <div class="btn btn-block btn-primary badge d-flex justify-content-between pr-0">Store
-                            <button type="button" class="btn btn-sm btn-primary btn-toggle" data-toggle="button"
-                                autocomplete="off">
-                                <div class="handle"></div>
-                            </button></div>
-                        <div class="btn btn-block btn-success badge d-flex justify-content-between pr-0">Harvest
-                            <button type="button" class="btn btn-sm btn-success btn-toggle" data-toggle="button"
-                                autocomplete="off">
-                                <div class="handle"></div>
-                            </button></div>
-                        <div class="btn btn-block btn-primary badge d-flex justify-content-between pr-0">Store
-                            <button type="button" class="btn btn-sm btn-primary btn-toggle" data-toggle="button"
-                                autocomplete="off">
-                                <div class="handle"></div>
-                            </button></div>
-                        <div class="btn btn-block btn-success badge d-flex justify-content-between pr-0">Harvest
-                            <button type="button" class="btn btn-sm btn-success btn-toggle" data-toggle="button"
-                                autocomplete="off">
-                                <div class="handle"></div>
-                            </button></div>
-                        <div class="btn btn-block btn-primary badge d-flex justify-content-between pr-0">Store
-                            <button type="button" class="btn btn-sm btn-primary btn-toggle" data-toggle="button"
-                                autocomplete="off">
-                                <div class="handle"></div>
-                            </button></div>
-                        <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">Morning
-                            <button type="button" class="btn btn-sm btn-secondary btn-toggle" data-toggle="button"
-                                autocomplete="off">
-                                <div class="handle"></div>
-                            </button></div>
+                    <!-- PERIOD n CHILD panel DATA row -->
+                    <div class="d-flex flex-nowrap">
+
+                        <!-- PERIOD n CHILD panel CHART column -->
+                        <div class="flex-grow-1 pr-1">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt
+                            ut labore
+                            et dolore magna aliqua.
+                        </div>
+
+                        <!-- PERIOD n CHILD panel FILTER BUTTONS column -->
+                        <div class="flex-wrap pl-1 pr-0" style="width: 7.70rem">
+                            <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">
+                                Morning
+                                <button type="button" class="btn btn-sm btn-secondary btn-toggle active"
+                                    data-toggle="button" autocomplete="off">
+                                    <div class="handle"></div>
+                                </button></div>
+                            <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">
+                                Afternoon
+                                <button type="button" class="btn btn-sm btn-secondary btn-toggle active"
+                                    data-toggle="button" autocomplete="off">
+                                    <div class="handle"></div>
+                                </button></div>
+                            <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">
+                                Evening
+                                <button type="button" class="btn btn-sm btn-secondary btn-toggle active"
+                                    data-toggle="button" autocomplete="off">
+                                    <div class="handle"></div>
+                                </button></div>
+                            <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">Night
+                                <button type="button" class="btn btn-sm btn-secondary btn-toggle active"
+                                    data-toggle="button" autocomplete="off">
+                                    <div class="handle"></div>
+                                </button></div>
+                        </div>
+
+                    </div>
+
+                    <!-- PERIOD n CHILD panel HSE BUTTONS row -->
+                    <div class="d-flex pt-2 pb-0">
+                        <div class="flex-grow-1">
+                            <div class="btn btn-success badge mr-1">Harvest
+                                <button type="button" class="btn btn-sm btn-success btn-toggle active"
+                                    data-toggle="button">
+                                    <div class="handle"></div>
+                                </button></div>
+                            <div class="btn btn-primary badge mr-1">Store
+                                <button type="button" class="btn btn-sm btn-primary btn-toggle active"
+                                    data-toggle="button">
+                                    <div class="handle"></div>
+                                </button></div>
+                            <div class="btn btn-danger badge mr-1">Enjoy
+                                <button type="button" class="btn btn-sm btn-danger btn-toggle active"
+                                    data-toggle="button">
+                                    <div class="handle"></div>
+                                </button></div>
+                            <div class="btn btn-dark badge mr-1">Grid
+                                <button type="button" class="btn btn-sm btn-dark btn-toggle active"
+                                    data-toggle="button">
+                                    <div class="handle"></div>
+                                </button></div>
+                        </div>
+
+                        <div>
+                            <span class="badge badge-secondary" data-toggle="tooltip" title="# days"
+                                autocomplete="off">7</span>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+                <!-- PERIOD n GRANDCHILD panel -->
+                <div class="card-body panel-grandchild pt-0 pb-3 collapse">
+
+                    <!-- PERIOD n GRANDCHILD panel HEADER row -->
+                    <div class="d-flex flex-nowrap">
+                        <div class="flex-grow-1">
+                            <h3 class="display-5 text-secondary"><small data-toggle="tooltip"
+                                    title="04/02/19 00:00 - 10/02/19 23:59" autocomplete="off">Feb 4 Night - Feb 10
+                                    Evening</small></h3>
+                        </div>
+                        <div class="nav-item px-0">
+                            <h3 class="display-5 text-secondary text-capitalize"><small>timeofday</small></h3>
+                        </div>
+                    </div>
+
+                    <!-- PERIOD n GRANDCHILD panel DATA row -->
+                    <div class="d-flex flex-nowrap">
+
+
+                        <!-- PERIOD n GRANDCHILD panel CHART column -->
+                        <div class="flex-grow-1 pr-1">
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                            commodo
+                            consequat.
+                        </div>
+
+                        <!-- PERIOD n GRANDCHILD panel FILTER BUTTONS column -->
+                        <div class="flex-wrap pl-1 pr-0" style="width: 7.70rem">
+                            <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">Mon
+                                <button type="button" class="btn btn-sm btn-secondary btn-toggle active"
+                                    data-toggle="button" autocomplete="off">
+                                    <div class="handle"></div>
+                                </button></div>
+                            <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">Tue
+                                <button type="button" class="btn btn-sm btn-secondary btn-toggle active"
+                                    data-toggle="button" autocomplete="off">
+                                    <div class="handle"></div>
+                                </button></div>
+                            <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">Wed
+                                <button type="button" class="btn btn-sm btn-secondary btn-toggle active"
+                                    data-toggle="button" autocomplete="off">
+                                    <div class="handle"></div>
+                                </button></div>
+                            <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">Thu
+                                <button type="button" class="btn btn-sm btn-secondary btn-toggle active"
+                                    data-toggle="button" autocomplete="off">
+                                    <div class="handle"></div>
+                                </button></div>
+                            <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">Fri
+                                <button type="button" class="btn btn-sm btn-secondary btn-toggle active"
+                                    data-toggle="button" autocomplete="off">
+                                    <div class="handle"></div>
+                                </button></div>
+                            <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">Sat
+                                <button type="button" class="btn btn-sm btn-secondary btn-toggle active"
+                                    data-toggle="button" autocomplete="off">
+                                    <div class="handle"></div>
+                                </button></div>
+                            <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">Sun
+                                <button type="button" class="btn btn-sm btn-secondary btn-toggle active"
+                                    data-toggle="button" autocomplete="off">
+                                    <div class="handle"></div>
+                                </button></div>
+                        </div>
+
+                    </div>
+
+
+                    <!-- PERIOD n GRANDCHILD panel HSE BUTTONS row -->
+                    <div class="d-flex pt-2 pb-0">
+                        <div class="flex-grow-1">
+                            <div class="btn btn-success badge mr-1">Harvest
+                                <button type="button" class="btn btn-sm btn-success btn-toggle active"
+                                    data-toggle="button">
+                                    <div class="handle"></div>
+                                </button></div>
+                            <div class="btn btn-primary badge mr-1">Store
+                                <button type="button" class="btn btn-sm btn-primary btn-toggle active"
+                                    data-toggle="button">
+                                    <div class="handle"></div>
+                                </button></div>
+                            <div class="btn btn-danger badge mr-1">Enjoy
+                                <button type="button" class="btn btn-sm btn-danger btn-toggle active"
+                                    data-toggle="button">
+                                    <div class="handle"></div>
+                                </button></div>
+                            <div class="btn btn-dark badge mr-1">Grid
+                                <button type="button" class="btn btn-sm btn-dark btn-toggle active"
+                                    data-toggle="button">
+                                    <div class="handle"></div>
+                                </button></div>
+                        </div>
+
+                        <div>
+                            <span class="badge badge-secondary" data-toggle="tooltip" title="# timeofdays"
+                                autocomplete="off">28</span>
+                        </div>
 
                     </div>
 
                 </div>
 
-                <div class="card-body panel-grandchild pt-0 pb-3 collapse">
-
-                    <ul class="nav d-flex bd-highlight">
-                        <li class="nav-item flex-grow-1 bd-highlight">
-                            <h3 class="display-5 text-secondary"><small data-toggle="tooltip"
-                                    title="04/02/19 00:00 - 10/02/19 23:59" autocomplete="off">Feb 4 Night - Feb 10
-                                    Evening</small></h3>
-                        </li>
-                        <li class="nav-item bd-highlight px-2">
-                            <h3 class="display-5 text-secondary text-capitalize"><small>timeofday</small></h3>
-                        </li>
-                        <li class="nav-item bd-highlight pt-2">
-                            <span class="badge badge-secondary p-1" data-toggle="tooltip" title="# timeofdays"
-                            autocomplete="off">28</span>
-                        </li>
-                    </ul>
-
-                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                    consequat.
-                </div>
-
             </div>
         </div>
 
+        <!-- PERIOD-2 CARD (TEMP) -->
         <div class="card">
+
+            <!-- PERIOD 2 NAV row (TEMP) -->
             <div class="card-header mt-n1 px-0">
                 <h2 class="mb-0">
                     <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
@@ -400,6 +523,8 @@
                     </button>
                 </h2>
             </div>
+
+            <!-- PERIOD 2 BODY row (TEMP) -->
             <div id="panelCollection_2" class="collapse show">
                 <div class="card-body">
                     Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
@@ -411,8 +536,14 @@
                     labore sustainable VHS.
                 </div>
             </div>
+
         </div>
+
+
+        <!-- PERIOD-3 CARD (TEMP) -->
         <div class="card">
+
+            <!-- PERIOD 3 NAV row (TEMP) -->
             <div class="card-header mt-n1 px-0" id="collectionpanelCollection_3">
                 <h2 class="mb-0">
                     <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
@@ -421,11 +552,12 @@
                     </button>
                 </h2>
             </div>
+
+            <!-- PERIOD 3 BODY row (TEMP) -->
             <div id="panelCollection_3" class="collapse">
                 <div class="card-body">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
-                    wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
-                    eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla
+                    Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it
+                    squid single-origin coffee nulla
                     assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt
                     sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer
                     farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus

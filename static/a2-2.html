@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Google Visualization API Sample</title>
+    <!--
+  One script tag loads all the required libraries! Do not specify any chart types in the
+  autoload statement.
+-->
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current');
+        google.charts.setOnLoadCallback(drawVisualization);
+
+        var wrapper;
+        function drawVisualization() {
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Employee Name');
+            data.addColumn('date', 'Start Date');
+            data.addRows(6);
+            data.setCell(0, 0, 'Mike');
+            data.setCell(0, 1, new Date(2008, 1, 28));
+            data.setCell(1, 0, 'Bob');
+            data.setCell(1, 1, new Date(2007, 5, 1));
+            data.setCell(2, 0, 'Alice');
+            data.setCell(2, 1, new Date(2006, 7, 16));
+            data.setCell(3, 0, 'Frank');
+            data.setCell(3, 1, new Date(2007, 11, 28));
+            data.setCell(4, 0, 'Floyd');
+            data.setCell(4, 1, new Date(2005, 3, 13));
+            data.setCell(5, 0, 'Fritz');
+            data.setCell(5, 1, new Date(2007, 9, 2));
+
+            // Create a view that shows everyone hired since 2007.
+            var view = new google.visualization.DataView(data);
+            view.setRows(view.getFilteredRows([{ column: 1, minValue: new Date(2007, 0, 1) }]));
+            var table = new google.visualization.Table(document.getElementById('visualization'));
+            table.draw(view, { sortColumn: 1 });
+        }
+    </script>
+</head>
+
+<body>
+    <div id="visualization" style="height: 400px; width: 400px;"></div>
+</body>
+
+</html>
