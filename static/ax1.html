@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Google Visualization API Sample</title>
+    <!--
+  One script tag loads all the required libraries! Do not specify any chart types in the
+  autoload statement.
+-->
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {
+            callback: drawChart,
+            packages: ['controls']
+        });
+
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['month', 'name', 'income'],
+                [0, 'Alice', 5000],
+                [1, 'Alice', 3000],
+                [2, 'Alice', 4500],
+                [0, 'Bob', 2750],
+                [1, 'Bob', 8000],
+                [2, 'Bob', 1000],
+                [0, 'Charlie', 3500],
+                [1, 'Charlie', 4100],
+                [2, 'Charlie', 3900]
+            ]);
+
+            var control = new google.visualization.ControlWrapper({
+                controlType: 'CategoryFilter',
+                containerId: 'control',
+                options: {
+                    filterColumnLabel: 'name',
+                    ui: {
+                        allowTyping: false,
+                        allowMultiple: true
+                    }
+                }
+            });
+
+            var chart = new google.visualization.ChartWrapper({
+                chartType: 'Table',
+                containerId: 'chart'
+            });
+
+            var view = new google.visualization.DataView(data);
+            view.setRows(data.getFilteredRows([{
+                column: 0,
+                minValue: data.getColumnRange(0).max
+            }]));
+
+            var dashboard = new google.visualization.Dashboard(
+                document.getElementById('dashboard')
+            );
+            dashboard.bind(control, chart);
+            dashboard.draw(view);
+        }    
+    </script>
+</head>
+
+<body>
+    <div id="control"></div>
+    <div id="chart"></div>
+</body>
+
+</html>
