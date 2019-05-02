@@ -6,6 +6,7 @@
  */
 const express = require('express');
 const router = express.Router();
+const utils = require('../host/utils');
 
 const Request = require('../requests');
 /*
@@ -19,26 +20,26 @@ router.route(['/',
     '/:energy?',
     '/:energy?/period/:period?',
     '/:energy?/period/:period?/:epoch?/:duration?'])
-    
+
     .get((req, res, next) => {
-        
+
         // request ---------------------
         let request = new Request.EnergyGet(req);
-        
+
         //  execute if valid
         let response = request.response;                       // execute the operation and return a response 
         let collections = response.content;
-        
-        
+
+
         // /* response
         res
             .status(response.statusCode)
             .type(response.contentType)
             .render(response.view, {
-                collections: collections
+                collections: collections, utils: utils
             });
         // */ // 
-        
+
         /* // debug START
         // console.log(` ${}`);
         // console.log(` ${JSON.stringify()}`);

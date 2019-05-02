@@ -32,7 +32,7 @@ class Param {
         this.value = value ? value : defaultValue;
 
         // validate enum                                  // if an enum was provided the value must exist in it  
-        let enumTest = enumsList ? utils.valueExists(enumsList, this.value) : true;
+        let enumTest = enumsList ? utils.valueExistsInObject(enumsList, this.value) : true;
 
 
         // isOptional & isValid                          // isValid if 1) enumTest passes and 2) there must be a value unless isOptional

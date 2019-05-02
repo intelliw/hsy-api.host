@@ -16,18 +16,18 @@ module.exports.capitalise = (str) => { return str.charAt(0).toUpperCase() + str.
  * e.g. startNum = 1, howMany = 10, delimiter = " ", prefix = '01 02 03 04 05 06 07'
  *  ->  '01 02 03 04 05 06 07 08 09 10'
   */
- module.exports.createSequence = (startNum, howMany, delimiter, prefix) => {
-    
+module.exports.createSequence = (startNum, howMany, delimiter, prefix) => {
+
     const PAD_ZERO = "0";
-    
-    let zerosToPad; let digits; let num; 
-    
-    let seqStr = prefix ? prefix.trim(): "";                      // prepend prefix if provided
+
+    let zerosToPad; let digits; let num;
+
+    let seqStr = prefix ? prefix.trim() : "";                      // prepend prefix if provided
     let maxNum = Number(startNum) + (howMany - 1);
     let maxDigits = maxNum.toString().length;
 
     let i;
-    seqStr+= howMany > 0 ? delimiter : "";
+    seqStr += howMany > 0 ? delimiter : "";
     for (i = startNum; i <= maxNum; i++) {
 
         num = i.toString();
@@ -55,7 +55,7 @@ module.exports.indexFromValue = (obj, value) => {
 
 }
 // returns true if a property with a matching value exists in the object. Can be used to check if a value exists in an enum
-module.exports.valueExists = (obj, value) => {
+module.exports.valueExistsInObject = (obj, value) => {
 
     const MISSING = -1;
 
@@ -64,6 +64,22 @@ module.exports.valueExists = (obj, value) => {
 
 }
 
+//returns whether the findValue exists at least once in the findInArray
+module.exports.valueExistsInArray = (findInArray, findValue) => {
+    
+    const EXITFOR = findInArray.length;
+
+    let n;
+    let exists = false;
+    for (n = 0; n < findInArray.length; n++) {
+        if (findInArray[n] === findValue) {
+           exists = true;
+           n = EXITFOR;   
+        }
+    }
+
+    return exists;
+}
 
 // returns a random number between min and max with decimal places based on precision 
 module.exports.randomFloat = (min, max, decimalPlaces) => {
