@@ -5,10 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/energy-button-toggle.css">
+    
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="/static/css/bootstrap-button-toggle.css">
 
     <title>Sundaya Energy API</title>
 </head>
@@ -327,8 +327,7 @@
                             </h3>
                         </div>
                         <div class="pr-1">
-                            <h3 class="display-5 text-secondary text-capitalize"><small data-toggle="tooltip"
-                                    title="Mon Tue Wed Thu Fri Sat Sun">days</small></h3>
+                            <h3 class="display-5 text-secondary text-capitalize"><small>days</small></h3>
                         </div>
                     </div>
 
@@ -350,7 +349,7 @@
                         </div>
 
                         <!-- PERIOD n CHILD panel FILTER BUTTONS column -->
-                        <div class="flex-wrap pl-1 pr-0" style="width: 8.00rem">
+                        <div class="flex-wrap pl-1 pr-0" style="width: 8.00rem" data-toggle="tooltip" title="Timeofday">
                             <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">
                                 Morning
                                 <button type="button"
@@ -409,12 +408,11 @@
                         </div>
 
                         <button type="button" class="btn btn-outline-light select-filter-reset btn-sm py-0 px-0">
-                            <i id="btnDone" class="material-icons" data-toggle="tooltip" title="reset"
+                            <i id="btnDone" class="material-icons" data-toggle="tooltip" title="reset filters"
                                 style="font-size:24px;color:darkgrey;">toggle_on</i>
                         </button>
 
                     </div>
-
 
                 </div>
 
@@ -429,8 +427,7 @@
                                     Evening</small></h3>
                         </div>
                         <div class="nav-item pr-1">
-                            <h3 class="display-5 text-secondary text-capitalize"><small data-toggle="tooltip"
-                                    title="Morning Afternoon Evening Night">timeofday</small></h3>
+                            <h3 class="display-5 text-secondary text-capitalize"><small>timeofday</small></h3>
                         </div>
                     </div>
 
@@ -451,7 +448,7 @@
                         </div>
 
                         <!-- PERIOD n GRANDCHILD panel FILTER BUTTONS column -->
-                        <div class="flex-wrap pl-1 pr-0" style="width: 8.00rem">
+                        <div class="flex-wrap pl-1 pr-0" style="width: 8.00rem" data-toggle="tooltip" title="Day">
                             <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">Mon
                                 <button type="button"
                                     class="btn btn-sm btn-secondary btn-toggle select-filter-btn active"
@@ -525,7 +522,7 @@
                         </div>
 
                         <button type="button" class="btn btn-outline-light select-filter-reset btn-sm py-0 px-0">
-                            <i id="btnDone" class="material-icons" data-toggle="tooltip" title="reset"
+                            <i id="btnDone" class="material-icons" data-toggle="tooltip" title="reset filters"
                                 style="font-size:24px;color:darkgrey;">toggle_on</i>
                         </button>
 

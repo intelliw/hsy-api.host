@@ -208,10 +208,11 @@ class Period extends Param {
     // returns each individual period for the duration of this period's child period . Each period in the array will have a duration of 1, and there will be as many objects in the array as the original child period's duration 
     getEachChild() {
 
+        const WITHOUT_DESCRIPTION = false;
 
         let childperiods = [];
 
-        let child = this.getChild();
+        let child = this.getChild(WITHOUT_DESCRIPTION);
 
         // if there is a child
         if (child) {
@@ -223,9 +224,9 @@ class Period extends Param {
 
 
     /* returns the grandchild of this period including the total duration of its child periods 
-    *  if isDescription is true the grandchild period is created with a description (if one has been configured for it in consts.periodChildDescription)
+    *  the grandchild period is created with a description (if one has been configured for it in consts.periodChildDescription)
     */
-    getGrandchild(isDescription) {
+    getGrandchild() {
 
         let grandchild;
 
@@ -244,7 +245,7 @@ class Period extends Param {
                 let totalDuration = Number(childDuration) * Number(grandchildDuration)      // total is 28
 
                 // get the description label e.g.  'Mon Tue Wed Thu Fri Sat Sun'
-                let descr = isDescription ? periodChildDescription(childEnum, this.epochInstant) : consts.NONE;
+                let descr = periodChildDescription(childEnum, this.epochInstant);
 
                 //create the grandchild with the total duration 
                 grandchild = new Period(grandchildEnum, this.epochInstant, totalDuration);   // construct grandchild with total duration  

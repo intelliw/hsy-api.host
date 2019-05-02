@@ -12,7 +12,7 @@ const consts = require('../host/constants');
 const Links = require('./Links');
 class EnergyLinks extends Links {
 
-    constructor(energy, period, site, isChildDescription) {                             // if isChildDescription is true the child period is created with a description (if one has been configured for it in consts.periodChildDescription)
+    constructor(energy, period, site, description) {                             // if isChildDescription is true the child period is created with a description (if one has been configured for it in consts.periodChildDescription)
 
         super();
 
@@ -20,19 +20,18 @@ class EnergyLinks extends Links {
         this.site = site;
 
         this.href = periodHref(energy, period, site);                                   // this href is used for the whole collection 
-
-        // these two links are needed for both collections and for items - add others after construction if needed e.g. for collections
-        this.addLink(period, enums.linkRender.link);                                    // self - is rendered 
-        this.addLink(period.getChild(isChildDescription), enums.linkRender.none);       // child collection link - not rendered, description if requested by caller
+        
+        // the self link is needed for both collections and items - add others after construction if needed e.g. for collections
+        this.addLink(period, enums.linkRender.link, description);                     // self - is rendered, and a description if requested eg hse 
         
     }
 
     // adds a link if the period exist
-    addLink(period, render) {
+    addLink(period, render, description) {
         
         if (period) {
             let href = periodHref(this.energy, period, this.site);
-            super.add(period.rel, period.context, period.prompt, period.title, period.description, href, render);
+            super.add(period.rel, period.context, period.prompt, period.title, description, href, render);
         }
     }
 
