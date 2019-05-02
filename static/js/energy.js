@@ -1,24 +1,54 @@
 
 
-$(document).ready(function () {
+$(window).on("load", function () {
+    // $('#stbutton').click();
+})
 
+$(document).ready(function () {
+    
     // activate bs tooltips
     $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
 
-    // put the selected item into the 'select-value' control (without child element's text);
+    // navbar dropdown ITEM click
     $(".select-justtext a").click(function () {
-        var selText = $(this).justtext();
+
+        // put the selected item into the 'select-value' control (without child element's text);
+        let selText = $(this).justtext();
         $(this).parents('.select-parent').find('.select-value').html(selText);
+
     });
 
-    // put the selected navbar child element into the 'select-value' control;
+    // navbar dropdown SELECT click
+    $(".select-parent").click(function () {
+        
+        // select the active item    
+        let selText = $(this).find('.select-value').justtext();
+
+        $(this).find('.dropdown-item').each(function() {
+
+            let badge = $(this).find('.badge');
+            let item = badge.text() ? badge : $(this);
+
+            let isActive = $(this).justtext() == selText;
+            isActive ? item.addClass("active") : item.removeClass("active");
+
+        });
+
+    });
+
+
+    // navbar energy dropdown item click
     $(".select-text a").click(function () {
+        
+        // put the selected navbar child element into the 'select-value' control;
         var selText = $(this).text();
         $(this).parents('.select-parent').find('.select-value').html(selText);
     });
 
-    // toggle the child/grandchild card 
+    // grandchild toggle click
     $(".select-toggle-grandchild").click(function () {
+        
+        // toggle the child/grandchild card 
         let isActive = $(this).find('.btn-toggle').hasClass('active');
 
         let ch = $(this).parents('.card').find('.panel-child');
@@ -28,15 +58,17 @@ $(document).ready(function () {
         (isActive ? ch : gch).collapse('show');  // (isActive ? ch : gch).show();
     });
 
-    // toggle the panel for each collection 
+    // collection panel click
     $(".select-toggle-collection").click(function () {
+        
+        // toggle the panel for each collection 
         let panel = $(this).parents('.card').find('.select-collection-panel');
         let isActive = panel.hasClass('show');
 
         panel.collapse(isActive ? 'hide' : 'show');  
     });
 
-    // reset the filter buttons
+    // filter buttons reset
     $(".select-filter-reset").click(function () {
 
         let resetState;
@@ -54,8 +86,7 @@ $(document).ready(function () {
 
     });
 
-
-    // 'done' button calls the API. Strip colon and space from the hour with regex
+    // 'done' button click - calls the API. Strip colon and space from the hour with regex
     $("#btnDone").click(function () {
         let apiUrl = "http://api.endpoints.sundaya.cloud.goog"
             + "/energy/" + $("#navEnergy").html()
@@ -68,7 +99,7 @@ $(document).ready(function () {
         window.location = apiUrl;
     });
 
-    // 'today' button  click 
+    // 'today' button click 
     $("#btnToday").click(function () {
         let apiUrl = "http://api.endpoints.sundaya.cloud.goog"
             + "/energy/" + $("#navEnergy").html()
@@ -92,4 +123,3 @@ jQuery.fn.justtext = function () {
         .end()
         .text();
 };
-

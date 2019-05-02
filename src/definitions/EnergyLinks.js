@@ -12,7 +12,7 @@ const consts = require('../host/constants');
 const Links = require('./Links');
 class EnergyLinks extends Links {
 
-    constructor(energy, period, site, description) {                             // if isChildDescription is true the child period is created with a description (if one has been configured for it in consts.periodChildDescription)
+    constructor(energy, period, site, description) {                                    // the description argument is for the self link. 
 
         super();
 
