@@ -39,12 +39,34 @@ module.exports.createSequence = (startNum, howMany, delimiter, prefix) => {
 
 }
 
-// returns the key name of the first property with a matching value. Can be used to retrieve an enum key from its value
-module.exports.keynameFromValue = (obj, value) => {
+/**
+ * searches through the findInObjectArray and finds the first item with a property equal to the findValue 
+ * if findAll is true the function will return all the items which match the findvalue, not only the first 
+ */
+module.exports.findByPropertyValue = (findInObjectArray, findProperty, findValue, findAll) => {
+    
+    const EXITFOR = findInObjectArray.length;
 
-    const keyname = Object.keys(obj)[this.indexFromValue(obj, value)];
-    return keyname;
+    let n;
+    let foundItems = [];
+    let item;
+    let all = findAll ? findAll : false;
 
+    for (n = 0; n < findInObjectArray.length; n++) {
+        
+        item = findInObjectArray[n];
+
+        if (item[findProperty] === findValue) {
+           foundItems.push(item);
+           // quit after the first if all were not requested
+           if (!all) {  
+             n = EXITFOR;   
+           }
+
+        }
+    }
+
+    return foundItems;
 }
 
 // returns the index of the first property with a matching value. Returns -1 if missing. 
@@ -54,6 +76,14 @@ module.exports.indexFromValue = (obj, value) => {
     return index;
 
 }
+// returns the key name of the first property with a matching value. Can be used to retrieve an enum key from its value
+module.exports.keynameFromValue = (obj, value) => {
+
+    const keyname = Object.keys(obj)[this.indexFromValue(obj, value)];
+    return keyname;
+
+}
+
 // returns true if a property with a matching value exists in the object. Can be used to check if a value exists in an enum
 module.exports.valueExistsInObject = (obj, value) => {
 

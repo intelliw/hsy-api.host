@@ -1,9 +1,4 @@
 
-
-$(window).on("load", function () {
-    // $('#stbutton').click();
-})
-
 $(document).ready(function () {
     
     // activate bs tooltips
@@ -43,6 +38,7 @@ $(document).ready(function () {
         // put the selected navbar child element into the 'select-value' control;
         var selText = $(this).text();
         $(this).parents('.select-parent').find('.select-value').html(selText);
+
     });
 
     // grandchild toggle click
@@ -88,7 +84,7 @@ $(document).ready(function () {
 
     // 'done' button click - calls the API. Strip colon and space from the hour with regex
     $("#btnDone").click(function () {
-        let apiUrl = "http://api.endpoints.sundaya.cloud.goog"
+        let apiUrl = API_BASE_URL
             + "/energy/" + $("#navEnergy").html()
             + "/period/" + $("#navPeriod").html()
             + "/" + $("#navEpochYear").html() + $("#navEpochMonth").html() + $("#navEpochDay").html()
@@ -102,7 +98,8 @@ $(document).ready(function () {
 
     // 'today' button click 
     $("#btnToday").click(function () {
-        let apiUrl = "http://api.endpoints.sundaya.cloud.goog"
+        
+        let apiUrl = API_BASE_URL
             + "/energy/" + $("#navEnergy").html()
             + "/period/" + $("#navPeriod").html()
             + "?site=" + $("#navSite").html()
