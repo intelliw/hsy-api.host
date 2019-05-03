@@ -93,7 +93,7 @@ $(document).ready(function () {
             + "?site=" + $("#navSite").html()
 
         // alert(apiUrl);
-        window.location = apiUrl;
+        window.location.href = apiUrl;
     });
 
     // 'today' button click 
@@ -104,7 +104,7 @@ $(document).ready(function () {
             + "/period/" + $("#navPeriod").html()
             + "?site=" + $("#navSite").html()
         // alert(apiUrl);
-        window.location = apiUrl;
+        window.location.href = apiUrl;
     });
 
 });

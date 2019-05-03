@@ -331,23 +331,23 @@
 
                     <span class="btn py-0 pl-1 pr-2" data-toggle="collapse">
                         <h3 class="display-5 text-secondary"><small data-toggle="tooltip"
-                            title="<%= link_self.title %>"><%= link_self.prompt %></small></h3>
+                            title="<%= utils.capitalise(link_self.name) %> <%= link_self.title %>"><%= link_self.prompt %></small></h3>
                     </span>
 
                     <button type="button" class="btn btn-sm btn-secondary py-0 capitalize" data-toggle="tooltip"
                         title="Prev <%= utils.capitalise(link_prev.name) %>"
-                        onclick="window.location = '<%= link_prev.href %>'">
+                        onclick="window.location.href = '<%= link_prev.href %>'">
                         <i class="material-icons" style="font-size:12px;color:white;">navigate_before</i>
                     </button>
 
                     <button type="button" class="btn btn-sm btn-secondary py-0" data-toggle="tooltip" title="Next <%= utils.capitalise(link_next.name) %>"
-                        onclick="window.location = '<%= link_next.href %>'">
+                        onclick="window.location.href = '<%= link_next.href %>'">
                         <i class="material-icons" style="font-size:12px;color:white;">navigate_next</i>
                     </button>
 
                     <button type="button" class="btn btn-sm btn-secondary py-0" data-toggle="tooltip"
                         title="<%= utils.capitalise(link_up.name) %> <%= link_up.prompt %>"
-                        onclick="window.location = '<%= link_up.href %>'">
+                        onclick="window.location.href = '<%= link_up.href %>'">
                         <i class="material-icons" style="font-size:12px;color:white;">call_made</i>
                     </button>
 
@@ -375,8 +375,7 @@
                     <!-- PERIOD n CHILD panel HEADER row -->
                     <div class="d-flex flex-nowrap">
                         <div class="flex-grow-1">
-                            <h3 class="display-5 text-secondary"><small data-toggle="tooltip"
-                                    title="<%= link_child.title %>"><%= link_child.prompt %></small>
+                            <h3 class="display-5 text-secondary"><small><%= link_child.prompt %></small>
                             </h3>
                         </div>
                         <div class="pr-1">
@@ -461,8 +460,7 @@
                     <!-- PERIOD n GRANDCHILD panel HEADER row -->
                     <div class="d-flex flex-nowrap">
                         <div class="flex-grow-1">
-                            <h3 class="display-5 text-secondary"><small data-toggle="tooltip"
-                                    title="<%= link_grandchild.title %>"><%= link_grandchild.prompt %></small></h3>
+                            <h3 class="display-5 text-secondary"><small><%= link_grandchild.prompt %></small></h3>
                         </div>
                         <div class="nav-item pr-1">
                             <h3 class="display-5 text-secondary text-capitalize"><small><%= utils.capitalise(link_child.name.split('.')[1]) %>s</small></h3>
