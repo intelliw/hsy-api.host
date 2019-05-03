@@ -45,7 +45,7 @@ function executeEnergyGet(params) {
   periods.forEach(period => {
 
     // create the collection links  
-    let selfDescription = `${params.energy.value} ${period.value} ${period.epoch} ${period.duration}`;    // e.g hse week 20190204 1
+    let selfDescription = `${params.energy.value} ${period.value} ${period.epoch} ${period.duration} ${params.site.value}`;    // e.g hse week 20190204 1 999
     links = new Links.EnergyLinks(params.energy, period, params.site, selfDescription);   // constructor creates a 'self' link with an energy and epoch description
     
     let child = period.getChild(ADD_CHILD_DESCRIPTION);                         // create the child link with a period description (if one has been configured for it in consts.periodChildDescription)

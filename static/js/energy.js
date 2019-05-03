@@ -94,6 +94,7 @@ $(document).ready(function () {
             + "/" + $("#navEpochYear").html() + $("#navEpochMonth").html() + $("#navEpochDay").html()
             + "T" + $("#navEpochHour").html().replace(/\s: /g, '')
             + "/" + $("#navDuration").html()
+            + "?site=" + $("#navSite").html()
 
         // alert(apiUrl);
         window.location = apiUrl;
@@ -104,6 +105,7 @@ $(document).ready(function () {
         let apiUrl = "http://api.endpoints.sundaya.cloud.goog"
             + "/energy/" + $("#navEnergy").html()
             + "/period/" + $("#navPeriod").html()
+            + "?site=" + $("#navSite").html()
         // alert(apiUrl);
         window.location = apiUrl;
     });

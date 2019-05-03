@@ -4,12 +4,14 @@
     let self_description = col_links[0].description.split(" ");  // e.g. 'hse week 20190204 1'
     let cols_energy = self_description[0]; 
     let cols_period = self_description[1];
-
+    
     let cols_epoch_year = self_description[2].substring(0, 4); 
     let cols_epoch_month = self_description[2].substring(4, 6); 
     let cols_epoch_day = self_description[2].substring(6, 8); 
-
+    
     let cols_duration = collections.length;
+
+    let cols_site = self_description[4];
 %> 
 
 <!doctype html>
@@ -143,7 +145,8 @@
                             </button>
 
                             <div class="dropdown-menu py-0 select-justtext">
-                                <a class="dropdown-item px-2 py-0 pt-1" href="#">01</a>
+                                <a class="dropdown-item px-2 py-0" id="btnToday" href="#" ><span class="badge btn-warning">today</span></a>
+                                <a class="dropdown-item px-2 py-0" href="#">01</a>
                                 <a class="dropdown-item px-2 py-0" href="#">02</a>
                                 <a class="dropdown-item px-2 py-0" href="#">03</a>
                                 <a class="dropdown-item px-2 py-0" href="#">04</a>
@@ -249,10 +252,11 @@
 
                 </li>
 
-                <!-- buttons -->
-                <li class="nav-item dropdown">
-                    <div class="btn-group btn-group-sm btn-sm px-0 py-0" role="group">
 
+                 <!-- buttons -->
+                 <li class="nav-item dropdown">
+                    <div class="btn-group btn-group-sm btn-sm px-0 py-0" role="group">
+    
                         <!-- 'Done' button -->
                         <div class="btn-group btn-group-sm" role="group">
                             <button type="button" class="btn pl-0">
@@ -261,14 +265,14 @@
                             </button>
                         </div>
 
-                        <!-- 'today' button -->
+                        <!-- 'site' display -->
                         <div class="btn-group btn-group-sm px-0" role="group">
-                            <button href="http://api.endpoints.sundaya.cloud.goog/energy" type="button"
-                                class="btn px-0">
-                                <span id="btnToday" class="badge badge-warning py-1">today</span>
+                            <button href="#" type="button"
+                                class="btn px-0 disabled" data-toggle="tooltip" data-placement="right" title="site">
+                                <span id="navSite" class="badge badge-light py-1"><%=cols_site%></span>
                             </button>
                         </div>
-
+    
                     </div>
                 </li>
 
