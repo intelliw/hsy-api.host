@@ -12,9 +12,6 @@ const Request = require('../requests');
 // [devices.datasets.post] ---------------
 router.post('/datasets', (req, res, next) => {
 
-    console.log(`body length ${req.body.length}`);
-    console.log(`deviceDatasetItems ${req.body.deviceDatasetItems}`);
-    
     // request ---------------------
     let request = new Request.DevicesDatasetsPost(req);
 

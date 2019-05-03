@@ -66,6 +66,7 @@ class Period extends Param {
         // hypermedia properties 
         this.rel = enums.linkRelations.self;                                                    // default is 'self' this is overwritten for parent, child, etc after construction
         this.prompt = periodPrompt(this.epochInstant, this.endInstant, this.value);
+        
         this.title = periodTitle(this.epochInstant, this.endInstant, this.value);               // "04/02/2019 - 10/02/2019";
         this.description = consts.NONE;                                                         // by default label is undefined except in a collection and overwritten by getChild() after construction
 
@@ -455,10 +456,12 @@ function periodTitle(epoch, end, periodEnum) {
 
 // returns a formatted string for the prompt property (e.g. "Week 13 2019" or "Week 13 2019 - Week 13 2019" if duration is > 1 )
 function periodPrompt(epoch, end, periodEnum) {
-
+    
     let epochPromptStr = datetimePromptStr(epoch, periodEnum);
     let endPromptStr = datetimePromptStr(end, periodEnum);
-    let prompt = (epochPromptStr == endPromptStr) ? epochPromptStr : `${epochPromptStr} - ${endPromptStr}`;
+    
+    // ignore end period for five year
+    let prompt = (epochPromptStr == endPromptStr) || periodEnum == enums.period.fiveyear ? epochPromptStr : `${epochPromptStr} - ${endPromptStr}`; 
     return prompt;                                                                      // return formatted title
 
 };
@@ -580,16 +583,16 @@ function datetimePromptStr(instant, periodEnum) {
             label = `${selectQuarterLabel(instant)} ${year}`;
             break;
         case enums.period.week:                 // 'Week 27 2019'
-            label = `Week ${moment.utc(instant).format('WW')} ${year}`;
+            label = `Week ${utils.padZero(moment.utc(instant).isoWeek(),2)} ${moment.utc(instant).isoWeekYear()}`;
             break;
         case enums.period.hour:                 // 'Hour 2100'
             label = `Hour ${moment.utc(instant).format('HH')}00`;
             break;
         case enums.period.year:                 // 'Year 2019'
-            label = `Year ${year}`;
+            label = `${year}`;
             break;
         case enums.period.fiveyear:             // '5 Years 2014-2019'
-            label = `5 Years ${year}-${moment.utc(instant).add(5, 'years').format('YYYY')}`;
+            label = `5 Years ${year}-${moment.utc(instant).add(4, 'years').format('YYYY')}`;
             break;
         default:
             label = utils.capitalise(periodEnum);

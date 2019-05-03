@@ -34,9 +34,16 @@ module.exports.createSequence = (startNum, howMany, delimiter, prefix) => {
         zerosToPad = maxDigits - num.length;
         seqStr += PAD_ZERO.repeat(zerosToPad) + num + (i <= maxNum - 1 ? delimiter : "");
     }
+    
+    return seqStr.trim();
 
-    return seqStr;
+}
 
+// pads leading zeros if the number is less than the width
+module.exports.padZero = (n, width) => {
+    let z = '0';
+    n = n + '';
+    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }
 
 /**
@@ -44,7 +51,7 @@ module.exports.createSequence = (startNum, howMany, delimiter, prefix) => {
  * if findAll is true the function will return all the items which match the findvalue, not only the first 
  */
 module.exports.findByPropertyValue = (findInObjectArray, findProperty, findValue, findAll) => {
-    
+
     const EXITFOR = findInObjectArray.length;
 
     let n;
@@ -53,15 +60,15 @@ module.exports.findByPropertyValue = (findInObjectArray, findProperty, findValue
     let all = findAll ? findAll : false;
 
     for (n = 0; n < findInObjectArray.length; n++) {
-        
+
         item = findInObjectArray[n];
 
         if (item[findProperty] === findValue) {
-           foundItems.push(item);
-           // quit after the first if all were not requested
-           if (!all) {  
-             n = EXITFOR;   
-           }
+            foundItems.push(item);
+            // quit after the first if all were not requested
+            if (!all) {
+                n = EXITFOR;
+            }
 
         }
     }
@@ -96,15 +103,15 @@ module.exports.valueExistsInObject = (obj, value) => {
 
 //returns whether the findValue exists at least once in the findInArray
 module.exports.valueExistsInArray = (findInArray, findValue) => {
-    
+
     const EXITFOR = findInArray.length;
 
     let n;
     let exists = false;
     for (n = 0; n < findInArray.length; n++) {
         if (findInArray[n] === findValue) {
-           exists = true;
-           n = EXITFOR;   
+            exists = true;
+            n = EXITFOR;
         }
     }
 

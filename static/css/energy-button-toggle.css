@@ -216,10 +216,10 @@
 }
 .btn-toggle.btn-sm > .handle {
   position: absolute;
-  top: 0.11rem;
-  left: 0.17rem;
-  width: 0.8rem;
-  height: 0.8rem;
+  top: 0.14rem;
+  left: 0.15rem;
+  width: 0.7rem;
+  height: 0.7rem;
   border-radius: 0.8rem;
   background: #fff;
   transition: left 0.25s;
