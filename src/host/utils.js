@@ -6,7 +6,28 @@
 
 const enums = require('./enums');
 
-module.exports.capitalise = (str) => { return str.charAt(0).toUpperCase() + str.slice(1) };       // capitalise first letter
+// capitalise first letter of first word or all words
+module.exports.capitalise = (str, allWords) => { 
+    
+    const SPACE_DELIMITER = ' ';
+    let outStr= '';
+
+    allWords = allWords || false;           // if true all words are capitalised
+    
+    if (allWords) {
+        let words = str.split(SPACE_DELIMITER);     // get the words
+        
+        words.forEach(word => {
+          outStr += word.charAt(0).toUpperCase() + word.slice(1) + SPACE_DELIMITER;
+        });
+        outStr = outStr.trim();
+
+    } else {
+        outStr = str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    return outStr; 
+};       
 
 /**
  * returns a number sequence (e.g. days of the month '01 02 ..' etc) in a delimited string with zero padding

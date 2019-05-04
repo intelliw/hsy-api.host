@@ -39,13 +39,13 @@ function executeEnergyGet(params) {
   let links;
   let items;
   let collections = new Collections();                                          // stores an array of collections, one for each period in the duration 
-
+  
   // get a collection for each period in the duration
   let periods = params.period.getEach();                                        // break up the period duration into individual periods (though typically there is only 1 period) 
   periods.forEach(period => {
-
+  
     // create the collection links  
-    let selfDescription = `${params.energy.value} ${period.value} ${period.epoch} ${period.duration} ${params.site.value}`;    // e.g hse week 20190204 1 999
+    let selfDescription = `${params.energy.value} ${period.value} ${period.epoch} ${period.duration} ${params.site.value}`;    // e.g hse week 20190204 1 999   (this is the self description format for energy periods) 
     links = new Links.EnergyLinks(params.energy, period, params.site, selfDescription);   // constructor creates a 'self' link with an energy and epoch description
     
     let child = period.getChild(ADD_CHILD_DESCRIPTION);                         // create the child link with a period description (if one has been configured for it in consts.periodChildDescription)
@@ -63,7 +63,7 @@ function executeEnergyGet(params) {
     // add each collection to the collections array
     collections.add(consts.CURRENT_VERSION, links.href, links, items);
   });
-
+ 
   return collections.getElements();
 
 }

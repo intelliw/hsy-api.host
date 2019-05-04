@@ -63,10 +63,11 @@ class Period extends Param {
         this.epoch = datetimeFormatISO(this.epochInstant, this.value);                          // format for the period  
         this.end = datetimeFormatISO(this.endInstant, this.value);
 
+
         // hypermedia properties 
         this.rel = enums.linkRelations.self;                                                    // default is 'self' this is overwritten for parent, child, etc after construction
         this.prompt = periodPrompt(this.epochInstant, this.endInstant, this.value);
-        
+
         this.title = periodTitle(this.epochInstant, this.endInstant, this.value);               // "04/02/2019 - 10/02/2019";
         this.description = consts.NONE;                                                         // by default label is undefined except in a collection and overwritten by getChild() after construction
 
@@ -154,7 +155,6 @@ class Period extends Param {
 
     // returns each individual period in the duration in an array. Each period in the array will have a duration of 1, and there will be as many objects in the array as the original period's duration 
     getEach() {
-
 
         let periods = [];
         const periodEnum = this.value;
@@ -338,8 +338,10 @@ function periodEnd(periodEnum, epoch, duration, format) {
 
         case enums.period.fiveyear:                         // add 5 years to epoch
             const FIVEYEAR_DURATION_YRS = 5;                // years
-            periodsToAdd = (duration * FIVEYEAR_DURATION_YRS) - 1;                                      // add at least one for 5yr to get to the endOf its period
+
+            periodsToAdd = (duration * FIVEYEAR_DURATION_YRS) - 1;                                          // add at least one for 5yr to get to the endOf its period
             periodEnd = moment.utc(epoch).add(periodsToAdd, 'years').endOf('year').format(format);      // add duration for 5yr to get to the endOf its period
+
             break;
 
         case enums.period.hour:
@@ -456,12 +458,13 @@ function periodTitle(epoch, end, periodEnum) {
 
 // returns a formatted string for the prompt property (e.g. "Week 13 2019" or "Week 13 2019 - Week 13 2019" if duration is > 1 )
 function periodPrompt(epoch, end, periodEnum) {
-    
+
     let epochPromptStr = datetimePromptStr(epoch, periodEnum);
     let endPromptStr = datetimePromptStr(end, periodEnum);
-    
+
     // ignore end period for five year
-    let prompt = (epochPromptStr == endPromptStr) || periodEnum == enums.period.fiveyear ? epochPromptStr : `${epochPromptStr} - ${endPromptStr}`; 
+    let prompt = (epochPromptStr == endPromptStr) ? epochPromptStr : `${epochPromptStr} - ${endPromptStr}`;
+
     return prompt;                                                                      // return formatted title
 
 };
@@ -583,21 +586,28 @@ function datetimePromptStr(instant, periodEnum) {
             label = `${selectQuarterLabel(instant)} ${year}`;
             break;
         case enums.period.week:                 // 'Week 27 2019'
-            label = `Week ${utils.padZero(moment.utc(instant).isoWeek(),2)} ${moment.utc(instant).isoWeekYear()}`;
+            label = `Week ${utils.padZero(moment.utc(instant).isoWeek(), 2)} ${moment.utc(instant).isoWeekYear()}`;
             break;
         case enums.period.hour:                 // 'Hour 2100'
             label = `Hour ${moment.utc(instant).format('HH')}00`;
             break;
-        case enums.period.year:                 // 'Year 2019'
+        case enums.period.year:                 // '2019'
             label = `${year}`;
             break;
         case enums.period.fiveyear:             // '5 Years 2014-2019'
-            label = `5 Years ${year}-${moment.utc(instant).add(4, 'years').format('YYYY')}`;
+            const FIVE_YEARS_IN_TOTAL = 4;          
+            
+            // get the start of the five year period - as moment.js does not have a fiveyear concept 
+            let normalisedInstant = periodEpoch(enums.period.fiveyear, instant, consts.periodDatetimeISO.instant);
+            year = moment.utc(normalisedInstant).format('YYYY');
+
+            label = `5 Years ${year}-${moment.utc(normalisedInstant).add(FIVE_YEARS_IN_TOTAL, 'years').format('YYYY')}`;
+
             break;
         default:
             label = utils.capitalise(periodEnum);
             break;
-    }
+    } 
     return label;
 }
 

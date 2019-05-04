@@ -363,7 +363,7 @@
 
                     <span class="btn select-toggle-grandchild pl-0 pr-1" data-toggle="button">
                         <button type="button" class="btn btn-xs btn-secondary btn-toggle" data-toggle="tooltip"
-                            title="<%= link_grandchild.name.replace('.', ' | ') %>">
+                            title="<%= utils.capitalise(link_grandchild.name.replace('.', ' | '), true) %>">
                             <div class="handle"></div>
                         </button>
                     </span>
@@ -375,24 +375,24 @@
             <!-- PERIOD n BODY row -->
             <div class="p-0 select-collection-panel collapse show">
 
-                <!-- PERIOD n CHILD panel -->
+                <!-- PERIOD n BODY CHILD panel -->
                 <div class="card-body panel-child pt-0 pb-2 collapse show">
 
-                    <!-- PERIOD n CHILD panel HEADER row -->
+                    <!-- PERIOD n BODY CHILD panel HEADER row -->
                     <div class="d-flex flex-nowrap">
                         <div class="flex-grow-1">
                             <h3 class="display-5 text-secondary"><small><%= link_child.prompt %></small>
                             </h3>
                         </div>
                         <div class="pr-1">
-                            <h3 class="display-5 text-secondary text-capitalize"><small><%= utils.capitalise(link_grandchild.name.split('.')[1]) %>s</small></h3>
+                            <h3 class="display-5 text-secondary text-capitalize"><small><%= utils.capitalise(link_grandchild.name.split('.')[1]) %></small></h3>
                         </div>
                     </div>
 
-                    <!-- PERIOD n CHILD panel DATA row -->
+                    <!-- PERIOD n BODY CHILD panel DATA row -->
                     <div class="d-flex flex-nowrap">
 
-                        <!-- PERIOD n CHILD panel CHART column -->
+                        <!-- PERIOD n BODY CHILD panel CHART column -->
                         <div class="row m-0">
                             <div id="chartDiv_1" class="col-md px-1 mb-2 mr-2 border border-default">
                                 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
@@ -406,7 +406,7 @@
                             </div>
                         </div>
 
-                        <!-- PERIOD n CHILD panel FILTER BUTTONS column -->
+                        <!-- PERIOD n BODY CHILD panel FILTER BUTTONS column -->
                         <div class="flex-wrap pl-1 pr-0" style="width: 8.75rem" data-toggle="tooltip" title="<%= utils.capitalise(link_grandchild.name.split('.')[1]) %>s <%= link_grandchild.title %>">
 
                             <% for(var n_btns=0; n_btns < grandchild_descriptions.length; n_btns++) { %>
@@ -425,7 +425,7 @@
 
                     </div>
 
-                    <!-- PERIOD n CHILD panel HSE BUTTONS row -->
+                    <!-- PERIOD n BODY CHILD panel HSE BUTTONS row -->
                     <div class="d-flex pb-0">
                         <div class="flex-grow-1">
                             <div class="btn btn-success badge pr-0 mr-1<% if (!isHarvest) { %> disabled<% } %>">Harvest
@@ -460,24 +460,24 @@
 
                 </div>
 
-                <!-- PERIOD n GRANDCHILD panel -->
+                <!-- PERIOD n BODY GRANDCHILD panel -->
                 <div class="card-body panel-grandchild pt-0 pb-2 collapse">
 
-                    <!-- PERIOD n GRANDCHILD panel HEADER row -->
+                    <!-- PERIOD n BODY GRANDCHILD panel HEADER row -->
                     <div class="d-flex flex-nowrap">
                         <div class="flex-grow-1">
                             <h3 class="display-5 text-secondary"><small><%= link_grandchild.prompt %></small></h3>
                         </div>
                         <div class="nav-item pr-1">
-                            <h3 class="display-5 text-secondary text-capitalize"><small><%= utils.capitalise(link_child.name.split('.')[1]) %>s</small></h3>
+                            <h3 class="display-5 text-secondary text-capitalize"><small><%= utils.capitalise(link_child.name.split('.')[1]) %></small></h3>
                         </div>
                     </div>
 
-                    <!-- PERIOD n GRANDCHILD panel DATA row -->
+                    <!-- PERIOD n BODY GRANDCHILD panel DATA row -->
                     <div class="d-flex flex-nowrap">
 
 
-                        <!-- PERIOD n GRANDCHILD panel CHART column -->
+                        <!-- PERIOD n BODY GRANDCHILD panel CHART column -->
                         <div class="row m-0">
                             <div class="col-md px-1 mb-2 mr-2 border border-default">
                                 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
@@ -489,7 +489,7 @@
                             </div>
                         </div>
 
-                        <!-- PERIOD n GRANDCHILD panel FILTER BUTTONS column -->
+                        <!-- PERIOD n BODY GRANDCHILD panel FILTER BUTTONS column -->
                         <div class="flex-wrap pl-1 pr-0" style="width: 8.75rem" data-toggle="tooltip" title="<%= utils.capitalise(link_child.name.split('.')[1]) %>s <%= link_child.title %>">
                         
                             <% for(var n_btns=0; n_btns < child_descriptions.length; n_btns++) { %>
@@ -509,7 +509,7 @@
                     </div>
 
                     
-                    <!-- PERIOD n GRANDCHILD panel HSE BUTTONS row -->
+                    <!-- PERIOD n BODY GRANDCHILD panel HSE BUTTONS row -->
                     <div class="d-flex pt-0 pb-0">
                         <div class="flex-grow-1">
                             <div class="btn btn-success badge pr-0 mr-1<% if (!isHarvest) { %> disabled<% } %>">Harvest
