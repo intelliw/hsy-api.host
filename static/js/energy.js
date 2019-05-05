@@ -1,6 +1,6 @@
 
 $(document).ready(function () {
-    
+
     // activate bs tooltips
     $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
 
@@ -15,11 +15,11 @@ $(document).ready(function () {
 
     // navbar dropdown SELECT click
     $(".select-parent").click(function () {
-        
+
         // select the active item    
         let selText = $(this).find('.select-value').justtext();
 
-        $(this).find('.dropdown-item').each(function() {
+        $(this).find('.dropdown-item').each(function () {
 
             let badge = $(this).find('.badge');
             let item = badge.text() ? badge : $(this);
@@ -34,7 +34,7 @@ $(document).ready(function () {
 
     // navbar energy dropdown item click
     $(".select-text a").click(function () {
-        
+
         // put the selected navbar child element into the 'select-value' control;
         var selText = $(this).text();
         $(this).parents('.select-parent').find('.select-value').html(selText);
@@ -43,41 +43,50 @@ $(document).ready(function () {
 
     // grandchild toggle click
     $(".select-toggle-grandchild").click(function () {
-        
-        // toggle the child/grandchild card 
-        let isActive = $(this).find('.btn-toggle').hasClass('active');
 
-        let ch = $(this).parents('.card').find('.panel-child');
-        let gch = $(this).parents('.card').find('.panel-grandchild');
+        // toggle the child / grandchild card visiblity 
+        let toggleOn = $(this).find('.btn-toggle').hasClass('active');
 
-        (isActive ? gch : ch).collapse('hide');  // (isActive ? gch : ch).hide();
-        (isActive ? ch : gch).collapse('show');  // (isActive ? ch : gch).show();
+        let card = $(this).parents('.card')
+        let ch = card.find('.panel-child');
+        let gch = card.find('.panel-grandchild');
+
+        (toggleOn ? gch : ch).collapse('hide');
+        (toggleOn ? ch : gch).collapse('show');
+
+        // toggle the child / grandchild name header
+        let chLbl = card.find('.name-toggle-child');
+        let gchLbl = card.find('.name-toggle-grandchild');
+
+        (toggleOn ? gchLbl : chLbl).hide();
+        (toggleOn ? chLbl : gchLbl).show();
+
     });
 
     // collection panel click
     $(".select-toggle-collection").click(function () {
-        
+
         // toggle the panel for each collection 
         let panel = $(this).parents('.card').find('.select-collection-panel');
         let isActive = panel.hasClass('show');
 
-        panel.collapse(isActive ? 'hide' : 'show');  
+        panel.collapse(isActive ? 'hide' : 'show');
     });
 
     // filter buttons reset
     $(".select-filter-reset").click(function () {
 
         let resetState;
-        
-        $(this).parents('.card-body').find('.select-filter-btn').each(function() {
-            
+
+        $(this).parents('.card-body').find('.select-filter-btn').each(function () {
+
             isActive = $(this).hasClass('active');
             resetState = resetState == undefined ? !isActive : resetState;      // decide resetState for all buttons from the state fo the first button 
-                
+
             if (!resetState == isActive) {
                 isActive ? $(this).removeClass("active") : $(this).addClass("active");
             }
-            
+
         });
 
     });
@@ -98,13 +107,23 @@ $(document).ready(function () {
 
     // 'today' button click 
     $("#btnToday").click(function () {
-        
+
         let apiUrl = API_BASE_URL
             + "/energy/" + $("#navEnergy").html()
             + "/period/" + $("#navPeriod").html()
             + "?site=" + $("#navSite").html()
         // alert(apiUrl);
         window.location.href = apiUrl;
+    });
+
+    // TEMP / TEST -----------------------------------------------------
+    $("#dropTemp1").click(function () {
+        alert('hello');
+
+        ("#childChartWrapper_1").setView({
+            columns: [0, 3, 4, 6]
+        });
+        ("#childChartWrapper_1").draw(document.getElementById('childChartDiv_1'));
     });
 
 });

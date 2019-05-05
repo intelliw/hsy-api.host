@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/energy-button-toggle.css">
+
+    <title>Google Visualization API</title>
+
+</head>
+
+<body>
+    <div class="card">
+        <ul id="navbarAPI" class="navbar-nav mt-auto">
+
+            <!-- Energy -->
+            <li class="nav-item dropdown select-parent">
+                <a class="nav-link dropdown-toggle pl-1" href="#" role="button" data-toggle="dropdown">
+                    Energy <span id="navEnergy" class="badge badge-light select-value">hse</span>
+                </a>
+
+                <div class="dropdown-menu select-text p-0">
+                    <a class="dropdown-item px-2 py-0" href="#"><span class="badge badge-light">hse</span></a>
+                    <a class="dropdown-item px-2 py-0" href="#"><span class="badge badge-success">harvest</span></a>
+                    <a class="dropdown-item px-2 py-0" href="#"><span class="badge badge-primary">store</span></a>
+                    <a class="dropdown-item px-2 py-0" href="#"><span class="badge badge-danger">enjoy</span></a>
+                    <a class="dropdown-item px-2 py-0 pb-2" href="#"><span class="badge badge-dark">grid</span></a>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div id="chartDiv1" class="card m-2 border border-primary"></div>
+    <div id="chartDiv2" class="card m-2 border border-primary pl-0"></div>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current');
+
+        google.charts.setOnLoadCallback(drawVisualization);
+
+
+        function drawVisualization() {
+            var dataTable = [
+                ['', 'Harvest', 'Enjoy', 'Store in', 'Store out', 'Grid in', 'Grid out'],
+                ['Mon', 900, -390, 900, -390, 390, -190],
+                ['Tue', 1000, -400, 200, -400, 400, -390],
+                ['Wed', 1170, -440, 110, -440, 440, -240],
+                ['Thu', 1250, -480, 150, -480, 480, -120],
+                ['Fri', 1250, -480, 150, -480, 480, -120],
+                ['Sat', 1250, -480, 150, -480, 480, -120],
+                ['Sun', 1530, -540, 130, -540, 540, -140]
+            ];
+            google.visualization.drawChart({
+                "containerId": "chartDiv1",
+                "dataTable": dataTable,
+                "refreshInterval": 5,
+                "chartType": "Table",
+                "options": {
+                    'width': 600,
+                    'height': 200,
+                    "alternatingRowStyle": true,
+                    "showRowNumber": false,
+                }
+            });
+            google.visualization.drawChart({
+                "containerId": "chartDiv2",
+                "dataTable": dataTable,
+                "refreshInterval": 5,
+                "chartType": "ColumnChart",
+                'options': {
+                    'width': 600,
+                    'height': 400,
+                    'bar': { 'groupWidth': '85%' },
+                    'isStacked': true,
+                    'legend': 'none',
+                    'chartArea': { 'left': 100, 'top': 30, 'right': 100, 'bottom': 30 },
+                    'colors': ['#28a745', '#FF0000', '#007bff', '#007bff', '#000000', '#000000']
+                }
+            });
+        }
+    </script>
+
+    <script src="//code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/energy.js"></script>
+
+</body>
+
+</html>
