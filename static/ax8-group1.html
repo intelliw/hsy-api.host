@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/energy-button-toggle.css">
+
+    <title>Google Visualization API</title>
+
+</head>
+
+<body>
+    <script src="/static/js/code.jquery_jquery-3.3.1.slim.min.js"></script>
+    <script src="/static/js/cloudflare.com_ajax_libs_popper.js_1.14.7_umd_popper.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/energy.js"></script>
+    <script type="text/javascript" src="/static/js/gstatic_charts_loader.js"></script>
+    
+    <script type="text/javascript">
+
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(drawVisualization);
+
+        function drawVisualization() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('datetime', 'Time');
+            data.addColumn('number', 'Temperature');
+            data.addColumn('number', 'Rainfall');
+            data.addRows([
+                [new Date(2013, 1, 2, 10, 0, 0), 25, 1],
+                [new Date(2013, 1, 2, 10, 5, 0), 25, 2],
+                [new Date(2013, 1, 2, 10, 10, 0), 27, 3],
+                [new Date(2013, 1, 2, 10, 15, 0), 27, 4],
+                [new Date(2013, 1, 2, 10, 20, 0), 29, 5],
+                [new Date(2013, 1, 2, 10, 25, 0), 29, 6],
+                [new Date(2013, 1, 3, 10, 0, 0), 35, 1],
+                [new Date(2013, 1, 3, 10, 5, 0), 36, 2],
+                [new Date(2013, 1, 3, 10, 10, 0), 34, 3],
+                [new Date(2013, 1, 3, 10, 15, 0), 32, 4],
+                [new Date(2013, 1, 3, 10, 20, 0), 35, 5],
+                [new Date(2013, 1, 3, 10, 25, 0), 35, 6],
+                [new Date(2013, 1, 3, 10, 30, 0), 35, 7],
+                [new Date(2013, 1, 4, 10, 0, 0), 25, 1],
+                [new Date(2013, 1, 4, 10, 5, 0), 25, 2],
+                [new Date(2013, 1, 4, 10, 10, 0), 70, 2.5],
+                [new Date(2013, 1, 4, 10, 15, 0), 25, 3],
+                [new Date(2013, 1, 4, 10, 20, 0), 25, 4],]);
+
+            function floorDate(datetime) {
+                var newDate = new Date(datetime);
+                newDate.setHours(0);
+                newDate.setMinutes(0);
+                newDate.setSeconds(0);
+                return newDate;
+            }
+
+            var newData = google.visualization.data.group(data, [{
+                column: 0,
+                modifier: floorDate,
+                type: 'date'
+            }], [{
+                column: 1,
+                label: 'Avg Temp',
+                aggregation: google.visualization.data.avg,
+                type: 'number'
+            }, {
+                column: 2,
+                label: 'Rainfall',
+                aggregation: google.visualization.data.sum,
+                type: 'number'
+            }]);
+
+
+            // Set chart options
+            var options = {
+                'title': 'Rainfall and Temperature',
+                'width': 400,
+                'height': 300
+            };
+
+            // Instantiate and draw our chart, passing in some options.
+            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+            chart.draw(newData, options);
+        }
+    </script>
+    
+
+    <div id="chart_div"></div>
+    <div id="childChartDiv_1"></div>
+    <div id="childTableDiv_1"></div>
+
+</body>
+
+</html>

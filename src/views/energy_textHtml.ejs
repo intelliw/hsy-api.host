@@ -37,8 +37,8 @@
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/energy-button-toggle.css">
     
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-
+    <link rel="stylesheet" href="/static/css/fonts.googleapis.com_icon_family_Material_Icons_icon.css">
+    
     <title>Sundaya Energy API</title>
     
 </head>
@@ -323,7 +323,7 @@
         <div class="card border border-top border-primary border-right-0 border-left-0 rounded-0">
 
             <!-- PERIOD n NAV row -->
-            <div class="card-header mt-n1 py-2 px-0 d-flex">
+            <div class="card-header py-2 px-0 d-flex">
 
                 <!-- PERIOD n NAV link buttons -->
                 <h2 class="mb-0 pl-3 flex-grow-1 select-toggle-collection">
@@ -380,7 +380,7 @@
             </div>
 
             <!-- PERIOD n BODY row -->
-            <div class="p-0 select-collection-panel collapse show">
+            <div class="p-0 mt-2 select-collection-panel collapse show">
 
                 <!-- PERIOD n BODY CHILD panel -->
                 <div class="card-body panel-child pt-0 pb-2 collapse show">
@@ -453,7 +453,7 @@
                         <div class="pr-1 mt-2 pt-1">
                             
                             <div class="flex-wrap pl-1 pr-0" style="width: 8.75rem">
-                                <div  data-toggle="tooltip" title="<%= utils.capitalise(link_grandchild.name.split('.')[1]) %>s <%= link_grandchild.title %>"> 
+                                <div  data-toggle="tooltip" title="<%= utils.capitalise(link_grandchild.name.split('.')[1]) %>s (<%= link_grandchild.title %>)"> 
                                     <% for(var n_btns=0; n_btns < grandchild_descriptions.length; n_btns++) { %>
 
                                     <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">
@@ -552,7 +552,7 @@
                         <div class="pr-1 mt-2 pt-1">
                             
                             <div class="flex-wrap pl-1 pr-0" style="width: 8.75rem">
-                                <div data-toggle="tooltip" title="<%= utils.capitalise(link_child.name.split('.')[1]) %>s <%= link_child.title %>"> 
+                                <div data-toggle="tooltip" title="<%= utils.capitalise(link_child.name.split('.')[1]) %>s (<%= link_child.title %>)"> 
                                     <% for(var n_btns=0; n_btns < child_descriptions.length; n_btns++) { %>
 
                                     <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">
@@ -595,12 +595,8 @@
     </nav>
 
     <!-- JavaScript: jQuery first, then Popper.js, then Bootstrap JS, app scripts must be last -->
-    <script src="//code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
+    <script src="/static/js/code.jquery_jquery-3.3.1.slim.min.js"></script>
+    <script src="/static/js/cloudflare.com_ajax_libs_popper.js_1.14.7_umd_popper.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
     <script src="/static/js/energy.js"></script>
 

@@ -73,7 +73,7 @@ $(document).ready(function () {
         panel.collapse(isActive ? 'hide' : 'show');
     });
 
-    // filter buttons reset
+    //  reset filter buttons
     $(".select-filter-reset").click(function () {
 
         let resetState;

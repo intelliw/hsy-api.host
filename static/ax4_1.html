@@ -42,9 +42,16 @@
 
 
         function drawVisualization() {
-
-            var dataTable = [
-                ['', 'Harvest', 'Enjoy', 'Store in', 'Store out', 'Grid in', 'Grid out'],
+            
+            var dataTable = new google.visualization.DataTable();
+            dataTable.addColumn('string', '');
+            dataTable.addColumn('number', 'Harvest');
+            dataTable.addColumn('number', 'Enjoy');
+            dataTable.addColumn('number', 'Store in');
+            dataTable.addColumn('number', 'Store out');          
+            dataTable.addColumn('number', 'Grid in');
+            dataTable.addColumn('number', 'Grid out');          
+            dataTable..addRows([
                 ['Mon', 900, -390, 900, -390, 390, -190],
                 ['Tue', 1000, -400, 200, -400, 400, -390],
                 ['Wed', 1170, -440, 110, -440, 440, -240],
@@ -52,7 +59,7 @@
                 ['Fri', 1250, -480, 150, -480, 480, -120],
                 ['Sat', 1250, -480, 150, -480, 480, -120],
                 ['Sun', 1530, -540, 130, -540, 540, -140]
-            ];
+            ]);
 
             google.visualization.drawChart({
                 "containerId": "chartDiv1",
