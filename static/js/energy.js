@@ -41,7 +41,7 @@ $(document).ready(function () {
 
     });
 
-    // grandchild toggle click
+    // child / grandchild button toggle 
     $(".select-toggle-grandchild").click(function () {
 
         // toggle the child / grandchild card visiblity 
@@ -54,7 +54,7 @@ $(document).ready(function () {
         (toggleOn ? gch : ch).collapse('hide');
         (toggleOn ? ch : gch).collapse('show');
 
-        // toggle the child / grandchild name header
+        // toggle the child / grandchild name header visibility
         let chLbl = card.find('.name-toggle-child');
         let gchLbl = card.find('.name-toggle-grandchild');
 
@@ -73,7 +73,7 @@ $(document).ready(function () {
         panel.collapse(isActive ? 'hide' : 'show');
     });
 
-    //  reset filter buttons
+    //  filter buttons reset 
     $(".select-filter-reset").click(function () {
 
         let resetState;
@@ -88,7 +88,13 @@ $(document).ready(function () {
             }
 
         });
+        
+    });
+    //  filter buttons panel visibility
+    $(".select-filter-visibility").click(function () {
 
+        let panel = $(this).parents('.card-body').find('.select-filter-btn-panel'); 
+        panel.collapse('toggle');
     });
 
     // 'done' button click - calls the API. Strip colon and space from the hour with regex
