@@ -214,6 +214,7 @@
   right: -0.5rem;
   opacity: 0.5;
 }
+
 .btn-toggle.btn-sm > .handle {
   position: absolute;
   top: 0.16rem;

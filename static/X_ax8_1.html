@@ -20,10 +20,9 @@
 
     <script type="text/javascript">
 
-        google.charts.load('current', { packages: ['corechart'] });
-        google.charts.setOnLoadCallback(drawVisualization);
-
-        function drawVisualization() {
+        google.charts.load('current', { packages: ['corechart'], callback: drawChart });
+        
+        function drawChart() {
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Child');
             data.addColumn('string', 'Grandchild');
