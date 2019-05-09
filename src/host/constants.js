@@ -41,7 +41,7 @@ module.exports.periodChildDescription = {
     minutesecond: '01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60',
     hourminute: '01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60',
     timeofdayhour: { 'morning': '06 07 08 09 10 11', 'afternoon': '12 13 14 15 16 17', 'evening': '18 19 20 21 22 23', 'night': '00 01 02 03 04 05' },
-    daytimeofday: 'Morning Afternoon Evening Night',
+    daytimeofday: 'Night Morning Afternoon Evening',
     weekday: 'Mon Tue Wed Thu Fri Sat Sun',
     // monthday is appended dynamically to the dates for Feb (the shortest month) for better performance
     monthday: '01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28',                        

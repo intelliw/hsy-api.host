@@ -90,19 +90,19 @@ $(document).ready(function () {
             }
 
         });
-        
+
     });
     //  filter buttons panel visibility
     $(".select-filter-visibility").click(function () {
 
-        let panel = $(this).parents('.card-body').find('.select-filter-btn-panel'); 
-        let reset = $(this).parents('.card-body').find('.select-filter-reset'); 
+        let panel = $(this).parents('.card-body').find('.select-filter-btn-panel');
+        let reset = $(this).parents('.card-body').find('.select-filter-reset');
 
         wasActive = panel.hasClass('show');
-        
-        wasActive ? reset.hide() : reset.show() ; 
+
+        wasActive ? reset.hide() : reset.show();
         panel.collapse(wasActive ? 'hide' : 'show');
-        
+
     });
 
     // 'done' button click - calls the API... Strip colon and space from the hour with regex
@@ -128,6 +128,14 @@ $(document).ready(function () {
             + "?site=" + $("#navSite").html()
         // alert(apiUrl);
         window.location.href = apiUrl;
+    });
+
+    // hide and hsow ther title period badge 
+    $('#navbarAPI').on('show.bs.collapse', function () {
+        $('#titlePeriod').hide();
+    });
+    $('#navbarAPI').on('hide.bs.collapse', function () {
+        $('#titlePeriod').show();
     });
 
     // TEMP / TEST -----------------------------------------------------

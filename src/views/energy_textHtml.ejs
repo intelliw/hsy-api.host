@@ -46,7 +46,9 @@
 <body>    
     <nav class="navbar navbar-expand-md navbar-dark bg-primary">
 
-        <a class="navbar-brand pl-1" href="#navbarAPI, #navbarMain" data-toggle="collapse">Sundaya Energy API</a>
+        <a class="navbar-brand pl-1" href="#navbarAPI, #navbarMain" data-toggle="collapse">Sundaya Energy API 
+            <small class=""><span id="titlePeriod" class="btn btn-outline-light badge-info badge badge-pill align-middle text-capitalize show mb-1 ml-1 pb-1"><%=params_period%></span></small>
+        </a>
 
         <!-- collapse HAMBURGER  -->
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarAPI, #navbarMain">
@@ -300,6 +302,7 @@
     <div class="accordion">
 
         <% for(var n_cols=0; n_cols < collections.length; n_cols++) { 
+            
             const FIND_ALL = true;
 
             links = collections[n_cols].collection.links; 
@@ -339,7 +342,7 @@
 
                     <!-- prev -->
                     <button type="button" class="btn btn-sm btn-secondary py-0 capitalize" data-toggle="tooltip"
-                        title="Prev <%= utils.capitalise(link_prev.name) %>"
+                        title="Previous <%= utils.capitalise(link_prev.name) %>"
                         onclick="window.location.href = '<%= link_prev.href %>'">
                         <i class="material-icons" style="font-size:12px;color:white;">navigate_before</i>
                     </button>
@@ -366,7 +369,7 @@
                 <!-- PERIOD n NAV row CHILD / GRANDCHILD toggle -->
                 <div class="d-flex flex-nowrap pt-1 mb-0 pr-3">
                     
-                    <div class="select-toggle-collection px-1">
+                    <div class="select-toggle-collection d-flex px-1">
                         <h3 class="display-5 text-secondary text-capitalize name-toggle-child collapse show"><small><%= utils.capitalise(link_child.name.split('.')[1]) %></small></small></h3>
                         <h3 class="display-5 text-secondary text-capitalize name-toggle-grandchild collapse hide"><small><%= utils.capitalise(link_grandchild.name.split('.')[1]) %></small></small></h3>
                     </div>
@@ -410,6 +413,22 @@
                                                 incididunt
                                                 ut labore
                                                 et dolore magna aliqua.
+
+                                                 <div class="btn-group btn-group-sm flex-wrap" <% if (panel === 'grandchild') { %>data-toggle="tooltip" title="<%= utils.capitalise(link_grandchild.name.split('.')[1]) %> (<%= link_grandchild.title %>)"<% } %>>
+                                                    <% for(var n_btns=0; n_btns < (panel==='child' ? child_descriptions : grandchild_descriptions).length; n_btns++) { %>
+
+                                                        <div class="btn btn-light border border-default py-0 m-0 mb-2 mr-1" 
+                                                                <% if (panel === 'child') { %>
+                                                                    data-toggle="tooltip" 
+                                                                    title="<%= items[n_btns].links[0].prompt %>"
+                                                                    onclick="window.location.href = '<%= items[n_btns].links[0].href %>'"
+                                                                <% } %>>
+                                                            <small class="text-secondary font-weight-bold align-middle"><%= (panel==='child' ? child_descriptions[n_btns] : grandchild_descriptions[n_btns]) %></small>
+                                                        </div>
+                                                    
+                                                    <% } %>
+                                                </div>
+
                                             </div>
                                             
                                             <div id="<%= panel === 'child' ? 'childTableDiv_' : 'grandchildTableDiv_' %><%= n_cols %>" class="col-md px-1 mb-2 mr-2 border border-default">

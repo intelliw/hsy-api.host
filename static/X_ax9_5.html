@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/energy-button-toggle.css">
+
+    <title>Charts Test Harness</title>
+
+</head>
+
+<body>
+    <script src="/static/js/code.jquery_jquery-3.3.1.slim.min.js"></script>
+    <script src="/static/js/cloudflare.com_ajax_libs_popper.js_1.14.7_umd_popper.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/energy.js"></script>
+    <script type="text/javascript" src="/static/js/gstatic_charts_loader.js"></script>
+
+    <script type="text/javascript">
+
+        google.charts.load('current', { packages: ['table', 'corechart'], callback: drawChart });
+
+        function drawChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn({ id: 'i0', type: 'number', label: 'Day' });
+            data.addColumn({ id: 'i1', type: 'string', label: 'Timeofday' });
+            data.addColumn({ id: 'i2', type: 'number', label: 'Harvest' });
+            data.addColumn({ id: 'i3', type: 'number', label: 'Store in' });
+            data.addColumn({ id: 'i4', type: 'number', label: 'Store out' });
+            data.addColumn({ id: 'i5', type: 'number', label: 'Enjoy' });
+            data.addColumn({ id: 'i6', type: 'number', label: 'Grid in' });
+            data.addColumn({ id: 'i7', type: 'number', label: 'Grid out' });
+            data.addRows([
+                [{ v: 1, f: 'Monday' }, 'Morning', 16.825, -6.566, 16.273, -18.196, 8.519, -18.152],
+                [{ v: 1, f: 'Monday' }, 'Afternoon', 18.229, -2.950, 15.211, -3.603, 14.878, -18.491],
+                [{ v: 1, f: 'Monday' }, 'Evening', 20.447, -4.857, 16.841, -3.137, 11.742, -17.249],
+                [{ v: 1, f: 'Monday' }, 'Night', 9.415, -14.471, 20.649, -8.049, 6.458, -15.513],
+                [{ v: 2, f: 'Tuesday' }, 'Morning', 14.648, -17.979, 11.470, -9.859, 6.792, -11.471],
+                [{ v: 2, f: 'Tuesday' }, 'Afternoon', 20.593, -4.875, 3.434, -4.866, 2.815, -4.383],
+                [{ v: 2, f: 'Tuesday' }, 'Evening', 10.735, -16.177, 9.115, -19.601, 8.004, -10.967],
+                [{ v: 2, f: 'Tuesday' }, 'Night', 14.871, -7.390, 13.455, -13.650, 18.081, -11.698],
+                [{ v: 3, f: 'Wednesday' }, 'Morning', 10.095, - 9.128, 19.591, -10.221, 5.588, -3.434],
+                [{ v: 3, f: 'Wednesday' }, 'Afternoon', 6.934, - 8.238, 9.431, -15.391, 6.856, -9.843],
+                [{ v: 3, f: 'Wednesday' }, 'Evening', 6.354, - 3.951, 15.713, -17.232, 19.696, -17.337],
+                [{ v: 3, f: 'Wednesday' }, 'Night', 9.793, - 12.542, 5.666, -6.816, 13.171, -11.950],
+                [{ v: 4, f: 'Thursday' }, 'Morning', 20.497, -4.945, 9.182, -14.924, 3.490, -16.642],
+                [{ v: 4, f: 'Thursday' }, 'Afternoon', 14.572, -19.099, 13.920, -9.392, 20.537, -16.914],
+                [{ v: 4, f: 'Thursday' }, 'Evening', 3.546, -10.432, 3.447, -14.066, 10.173, -12.269],
+                [{ v: 4, f: 'Thursday' }, 'Night', 9.007, -9.497, 15.301, -14.670, 6.515, -8.791],
+                [{ v: 5, f: 'Friday' }, 'Morning', 15.891, -3.019, 4.127, -18.566, 6.495, -6.130],
+                [{ v: 5, f: 'Friday' }, 'Afternoon', 12.017, -20.189, 7.685, -20.318, 11.664, -18.634],
+                [{ v: 5, f: 'Friday' }, 'Evening', 13.551, -5.462, 17.209, -16.470, 6.206, -15.027],
+                [{ v: 5, f: 'Friday' }, 'Night', 13.120, -16.939, 7.234, -12.507, 12.925, -6.384],
+                [{ v: 6, f: 'Saturday' }, 'Morning', 16.552, -19.386, 18.615, -15.924, 18.373, -9.758],
+                [{ v: 6, f: 'Saturday' }, 'Afternoon', 4.763, -19.493, 8.221, -3.811, 3.924, -3.381],
+                [{ v: 6, f: 'Saturday' }, 'Evening', 12.947, -19.124, 6.174, -13.392, 17.276, -17.566],
+                [{ v: 6, f: 'Saturday' }, 'Night', 16.586, -19.840, 12.753, -3.160, 10.506, -3.780],
+                [{ v: 7, f: 'Sunday' }, 'Morning', 10.436, -12.818, 14.797, -14.932, 6.025, -13.962],
+                [{ v: 7, f: 'Sunday' }, 'Afternoon', 12.537, -6.735, 19.594, -11.915, 6.106, -12.372],
+                [{ v: 7, f: 'Sunday' }, 'Evening', 18.173, -11.612, 5.048, -18.794, 11.320, -16.855],
+                [{ v: 7, f: 'Sunday' }, 'Night', 7.448, -16.431, 14.193, -12.414, 18.548, -9.476]
+            ]);
+
+            var newData = google.visualization.data.group(
+                data, [{ column: 0, label: 'Child', type: 'string' }],
+                [
+                    { column: 2, label: 'Harvest', aggregation: google.visualization.data.sum, type: 'number' },
+                    { column: 3, label: 'Enjoy', aggregation: google.visualization.data.sum, type: 'number' },
+                    { column: 4, label: 'Store in', aggregation: google.visualization.data.sum, type: 'number' },
+                    { column: 5, label: 'Store out', aggregation: google.visualization.data.sum, type: 'number' },
+                    { column: 6, label: 'Grid in', aggregation: google.visualization.data.sum, type: 'number' },
+                    { column: 7, label: 'Grid out', aggregation: google.visualization.data.sum, type: 'number' }
+                ]);
+
+            var columnView = new google.visualization.DataView(newData);
+            columnView.setColumns([0, 1, 2, 3, 4, 5, 6]);
+
+            // Set chart options
+            var chartOptions = {
+                width: 800,
+                height: 600,
+                bar: { groupWidth: '81.8%' },
+                isStacked: true,
+                selectionMode: 'multiple',
+                tooltip: { trigger: 'selection', showColorCode: true },
+                aggregationTarget: 'category',
+                fontName: 'Open Sans',
+                fontSize: 14,
+                dataOpacity: 0.8,
+                legend: { position: 'top', maxLines: 2, alignment: 'start' },
+                vAxis: {
+                    title: 'Megajoules (MJ)',
+                    titleTextStyle: { italic: 'false' },
+                    gridlines: { count: 8, color: 'none' },
+                    format: '##'
+                },
+                hAxis: {
+                    title: 'Day',
+                    textPosition: 'out',
+                    textStyle: { fontSize: 14 },
+                    ttitleTextStyle: { italic: 'false' }
+                },
+                axisTitlesPosition: 'in',
+                backgroundColor: { fill: 'none', stroke: 'none', strokeWidth: 4 },
+                chartArea: { left: 50, top: 50, right: 10, bottom: 50, width: '100%', height: '100%' },
+                colors: ['#28a745', '#FF0000', '#007bff', '#007bff', '#000000', '#000000']
+            };
+
+            // Instantiate and draw our chart, passing in some options.
+            var chart = new google.visualization.ColumnChart(document.getElementById('childColumnChartDiv_1'));
+            chart.draw(columnView, chartOptions);
+
+            var tableOptions = {
+                width: 600,
+                height: '100%',
+                alternatingRowStyle: false,
+                showRowNumber: false,
+                page: 'enable', pageSize: 10,
+                cssClassNames: {
+                    headerRow: '',
+                    tableRow: 'sundaya-font',
+                    oddTableRow: ' sundaya-font',
+                    selectedTableRow: 'sundaya-font',
+                    hoverTableRow: '',
+                    headerCell: 'text-left bg-secondary font-weight-bold text-white border-bottom border-top border-right-0 border-dark',
+                    tableCell: 'sundaya-font border-bottom border-right-0 border-secondary',
+                    rowNumberCell: ''
+                }
+            }
+
+            var tableView = new google.visualization.DataView(data);
+            tableView.setColumns([0, 1, 2, 3, 4, 5, 6]);
+
+            var table = new google.visualization.Table(document.getElementById('childTableDiv_1'));
+            table.draw(tableView, tableOptions);
+            google.visualization.events.addListener(table, 'select', function () {
+                var row = table.getSelection()[0].row;
+                //alert('You selected ' + data.getValue(row, 0));
+            });
+            /*
+            var childTableWrapper_1 = new google.visualization.ChartWrapper({
+                dataTable: data,
+                chartType: 'Table',
+                containerId: 'childTableDiv_1',
+                options: {
+                    'width': 600,
+                    'height': 200,
+                    'alternatingRowStyle': true,
+                    'showRowNumber': false,
+                }
+            });
+            childTableWrapper_1.setView({
+                columns: [0, 1, 2, 3, 4, 5, 6]
+            });
+
+            childTableWrapper_1.draw();
+            */
+
+        }
+    </script>
+
+    <div class="w-15 btn btn-primary badge pr-0 mb-1 mr-1">Store
+        <button type="button" class="btn btn-sm btn-primary btn-toggle active" data-toggle="button">
+            <div class="handle"></div>
+        </button></div>
+
+    <div class="card">
+
+
+        <ul id="navbarAPI" class="navbar-nav mt-auto">
+
+
+            <li class="nav-item dropdown select-parent">
+                <a class="nav-link dropdown-toggle pl-1" href="#" role="button" data-toggle="dropdown">
+                    Energy <span id="navEnergy" class="badge badge-light select-value">hse</span>
+                </a>
+
+                <div class="dropdown-menu select-text p-0">
+                    <a class="dropdown-item px-2 py-0" href="#"><span class="badge badge-light">hse</span></a>
+                    <a class="dropdown-item px-2 py-0" href="#"><span class="badge badge-success">harvest</span></a>
+                    <a class="dropdown-item px-2 py-0" href="#"><span class="badge badge-primary">store</span></a>
+                    <a class="dropdown-item px-2 py-0" href="#"><span class="badge badge-danger">enjoy</span></a>
+                    <a class="dropdown-item px-2 py-0 pb-2" href="#"><span class="badge badge-dark">grid</span></a>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div id="chart_div"></div>
+    <div id="childColumnChartDiv_1" class="card border border-secondary rounded-0 pt-1 m-2"></div>
+    <div id="childTableDiv_1" class="card border border-secondary rounded-0 pt-1 m-2"></div>
+
+</body>
+
+</html>
