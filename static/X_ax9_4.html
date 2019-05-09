@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/energy-button-toggle.css">
 
-    <title>Google Visualization API</title>
+    <title>Charts Test Harness</title>
 
 </head>
 
@@ -20,19 +20,19 @@
 
     <script type="text/javascript">
 
-        google.charts.load('current', { packages: ['corechart'], callback: drawChart });
+        google.charts.load('current', { packages: ['table', 'corechart'], callback: drawChart });
 
         function drawChart() {
             var data = new google.visualization.DataTable();
-            data.addColumn({ id: 'i0', type: 'string', label: 'Child' });
-            data.addColumn({ id: 'i1', type: 'string', label: 'Grandchild' });
+            data.addColumn({ id: 'i0', type: 'string', label: 'Day' });
+            data.addColumn({ id: 'i1', type: 'string', label: 'Timeofday' });
             data.addColumn({ id: 'i2', type: 'number', label: 'Harvest' });
             data.addColumn({ id: 'i3', type: 'number', label: 'Store in' });
             data.addColumn({ id: 'i4', type: 'number', label: 'Store out' });
             data.addColumn({ id: 'i5', type: 'number', label: 'Enjoy' });
             data.addColumn({ id: 'i6', type: 'number', label: 'Grid in' });
             data.addColumn({ id: 'i7', type: 'number', label: 'Grid out' });
-            data.addColumn({ id: 'i8', type: 'string', role: 'annotation' }); // annotation role col.
+            data.addColumn({ id: 'i8', type: 'string', role: 'annotationText' }); // annotation role col.
             data.addRows([
                 ['Monday', 'Morning', 16.825, -6.566, 16.273, -18.196, 8.519, -18.152, 'hello'],
                 ['Monday', 'Afternoon', 18.229, -2.950, 15.211, -3.603, 14.878, -18.491, 'hello'],
@@ -64,14 +64,6 @@
                 ['Sunday', 'Night', 7.448, -16.431, 14.193, -12.414, 18.548, -9.476, 'hello']
             ]);
 
-            function floorDate(datetime) {
-                var newDate = new Date(datetime);
-                newDate.setHours(0);
-                newDate.setMinutes(0);
-                newDate.setSeconds(0);
-                return newDate;
-            }
-
             var newData = google.visualization.data.group(
                 data, [{ column: 0, label: 'Child', type: 'string' }],
                 [
@@ -86,10 +78,9 @@
 
             // Set chart options
             var chartOptions = {
-                title: 'Week 06', titlePosition: 'in',
                 width: 800,
                 height: 600,
-                bar: { groupWidth: '85%' },
+                bar: { groupWidth: '81.8%' },
                 isStacked: true,
                 selectionMode: 'multiple',
                 tooltip: { trigger: 'selection', showColorCode: true },
@@ -98,15 +89,21 @@
                 fontSize: 14,
                 dataOpacity: 0.8,
                 legend: { position: 'top', maxLines: 2, alignment: 'start' },
-                vAxis: { 
-                    title: 'Megajoules (MJ)', 
-                    titleTextStyle: { italic: 'false' }, 
-                    gridlines: {count: 5, color: 'white'}
-                    },
-                hAxis: { 
-                    textStyle: { fontSize: 14 } 
+                vAxis: {
+                    title: 'Megajoules (MJ)',
+                    titleTextStyle: { italic: 'false' },
+                    gridlines: { count: 8, color: 'none' },
+                    format: '##'
                 },
-                chartArea: { left: 80, top: 70, right: 10, bottom: 45, width: '100%', height: '100%' },
+                hAxis: {
+                    title: 'Day',
+                    textPosition: 'out',
+                    textStyle: { fontSize: 14 },
+                    ttitleTextStyle: { italic: 'false' }
+                },
+                axisTitlesPosition: 'in',
+                backgroundColor: { fill: 'none', stroke: 'none', strokeWidth: 4 },
+                chartArea: { left: 50, top: 50, right: 10, bottom: 50, width: '100%', height: '100%' },
                 colors: ['#28a745', '#FF0000', '#007bff', '#007bff', '#000000', '#000000']
             };
 
@@ -114,8 +111,39 @@
             var chart = new google.visualization.ColumnChart(document.getElementById('childChartDiv_1'));
             chart.draw(newData, chartOptions);
 
+            var tableCss = {
+                headerRow: 'bg-secondary text-white font-weight-light',
+                tableRow: 'sundaya-font',
+                oddTableRow: ' sundaya-font bg-light',
+                selectedTableRow: 'bg-light text-dark',
+                hoverTableRow: 'bg-light text-secondary',
+                headerCell: 'bg-secondary text-white font-weight-light',
+                tableCell: 'sundaya-font',
+                rowNumberCell: ''
+            };
+
+            var tableOptions = {
+                width: 600,
+                height: '100%',
+                alternatingRowStyle: true,
+                showRowNumber: true,
+                page: 'enable',
+                pageSize: 10,
+                cssClassNames: tableCss
+            }
+
+            var tableView = new google.visualization.DataView(data);
+            tableView.setColumns([0, 1, 2, 3, 4, 5, 6]);
+
+            var table = new google.visualization.Table(document.getElementById('childTableDiv_1'));
+            table.draw(tableView, tableOptions);
+            google.visualization.events.addListener(table, 'select', function () {
+                var row = table.getSelection()[0].row;
+                //alert('You selected ' + data.getValue(row, 0));
+            });
+            /*
             var childTableWrapper_1 = new google.visualization.ChartWrapper({
-                dataTable: newData,
+                dataTable: data,
                 chartType: 'Table',
                 containerId: 'childTableDiv_1',
                 options: {
@@ -130,9 +158,30 @@
             });
 
             childTableWrapper_1.draw();
+            */
+
         }
     </script>
 
+    <div class="card">
+        <ul id="navbarAPI" class="navbar-nav mt-auto">
+
+            <!-- Energy -->
+            <li class="nav-item dropdown select-parent">
+                <a class="nav-link dropdown-toggle pl-1" href="#" role="button" data-toggle="dropdown">
+                    Energy <span id="navEnergy" class="badge badge-light select-value">hse</span>
+                </a>
+
+                <div class="dropdown-menu select-text p-0">
+                    <a class="dropdown-item px-2 py-0" href="#"><span class="badge badge-light">hse</span></a>
+                    <a class="dropdown-item px-2 py-0" href="#"><span class="badge badge-success">harvest</span></a>
+                    <a class="dropdown-item px-2 py-0" href="#"><span class="badge badge-primary">store</span></a>
+                    <a class="dropdown-item px-2 py-0" href="#"><span class="badge badge-danger">enjoy</span></a>
+                    <a class="dropdown-item px-2 py-0 pb-2" href="#"><span class="badge badge-dark">grid</span></a>
+                </div>
+            </li>
+        </ul>
+    </div>
 
     <div id="chart_div"></div>
     <div id="childChartDiv_1" class="card border border-primary pt-1 m-2"></div>

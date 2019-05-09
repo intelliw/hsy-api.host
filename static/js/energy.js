@@ -41,7 +41,7 @@ $(document).ready(function () {
 
     });
 
-    // child / grandchild button toggle 
+    // child / grandchild toggle button click 
     $(".select-toggle-grandchild").click(function () {
 
         // toggle the child / grandchild card visiblity 
@@ -60,6 +60,8 @@ $(document).ready(function () {
 
         (toggleOn ? gchLbl : chLbl).hide();
         (toggleOn ? chLbl : gchLbl).show();
+
+        card.find('.select-collection-panel').collapse('show'); // always make visible
 
     });
 
@@ -94,10 +96,16 @@ $(document).ready(function () {
     $(".select-filter-visibility").click(function () {
 
         let panel = $(this).parents('.card-body').find('.select-filter-btn-panel'); 
-        panel.collapse('toggle');
+        let reset = $(this).parents('.card-body').find('.select-filter-reset'); 
+
+        wasActive = panel.hasClass('show');
+        
+        wasActive ? reset.hide() : reset.show() ; 
+        panel.collapse(wasActive ? 'hide' : 'show');
+        
     });
 
-    // 'done' button click - calls the API. Strip colon and space from the hour with regex
+    // 'done' button click - calls the API... Strip colon and space from the hour with regex
     $("#btnDone").click(function () {
         let apiUrl = API_BASE_URL
             + "/energy/" + $("#navEnergy").html()
@@ -123,8 +131,8 @@ $(document).ready(function () {
     });
 
     // TEMP / TEST -----------------------------------------------------
-    $("#dropTemp1").click(function () {
-        alert('hello');
+    $(".dropdown-item").click(function () {
+        // alert($(this).text());
 
         ("#childChartWrapper_1").setView({
             columns: [0, 3, 4, 6]

@@ -9,7 +9,9 @@ const router = express.Router();
 
 const Request = require('../requests');
 
-// [devices.datasets.post] ---------------
+/*  [devices.datasets.post] 
+
+*/
 router.post('/datasets', (req, res, next) => {
 
     // request ---------------------
@@ -29,7 +31,9 @@ router.post('/datasets', (req, res, next) => {
 
 });
 
-// [device.dataset.period.epoch.duration.get]
+/* [device.dataset.period.epoch.duration.get]
+    Returns device data for a period. 
+*/
 router.get(['/:device?/dataset/:dataset?',
     '/:device?/dataset/:dataset?/period/:period?',
     '/:device?/dataset/:dataset?/period/:period?/:epoch?/:duration?'],
@@ -52,7 +56,11 @@ router.get(['/:device?/dataset/:dataset?',
 
     });
 
-// [devices.device.config.epoch.get] /devices/{device}/config/{epoch}
+
+/* [devices.device.config.epoch.get] /devices/{device}/config/{epoch}
+    Returns historical configuration data for a period, including identifiers of subitems 
+    such as battery assembly, MCU board, and Mosfet board.
+*/
 router.get('/:device?/config/:epoch?', (req, res, next) => {
 
     res

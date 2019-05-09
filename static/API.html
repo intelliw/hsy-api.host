@@ -1,31 +1,5 @@
 
-<% 
-    
-    // constants - soime of these are inserted into the client side script block at the bottom of this page
-    const API_BASE_URL = consts.API_SCHEME + '://' + consts.API_HOST;     // e.g.  'http://api.endpoints.sundaya.cloud.goog'
-
-    // parameters from the first self link, these are common across all collections
-    let links = collections[0].collection.links; 
-    let link_self = utils.findByPropertyValue(links, 'rel', 'self')[0] ;
-    let self_descriptions = link_self.description.split(" ");       // e.g. 'hse week 20190204 1' 
-    let params_energy = self_descriptions[0]; 
-    let params_period = self_descriptions[1];
-    
-    let params_epoch_year = self_descriptions[2].substring(0, 4); 
-    let params_epoch_month = self_descriptions[2].substring(4, 6); 
-    let params_epoch_day = self_descriptions[2].substring(6, 8); 
-    
-    let params_duration = collections.length;
-
-    let params_site = self_descriptions[4];
-
-    // check which energy params are active 
-    let isHarvest = utils.valueExistsInArray(['harvest', 'hse'], params_energy);
-    let isStore = utils.valueExistsInArray(['store', 'hse'], params_energy);
-    let isEnjoy = utils.valueExistsInArray(['enjoy', 'hse'], params_energy);
-    let isGrid = utils.valueExistsInArray(['grid', 'hse'], params_energy);
-
-%> 
+ 
 
 <!doctype html>
 <html lang="en">
@@ -60,7 +34,7 @@
                 <!-- Energy -->
                 <li class="nav-item dropdown select-parent">
                     <a class="nav-link dropdown-toggle pl-1" href="#" role="button" data-toggle="dropdown">
-                        Energy <span id="navEnergy" class="badge badge-light select-value"><%=params_energy%></span>
+                        Energy <span id="navEnergy" class="badge badge-light select-value">hse</span>
                     </a>
 
                     <div class="dropdown-menu select-text p-0">
@@ -75,7 +49,7 @@
                 <!-- Period -->
                 <li class="nav-item dropdown select-parent">
                     <a class="nav-link dropdown-toggle pl-1" href="#" role="button" data-toggle="dropdown">
-                        Period <span id="navPeriod" class="badge badge-light select-value"><%=params_period%></span>
+                        Period <span id="navPeriod" class="badge badge-light select-value">week</span>
                     </a>
 
                     <div class="dropdown-menu select-justtext p-0">
@@ -103,7 +77,7 @@
                         <div class="btn-group btn-group-sm select-parent" role="group">
                             <button type="button" class="btn btn-outline-light dropdown-toggle px-1"
                                 data-toggle="dropdown">
-                                <span id="navEpochYear" class="badge badge-primary select-value"><%=params_epoch_year%></span>
+                                <span id="navEpochYear" class="badge badge-primary select-value">2019</span>
                             </button>
 
                             <div class="dropdown-menu py-0 select-justtext">
@@ -120,7 +94,7 @@
                         <div class="btn-group btn-group-sm select-parent" role="group">
                             <button type="button" class="btn btn-outline-light dropdown-toggle px-1 pl-0"
                                 data-toggle="dropdown">
-                                <span id="navEpochMonth" class="badge badge-primary select-value"><%=params_epoch_month%></span>
+                                <span id="navEpochMonth" class="badge badge-primary select-value">05</span>
                             </button>
 
                             <div class="dropdown-menu py-0 select-justtext">
@@ -155,7 +129,7 @@
                         <div class="btn-group btn-group-sm select-parent" role="group">
                             <button type="button" class="btn btn-outline-light dropdown-toggle px-1 pl-0"
                                 data-toggle="dropdown">
-                                <span id="navEpochDay" class="badge badge-primary select-value"><%=params_epoch_day%></span>
+                                <span id="navEpochDay" class="badge badge-primary select-value">06</span>
                             </button>
 
                             <div class="dropdown-menu py-0 select-justtext">
@@ -251,7 +225,7 @@
                             data-placement="left" title="how many periods">
                             <button type="button" class="btn btn-outline-light dropdown-toggle px-1 pl-0"
                                 data-toggle="dropdown">
-                                <span id="navDuration" class="badge badge-primary select-value"><%=params_duration%></span>
+                                <span id="navDuration" class="badge badge-primary select-value">1</span>
                             </button>
 
                             <div class="dropdown-menu py-0 select-justtext">
@@ -283,7 +257,7 @@
                         <div class="btn-group btn-group-sm px-0" role="group">
                             <button href="#" type="button"
                                 class="btn px-0 disabled" data-toggle="tooltip" data-placement="right" title="site">
-                                <span id="navSite" class="badge badge-light py-1"><%=params_site%></span>
+                                <span id="navSite" class="badge badge-light py-1">999</span>
                             </button>
                         </div>
     
@@ -296,31 +270,10 @@
 
     </nav>
 
-    <!-- NON-EXCLUSIVE ACCORDION  ------------------------------------------------------------------------------------------------------------->
+    <!-- ACCORDION (without exclusive open)  ------------------------------------------------------------------------------------------------------------->
     <div class="accordion">
 
-        <% for(var n_cols=0; n_cols < collections.length; n_cols++) { 
-            const FIND_ALL = true;
-
-            links = collections[n_cols].collection.links; 
-            items = collections[n_cols].collection.items; 
-
-            link_self = utils.findByPropertyValue(links, 'rel', 'self')[0];
-            link_next = utils.findByPropertyValue(links, 'rel', 'next')[0];
-            link_prev = utils.findByPropertyValue(links, 'rel', 'prev')[0];
-            link_up = utils.findByPropertyValue(links, 'rel', 'up')[0];
-
-            link_collections = utils.findByPropertyValue(links, 'rel', 'collection', FIND_ALL);
-            link_child = link_collections[0];               // first is child second is grandchild
-            link_grandchild = link_collections[1];
-
-            child_descriptions = link_child.description.split(' ');
-            grandchild_descriptions = link_grandchild.description.split(' ');
-
-            panels = ['child', 'grandchild'];
-            bShowAllPanels = true;
-
-        %>
+        
 
         <!-- PERIOD n CARD -->
         <div class="card border border-top border-primary border-right-0 border-left-0 rounded-0">
@@ -334,111 +287,110 @@
                     <!-- self -->
                     <span class="btn py-0 pl-1 pr-1" data-toggle="collapse">
                         <h3 class="display-5 text-secondary"><small data-toggle="tooltip"
-                            title="<%= utils.capitalise(link_self.name) %>"><%= link_self.prompt %></small></h3>
+                            title="Week">Week 19 2019</small></h3>
                     </span>
 
                     <!-- prev -->
                     <button type="button" class="btn btn-sm btn-secondary py-0 capitalize" data-toggle="tooltip"
-                        title="Prev <%= utils.capitalise(link_prev.name) %>"
-                        onclick="window.location.href = '<%= link_prev.href %>'">
+                        title="Prev Week"
+                        onclick="window.location.href = 'http://localhost:8080/energy/hse/period/week/20190429/1?site=999'">
                         <i class="material-icons" style="font-size:12px;color:white;">navigate_before</i>
                     </button>
 
                     <!-- next -->
-                    <button type="button" class="btn btn-sm btn-secondary py-0" data-toggle="tooltip" title="Next <%= utils.capitalise(link_next.name) %>"
-                        onclick="window.location.href = '<%= link_next.href %>'">
+                    <button type="button" class="btn btn-sm btn-secondary py-0" data-toggle="tooltip" title="Next Week"
+                        onclick="window.location.href = 'http://localhost:8080/energy/hse/period/week/20190513/1?site=999'">
                         <i class="material-icons" style="font-size:12px;color:white;">navigate_next</i>
                     </button>
 
                     <!-- up -->
-                    <% if (link_up) { %>
+                    
 
                     <button type="button" class="btn btn-sm btn-secondary py-0" data-toggle="tooltip"
-                        title="<%= utils.capitalise(link_up.name) %> (<%= link_up.prompt %>)"
-                        onclick="window.location.href = '<%= link_up.href %>'">
+                        title="Month (May 2019)"
+                        onclick="window.location.href = 'http://localhost:8080/energy/hse/period/month/20190501/1?site=999'">
                         <i class="material-icons" style="font-size:12px;color:white;">call_made</i>
                     </button>
 
-                    <% } %>
+                    
 
                 </h2>
                 
                 <!-- PERIOD n NAV row CHILD / GRANDCHILD toggle -->
-                <div class="d-flex flex-nowrap pt-1 mb-0 pr-3">
+                <h2 class="mb-0 pr-3 d-flex flex-nowrap pt-1">
                     
-                    <div class="select-toggle-collection px-1">
-                        <h3 class="display-5 text-secondary text-capitalize name-toggle-child collapse show"><small><%= utils.capitalise(link_child.name.split('.')[1]) %></small></small></h3>
-                        <h3 class="display-5 text-secondary text-capitalize name-toggle-grandchild collapse hide"><small><%= utils.capitalise(link_grandchild.name.split('.')[1]) %></small></small></h3>
+                    <div class="px-1">
+                        <h3 class="display-5 text-secondary text-capitalize name-toggle-child collapse show"><small>Day</small></small></h3>
+                        <h3 class="display-5 text-secondary text-capitalize name-toggle-grandchild collapse hide"><small>Timeofday</small></small></h3>
                     </div>
 
                     <span class="btn select-toggle-grandchild pl-1 pr-1" data-toggle="button">
                         <button type="button" class="btn btn-xs btn-secondary btn-toggle" data-toggle="tooltip"
-                            title="<%= utils.capitalise(link_grandchild.name.replace('.', ' | '), true) %>">
+                            title="Day | Timeofday">
                             <div class="handle"></div>
                         </button>
                     </span>
 
-                </div>
+                </h2>
 
             </div>
 
             <!-- PERIOD n BODY row -->
-            <div class="p-0 mt-2 select-collection-panel collapse <%= n_cols == 0 || bShowAllPanels ? 'show' : 'hide' %>">
-                
-                <% for(var n_panels=0; n_panels < panels.length; n_panels++) { panel=panels[n_panels]; %>
+            <div class="p-0 mt-2 select-collection-panel collapse show">
 
-                <!-- PERIOD n BODY panel -->
-                <div class="card-body <%= panel === 'child' ? 'panel-child collapse show' : 'panel-grandchild collapse' %> pt-0 pb-2">
+                <!-- PERIOD n BODY CHILD panel -->
+                <div class="card-body panel-child pt-0 pb-2 collapse show">
 
+                    <!-- PERIOD n BODY CHILD panel DATA row -->
                     <div class="d-flex flex-nowrap">
 
                         <div class="d-flex flex-nowrap">
                             <div class="flex-grow-1">
 
-                                <!-- PERIOD n BODY panel TITLE -->
-                                <h3 class="display-5 text-secondary"><small><%= panel === 'child' ? link_child.prompt : link_grandchild.prompt %></small>
+                                <!-- PERIOD n BODY CHILD panel HEADER row -->
+                                <h3 class="display-5 text-secondary"><small>Mon May 6th - Sun May 12th</small>
                                 </h3>
 
-                                <!-- PERIOD n BODY panel CHARTs  -->
+                                <!-- PERIOD n BODY CHILD panel CHART column -->
                                 <div class="d-flex flex-nowrap">
                                     
                                     <div class="row m-0">
                                         <div class="row m-0">
 
-                                            <div id="<%= panel === 'child' ? 'childColumnChartDiv_' : 'grandchildColumnChartDiv_' %><%= n_cols + 1 %>" class="col-md px-1 mb-2 mr-2 border border-default">
+                                            <div id="childChartDiv_1" class="col-md px-1 mb-2 mr-2 border border-default">
                                                 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
                                                 incididunt
                                                 ut labore
                                                 et dolore magna aliqua.
                                             </div>
                                             
-                                            <div id="<%= panel === 'child' ? 'childTableDiv_' : 'grandchildTableDiv_' %><%= n_cols %>" class="col-md px-1 mb-2 mr-2 border border-default">
+                                            <div id="childTableDiv_1" class="col-md px-1 mb-2 mr-2 border border-default">
                                                 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
                                                 et dolore magna aliqua.
                                             </div>
 
                                         </div>
 
-                                        <!-- PERIOD n BODY panel HSE BUTTONS -->
+                                        <!-- PERIOD n BODY CHILD panel HSE BUTTONS row -->
                                         <div class="d-flex pt-0 pb-0">
                                             <div class="flex-grow-1 mr-2">
-                                                <div class="btn btn-success badge pr-0 mb-1 mr-1<% if (!isHarvest) { %> disabled<% } %>">Harvest
-                                                    <button type="button" class="btn btn-sm btn-success btn-toggle active<% if (!isHarvest) { %> invisible<% } %>"
+                                                <div class="btn btn-success badge pr-0 mb-1 mr-1">Harvest
+                                                    <button type="button" class="btn btn-sm btn-success btn-toggle active"
                                                         data-toggle="button">
                                                         <div class="handle"></div>
                                                     </button></div>
-                                                <div class="btn btn-primary badge pr-0 mb-1 mr-1<% if (!isStore) { %> disabled<% } %>">Store
-                                                    <button type="button" class="btn btn-sm btn-primary btn-toggle active<% if (!isStore) { %> invisible<% } %>"
+                                                <div class="btn btn-primary badge pr-0 mb-1 mr-1">Store
+                                                    <button type="button" class="btn btn-sm btn-primary btn-toggle active"
                                                         data-toggle="button">
                                                         <div class="handle"></div>
                                                     </button></div>
-                                                <div class="btn btn-danger badge pr-0 mb-1 mr-1<% if (!isEnjoy) { %> disabled<% } %>">Enjoy
-                                                    <button type="button" class="btn btn-sm btn-danger btn-toggle active<% if (!isEnjoy) { %> invisible<% } %>"
+                                                <div class="btn btn-danger badge pr-0 mb-1 mr-1">Enjoy
+                                                    <button type="button" class="btn btn-sm btn-danger btn-toggle active"
                                                         data-toggle="button">
                                                         <div class="handle"></div>
                                                     </button></div>
-                                                <div class="btn btn-dark badge pr-0 mb-1 mr-1<% if (!isGrid) { %> disabled<% } %>">Grid
-                                                    <button type="button" class="btn btn-sm btn-dark btn-toggle active<% if (!isGrid) { %> invisible<% } %>"
+                                                <div class="btn btn-dark badge pr-0 mb-1 mr-1">Grid
+                                                    <button type="button" class="btn btn-sm btn-dark btn-toggle active"
                                                         data-toggle="button">
                                                         <div class="handle"></div>
                                                     </button></div>
@@ -453,17 +405,12 @@
                             </div>        
                         </div>
 
-                        <!-- PERIOD n BODY panel FILTER BUTTONS -->                    
-                        <div class="pr-1 my-2">
+                        <!-- PERIOD n BODY CHILD panel FILTER BUTTONS column -->                    
+                        <div class="pr-1 mt-2 pt-1">
                             
                             <div class="flex-wrap pl-1 pr-0">
 
                                 <div class="d-flex justify-content-end px-0">
-
-                                    <button type="button" class="btn btn-outline-light select-filter-reset btn-sm py-0 px-0">
-                                        <i id="btnDone" class="material-icons" data-toggle="tooltip" title="reset filters"
-                                            style="font-size:24px;color:darkgrey;">toggle_on</i>
-                                    </button>
 
                                     <button type="button" class="btn btn-outline-light select-filter-visibility btn-sm py-0 px-0">
                                         <i id="btnDone" class="material-icons" data-toggle="tooltip" title="filters"
@@ -474,11 +421,11 @@
 
                                 <div class="select-filter-btn-panel collapse show" style="width: 8.5rem"> 
 
-                                    <div data-toggle="tooltip" title="filter by <%= utils.capitalise((panel==='child' ? link_grandchild : link_child).name.split('.')[1]) %> (<%= (panel==='child' ? link_grandchild : link_child).title %>)"> 
-                                    <% for(var n_btns=0; n_btns < (panel==='child' ? grandchild_descriptions : child_descriptions).length; n_btns++) { %>
+                                    <div data-toggle="tooltip" title="filter by Timeofday (06/05/19 00:00 - 12/05/19 23:59)"> 
+                                    
 
                                         <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">
-                                            <%= (panel==='child' ? grandchild_descriptions[n_btns] : child_descriptions[n_btns]) %>
+                                            Morning
                                             <button type="button"
                                                 class="btn btn-sm btn-secondary btn-toggle select-filter-btn active"
                                                 data-toggle="button">
@@ -486,7 +433,47 @@
                                             </button>
                                         </div>
                                     
-                                    <% } %>
+                                    
+
+                                        <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">
+                                            Afternoon
+                                            <button type="button"
+                                                class="btn btn-sm btn-secondary btn-toggle select-filter-btn active"
+                                                data-toggle="button">
+                                                <div class="handle"></div>
+                                            </button>
+                                        </div>
+                                    
+                                    
+
+                                        <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">
+                                            Evening
+                                            <button type="button"
+                                                class="btn btn-sm btn-secondary btn-toggle select-filter-btn active"
+                                                data-toggle="button">
+                                                <div class="handle"></div>
+                                            </button>
+                                        </div>
+                                    
+                                    
+
+                                        <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">
+                                            Night
+                                            <button type="button"
+                                                class="btn btn-sm btn-secondary btn-toggle select-filter-btn active"
+                                                data-toggle="button">
+                                                <div class="handle"></div>
+                                            </button>
+                                        </div>
+                                    
+                                    
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-end px-0 pt-1">
+                                        <button type="button" class="btn btn-outline-light select-filter-reset btn-sm py-0 px-0">
+                                            <i id="btnDone" class="material-icons" data-toggle="tooltip" title="reset filters"
+                                                style="font-size:24px;color:darkgrey;">toggle_on</i>
+                                        </button>
                                     </div>
 
                                 </div>
@@ -499,13 +486,191 @@
 
                 </div>
 
-                <% } %>
+                <!-- PERIOD n BODY GRANDCHILD panel -->
+                <div class="card-body panel-grandchild pt-0 pb-2 collapse">
+
+                    
+                    <!-- PERIOD n BODY GRANDCHILD panel DATA row -->
+                    <div class="d-flex flex-nowrap">
+
+                        <div class="d-flex flex-nowrap">
+                            <div class="flex-grow-1">
+
+                                <!-- PERIOD n BODY GRANDCHILD panel HEADER row -->
+                                <h3 class="display-5 text-secondary"><small>May 6 Night - May 12 Evening</small>
+                                </h3>
+
+                                <!-- PERIOD n BODY GRANDCHILD panel CHART column -->
+                                <div class="d-flex flex-nowrap">
+                                    
+                                    <div class="row m-0">
+                                        <div class="row m-0">
+
+                                            <div class="col-md px-1 mb-2 mr-2 border border-default">
+                                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                                                commodo consequat.
+                                            </div>
+
+                                            <div class="col-md px-1 mb-2 mr-2 border border-default">
+                                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                                                commodo consequat. et dolore magna aliqua.
+                                            </div>
+
+                                        </div>
+
+                                        <!-- PERIOD n BODY GRANDCHILD panel HSE BUTTONS row -->
+                                        <div class="d-flex pt-0 pb-0">
+                                            <div class="flex-grow-1 mr-2">
+                                                <div class="btn btn-success badge pr-0 mb-1 mr-1">Harvest
+                                                    <button type="button" class="btn btn-sm btn-success btn-toggle active"
+                                                        data-toggle="button">
+                                                        <div class="handle"></div>
+                                                    </button></div>
+                                                <div class="btn btn-primary badge pr-0 mb-1 mr-1">Store
+                                                    <button type="button" class="btn btn-sm btn-primary btn-toggle active"
+                                                        data-toggle="button">
+                                                        <div class="handle"></div>
+                                                    </button></div>
+                                                <div class="btn btn-danger badge pr-0 mb-1 mr-1">Enjoy
+                                                    <button type="button" class="btn btn-sm btn-danger btn-toggle active"
+                                                        data-toggle="button">
+                                                        <div class="handle"></div>
+                                                    </button></div>
+                                                <div class="btn btn-dark badge pr-0 mb-1 mr-1">Grid
+                                                    <button type="button" class="btn btn-sm btn-dark btn-toggle active"
+                                                        data-toggle="button">
+                                                        <div class="handle"></div>
+                                                    </button></div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- PERIOD n BODY GRANDCHILD panel FILTER BUTTONS column --> 
+                        <div class="pr-1 mt-2 pt-1">
+                            
+                            <div class="flex-wrap pl-1 pr-0">
+
+                                <div class="d-flex justify-content-end px-0">
+
+                                    <button type="button" class="btn btn-outline-light select-filter-visibility btn-sm py-0 px-0">
+                                        <i id="btnDone" class="material-icons" data-toggle="tooltip" title="filters"
+                                            style="font-size:24px;color:darkgrey;">link_off</i>
+                                    </button>
+
+                                </div>
+
+                                <div class="select-filter-btn-panel collapse show" style="width: 8.5rem">
+
+                                    <div data-toggle="tooltip" title="filter by Day (06/05/19 - 12/05/19)"> 
+                                    
+
+                                        <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">
+                                            Mon
+                                            <button type="button"
+                                                class="btn btn-sm btn-secondary btn-toggle select-filter-btn active"
+                                                data-toggle="button">
+                                                <div class="handle"></div>
+                                            </button>
+                                        </div>
+
+                                    
+
+                                        <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">
+                                            Tue
+                                            <button type="button"
+                                                class="btn btn-sm btn-secondary btn-toggle select-filter-btn active"
+                                                data-toggle="button">
+                                                <div class="handle"></div>
+                                            </button>
+                                        </div>
+
+                                    
+
+                                        <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">
+                                            Wed
+                                            <button type="button"
+                                                class="btn btn-sm btn-secondary btn-toggle select-filter-btn active"
+                                                data-toggle="button">
+                                                <div class="handle"></div>
+                                            </button>
+                                        </div>
+
+                                    
+
+                                        <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">
+                                            Thu
+                                            <button type="button"
+                                                class="btn btn-sm btn-secondary btn-toggle select-filter-btn active"
+                                                data-toggle="button">
+                                                <div class="handle"></div>
+                                            </button>
+                                        </div>
+
+                                    
+
+                                        <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">
+                                            Fri
+                                            <button type="button"
+                                                class="btn btn-sm btn-secondary btn-toggle select-filter-btn active"
+                                                data-toggle="button">
+                                                <div class="handle"></div>
+                                            </button>
+                                        </div>
+
+                                    
+
+                                        <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">
+                                            Sat
+                                            <button type="button"
+                                                class="btn btn-sm btn-secondary btn-toggle select-filter-btn active"
+                                                data-toggle="button">
+                                                <div class="handle"></div>
+                                            </button>
+                                        </div>
+
+                                    
+
+                                        <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">
+                                            Sun
+                                            <button type="button"
+                                                class="btn btn-sm btn-secondary btn-toggle select-filter-btn active"
+                                                data-toggle="button">
+                                                <div class="handle"></div>
+                                            </button>
+                                        </div>
+
+                                    
+                                    </div>
+
+                                    <div class="d-flex justify-content-end px-0 pt-1">
+                                        <button type="button" class="btn btn-outline-light select-filter-reset btn-sm py-0 px-0">
+                                            <i id="btnDone" class="material-icons" data-toggle="tooltip" title="reset filters"
+                                                style="font-size:24px;color:darkgrey;">toggle_on</i>
+                                        </button>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
 
             </div>
 
         </div>
         
-        <% } %>
+        
         
     </div>
     
@@ -528,12 +693,12 @@
     <script type="text/javascript">
         
         // constants for client side - some of these are used by energy.js as well
-        const API_BASE_URL = '<%= API_BASE_URL %>';     // e.g.  'http://api.endpoints.sundaya.cloud.goog'
+        const API_BASE_URL = 'http://localhost:8080';     // e.g.  'http://api.endpoints.sundaya.cloud.goog'
 
-        const isHarvest = <%= isHarvest %>;
-        const isStore = <%= isStore %>;
-        const isEnjoy = <%= isEnjoy %>;
-        const isGrid = <%= isGrid %>;
+        const isHarvest = true;
+        const isStore = true;
+        const isEnjoy = true;
+        const isGrid = true;
         
         $(window).on("load", function () {
         // $('#stbutton').click();
