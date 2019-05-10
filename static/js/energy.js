@@ -4,7 +4,7 @@ $(document).ready(function () {
     // activate bs tooltips
     $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
 
-    // navbar dropdown ITEM click
+    // navbar unbadged dropdown ITEM click
     $(".select-justtext a").click(function () {
 
         // put the selected item into the 'select-value' control (without child element's text);
@@ -32,12 +32,14 @@ $(document).ready(function () {
     });
 
 
-    // navbar energy dropdown item click
+    // navbar badged dropdown item click
     $(".select-text a").click(function () {
 
         // put the selected navbar child element into the 'select-value' control;
-        var selText = $(this).text();
-        $(this).parents('.select-parent').find('.select-value').html(selText);
+        var isBlank = $(this).hasClass('select-blank');   
+        var selText = (isBlank ? '': $(this).text());
+
+        $(this).parents('.select-parent').find('.select-value').html(selText);  // if the droipdown item is flagged as blank then make the display balnk
 
     });
 
@@ -130,7 +132,7 @@ $(document).ready(function () {
         window.location.href = apiUrl;
     });
 
-    // hide and hsow ther title period badge 
+    // hide and hsow the title period badge 
     $('#navbarAPI').on('show.bs.collapse', function () {
         $('#titlePeriod').hide();
     });
@@ -138,14 +140,15 @@ $(document).ready(function () {
         $('#titlePeriod').show();
     });
 
+
     // TEMP / TEST -----------------------------------------------------
     $(".dropdown-item").click(function () {
         // alert($(this).text());
 
-        ("#childChartWrapper_1").setView({
-            columns: [0, 3, 4, 6]
-        });
-        ("#childChartWrapper_1").draw(document.getElementById('childChartDiv_1'));
+        //("#childChartWrapper_1").setView({
+        //    columns: [0, 3, 4, 6]
+        //});
+        //("#childChartWrapper_1").draw(document.getElementById('childChartDiv_1'));
     });
 
 });
