@@ -74,7 +74,7 @@
                     { column: 7, label: 'Grid out', aggregation: google.visualization.data.sum, type: 'number' }
                 ]);
 
-            var columnView = new google.visualization.DataView(newData);
+            var columnView = new google.visualization.DataView(data);
             columnView.setColumns([0, 1, 2, 3, 4, 5, 6]);
 
             // Set chart options
@@ -100,7 +100,7 @@
                     title: 'Day',
                     textPosition: 'out',
                     textStyle: { fontSize: 14 },
-                    ttitleTextStyle: { italic: 'false' }
+                    titleTextStyle: { italic: 'false' }
                 },
                 axisTitlesPosition: 'in',
                 backgroundColor: { fill: 'none', stroke: 'none', strokeWidth: 4 },
