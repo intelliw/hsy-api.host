@@ -216,6 +216,8 @@
 }
 
 
+
+
 .btn-toggle.btn-sm.btn-avg-sum:before {
   content: "Avg";
   left: -0.5rem;
@@ -229,17 +231,44 @@
   line-height: -0.5rem;
   color: #212529;
   letter-spacing: 0.75px;
-  left: 0.4125rem;
-  width: 2.325rem;
+  left: 0.58rem;
+  width: 1.657rem;
 }
+.btn-toggle.btn-sm.btn-avg-sum {
+  margin: 0 0.2rem;
+  padding: 0;
+  position: relative;
+  border: none;
+  height: 1.0rem;
+  width: 2.6rem;
+  border-radius: 1.0rem;
+}
+.btn-toggle.btn-sm.btn-avg-sum.active > .handle {
+  left: 1.8rem;
+  transition: left 0.25s;
+}
+.btn-toggle.btn-sm.btn-avg-sum > .handle {
+  position: absolute;
+  top: 0.16rem;
+  left: 0.20rem;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 0.8rem;
+  background: #fff;
+  transition: left 0.25s;
+}
+
+
+
+
 
 
 .btn-toggle.btn-sm > .handle {
   position: absolute;
-  top: 0.16rem;
-  left: 0.15rem;
-  width: 0.7rem;
-  height: 0.7rem;
+  top: 0.19rem;
+  left: 0.18rem;
+  width: 0.65rem;
+  height: 0.65rem;
   border-radius: 0.8rem;
   background: #fff;
   transition: left 0.25s;
@@ -248,7 +277,7 @@
   transition: background-color 0.25s;
 }
 .btn-toggle.btn-sm.active > .handle {
-  left: 2.3rem;
+  left: 2.4rem;
   transition: left 0.25s;
 }
 .btn-toggle.btn-sm.active:before {

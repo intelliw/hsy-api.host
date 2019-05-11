@@ -206,13 +206,13 @@
             tableData.setColumns([RAWDATA_CHILD_FORMATTED, RAWDATA_GRANDCHILD_FORMATTED].concat(RAWDATA_HSE_COLUMNS));
             drawTableChart(tableData, 'childTableDiv_1', RAWDATA_CHILD_FORMATTED);
 
-            var tableDataSS = new google.visualization.DataView(groupedChildData);
+            vartableData = new google.visualization.DataView(groupedChildData);
             //tableData.setColumns([AGGDATA_CHILD_ID].concat(AGGDATA_HSE_COLUMNS));
 
             var tableDataFormatSource = new google.visualization.DataView(dt);
             // tableDataFormatSource.setColumns([RAWDATA_CHILD_ID, RAWDATA_CHILD_FORMATTED]);
 
-            var tableDataJoin = google.visualization.data.join(tableDataSS, dt, 'full', [[0,1]], [1, 2, 3], [2, 3]);
+            var tableDataJoin = google.visualization.data.join(tableData, dt, 'full', [[0,1]], [1, 2, 3], [2, 3]);
 
             drawTableChart(tableDataJoin, 'grandchildTableDiv_1', RAWDATA_CHILD_FORMATTED);
 
