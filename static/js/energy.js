@@ -4,7 +4,7 @@ $(document).ready(function () {
     // activate bs tooltips
     $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
 
-    // navbar unbadged dropdown ITEM click
+    // navbar API unbadged (justtext) dropdown item click
     $(".select-justtext a").click(function () {
 
         // put the selected item into the 'select-value' control (without child element's text);
@@ -13,7 +13,17 @@ $(document).ready(function () {
 
     });
 
-    // navbar dropdown SELECT click
+    // navbar API badged (text) dropdown item click
+    $(".select-text a").click(function () {
+
+        // put the selected navbar child element into the 'select-value' control;
+        var selText = $(this).text();
+
+        $(this).parents('.select-parent').find('.select-value').html(selText);  
+
+    });
+    
+    // navbar API parent click, flags the ACTIVE dropdown item 
     $(".select-parent").click(function () {
 
         // select the active item    
@@ -28,18 +38,6 @@ $(document).ready(function () {
             isActive ? item.addClass("active") : item.removeClass("active");
 
         });
-
-    });
-
-
-    // navbar badged dropdown item click
-    $(".select-text a").click(function () {
-
-        // put the selected navbar child element into the 'select-value' control;
-        var isBlank = $(this).hasClass('select-blank');   
-        var selText = (isBlank ? '': $(this).text());
-
-        $(this).parents('.select-parent').find('.select-value').html(selText);  // if the droipdown item is flagged as blank then make the display balnk
 
     });
 
@@ -107,7 +105,7 @@ $(document).ready(function () {
 
     });
 
-    // 'done' button click - calls the API... Strip colon and space from the hour with regex
+    // navbar API 'done' button click - calls the API... Strip colon and space from the hour with regex
     $("#btnDone").click(function () {
         let apiUrl = API_BASE_URL
             + "/energy/" + $("#navEnergy").html()
@@ -121,7 +119,7 @@ $(document).ready(function () {
         window.location.href = apiUrl;
     });
 
-    // 'today' button click 
+    // navbar API 'today' item click 
     $("#btnToday").click(function () {
 
         let apiUrl = API_BASE_URL
@@ -132,7 +130,7 @@ $(document).ready(function () {
         window.location.href = apiUrl;
     });
 
-    // hide and hsow the title period badge 
+    // hide / show the title period badge 
     $('#navbarAPI').on('show.bs.collapse', function () {
         $('#titlePeriod').hide();
     });
@@ -142,13 +140,34 @@ $(document).ready(function () {
 
 
     // TEMP / TEST -----------------------------------------------------
-    $(".dropdown-item").click(function () {
+    $(".testButton").click(function () {
         // alert($(this).text());
-
+        
+        //chart_1.setSelection([{"row":2,"column":1}]);
+        // chart_1.setSelection([{"column":1}]);
         //("#childChartWrapper_1").setView({
         //    columns: [0, 3, 4, 6]
         //});
         //("#childChartWrapper_1").draw(document.getElementById('childChartDiv_1'));
+        
+        // /*
+        let btnId = $(this).text().trim();
+        if (btnId == 'Store') {
+            chart_1.setSelection();
+
+        } else if (btnId == 'Enjoy') {
+            selected = chart_1.getSelection();
+            //{"row":0,"column":5}
+            chart_1.setSelection([
+                {"row":0,"column":5},
+                {"row":1,"column":5},
+                {"row":2,"column":5},
+                {"row":3,"column":5},
+                {"row":4,"column":5},
+                {"row":5,"column":5},
+            ]);
+        }
+        // */
     });
 
 });

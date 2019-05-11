@@ -215,6 +215,25 @@
   opacity: 0.5;
 }
 
+
+.btn-toggle.btn-sm.btn-avg-sum:before {
+  content: "Avg";
+  left: -0.5rem;
+}
+.btn-toggle.btn-sm.btn-avg-sum:after {
+  content: "Sum";
+  right: -0.5rem;
+  opacity: 0.5;
+}
+.btn-toggle.btn-sm.btn-sm.btn-avg-sum:before {
+  line-height: -0.5rem;
+  color: #000;
+  letter-spacing: 0.75px;
+  left: 0.4125rem;
+  width: 2.325rem;
+}
+
+
 .btn-toggle.btn-sm > .handle {
   position: absolute;
   top: 0.16rem;

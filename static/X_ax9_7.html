@@ -35,10 +35,17 @@
         let chart_1;
 
         // draws a column chart in the div
-        function drawColumnChart(dataView, div) {
+        function drawChildColumnChart(dataView, div) {
 
+            let chartOptions = getColumnChartOptions('Day')
+            chart_1 = new google.visualization.ColumnChart(document.getElementById(div));
+            chart_1.draw(dataView, chartOptions);
+
+        }
+
+        function getColumnChartOptions(period) {
             // Set chart options
-            var chartOptions = {
+            let chartOptions = {
                 width: 700,
                 height: 400,
                 bar: { groupWidth: '75.0%' },
@@ -56,7 +63,7 @@
                     format: '##.##'
                 },
                 hAxis: {
-                    title: 'Day',
+                    title: period,
                     textPosition: 'none',
                     textStyle: { fontSize: 14 },
                     titleTextStyle: { italic: 'true' }
@@ -66,15 +73,13 @@
                 chartArea: { left: 45, top: 30, right: 0, bottom: 15, width: '95%', height: '95%' },
                 colors: ['#28a745', '#FF0000', '#007bff', '#007bff', '#000000', '#000000']
             };
-
-            chart_1 = new google.visualization.ColumnChart(document.getElementById(div));
-            chart_1.draw(dataView, chartOptions);
-
+            return chartOptions;
         }
 
-        // draws a table chart in the div    
-        function drawTableChart (dataView, div, initialSort) {
-            var tableOptions = {
+        function getTableOptions(initialSort) {
+
+            // Set chart options
+            let tableOptions = {
                 width: 600,
                 height: '100%',     // 100% if paged 
                 alternatingRowStyle: false,
@@ -92,12 +97,18 @@
                     rowNumberCell: ''
                 }
             }
+            return tableOptions;
+        }
 
+        // draws a table chart in the div    
+        function drawTableChart(dataView, div, initialSort) {
+
+            let tableOptions = getTableOptions(initialSort);
             var table = new google.visualization.Table(document.getElementById(div));
             table.draw(dataView, tableOptions);
 
         }
-        
+
         // returns a DataTable with raw data from the API collection+JSON
         function getRawData(childLabel, grandchildLabel) {
             let dt;
@@ -160,12 +171,12 @@
                         'Harvest', Enjoy', 'Store in' 'Store out', 'Grid in', 'Grid out'
         */
         function getAggregateData(rawData) {
-            
-            let aggregateData = google.visualization.data.group (
-                rawData, 
+
+            let aggregateData = google.visualization.data.group(
+                rawData,
                 [   // group by these columns and include them in the output
-                    { column: RAWDATA_CHILD_ID}, 
-                    { column: RAWDATA_CHILD_LABEL}
+                    { column: RAWDATA_CHILD_ID },
+                    { column: RAWDATA_CHILD_LABEL }
                 ],
                 [   // in addition output these columns 
                     { column: RAWDATA_HSE_COLUMNS[0], label: 'Harvest', aggregation: google.visualization.data.sum, type: 'number' },
@@ -177,7 +188,7 @@
 
                 ]);
 
-               return aggregateData;
+            return aggregateData;
         }
 
         // this is the callback
@@ -189,15 +200,21 @@
 
             var columnData = new google.visualization.DataView(groupedChildData);
             columnData.setColumns([AGGDATA_CHILD_LABEL].concat(AGGDATA_HSE_COLUMNS));
-            drawColumnChart(columnData, 'childColumnChartDiv_1');
+            drawChildColumnChart(columnData, 'childColumnChartDiv_1');
 
             var tableData = new google.visualization.DataView(dt);
             tableData.setColumns([RAWDATA_CHILD_FORMATTED, RAWDATA_GRANDCHILD_FORMATTED].concat(RAWDATA_HSE_COLUMNS));
             drawTableChart(tableData, 'childTableDiv_1', RAWDATA_CHILD_FORMATTED);
 
-            tableData = new google.visualization.DataView(groupedChildData);
-            tableData.setColumns([AGGDATA_CHILD_LABEL].concat(AGGDATA_HSE_COLUMNS));
-            drawTableChart(tableData, 'grandchildTableDiv_1', RAWDATA_CHILD_FORMATTED);
+            var tableDataSS = new google.visualization.DataView(groupedChildData);
+            //tableData.setColumns([AGGDATA_CHILD_ID].concat(AGGDATA_HSE_COLUMNS));
+
+            var tableDataFormatSource = new google.visualization.DataView(dt);
+            // tableDataFormatSource.setColumns([RAWDATA_CHILD_ID, RAWDATA_CHILD_FORMATTED]);
+
+            var tableDataJoin = google.visualization.data.join(tableDataSS, dt, 'full', [[0,1]], [1, 2, 3], [2, 3]);
+
+            drawTableChart(tableDataJoin, 'grandchildTableDiv_1', RAWDATA_CHILD_FORMATTED);
 
         }
     </script>
