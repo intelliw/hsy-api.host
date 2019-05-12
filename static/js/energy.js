@@ -152,10 +152,12 @@ $(document).ready(function () {
         
         // /*
         let btnId = $(this).text().trim();
+
         if (btnId == 'Store') {
-            chart_1.setSelection();
+            childChart_1.setSelection();
 
         } else if (btnId == 'Enjoy') {
+            grandchildChart_1.setSelection();
             selected = chart_1.getSelection();
             //{"row":0,"column":5}
             chart_1.setSelection([

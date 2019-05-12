@@ -49,7 +49,7 @@
         <span class="d-flex align-item-start">
             <a class="navbar-brand pl-2" href="#navbarAPI, #navbarMain" data-toggle="collapse">Sundaya Energy API</a>
 
-            <ul id="titlePeriod" class="navbar-nav show">
+            <ul id="titlePeriod" class="navbar-nav show" data-toggle="tooltip" data-placement="right" title="Period">
                 <a class="nav-link pl-1" href="#navbarAPI, #navbarMain" data-toggle="collapse"><%= utils.capitalise(link_self.name) %>
                 </a>
             </ul>
@@ -378,7 +378,7 @@
                         <h3 class="display-5 text-secondary text-capitalize name-toggle-grandchild collapse hide"><small><%= utils.capitalise(link_grandchild.name.split('.')[1]) %></small></small></h3>
                     </div>
 
-                    <span class="btn select-toggle-grandchild pl-1 pr-1" data-toggle="button">
+                    <span class="btn select-toggle-grandchild pl-1 mr-1 pr-1" data-toggle="button">
                         <button type="button" class="btn btn-xs btn-secondary btn-toggle" data-toggle="tooltip"
                             title="<%= utils.capitalise(link_grandchild.name.replace('.', ' | '), true) %>">
                             <div class="handle"></div>
@@ -535,11 +535,15 @@
     <!-- FOOTER  ------------------------------------------------------------------------------------------------------------->
     <nav class="navbar navbar-expand-md navbar-dark bg-light border-top border-primary py-0 pr-3">
         
-        <!-- AVG/SUM --->
-        <div class="d-flex flex-grow-1 justify-content-end my-2 mr-1">
-            <button type="button" class="btn btn-sm btn-outline-default btn-avg-sum btn-primary btn-toggle" data-toggle="button">
-                <div class="handle"></div>
-            </button>
+        <div class="d-flex flex-grow-1 justify-content-end">
+            
+            <!-- AVG/SUM --->
+            <span class="mb-1 mr-1" data-toggle="tooltip" data-placement="right" title="Total | Average">
+                <button type="button" class="btn btn-sm btn-outline-default btn-avg-sum btn-primary btn-toggle" data-toggle="button">
+                    <div class="handle"></div>
+                </button>
+            </span>
+
         </div>
 
     </nav>
