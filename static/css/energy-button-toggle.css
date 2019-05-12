@@ -219,21 +219,23 @@
 
 
 .btn-toggle.btn-sm.btn-avg-sum:before {
-  content: "Avg";
+  content: "Sum";
   left: -0.5rem;
 }
 .btn-toggle.btn-sm.btn-avg-sum:after {
-  content: "Sum";
+  content: "Avg";
   right: -0.5rem;
   opacity: 0.5;
 }
-.btn-toggle.btn-sm.btn-sm.btn-avg-sum:before {
+.btn-toggle.btn-sm.btn-sm.btn-avg-sum:before,
+.btn-toggle.btn-sm.btn-sm.btn-avg-sum:after {
   line-height: -0.5rem;
-  color: #212529;
+  color: #fff;
   letter-spacing: 0.75px;
-  left: 0.58rem;
-  width: 1.657rem;
+  left: 0.4125rem;
+  width: 1.9rem;
 }
+
 .btn-toggle.btn-sm.btn-avg-sum {
   margin: 0 0.2rem;
   padding: 0;
@@ -243,13 +245,9 @@
   width: 2.6rem;
   border-radius: 1.0rem;
 }
-.btn-toggle.btn-sm.btn-avg-sum.active > .handle {
-  left: 1.8rem;
-  transition: left 0.25s;
-}
 .btn-toggle.btn-sm.btn-avg-sum > .handle {
   position: absolute;
-  top: 0.16rem;
+  top: 0.18rem;
   left: 0.20rem;
   width: 0.65rem;
   height: 0.65rem;
@@ -257,8 +255,10 @@
   background: #fff;
   transition: left 0.25s;
 }
-
-
+.btn-toggle.btn-sm.btn-avg-sum.active > .handle {
+  left: 1.8rem;
+  transition: left 0.25s;
+}
 
 
 

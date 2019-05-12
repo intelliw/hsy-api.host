@@ -45,22 +45,17 @@
 <body>    
     <nav class="navbar navbar-expand-md navbar-dark bg-primary">
 
-        <!-- TITLE -->
-        <span class="d-flex align-items-start">
-            <a class="navbar-brand pl-1" href="#navbarAPI, #navbarMain" data-toggle="collapse">Sundaya Energy API</a>
+        <!-- TITLE / period-->
+        <span class="d-flex align-item-start">
+            <a class="navbar-brand pl-2" href="#navbarAPI, #navbarMain" data-toggle="collapse">Sundaya Energy API</a>
 
-            <ul id="titlePeriod" class="navbar-nav show mt-2 pt-1" data-toggle="tooltip" data-placement="right" title="Period total/average">
-
-                <div class="btn btn-primary btn-avg-sum badge pl-1 pr-0 mr-1"><%= utils.capitalise(link_self.name) %>
-                    <button type="button" class="btn btn-sm btn-outline-default btn-avg-sum btn-primary btn-toggle active" data-toggle="button">
-                    <div class="handle"></div>
-                    </button>
-                </div>
-
+            <ul id="titlePeriod" class="navbar-nav show">
+                <a class="nav-link pl-1" href="#navbarAPI, #navbarMain" data-toggle="collapse"><%= utils.capitalise(link_self.name) %>
+                </a>
             </ul>
         </span>
 
-        <!-- collapse HAMBURGER  -->
+        <!-- HAMBURGER  -->
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarAPI, #navbarMain">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -368,7 +363,7 @@
                     <button type="button" class="btn btn-sm btn-light border border-secondary rounded-right py-0" data-toggle="tooltip"
                         title="<%= utils.capitalise(link_up.name) %> (<%= link_up.prompt %>)"
                         onclick="window.location.href = '<%= link_up.href %>'">
-                        <i class="material-icons text-secondary font-weight-bolder" style="font-size:12px;">call_made</i>
+                        <i class="material-icons text-secondary font-weight-normal" style="font-size:12px;">call_made</i>
                     </button>
 
                     <% } %>
@@ -538,7 +533,15 @@
     </div>
     
     <!-- FOOTER  ------------------------------------------------------------------------------------------------------------->
-    <nav class="navbar navbar-expand-md navbar-dark bg-light border-top border-primary py-2">
+    <nav class="navbar navbar-expand-md navbar-dark bg-light border-top border-primary py-0 pr-3">
+        
+        <!-- AVG/SUM --->
+        <div class="d-flex flex-grow-1 justify-content-end my-2 mr-1">
+            <button type="button" class="btn btn-sm btn-outline-default btn-avg-sum btn-primary btn-toggle" data-toggle="button">
+                <div class="handle"></div>
+            </button>
+        </div>
+
     </nav>
 
     <!-- SCRIPT: jQuery first, then Popper.js, then Bootstrap JS, app scripts must be last -->
