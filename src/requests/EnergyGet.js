@@ -43,10 +43,10 @@ class EnergyGet extends Request {
 
         // super - validate params, auth, accept header
         super(req, params, EnergyGetResponse.produces, EnergyGetResponse.consumes);                 // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
-
+        
         // execute the response only if super isValid                   // if not isValid  super constuctor would have created a this.response = ErrorResponse 
         this.response = this.validation.isValid ? new Response.EnergyGetResponse(this.params, this.accept) : this.response;
-
+        
     }
 
 }

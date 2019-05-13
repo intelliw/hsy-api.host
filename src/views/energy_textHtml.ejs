@@ -86,6 +86,7 @@
                     </a>
 
                     <div class="dropdown-menu select-justtext p-0">
+                        <a class="dropdown-item px-2" href="#">hour</a>
                         <a class="dropdown-item px-2" href="#">timeofday</a>
                         <a class="dropdown-item px-2" href="#">day</a>
                         <a class="dropdown-item px-2" href="#">week</a>
@@ -94,7 +95,6 @@
                         <a class="dropdown-item px-2" href="#">year</a>
                         <a class="dropdown-item px-2" href="#">fiveyear</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item px-2 disabled" href="#">hour</a>
                         <a class="dropdown-item px-2 disabled" href="#">minute</a>
                         <a class="dropdown-item px-2 disabled" href="#">second</a>
                         <a class="dropdown-item px-2 disabled" href="#">instant</a>
@@ -322,10 +322,13 @@
             link_child = link_collections[0];               // first is child second is grandchild
             link_grandchild = link_collections[1];
 
-            child_descriptions = link_child.description.split(' ');
-            grandchild_descriptions = link_grandchild.description.split(' ');
+            if (!link_grandchild) {link_grandchild = {name: '.', description: ''}; }
+            
+            child_descriptions = (link_child.description ? link_child.description.split(' ') : []);
+            grandchild_descriptions = (link_grandchild.description ? link_grandchild.description.split(' ') : []);
 
             panels = ['child', 'grandchild'];
+
             bShowAllPanels = true;
         %>
 

@@ -195,7 +195,7 @@ class Period extends Param {
 
             // get the description label e.g.  'Mon Tue Wed Thu Fri Sat Sun'
             let descr = isDescription ? periodChildDescription(periodEnum, this.epochInstant) : consts.NONE;
-
+            
             //col the period and sets its relationship
             child = new Period(childEnum, this.epochInstant, duration);                     // construct child with a duration  
             child.context = `${periodEnum}.${childEnum}`                                    // context is period to child  e.g. 'week.day' 
