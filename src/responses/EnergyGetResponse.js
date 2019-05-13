@@ -49,7 +49,9 @@ function executeEnergyGet(params) {
     links = new Links.EnergyLinks(params.energy, period, params.site, selfDescription);   // constructor creates a 'self' link with an energy and epoch description
     
     let child = period.getChild(ADD_CHILD_DESCRIPTION);                           // create the child link with a period description (if one has been configured for it in consts.periodChildDescription)
-    links.addLink(child, enums.linkRender.none, child.description);               // child collection link - not rendered, with a period description
+    if (child) {                                                                  // intant does not have a child
+      links.addLink(child, enums.linkRender.none, child.description);               // child collection link - not rendered, with a period description
+    }
 
     let grandchild = period.getGrandchild();
     if (grandchild) {                                                             // second for example does not have a grandchild
@@ -84,7 +86,7 @@ function createItems(energy, period, site) {
   periods.forEach(childPeriod => {                                                // this can be upto 1000 if child is instant
     
     const WITHOUT_DESCRIPTION = false;
-
+    
     if (childPeriod) {
 
       // get data

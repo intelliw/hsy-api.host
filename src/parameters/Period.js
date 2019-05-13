@@ -81,6 +81,14 @@ class Period extends Param {
         return isFuture;
     }
 
+    // returns true if this is a time-based period (hour minute etc) false if it is a date period (timeofday day month year etc)
+    isTimePeriod() {
+        const MAX_DATE_PERIOD_EPOCH_LENGTH = consts.periodDatetimeISO.day.length;
+        const isTime = this.epoch.length > MAX_DATE_PERIOD_EPOCH_LENGTH;
+
+        return isTime;                  // timeofday is also considered a time period
+    }
+
     // returns the next period 
     getNext() {
 
@@ -195,7 +203,7 @@ class Period extends Param {
 
             // get the description label e.g.  'Mon Tue Wed Thu Fri Sat Sun'
             let descr = isDescription ? periodChildDescription(periodEnum, this.epochInstant) : consts.NONE;
-            
+
             //col the period and sets its relationship
             child = new Period(childEnum, this.epochInstant, duration);                     // construct child with a duration  
             child.context = `${periodEnum}.${childEnum}`                                    // context is period to child  e.g. 'week.day' 
@@ -595,8 +603,8 @@ function datetimePromptStr(instant, periodEnum) {
             label = `${year}`;
             break;
         case enums.period.fiveyear:             // '5 Years 2014-2019'
-            const FIVE_YEARS_IN_TOTAL = 4;          
-            
+            const FIVE_YEARS_IN_TOTAL = 4;
+
             // get the start of the five year period - as moment.js does not have a fiveyear concept 
             let normalisedInstant = periodEpoch(enums.period.fiveyear, instant, consts.periodDatetimeISO.instant);
             year = moment.utc(normalisedInstant).format('YYYY');
@@ -607,7 +615,7 @@ function datetimePromptStr(instant, periodEnum) {
         default:
             label = utils.capitalise(periodEnum);
             break;
-    } 
+    }
     return label;
 }
 

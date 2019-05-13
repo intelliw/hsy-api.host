@@ -31,7 +31,7 @@ class EnergyGet extends Request {
     * @param {*} req                                                    // express req
     */
     constructor(req) {
-        
+
         const OPTIONAL = true;
 
         // parameters                                                   // validate and default all parameters
@@ -41,12 +41,23 @@ class EnergyGet extends Request {
         params.site = new Param('site', req.query.site, consts.DEFAULT_SITE);
         params.productCatalogItems = new Param('productCatalogItems', req.body.productCatalogItems, consts.NONE, consts.NONE, OPTIONAL);
 
+        // cap the duration for each time period  
+        if (params.period.value == enums.period.timeofday) {                            // max allowed for time-of-day is 8 (2 days)     
+            params.period.duration = (params.period.duration > consts.MAX_TIMEOFDAY_PERIOD_DURATIONS ? consts.MAX_TIMEOFDAY_PERIOD_DURATIONS : params.period.duration);
+
+        } else if (params.period.isTimePeriod()) {                                      // max allowed for time periods is 1 dur to the large number of items in each collection 
+            params.period.duration = consts.DEFAULT_DURATION;
+
+        } else {                                                                        // max for date periods is 31 
+            params.period.duration = (params.period.duration > consts.MAX_DATE_PERIOD_DURATIONS ? consts.MAX_DATE_PERIOD_DURATIONS : params.period.duration);
+        }
+
         // super - validate params, auth, accept header
         super(req, params, EnergyGetResponse.produces, EnergyGetResponse.consumes);                 // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
-        
+
         // execute the response only if super isValid                   // if not isValid  super constuctor would have created a this.response = ErrorResponse 
         this.response = this.validation.isValid ? new Response.EnergyGetResponse(this.params, this.accept) : this.response;
-        
+
     }
 
 }

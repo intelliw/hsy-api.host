@@ -92,11 +92,11 @@ $(document).ready(function () {
         });
 
     });
-    //  filter buttons panel visibility
+    //  filter buttons visibility
     $(".select-filter-visibility").click(function () {
 
-        let panel = $(this).parents('.card-body').find('.select-filter-btn-panel');
-        let reset = $(this).parents('.card-body').find('.select-filter-reset');
+        let panel = $(this).parents('.card').find('.select-filter-btn-panel');
+        let reset = $(this).parents('.card').find('.select-filter-reset');
 
         wasActive = panel.hasClass('show');
 
@@ -128,6 +128,15 @@ $(document).ready(function () {
             + "?site=" + $("#navSite").html()
         // alert(apiUrl);
         window.location.href = apiUrl;
+    });
+    
+    // title period badge click - cpllapse all panes
+    $("#titlePeriod").click(function () {
+        
+        $('.accordion').find('.card').find('.select-collection-panel').each(function () {
+            let isOpen = $(this).hasClass('show');
+            if (isOpen) $(this).removeClass("show");
+        });
     });
 
     // hide / show the title period badge 

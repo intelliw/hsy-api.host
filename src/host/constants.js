@@ -86,7 +86,7 @@ module.exports.periodDatetimeISO = {
     second: 'YYYYMMDDTHHmmss',
     minute: 'YYYYMMDDTHHmm',
     hour: 'YYYYMMDDTHHmm',
-    timeofday: 'YYYYMMDDTHHmm',                 // timofday formatted same as hour
+    timeofday: 'YYYYMMDDTHHmm',                 // timeofday formatted same as hour
     day: 'YYYYMMDD',
     week: 'YYYYMMDD',
     month: 'YYYYMMDD',
@@ -117,8 +117,10 @@ module.exports.CURRENT_VERSION = '0.3';
 module.exports.DATE_FORMAT = 'YYYYMMDDTHHmmss.SSS±HHmm';
 module.exports.NONE = global.undefined;
 // parameter constants 
-module.exports.DEFAULT_DURATION = '1';
 module.exports.DEFAULT_SITE = '999';
+module.exports.DEFAULT_DURATION = '1';
+module.exports.MAX_DATE_PERIOD_DURATIONS = '31';            // max durations allowed in a request date periods other than timeofday
+module.exports.MAX_TIMEOFDAY_PERIOD_DURATIONS = '8';        // max durations allowed in a request for timeofday
 module.exports.API_KEY_PARAM_NAME = 'api_key';              // header param, must be lower case
 module.exports.ACCEPT_TYPE_PARAM_NAME = 'accept';
 // module.exports.API_HOST = 'api.endpoints.sundaya.cloud.goog';
