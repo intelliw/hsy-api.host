@@ -160,16 +160,16 @@ $(document).ready(function () {
         //("#childChartWrapper_1").draw(document.getElementById('childChartDiv_1'));
         
         // /*
-        let btnId = $(this).text().trim();
-
+        let btnId = $(this).justtext().trim();
+        alert(btnId);
         if (btnId == 'Store') {
             childChart_1.setSelection();
 
         } else if (btnId == 'Enjoy') {
             grandchildChart_1.setSelection();
-            selected = chart_1.getSelection();
+            selected = childChart_1.getSelection();
             //{"row":0,"column":5}
-            chart_1.setSelection([
+            childChart_1.setSelection([
                 {"row":0,"column":5},
                 {"row":1,"column":5},
                 {"row":2,"column":5},

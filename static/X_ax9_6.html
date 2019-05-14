@@ -64,7 +64,7 @@
                 axisTitlesPosition: 'in',
                 backgroundColor: { fill: 'none', stroke: 'none', strokeWidth: 4 },
                 chartArea: { left: 45, top: 30, right: 0, bottom: 15, width: '95%', height: '95%' },
-                colors: ['#28a745', '#FF0000', '#007bff', '#007bff', '#000000', '#000000']
+                colors: ['#28a745', '#007bff', '#007bff', '#FF0000', '#000000', '#000000']
             };
 
             chart_1 = new google.visualization.ColumnChart(document.getElementById(div));
@@ -169,9 +169,9 @@
                 ],
                 [   // in addition output these columns 
                     { column: RAWDATA_HSE_COLUMNS[0], label: 'Harvest', aggregation: google.visualization.data.sum, type: 'number' },
-                    { column: RAWDATA_HSE_COLUMNS[1], label: 'Enjoy', aggregation: google.visualization.data.sum, type: 'number' },
-                    { column: RAWDATA_HSE_COLUMNS[2], label: 'Store in', aggregation: google.visualization.data.sum, type: 'number' },
-                    { column: RAWDATA_HSE_COLUMNS[3], label: 'Store out', aggregation: google.visualization.data.sum, type: 'number' },
+                    { column: RAWDATA_HSE_COLUMNS[1], label: 'Store in', aggregation: google.visualization.data.sum, type: 'number' },
+                    { column: RAWDATA_HSE_COLUMNS[2], label: 'Store out', aggregation: google.visualization.data.sum, type: 'number' },
+                    { column: RAWDATA_HSE_COLUMNS[3], label: 'Enjoy', aggregation: google.visualization.data.sum, type: 'number' },
                     { column: RAWDATA_HSE_COLUMNS[4], label: 'Grid in', aggregation: google.visualization.data.sum, type: 'number' },
                     { column: RAWDATA_HSE_COLUMNS[5], label: 'Grid out', aggregation: google.visualization.data.sum, type: 'number' }
 

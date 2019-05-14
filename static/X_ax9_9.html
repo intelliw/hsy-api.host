@@ -24,11 +24,12 @@
 
         const RAWDATA_CHILD_FORMATTED_COLUMN = 0;
         const RAWDATA_GRANDCHILD_FORMATTED_COLUMN = 1;
-        const RAWDATA_HSE_COLUMNS = [2, 3, 4, 5, 6, 7];
+        const RAWDATA_HSE_COLUMNS = [2, 3, 4, 5, 6, 7, 8, 9];
 
         const AGGDATA_ID_COLUMN = 0;
-        const AGGDATA_HSE_COLUMNS = [1, 2, 3, 4, 5, 6];
-        const AGGDATA_JOIN_FORMATTED_COLUMN = 7;
+        const AGGDATA_HSE_COLUMNS = [1, 2, 3, 4, 5, 6, 7, 8];
+        const AGGDATA_CHART_COLUMNS = [0, 1, 2, 3, 4, 6, 7];
+        const AGGDATA_JOIN_FORMATTED_COLUMN = 9;
 
         let childChart_1;
         let grandchildChart_1;
@@ -71,8 +72,11 @@
                 colors: ['#28a745', '#FF0000', '#007bff', '#007bff', '#000000', '#000000']
             };
 
+            let chartView = new google.visualization.DataView(dataView);
+            chartView.setColumns(AGGDATA_CHART_COLUMNS);
+
             let chart = new google.visualization.ColumnChart(document.getElementById(div));
-            chart.draw(dataView, chartOptions);
+            chart.draw(chartView, chartOptions);
 
             return chart;
         }
@@ -84,9 +88,10 @@
 
             // Set chart options
             let tableOptions = {
-                width: 600,
+                width: 800,
                 height: '100%',     // 100% if paged 
                 alternatingRowStyle: false,
+                allowHtml: true,
                 showRowNumber: false,
                 sortColumn: INITIAL_SORT_COL,
                 page: 'enable', pageSize: 10,
@@ -113,15 +118,18 @@
             return TEMP_METHOD;
         }
 
-        // returns filtered data rows from the rawDataTable. filterValues is a string array.
+        // returns filtered data rows from the rawDataTable. filterValues is a numeric array.
         function getFilteredData(filterColumn, filterValues) {
             let filteredData = new google.visualization.DataView(rawDataTable);
 
             if (filterValues) {
                 let rows = filteredData.getFilteredRows([{
                     column: filterColumn,
+
                     test: function (value, row, column, table) {
-                        return filterValues.includes(table.getFormattedValue(row, column));
+                        //return filterValues.includes(table.getFormattedValue(row, column));    // if filers are a strign array of formatted values
+                        let includeRow = filterValues.includes(table.getValue(row, column));
+                        return includeRow;
                     }
                 }]);
 
@@ -129,8 +137,6 @@
             }
 
             filteredData.setColumns([RAWDATA_CHILD_FORMATTED_COLUMN, RAWDATA_GRANDCHILD_FORMATTED_COLUMN].concat(RAWDATA_HSE_COLUMNS));
-
-            // getFilteredRows([{column: 3, value: 42}, {column: 2, minValue: 'bar', maxValue: 'foo'}]) 
 
             return filteredData;
         }
@@ -144,46 +150,53 @@
             let cols = [
                 { id: '0', type: 'number', label: 'Day' },            // v: 0, f: 'Mon Feb 4th'
                 { id: '1', type: 'number', label: 'Timeofday' },       // v: 0, f: 'Night'
-
                 { id: '2', type: 'number', label: 'Harvest' },
-                { id: '3', type: 'number', label: 'Store in' },
-                { id: '4', type: 'number', label: 'Store out' },
-                { id: '5', type: 'number', label: 'Enjoy' },
-                { id: '6', type: 'number', label: 'Grid in' },
-                { id: '7', type: 'number', label: 'Grid out' }];
+                { id: '3', type: 'number', label: 'Enjoy' },
+                { id: '4', type: 'number', label: 'Store in' },
+                { id: '5', type: 'number', label: 'Store out' },
+                { id: '6', type: 'number', label: '(Store)' },
+                { id: '7', type: 'number', label: 'Grid in' },
+                { id: '8', type: 'number', label: 'Grid out' },
+                { id: '9', type: 'number', label: '(Grid)' }];
 
             let rows = [
-                { c: [{ v: 0, f: 'Mon Feb 4th' }, { v: 0, f: 'Night' }, { v: 16.825 }, { v: -6.566 }, { v: 16.273 }, { v: -18.196 }, { v: 8.519 }, { v: -18.152 }] },
-                { c: [{ v: 0, f: 'Mon Feb 4th' }, { v: 1, f: 'Afternoon' }, { v: 18.229 }, { v: -2.950 }, { v: 15.211 }, { v: -3.603 }, { v: 14.878 }, { v: -18.491 }] },
-                { c: [{ v: 0, f: 'Mon Feb 4th' }, { v: 2, f: 'Evening' }, { v: 20.447 }, { v: -4.857 }, { v: 16.841 }, { v: -3.137 }, { v: 11.742 }, { v: -17.249 }] },
-                { c: [{ v: 0, f: 'Mon Feb 4th' }, { v: 3, f: 'Morning' }, { v: 9.415 }, { v: -14.471 }, { v: 20.649 }, { v: -8.049 }, { v: 6.458 }, { v: -15.513 }] },
-                { c: [{ v: 1, f: 'Tue Feb 5th' }, { v: 0, f: 'Night' }, { v: 14.648 }, { v: -17.979 }, { v: 11.470 }, { v: -9.859 }, { v: 6.792 }, { v: -11.471 }] },
-                { c: [{ v: 1, f: 'Tue Feb 5th' }, { v: 1, f: 'Afternoon' }, { v: 20.593 }, { v: -4.875 }, { v: 3.434 }, { v: -4.866 }, { v: 2.815 }, { v: -4.383 }] },
-                { c: [{ v: 1, f: 'Tue Feb 5th' }, { v: 2, f: 'Evening' }, { v: 10.735 }, { v: -16.177 }, { v: 9.115 }, { v: -19.601 }, { v: 8.004 }, { v: -10.967 }] },
-                { c: [{ v: 1, f: 'Tue Feb 5th' }, { v: 3, f: 'Morning' }, { v: 14.871 }, { v: -7.390 }, { v: 13.455 }, { v: -13.650 }, { v: 18.081 }, { v: -11.698 }] },
-                { c: [{ v: 2, f: 'Wed Feb 6th' }, { v: 0, f: 'Night' }, { v: 10.095 }, { v: -9.128 }, { v: 19.591 }, { v: -10.221 }, { v: 5.588 }, { v: -3.434 }] },
-                { c: [{ v: 2, f: 'Wed Feb 6th' }, { v: 1, f: 'Afternoon' }, { v: 6.934 }, { v: -8.238 }, { v: 9.431 }, { v: -15.391 }, { v: 6.856 }, { v: -9.843 }] },
-                { c: [{ v: 2, f: 'Wed Feb 6th' }, { v: 2, f: 'Evening' }, { v: 6.354 }, { v: -3.951 }, { v: 15.713 }, { v: -17.232 }, { v: 19.696 }, { v: -17.337 }] },
-                { c: [{ v: 2, f: 'Wed Feb 6th' }, { v: 3, f: 'Morning' }, { v: 9.793 }, { v: -12.542 }, { v: 5.666 }, { v: -6.816 }, { v: 13.171 }, { v: -11.950 }] },
-                { c: [{ v: 3, f: 'Thu Feb 7th' }, { v: 0, f: 'Night' }, { v: 20.497 }, { v: -4.945 }, { v: 9.182 }, { v: -14.924 }, { v: 3.490 }, { v: -16.642 }] },
-                { c: [{ v: 3, f: 'Thu Feb 7th' }, { v: 1, f: 'Afternoon' }, { v: 14.572 }, { v: -19.099 }, { v: 13.920 }, { v: -9.392 }, { v: 20.537 }, { v: -16.914 }] },
-                { c: [{ v: 3, f: 'Thu Feb 7th' }, { v: 2, f: 'Evening' }, { v: 3.546 }, { v: -10.432 }, { v: 3.447 }, { v: -14.066 }, { v: 10.173 }, { v: -12.269 }] },
-                { c: [{ v: 3, f: 'Thu Feb 7th' }, { v: 3, f: 'Morning' }, { v: 9.007 }, { v: -9.497 }, { v: 15.301 }, { v: -14.670 }, { v: 6.515 }, { v: -8.791 }] },
-                { c: [{ v: 4, f: 'Fri Feb 8th' }, { v: 0, f: 'Night' }, { v: 15.891 }, { v: -3.019 }, { v: 4.127 }, { v: -18.566 }, { v: 6.495 }, { v: -6.130 }] },
-                { c: [{ v: 4, f: 'Fri Feb 8th' }, { v: 1, f: 'Afternoon' }, { v: 12.017 }, { v: -20.189 }, { v: 7.685 }, { v: -20.318 }, { v: 11.664 }, { v: -18.634 }] },
-                { c: [{ v: 4, f: 'Fri Feb 8th' }, { v: 2, f: 'Evening' }, { v: 13.551 }, { v: -5.462 }, { v: 17.209 }, { v: -16.470 }, { v: 6.206 }, { v: -15.027 }] },
-                { c: [{ v: 4, f: 'Fri Feb 8th' }, { v: 3, f: 'Morning' }, { v: 13.120 }, { v: -16.939 }, { v: 7.234 }, { v: -12.507 }, { v: 12.925 }, { v: -6.384 }] },
-                { c: [{ v: 5, f: 'Sat Feb 9th' }, { v: 0, f: 'Night' }, { v: 16.552 }, { v: -19.386 }, { v: 18.615 }, { v: -15.924 }, { v: 18.373 }, { v: -9.758 }] },
-                { c: [{ v: 5, f: 'Sat Feb 9th' }, { v: 1, f: 'Afternoon' }, { v: 4.763 }, { v: -19.493 }, { v: 8.221 }, { v: -3.811 }, { v: 3.924 }, { v: -3.381 }] },
-                { c: [{ v: 5, f: 'Sat Feb 9th' }, { v: 2, f: 'Evening' }, { v: 12.947 }, { v: -19.124 }, { v: 6.174 }, { v: -13.392 }, { v: 17.276 }, { v: -17.566 }] },
-                { c: [{ v: 5, f: 'Sat Feb 9th' }, { v: 3, f: 'Morning' }, { v: 16.586 }, { v: -19.840 }, { v: 12.753 }, { v: -3.160 }, { v: 10.506 }, { v: -3.780 }] },
-                { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 0, f: 'Night' }, { v: 10.436 }, { v: -12.818 }, { v: 14.797 }, { v: -14.932 }, { v: 6.025 }, { v: -13.962 }] },
-                { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 1, f: 'Afternoon' }, { v: 12.537 }, { v: -6.735 }, { v: 19.594 }, { v: -11.915 }, { v: 6.106 }, { v: -12.372 }] },
-                { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 2, f: 'Evening' }, { v: 18.173 }, { v: -11.612 }, { v: 5.048 }, { v: -18.794 }, { v: 11.320 }, { v: -16.855 }] },
-                { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 3, f: 'Morning' }, { v: 7.448 }, { v: -16.431 }, { v: 14.193 }, { v: -12.414 }, { v: 18.548 }, { v: -9.476 }] }
+                { c: [{ v: 0, f: 'Mon Feb 4th' }, { v: 0, f: 'Night' }, { v: 16.825 }, { v: -18.196 }, { v: -6.566 }, { v: 16.273 }, { v: -9.707 }, { v: 8.519 }, { v: -18.152 }, { v: -9.633 }] },
+                { c: [{ v: 0, f: 'Mon Feb 4th' }, { v: 1, f: 'Afternoon' }, { v: 18.229 }, { v: -3.603 }, { v: -2.950 }, { v: 15.211 }, { v: -12.261 }, { v: 14.878 }, { v: -18.491 }, { v: -3.613 }] },
+                { c: [{ v: 0, f: 'Mon Feb 4th' }, { v: 2, f: 'Evening' }, { v: 20.447 }, { v: -3.137 }, { v: -4.857 }, { v: 16.841 }, { v: -11.984 }, { v: 11.742 }, { v: -17.249 }, { v: -5.507 }] },
+                { c: [{ v: 0, f: 'Mon Feb 4th' }, { v: 3, f: 'Morning' }, { v: 9.415 }, { v: -8.049 }, { v: -14.471 }, { v: 20.649 }, { v: -6.178 }, { v: 6.458 }, { v: -15.513 }, { v: -9.055 }] },
+                { c: [{ v: 1, f: 'Tue Feb 5th' }, { v: 0, f: 'Night' }, { v: 14.648 }, { v: -9.859 }, { v: -17.979 }, { v: 11.470 }, { v: 6.509 }, { v: 6.792 }, { v: -11.471 }, { v: -4.679 }] },
+                { c: [{ v: 1, f: 'Tue Feb 5th' }, { v: 1, f: 'Afternoon' }, { v: 20.593 }, { v: -4.866 }, { v: -4.875 }, { v: 3.434 }, { v: 1.441 }, { v: 2.815 }, { v: -4.383 }, { v: -1.568 }] },
+                { c: [{ v: 1, f: 'Tue Feb 5th' }, { v: 2, f: 'Evening' }, { v: 10.735 }, { v: -19.601 }, { v: -16.177 }, { v: 9.115 }, { v: 7.062 }, { v: 8.004 }, { v: -10.967 }, { v: -2.963 }] },
+                { c: [{ v: 1, f: 'Tue Feb 5th' }, { v: 3, f: 'Morning' }, { v: 14.871 }, { v: -13.650 }, { v: -7.390 }, { v: 13.455 }, { v: -6.065 }, { v: 18.081 }, { v: -11.698 }, { v: 6.383 }] },
+                { c: [{ v: 2, f: 'Wed Feb 6th' }, { v: 0, f: 'Night' }, { v: 10.095 }, { v: -10.221 }, { v: -9.128 }, { v: 19.591 }, { v: -10.463 }, { v: 5.588 }, { v: -3.434 }, { v: 2.154 }] },
+                { c: [{ v: 2, f: 'Wed Feb 6th' }, { v: 1, f: 'Afternoon' }, { v: 6.934 }, { v: -15.391 }, { v: -8.238 }, { v: 9.431 }, { v: -1.193 }, { v: 6.856 }, { v: -9.843 }, { v: -2.987 }] },
+                { c: [{ v: 2, f: 'Wed Feb 6th' }, { v: 2, f: 'Evening' }, { v: 6.354 }, { v: -17.232 }, { v: -3.951 }, { v: 15.713 }, { v: -11.762 }, { v: 19.696 }, { v: -17.337 }, { v: 2.359 }] },
+                { c: [{ v: 2, f: 'Wed Feb 6th' }, { v: 3, f: 'Morning' }, { v: 9.793 }, { v: -6.816 }, { v: -12.542 }, { v: 5.666 }, { v: 6.876 }, { v: 13.171 }, { v: -11.950 }, { v: 1.221 }] },
+                { c: [{ v: 3, f: 'Thu Feb 7th' }, { v: 0, f: 'Night' }, { v: 20.497 }, { v: -14.924 }, { v: -4.945 }, { v: 9.182 }, { v: -4.237 }, { v: 3.490 }, { v: -16.642 }, { v: -13.152 }] },
+                { c: [{ v: 3, f: 'Thu Feb 7th' }, { v: 1, f: 'Afternoon' }, { v: 14.572 }, { v: -9.392 }, { v: -19.099 }, { v: 13.920 }, { v: 5.179 }, { v: 20.537 }, { v: -16.914 }, { v: 3.623 }] },
+                { c: [{ v: 3, f: 'Thu Feb 7th' }, { v: 2, f: 'Evening' }, { v: 3.546 }, { v: -14.066 }, { v: -10.432 }, { v: 3.447 }, { v: 6.985 }, { v: 10.173 }, { v: -12.269 }, { v: -2.096 }] },
+                { c: [{ v: 3, f: 'Thu Feb 7th' }, { v: 3, f: 'Morning' }, { v: 9.007 }, { v: -14.670 }, { v: -9.497 }, { v: 15.301 }, { v: -5.804 }, { v: 6.515 }, { v: -8.791 }, { v: -2.276 }] },
+                { c: [{ v: 4, f: 'Fri Feb 8th' }, { v: 0, f: 'Night' }, { v: 15.891 }, { v: -18.566 }, { v: -3.019 }, { v: 4.127 }, { v: -1.108 }, { v: 6.495 }, { v: -6.130 }, { v: 0.365 }] },
+                { c: [{ v: 4, f: 'Fri Feb 8th' }, { v: 1, f: 'Afternoon' }, { v: 12.017 }, { v: -20.318 }, { v: -20.189 }, { v: 7.685 }, { v: 12.504 }, { v: 11.664 }, { v: -18.634 }, { v: -6.970 }] },
+                { c: [{ v: 4, f: 'Fri Feb 8th' }, { v: 2, f: 'Evening' }, { v: 13.551 }, { v: -16.470 }, { v: -5.462 }, { v: 17.209 }, { v: -11.747 }, { v: 6.206 }, { v: -15.027 }, { v: -8.821 }] },
+                { c: [{ v: 4, f: 'Fri Feb 8th' }, { v: 3, f: 'Morning' }, { v: 13.120 }, { v: -12.507 }, { v: -16.939 }, { v: 7.234 }, { v: 9.705 }, { v: 12.925 }, { v: -6.384 }, { v: 6.541 }] },
+                { c: [{ v: 5, f: 'Sat Feb 9th' }, { v: 0, f: 'Night' }, { v: 16.552 }, { v: -15.924 }, { v: -19.386 }, { v: 18.615 }, { v: 0.771 }, { v: 18.373 }, { v: -9.758 }, { v: 8.615 }] },
+                { c: [{ v: 5, f: 'Sat Feb 9th' }, { v: 1, f: 'Afternoon' }, { v: 4.763 }, { v: -3.811 }, { v: -19.493 }, { v: 8.221 }, { v: 11.272 }, { v: 3.924 }, { v: -3.381 }, { v: 0.543 }] },
+                { c: [{ v: 5, f: 'Sat Feb 9th' }, { v: 2, f: 'Evening' }, { v: 12.947 }, { v: -13.392 }, { v: -19.124 }, { v: 6.174 }, { v: 12.950 }, { v: 17.276 }, { v: -17.566 }, { v: -0.290 }] },
+                { c: [{ v: 5, f: 'Sat Feb 9th' }, { v: 3, f: 'Morning' }, { v: 16.586 }, { v: -3.160 }, { v: -19.840 }, { v: 12.753 }, { v: 7.087 }, { v: 10.506 }, { v: -3.780 }, { v: 6.726 }] },
+                { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 0, f: 'Night' }, { v: 10.436 }, { v: -14.932 }, { v: -12.818 }, { v: 14.797 }, { v: -1.979 }, { v: 6.025 }, { v: -13.962 }, { v: -7.937 }] },
+                { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 1, f: 'Afternoon' }, { v: 12.537 }, { v: -11.915 }, { v: -6.735 }, { v: 19.594 }, { v: -12.859 }, { v: 6.106 }, { v: -12.372 }, { v: -6.266 }] },
+                { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 2, f: 'Evening' }, { v: 18.173 }, { v: -18.794 }, { v: -11.612 }, { v: 5.048 }, { v: 6.564 }, { v: 11.320 }, { v: -16.855 }, { v: -5.535 }] },
+                { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 3, f: 'Morning' }, { v: 7.448 }, { v: -12.414 }, { v: -16.431 }, { v: 14.193 }, { v: 2.238 }, { v: 18.548 }, { v: -9.476 }, { v: 9.072 }] }
             ]
 
             dt = new google.visualization.DataTable({ 'cols': cols, 'rows': rows });
+
+            let formatter = new google.visualization.ColorFormat();
+            formatter.addRange(0, null, 'red', 'white');
+            formatter.format(dt, 6);
+            formatter.format(dt, 9);
+
             return dt;
 
         }
@@ -210,7 +223,9 @@
                     { column: RAWDATA_HSE_COLUMNS[2], aggregation: aggFunction, type: 'number' },
                     { column: RAWDATA_HSE_COLUMNS[3], aggregation: aggFunction, type: 'number' },
                     { column: RAWDATA_HSE_COLUMNS[4], aggregation: aggFunction, type: 'number' },
-                    { column: RAWDATA_HSE_COLUMNS[5], aggregation: aggFunction, type: 'number' }
+                    { column: RAWDATA_HSE_COLUMNS[5], aggregation: aggFunction, type: 'number' },
+                    { column: RAWDATA_HSE_COLUMNS[6], aggregation: aggFunction, type: 'number' },
+                    { column: RAWDATA_HSE_COLUMNS[7], aggregation: aggFunction, type: 'number' }
                 ]);
 
 
@@ -226,8 +241,8 @@
         function initialiseCharts() {
 
             rawDataTable = createDataTable();
-            drawChildPane('childColumnChartDiv_1', 'childTableDiv_1', 'Day', ['Morning', 'Afternoon', 'Night']);
-            drawGrandchildPane('grandchildColumnChartDiv_1', 'grandchildTableDiv_1', 'Timeofday', ['Mon Feb 4th']);
+            drawChildPane('childColumnChartDiv_1', 'childTableDiv_1', 'Day', [0, 1, 2, 3, 4, 5, 6]);
+            drawGrandchildPane('grandchildColumnChartDiv_1', 'grandchildTableDiv_1', 'Timeofday', [0, 1, 2, 3]);
         }
 
         function drawChildPane(chartDiv, tableDiv, period, filterValues) {
@@ -235,9 +250,9 @@
             const FILTER_COLUMN = RAWDATA_GRANDCHILD_FORMATTED_COLUMN;
             const GROUP_COLUMN = RAWDATA_CHILD_FORMATTED_COLUMN;
 
-            let aggregationMethod = getAggregationMethod();
             let filteredData = getFilteredData(FILTER_COLUMN, filterValues);
 
+            let aggregationMethod = getAggregationMethod();
             let aggregateData = getAggregateData(filteredData, GROUP_COLUMN, aggregationMethod);
             childChart_1 = drawColumnChart(aggregateData, chartDiv, period);
 
@@ -251,10 +266,11 @@
             const FILTER_COLUMN = RAWDATA_CHILD_FORMATTED_COLUMN;
             const GROUP_COLUMN = RAWDATA_GRANDCHILD_FORMATTED_COLUMN;
 
-            let aggregationMethod = getAggregationMethod();
             let filteredData = getFilteredData(FILTER_COLUMN, filterValues);
 
+            let aggregationMethod = getAggregationMethod();
             let aggregateData = getAggregateData(filteredData, GROUP_COLUMN, aggregationMethod);
+
             grandchildChart_1 = drawColumnChart(aggregateData, chartDiv, period);
 
             // child table - rawdata/filtered/grouped-by-child,  
@@ -327,7 +343,7 @@
         </button></div>
 
 
-    
+
     <div id="childTableDiv_1" class="card border border-secondary rounded-0 pt-1 m-2"></div>
 
     <div id="grandchildColumnChartDiv_1" class="card border border-secondary rounded-0 pt-1 m-2"></div>
