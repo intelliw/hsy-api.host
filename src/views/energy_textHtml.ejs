@@ -2,11 +2,15 @@
 <%  
     // constants - soime of these are placed into client side script blocks at the bottom of this page
     const API_BASE_URL = consts.API_SCHEME + '://' + consts.API_HOST;     // e.g.  'http://api.endpoints.sundaya.cloud.goog'
+    const FIND_ALL = true;
+    const SHOW_ALL_PANELS = false;
 
     // parameters from the first self link, these are common across all collections
     let links = collections[0].collection.links; 
+
     let link_self = utils.findByPropertyValue(links, 'rel', 'self')[0] ;
-    let self_descriptions = link_self.description.split(" ");       // e.g. 'hse week 20190204 1' 
+    let self_descriptions = link_self.description.split(' ');       // e.g. 'hse week 20190204 1' 
+
     let params_energy = self_descriptions[0]; 
     let params_period = self_descriptions[1];
     
@@ -15,8 +19,9 @@
     let params_epoch_day = self_descriptions[2].substring(6, 8); 
     
     let params_duration = collections.length;
-
     let params_site = self_descriptions[4];
+    
+    let panels = ['child', 'grandchild'];
 
     // check which energy params are active 
     let isHarvest = utils.valueExistsInArray(['harvest', 'hse'], params_energy);
@@ -307,8 +312,6 @@
     <div class="accordion">
 
         <% for(var n_cols=0; n_cols < collections.length; n_cols++) { 
-            
-            const FIND_ALL = true;
 
             links = collections[n_cols].collection.links; 
             items = collections[n_cols].collection.items; 
@@ -330,12 +333,9 @@
             
             child_descriptions = (link_child.description ? link_child.description.split(' ') : []);
             grandchild_descriptions = (link_grandchild.description ? link_grandchild.description.split(' ') : []);
+            child_period = link_child.name.split('.')[1];
             grandchild_period = link_grandchild.name.split('.')[1];                                 // e.g day.timeofday
 
-            panels = ['child', 'grandchild'];
-
-
-            bShowAllPanels = false;
         %>
 
         <!-- PERIOD n PANEL -->
@@ -363,7 +363,7 @@
                     <!-- self -->
                     <span class="btn select-toggle-collection py-0 pl-1 pr-1" data-toggle="collapse">
                         <h3 class="display-5 text-secondary"><small data-toggle="tooltip"
-                            title="<%= utils.capitalise(link_self.name) %>"><%= link_self.prompt %></small></h3>
+                            title="<%= utils.capitalise(link_self.name) + ' ' + link_self.title%>"><%= link_self.prompt %></small></h3>
                     </span>
 
                     <!-- up -->
@@ -386,7 +386,7 @@
                 <div class="d-flex flex-nowrap pt-1 mb-0 pr-3">
 
                     <div class="d-flex px-1">
-                        <% if (bHasChild) { %> <h3 class="display-5 text-secondary text-capitalize name-toggle-child collapse show"><small><%= utils.capitalise(link_child.name.split('.')[1]) %></small></small></h3> <% } %>
+                        <% if (bHasChild) { %> <h3 class="display-5 text-secondary text-capitalize name-toggle-child collapse show"><small><%= utils.capitalise(child_period) %></small></small></h3> <% } %>
                         <% if (bHasGrandchild) { %> <h3 class="display-5 text-secondary text-capitalize name-toggle-grandchild collapse hide"><small><%= utils.capitalise(grandchild_period) %></small></small></h3> <% } %>
                     </div>
 
@@ -406,7 +406,7 @@
             </div>
 
             <!-- PERIOD n BODY row -->
-            <div class="p-0 mt-2 select-collection-panel collapse <%= n_cols == 0 || bShowAllPanels ? 'show' : 'hide' %>">
+            <div class="p-0 mt-2 select-collection-panel collapse <%= n_cols == 0 || SHOW_ALL_PANELS ? 'show' : 'hide' %>">
                 
                 <% for(var n_panels=0; n_panels < panels.length; n_panels++) { panel=panels[n_panels]; %>
 
@@ -553,14 +553,18 @@
     <!-- FOOTER  ------------------------------------------------------------------------------------------------------------->
     <nav class="navbar navbar-expand-md navbar-dark bg-light border-top border-primary py-0 pr-3">
         
-        <div class="d-flex flex-grow-1 justify-content-end">
-            
+        <div class="d-flex flex-grow-1 justify-content-end">&nbsp
+
+            <% if (bHasChild && bHasGrandchild) { %> 
+
             <!-- AVG/SUM --->
-            <span class="mb-1 mr-1" data-toggle="tooltip" data-placement="right" title="Total | Average">
+            <span class="mb-1 mr-1" data-toggle="tooltip" data-placement="right" title="Total | Average/<%= grandchild_period %>">
                 <button type="button" class="btn btn-sm btn-outline-default btn-avg-sum btn-primary btn-toggle" data-toggle="button">
                     <div class="handle"></div>
                 </button>
             </span>
+
+            <% } %>
 
         </div>
 

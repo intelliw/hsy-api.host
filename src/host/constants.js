@@ -110,6 +110,20 @@ module.exports.periodDatetimeGeneral = {
     fiveyear: 'DD/MM/YY'
 }
 
+// returns max allowed durations for each period. each period cap is proportional to the large number of items in its collection
+module.exports.periodMaxDurationsAllowed = {
+    instant: '1',                                           // max allowed for time periods is 1 due to large number of items in each collection 
+    second: '1',
+    minute: '1',
+    hour: '1',
+    timeofday: '8',                                         // max allowed for time-of-day is 8 (2 days)  
+    day: '31',                                              // only 4 items per day    
+    week: '8',
+    month: '3',                                             // there are 31 items in a month.. so cap to 3 (1 quarter)
+    quarter: '8',
+    year: '5',
+    fiveyear: '5'                                       
+}
 
 // system constants
 module.exports.ACTIVE_VERSIONS = '0.2 0.3';
@@ -119,8 +133,6 @@ module.exports.NONE = global.undefined;
 // parameter constants 
 module.exports.DEFAULT_SITE = '999';
 module.exports.DEFAULT_DURATION = '1';
-module.exports.MAX_DATE_PERIOD_DURATIONS = '31';            // max durations allowed in a request date periods other than timeofday
-module.exports.MAX_TIMEOFDAY_PERIOD_DURATIONS = '8';        // max durations allowed in a request for timeofday
 module.exports.API_KEY_PARAM_NAME = 'api_key';              // header param, must be lower case
 module.exports.ACCEPT_TYPE_PARAM_NAME = 'accept';
 // module.exports.API_HOST = 'api.endpoints.sundaya.cloud.goog';

@@ -41,16 +41,9 @@ class EnergyGet extends Request {
         params.site = new Param('site', req.query.site, consts.DEFAULT_SITE);
         params.productCatalogItems = new Param('productCatalogItems', req.body.productCatalogItems, consts.NONE, consts.NONE, OPTIONAL);
 
-        // cap the duration for each time period  
-        if (params.period.value == enums.period.timeofday) {                            // max allowed for time-of-day is 8 (2 days)     
-            params.period.duration = (params.period.duration > consts.MAX_TIMEOFDAY_PERIOD_DURATIONS ? consts.MAX_TIMEOFDAY_PERIOD_DURATIONS : params.period.duration);
-
-        } else if (params.period.isTimePeriod()) {                                      // max allowed for time periods is 1 dur to the large number of items in each collection 
-            params.period.duration = consts.DEFAULT_DURATION;
-
-        } else {                                                                        // max for date periods is 31 
-            params.period.duration = (params.period.duration > consts.MAX_DATE_PERIOD_DURATIONS ? consts.MAX_DATE_PERIOD_DURATIONS : params.period.duration);
-        }
+        // cap the number of duration for this period
+        let maxDurationsAllowed = Number(consts.periodMaxDurationsAllowed[params.period.value]);  
+        params.period.duration = (params.period.duration > maxDurationsAllowed ? maxDurationsAllowed : params.period.duration);
 
         // super - validate params, auth, accept header
         super(req, params, EnergyGetResponse.produces, EnergyGetResponse.consumes);                 // super validates and sets this.accepts this.isValid, this.isAuthorised params valid

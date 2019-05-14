@@ -69,7 +69,7 @@ module.exports.padZero = (n, width) => {
 
 /**
  * searches through the findInObjectArray and finds the first item with a property equal to the findValue 
- * if findAll is true the function will return all the items which match the findvalue, not only the first 
+ * if findAll is true the function will return all the items which match the findvalue, otherwise only the first 
  */
 module.exports.findByPropertyValue = (findInObjectArray, findProperty, findValue, findAll) => {
 
@@ -161,7 +161,7 @@ module.exports.randomTrue = () => {
     const max = 30;                                                     // the larger this number the more skips there will be  
     const random_match = 5;                                             // this can be any number less than MOCK_max
 
-    randomnum = Number(this.randomFloat(1, max, 0));         // get a random integer between 1 and MOCK_max
+    randomnum = Number(this.randomFloat(1, max, 0));                    // get a random integer between 1 and MOCK_max
     randomTrue = (randomnum == random_match) ? false : true;            // skip unless there is a match
 
     return randomTrue;                                                  // return whether to skip  
