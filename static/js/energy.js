@@ -161,14 +161,25 @@ $(document).ready(function () {
         
         // /*
         let btnId = $(this).justtext().trim();
-        alert(btnId);
+        //alert(btnId);
         if (btnId == 'Store') {
-            childChart_1.setSelection();
+            // childChart_1.setSelection();
+            
+            alert(getAggregationOption());
 
         } else if (btnId == 'Enjoy') {
-            grandchildChart_1.setSelection();
-            selected = childChart_1.getSelection();
+            //alert(getFilterValues(0, 'child'));
+            //let x = $('.accordion').find('.card').find('.select-collection-panel')[panelIndex].text
+            //let x = $('.accordion').find('.card').find('.card-body, panel-grandchild').attr('class');
+            //let x = $('.accordion').find('.card').eq(0).find('.panel-grandchild').find('.btn-block').eq(2);
+            //let y = x.find('.btn').hasClass('active');
+            //let y = x.find('.btn').hasClass('active');
+            alert(getFilterValues(2, 'grandchild'));
+
+            //grandchildChart_1.setSelection();
+            //selected = childChart_1.getSelection();
             //{"row":0,"column":5}
+            /*
             childChart_1.setSelection([
                 {"row":0,"column":5},
                 {"row":1,"column":5},
@@ -177,6 +188,7 @@ $(document).ready(function () {
                 {"row":4,"column":5},
                 {"row":5,"column":5},
             ]);
+            */
         }
         // */
     });
@@ -187,7 +199,33 @@ $(document).ready(function () {
 /** 
  * functions
  */
-// get just the text without child element's text  
+
+// returns whether sum or avg has been selected
+function getAggregationOption() {
+
+    let isAvg = $('body').find('#btnSumAvg').hasClass('active');
+    return (isAvg ? 'Avg' : 'Sum');
+
+}
+
+// returns an array of selected filter button indexes for the panel and pane (child / grandchild)
+function getFilterValues(panelIndex, pane) {
+    // each button index represents the datatable value which is to be displayed 
+    
+    let filterVals = [];
+    let btnNdx = 0;
+    let paneClassName = (pane == 'child' ?  'panel-child' : 'panel-grandchild');
+
+    $('.accordion').find('.card').eq(panelIndex).find('.' + paneClassName).find('.btn-block').each (function () {
+        if ($(this).find('.btn').hasClass('active')) {
+            filterVals.push(btnNdx);
+        }
+        ++btnNdx;
+    });
+    return filterVals;
+}
+
+// just get the text without child element's text  
 jQuery.fn.justtext = function () {
     return $(this)
         .clone()
