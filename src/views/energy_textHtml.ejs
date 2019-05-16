@@ -2,6 +2,7 @@
 <%  
     /* custom attributes and classes added to elements
             class - select-collection-panel             index=<collection indes>
+                                                        class - redraw
             class - select-collection-panel.card-body   class <panel-child | panel-grandchild>
             class - select-filter-btn-panel                 .find('.btn-block').hasClass('active');
         custom IDs 
@@ -52,11 +53,8 @@
 
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/energy-button-toggle.css">
-    
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    
     <title>Sundaya Energy API</title>
-    
 </head>
 
 <body>    
@@ -187,7 +185,7 @@
             </div>
 
             <!-- PERIOD n BODY row -->
-            <div class="p-0 mt-2 select-collection-panel collapse <%= n_cols == 0 || SHOW_ALL_PANELS ? 'show' : 'hide' %>" index=<%= n_cols%>>
+            <div class="p-0 mt-2 select-collection-panel collapse <%= n_cols == 0 || SHOW_ALL_PANELS ? 'show' : 'hide' %> redraw" index=<%= n_cols%>>
                 
                 <% for (var n_panes=0; n_panes < panes.length; n_panes++) { panel=panes[n_panes]; %>
 
@@ -218,7 +216,7 @@
                                                     </button>
                                                 </div>
                                                 
-                                                <div id="<%= panel === 'child' ? 'childColumnChartDiv_' : 'grandchildColumnChartDiv_' %><%= n_cols + 1 %>" class="px-0">
+                                                <div id="<%= panel === 'child' ? 'childColumnChartDiv_' : 'grandchildColumnChartDiv_' %><%= n_cols %>" class="px-0">
                                                     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
                                                     incididunt
                                                     ut labore
@@ -359,7 +357,7 @@
 
             <!-- SUM/AVG --->
             <span class="mb-1 mr-1" data-toggle="tooltip" data-placement="right" title="Total | Average/<%= grandchild_period %>">
-                <button id="btnSumAvg" type="button" class="btn btn-sm btn-outline-default btn-avg-sum btn-primary btn-toggle" data-toggle="button">
+                <button id="btnSumAvg" type="button" class="btn btn-sm btn-outline-default btn-avg-sum btn-primary btn-toggle">
                     <div class="handle"></div>
                 </button>
             </span>
@@ -379,11 +377,16 @@
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
     
+    <script type="text/javascript" src="/static/js/gstatic_charts_loader.js"></script>
+
     <script src="/static/js/bootstrap.min.js"></script>
     <script src="/static/js/collection.js"></script>
+    <script src="/static/js/energy_charts.js"></script>
 
     <script type="text/javascript">
         
+        google.charts.load('current', { packages: ['table', 'corechart'], callback: reDrawCharts });
+
         // constants for client side - some of these are used by energy.js as well
         const API_BASE_URL = '<%= API_BASE_URL %>';     // e.g.  'http://api.endpoints.sundaya.cloud.goog'
 
@@ -392,30 +395,21 @@
         const isEnjoy = <%= isEnjoy %>;
         const isGrid = <%= isGrid %>;
 
-        $(window).on("load", function () {
-            initialiseCharts();
-            // $('body').find('.navbar-brand').click();
-        });
-
-        function initialiseCharts() {
-            $('.accordion').find('.card').find('.select-collection-panel').each(function () {
-                if ($(this).hasClass('show')) {
-                    //alert(collection_panels['chart_' + 2].colChart);
-                    let x = collection_panels['chart_' + 2]
-                    //alert($(this).index());
-                    //alert(x.colChart);
-                };
-            });
-        }
-
-
-        $('.select-collection-panel').on('show.bs.collapse', function () {
-            //alert($(this).attr('index') + $(this).hasClass('loaded'));
-        });
-
-        let collection_panels = {
-            chart_1: { colChart: 'hello2', doThis: 'do this1' },
-            chart_2: { colChart: 'hello2', doThis: 'do this2' }
+        const dataCols = [
+                { id: '0', type: 'number', label: 'Day' },            // v: 0, f: 'Mon Feb 4th'
+                { id: '1', type: 'number', label: 'Timeofday' },       // v: 0, f: 'Night'
+                { id: '2', type: 'number', label: 'Harvest' },
+                { id: '3', type: 'number', label: 'Enjoy' },
+                { id: '4', type: 'number', label: 'Store in' },
+                { id: '5', type: 'number', label: 'Store out' },
+                { id: '6', type: 'number', label: '(Store)' },
+                { id: '7', type: 'number', label: 'Grid out' },
+                { id: '8', type: 'number', label: 'Grid in' },
+                { id: '9', type: 'number', label: '(Grid)' }];
+        
+        let panelMap = {
+            panel_1: { colChart: {}, doThis: 'do this1' },
+            panel_2: { colChart: {}, doThis: 'do this2' }
         };
 
     </script>

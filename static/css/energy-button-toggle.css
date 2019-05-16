@@ -410,7 +410,23 @@
 
 
 
-.sundaya-font {
+.sundaya-font-row {
   font-family: 'Open Sans';
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  padding: 0.25em 0.4em;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.header-badge {
+  padding: 0.25em 0.4em;
+  font-family: 'Open Sans';
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: left;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }

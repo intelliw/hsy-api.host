@@ -22,10 +22,10 @@ $(document).ready(function () {
         // put the selected navbar child element into the 'select-value' control;
         var selText = $(this).text();
 
-        $(this).parents('.select-parent').find('.select-value').html(selText);  
+        $(this).parents('.select-parent').find('.select-value').html(selText);
 
     });
-    
+
     // navbar parent click              ...selects the ACTIVE dropdown item before showing the list
     $(".select-parent").click(function () {
 
@@ -68,17 +68,17 @@ $(document).ready(function () {
         // alert(apiUrl);
         window.location.href = apiUrl;
     });
-    
+
     // navbar title period click - copllapses all panes
     $("#titlePeriod").click(function () {
-        
+
         $('.accordion').find('.card').find('.select-collection-panel').each(function () {
             let isOpen = $(this).hasClass('show');
             if (isOpen) $(this).removeClass("show");
         });
     });
 
-    // navbar collapse/hide             ...shows the title period badge 
+    // navbar show             ...shows the title period badge 
     $('#navbarAPI').on('show.bs.collapse', function () {
         $('#titlePeriod').hide();
     });
@@ -98,6 +98,13 @@ $(document).ready(function () {
         let isActive = panel.hasClass('show');
 
         panel.collapse(isActive ? 'hide' : 'show');
+    });
+
+    // collection panel shown           ...calls reDrawCharts
+    $('.select-collection-panel').on('shown.bs.collapse', function () {
+
+        reDrawCharts();
+
     });
 
     // child / grandchild pane toggle button click 
@@ -127,7 +134,17 @@ $(document).ready(function () {
 
 
 
-    // filter buttons reset click
+    // filter button click              ...calls reDrawCharts
+    $('.select-filter-btn').click(function () {
+
+        let panel = $(this).parents('.select-collection-panel');
+        if (!panel.hasClass('redraw')) panel.addClass('redraw');
+
+        reDrawCharts();
+
+    });
+
+    // filter buttons reset click       ...calls reDrawCharts
     $(".select-filter-reset").click(function () {
 
         let resetState;
@@ -143,6 +160,10 @@ $(document).ready(function () {
 
         });
 
+        let panel = $(this).parents('.select-collection-panel');
+        if (!panel.hasClass('redraw')) panel.addClass('redraw');
+
+        reDrawCharts();
     });
 
     // filter buttons visibility click
@@ -158,59 +179,21 @@ $(document).ready(function () {
 
     });
 
-
-    // sum/avg button click
+    // sum/avg button click             ...calls reDrawCharts
     $('#btnSumAvg').click(function () {
-        alert('sum/avg');
+
+        $(this).hasClass('active') ? $(this).removeClass("active") : $(this).addClass("active");
+
+        $('.accordion').find('.card').find('.select-collection-panel').each(function () {
+
+            if (!$(this).hasClass('redraw')) {
+                $(this).addClass('redraw');
+            }
+        });
+
+        reDrawCharts();
     });
-    
 
-
-
-    // TEMP / TEST -----------------------------------------------------
-    $(".testButton").click(function () {
-        // alert($(this).text());
-        
-        //chart_1.setSelection([{"row":2,"column":1}]);
-        // chart_1.setSelection([{"column":1}]);
-        //("#childChartWrapper_1").setView({
-        //    columns: [0, 3, 4, 6]
-        //});
-        //("#childChartWrapper_1").draw(document.getElementById('childChartDiv_1'));
-        
-        // /*
-        let btnId = $(this).justtext().trim();
-        //alert(btnId);
-        if (btnId == 'Store') {
-            // childChart_1.setSelection();
-            
-            alert(getGroupOption());
-
-        } else if (btnId == 'Enjoy') {
-            //alert(getFilterValues(0, 'child'));
-            //let x = $('.accordion').find('.card').find('.select-collection-panel')[panelIndex].text
-            //let x = $('.accordion').find('.card').find('.card-body, panel-grandchild').attr('class');
-            //let x = $('.accordion').find('.card').eq(0).find('.panel-grandchild').find('.btn-block').eq(2);
-            //let y = x.find('.btn').hasClass('active');
-            //let y = x.find('.btn').hasClass('active');
-            alert(getFilterValues(0, 'grandchild'));
-
-            //grandchildChart_1.setSelection();
-            //selected = childChart_1.getSelection();
-            //{"row":0,"column":5}
-            /*
-            childChart_1.setSelection([
-                {"row":0,"column":5},
-                {"row":1,"column":5},
-                {"row":2,"column":5},
-                {"row":3,"column":5},
-                {"row":4,"column":5},
-                {"row":5,"column":5},
-            ]);
-            */
-        }
-        // */
-    });
 
 });
 
@@ -218,6 +201,30 @@ $(document).ready(function () {
 /** 
  * functions
  */
+function reDrawCharts() {
+
+    let sumAvg = getGroupOption();
+    let debugStr = [];
+
+    $('.accordion').find('.card').find('.select-collection-panel').each(function () {
+
+        if ($(this).hasClass('show') && $(this).hasClass('redraw')) {
+
+            let panelIndex = $(this).attr('index');
+            let childFilterVals = getFilterValues(panelIndex, 'child');
+            let grandchildFilterVals = getFilterValues(panelIndex, 'grandchild');
+
+            // let chartObj = collection_panels['chart_' + panelIndex]
+            debugStr.push('panel ' + panelIndex + ' ' + sumAvg + ' , filters ' + childFilterVals + ' | ' + grandchildFilterVals + '...');
+
+            $(this).removeClass('redraw');
+
+        };
+    });
+
+    // if (debugStr.length > 0) alert(debugStr);
+
+}
 
 // returns whether sum or avg has been selected
 function getGroupOption() {
@@ -230,12 +237,12 @@ function getGroupOption() {
 // returns an array of selected filter button indexes for the panel and pane (child / grandchild)
 function getFilterValues(panelIndex, pane) {
     // each button index represents the datatable value which is to be displayed 
-    
+
     let filterVals = [];
     let btnNdx = 0;
-    let paneClassName = (pane == 'child' ?  'panel-child' : 'panel-grandchild');
+    let paneClassName = (pane == 'child' ? 'panel-child' : 'panel-grandchild');
 
-    $('.accordion').find('.card').eq(panelIndex).find('.' + paneClassName).find('.btn-block').each (function () {
+    $('.accordion').find('.card').eq(panelIndex).find('.' + paneClassName).find('.btn-block').each(function () {
         if ($(this).find('.btn').hasClass('active')) {
             filterVals.push(btnNdx);
         }
@@ -253,3 +260,59 @@ jQuery.fn.justtext = function () {
         .end()
         .text();
 };
+
+
+// TEMP / TEST -----------------------------------------------------
+$(".testButton2").click(function () {
+    let btnId = $(this).justtext().trim();
+    //alert(btnId);
+    if (btnId == 'Store') {
+        
+    } else if (btnId == 'Enjoy') {
+
+    }
+});
+
+$(".testButton").click(function () {
+    // alert($(this).text());
+
+    //chart_1.setSelection([{"row":2,"column":1}]);
+    // chart_1.setSelection([{"column":1}]);
+    //("#childChartWrapper_1").setView({
+    //    columns: [0, 3, 4, 6]
+    //});
+    //("#childChartWrapper_1").draw(document.getElementById('childChartDiv_1'));
+
+    // /*
+    let btnId = $(this).justtext().trim();
+    //alert(btnId);
+    if (btnId == 'Store') {
+        // childChart_1.setSelection();
+
+        alert(getGroupOption());
+
+    } else if (btnId == 'Enjoy') {
+        //alert(getFilterValues(0, 'child'));
+        //let x = $('.accordion').find('.card').find('.select-collection-panel')[panelIndex].text
+        //let x = $('.accordion').find('.card').find('.card-body, panel-grandchild').attr('class');
+        //let x = $('.accordion').find('.card').eq(0).find('.panel-grandchild').find('.btn-block').eq(2);
+        //let y = x.find('.btn').hasClass('active');
+        //let y = x.find('.btn').hasClass('active');
+        alert(getFilterValues(0, 'grandchild'));
+
+        //grandchildChart_1.setSelection();
+        //selected = childChart_1.getSelection();
+        //{"row":0,"column":5}
+        /*
+        childChart_1.setSelection([
+            {"row":0,"column":5},
+            {"row":1,"column":5},
+            {"row":2,"column":5},
+            {"row":3,"column":5},
+            {"row":4,"column":5},
+            {"row":5,"column":5},
+        ]);
+        */
+    }
+    // */
+});
