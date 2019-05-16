@@ -36,7 +36,7 @@
         let rawDataTable;
 
         // checks the sum/avg button and returns its current selection
-        function getAggregationOption() {
+        function getGroupOption() {
             const TEMP_METHOD = 'sum';
             return TEMP_METHOD;
         }
@@ -323,7 +323,7 @@
 
             let filteredData = getFilteredData(FILTER_COLUMN, filterValues);
 
-            let aggregationMethod = getAggregationOption();
+            let aggregationMethod = getGroupOption();
             let aggregateData = getAggregateData(filteredData, GROUP_COLUMN, aggregationMethod);
             childChart_1 = drawColumnChart(aggregateData, chartDiv, period);
 
@@ -339,7 +339,7 @@
 
             let filteredData = getFilteredData(FILTER_COLUMN, filterValues);
 
-            let aggregationMethod = getAggregationOption();
+            let aggregationMethod = getGroupOption();
             let aggregateData = getAggregateData(filteredData, GROUP_COLUMN, aggregationMethod);
 
             grandchildChart_1 = drawColumnChart(aggregateData, chartDiv, period);

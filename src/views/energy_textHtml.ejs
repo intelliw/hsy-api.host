@@ -33,7 +33,7 @@
     let params_duration = collections.length;
     let params_site = self_descriptions[4];
     
-    let panels = ['child', 'grandchild'];
+    let panes = ['child', 'grandchild'];
 
     // check which energy params are active 
     let isHarvest = utils.valueExistsInArray(['harvest', 'hse'], params_energy);
@@ -81,7 +81,7 @@
         <div class="collapse navbar-collapse" id="navbarMain">
             <ul id="navbarAPI" class="navbar-nav mt-auto collapse">
 
-                <% include energy_navbar_textHtml %>
+                <% include energy_textHtml_navbar %>
 
             </ul>
 
@@ -189,7 +189,7 @@
             <!-- PERIOD n BODY row -->
             <div class="p-0 mt-2 select-collection-panel collapse <%= n_cols == 0 || SHOW_ALL_PANELS ? 'show' : 'hide' %>" index=<%= n_cols%>>
                 
-                <% for (var n_panels=0; n_panels < panels.length; n_panels++) { panel=panels[n_panels]; %>
+                <% for (var n_panes=0; n_panes < panes.length; n_panes++) { panel=panes[n_panes]; %>
 
                 <!-- PERIOD n BODY panel -->
                 <div class="card-body <%= panel === 'child' ? 'panel-child collapse show' : 'panel-grandchild collapse' %> pt-0 pb-2">
@@ -407,8 +407,10 @@
                 };
             });
         }
+
+
         $('.select-collection-panel').on('show.bs.collapse', function () {
-              //alert($(this).attr('index') + $(this).hasClass('loaded'));
+            //alert($(this).attr('index') + $(this).hasClass('loaded'));
         });
 
         let collection_panels = {

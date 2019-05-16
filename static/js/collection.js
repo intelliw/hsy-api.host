@@ -4,7 +4,10 @@ $(document).ready(function () {
     // activate bs tooltips
     $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
 
-    // navbar API unbadged (justtext) dropdown item click
+
+
+
+    // navbar dropdown item click       ...justtext without badges
     $(".select-justtext a").click(function () {
 
         // put the selected item into the 'select-value' control (without child element's text);
@@ -13,7 +16,7 @@ $(document).ready(function () {
 
     });
 
-    // navbar API badged (text) dropdown item click
+    // navbar dropdown item click       ...badges
     $(".select-text a").click(function () {
 
         // put the selected navbar child element into the 'select-value' control;
@@ -23,7 +26,7 @@ $(document).ready(function () {
 
     });
     
-    // navbar API parent click, flags the ACTIVE dropdown item 
+    // navbar parent click              ...selects the ACTIVE dropdown item before showing the list
     $(".select-parent").click(function () {
 
         // select the active item    
@@ -41,7 +44,63 @@ $(document).ready(function () {
 
     });
 
-    // child / grandchild toggle button click 
+    // navbar 'done' button click   ...calls the API... Strip colon and space from the hour with regex
+    $("#btnDone").click(function () {
+        let apiUrl = API_BASE_URL
+            + "/energy/" + $("#navEnergy").html()
+            + "/period/" + $("#navPeriod").html()
+            + "/" + $("#navEpochYear").html() + $("#navEpochMonth").html() + $("#navEpochDay").html()
+            + "T" + $("#navEpochHour").html().replace(/\s: /g, '')
+            + "/" + $("#navDuration").html()
+            + "?site=" + $("#navSite").html()
+
+        // alert(apiUrl);
+        window.location.href = apiUrl;
+    });
+
+    // navbar 'today' item click 
+    $("#btnToday").click(function () {
+
+        let apiUrl = API_BASE_URL
+            + "/energy/" + $("#navEnergy").html()
+            + "/period/" + $("#navPeriod").html()
+            + "?site=" + $("#navSite").html()
+        // alert(apiUrl);
+        window.location.href = apiUrl;
+    });
+    
+    // navbar title period click - copllapses all panes
+    $("#titlePeriod").click(function () {
+        
+        $('.accordion').find('.card').find('.select-collection-panel').each(function () {
+            let isOpen = $(this).hasClass('show');
+            if (isOpen) $(this).removeClass("show");
+        });
+    });
+
+    // navbar collapse/hide             ...shows the title period badge 
+    $('#navbarAPI').on('show.bs.collapse', function () {
+        $('#titlePeriod').hide();
+    });
+    $('#navbarAPI').on('hide.bs.collapse', function () {
+        $('#titlePeriod').show();
+    });
+
+
+
+
+
+    // collection panel header click
+    $(".select-toggle-collection").click(function () {
+
+        // toggle the panel for each collection 
+        let panel = $(this).parents('.card').find('.select-collection-panel');
+        let isActive = panel.hasClass('show');
+
+        panel.collapse(isActive ? 'hide' : 'show');
+    });
+
+    // child / grandchild pane toggle button click 
     $(".select-toggle-grandchild").click(function () {
 
         // toggle the child / grandchild card visiblity 
@@ -65,17 +124,10 @@ $(document).ready(function () {
 
     });
 
-    // collection panel click
-    $(".select-toggle-collection").click(function () {
 
-        // toggle the panel for each collection 
-        let panel = $(this).parents('.card').find('.select-collection-panel');
-        let isActive = panel.hasClass('show');
 
-        panel.collapse(isActive ? 'hide' : 'show');
-    });
 
-    //  filter buttons reset 
+    // filter buttons reset click
     $(".select-filter-reset").click(function () {
 
         let resetState;
@@ -92,7 +144,8 @@ $(document).ready(function () {
         });
 
     });
-    //  filter buttons visibility
+
+    // filter buttons visibility click
     $(".select-filter-visibility").click(function () {
 
         let panel = $(this).parents('.card').find('.select-filter-btn-panel');
@@ -105,47 +158,13 @@ $(document).ready(function () {
 
     });
 
-    // navbar API 'done' button click - calls the API... Strip colon and space from the hour with regex
-    $("#btnDone").click(function () {
-        let apiUrl = API_BASE_URL
-            + "/energy/" + $("#navEnergy").html()
-            + "/period/" + $("#navPeriod").html()
-            + "/" + $("#navEpochYear").html() + $("#navEpochMonth").html() + $("#navEpochDay").html()
-            + "T" + $("#navEpochHour").html().replace(/\s: /g, '')
-            + "/" + $("#navDuration").html()
-            + "?site=" + $("#navSite").html()
 
-        // alert(apiUrl);
-        window.location.href = apiUrl;
-    });
-
-    // navbar API 'today' item click 
-    $("#btnToday").click(function () {
-
-        let apiUrl = API_BASE_URL
-            + "/energy/" + $("#navEnergy").html()
-            + "/period/" + $("#navPeriod").html()
-            + "?site=" + $("#navSite").html()
-        // alert(apiUrl);
-        window.location.href = apiUrl;
+    // sum/avg button click
+    $('#btnSumAvg').click(function () {
+        alert('sum/avg');
     });
     
-    // title period badge click - cpllapse all panes
-    $("#titlePeriod").click(function () {
-        
-        $('.accordion').find('.card').find('.select-collection-panel').each(function () {
-            let isOpen = $(this).hasClass('show');
-            if (isOpen) $(this).removeClass("show");
-        });
-    });
 
-    // hide / show the title period badge 
-    $('#navbarAPI').on('show.bs.collapse', function () {
-        $('#titlePeriod').hide();
-    });
-    $('#navbarAPI').on('hide.bs.collapse', function () {
-        $('#titlePeriod').show();
-    });
 
 
     // TEMP / TEST -----------------------------------------------------
@@ -165,7 +184,7 @@ $(document).ready(function () {
         if (btnId == 'Store') {
             // childChart_1.setSelection();
             
-            alert(getAggregationOption());
+            alert(getGroupOption());
 
         } else if (btnId == 'Enjoy') {
             //alert(getFilterValues(0, 'child'));
@@ -174,7 +193,7 @@ $(document).ready(function () {
             //let x = $('.accordion').find('.card').eq(0).find('.panel-grandchild').find('.btn-block').eq(2);
             //let y = x.find('.btn').hasClass('active');
             //let y = x.find('.btn').hasClass('active');
-            alert(getFilterValues(2, 'grandchild'));
+            alert(getFilterValues(0, 'grandchild'));
 
             //grandchildChart_1.setSelection();
             //selected = childChart_1.getSelection();
@@ -201,7 +220,7 @@ $(document).ready(function () {
  */
 
 // returns whether sum or avg has been selected
-function getAggregationOption() {
+function getGroupOption() {
 
     let isAvg = $('body').find('#btnSumAvg').hasClass('active');
     return (isAvg ? 'Avg' : 'Sum');
