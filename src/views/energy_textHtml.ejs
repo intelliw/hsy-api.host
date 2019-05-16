@@ -81,7 +81,7 @@
         <div class="collapse navbar-collapse" id="navbarMain">
             <ul id="navbarAPI" class="navbar-nav mt-auto collapse">
 
-                <% include navbar_energy_textHtml %>
+                <% include energy_navbar_textHtml %>
 
             </ul>
 
@@ -216,7 +216,6 @@
                                                         <i id="btnDone" class="material-icons" data-toggle="tooltip" title="clear selection"
                                                             style="font-size:18px;color:darkgrey;">bar_chart</i>
                                                     </button>
-
                                                 </div>
                                                 
                                                 <div id="<%= panel === 'child' ? 'childColumnChartDiv_' : 'grandchildColumnChartDiv_' %><%= n_cols + 1 %>" class="px-0">
@@ -228,19 +227,15 @@
 
                                                 <div class="btn-group btn-group-sm flex-wrap" 
                                                     <% if (panel === 'grandchild') { %>
-                                                        data-toggle="tooltip" 
-                                                        title="<%= utils.capitalise(grandchild_period) %> (<%= link_col_grandchildren.title %>)" 
-                                                        onclick="window.location.href = '<%= link_col_grandchildren.href %>'"
+                                                        data-toggle="tooltip" title="<%= utils.capitalise(grandchild_period) %> (<%= link_col_grandchildren.title %>)" onclick="window.location.href = '<%= link_col_grandchildren.href %>'"
                                                     <% } %>>
 
                                                     <% for(var n_btns=0; n_btns < (panel==='child' ? child_descriptions : grandchild_descriptions).length; n_btns++) { %>
 
                                                         <button type="button" class="btn btn-light border border-default py-0 m-0 mb-2 mr-1" 
-                                                                <% if (panel === 'child') { %>
-                                                                    data-toggle="tooltip" 
-                                                                    title="<%= items[n_btns].links[0].prompt %>"
-                                                                    onclick="window.location.href = '<%= items[n_btns].links[0].href %>'"
-                                                                <% } %>>
+                                                            <% if (panel === 'child') { %>
+                                                                data-toggle="tooltip" title="<%= items[n_btns].links[0].prompt %>" onclick="window.location.href = '<%= items[n_btns].links[0].href %>'"
+                                                            <% } %>>
                                                             <small class="text-secondary font-weight-bold align-baseline"><%= (panel==='child' ? child_descriptions[n_btns] : grandchild_descriptions[n_btns]) %></small>
                                                         </button>
                                                     
@@ -249,9 +244,18 @@
 
                                             </div>
                                             
-                                            <div id="<%= panel === 'child' ? 'childTableDiv_' : 'grandchildTableDiv_' %><%= n_cols %>" class="col-md px-1 mb-2 mr-2 border border-default">
-                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                                et dolore magna aliqua.
+                                            <div class="col-md px-1 mb-2 mr-2 border border-default">
+                                                <div class="d-flex flex-grow-1 justify-content-end py-0"> 
+                                                    <button type="button" class="btn btn-outline-light chart-selection-reset btn-sm py-0 mx-0 px-0">
+                                                        <i id="btnDone" class="material-icons" data-toggle="tooltip" title="clear selection"
+                                                            style="font-size:18px;color:darkgrey;">bar_chart</i>
+                                                    </button>
+                                                </div>
+
+                                                <div id="<%= panel === 'child' ? 'childTableDiv_' : 'grandchildTableDiv_' %><%= n_cols %>" class="px-0">
+                                                    Lorem apsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                                                    et dolore magna aliqua.
+                                                </div>
                                             </div>
 
                                         </div>
@@ -376,7 +380,7 @@
         crossorigin="anonymous"></script>
     
     <script src="/static/js/bootstrap.min.js"></script>
-    <script src="/static/js/energy.js"></script>
+    <script src="/static/js/collection.js"></script>
 
     <script type="text/javascript">
         

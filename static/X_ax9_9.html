@@ -253,18 +253,18 @@
                 { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 2, f: 'Evening' }, { v: -18.794 }] },
                 { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 3, f: 'Morning' }, { v: -12.414 }] }
             ]
-        
-        dt = new google.visualization.DataTable({ 'cols': cols, 'rows': rows });
 
-        let formatter = new google.visualization.ColorFormat();
-        formatter.addRange(0, null, 'red', 'white');
-        formatter.format(dt, 6);
+            dt = new google.visualization.DataTable({ 'cols': cols, 'rows': rows });
 
-        formatter = new google.visualization.ColorFormat();
-        formatter.addRange(null, 0, 'red', 'white');
-        formatter.format(dt, 9);
+            let formatter = new google.visualization.ColorFormat();
+            formatter.addRange(0, null, 'red', 'white');
+            formatter.format(dt, 6);
 
-        return dt;
+            formatter = new google.visualization.ColorFormat();
+            formatter.addRange(null, 0, 'red', 'white');
+            formatter.format(dt, 9);
+
+            return dt;
 
         }
 
