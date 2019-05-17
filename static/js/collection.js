@@ -100,10 +100,10 @@ $(document).ready(function () {
         panel.collapse(isActive ? 'hide' : 'show');
     });
 
-    // collection panel shown           ...calls reDrawCharts
+    // collection panel shown           ...calls reDrawPanel
     $('.select-collection-panel').on('shown.bs.collapse', function () {
 
-        reDrawCharts();
+        reDrawPanel();
 
     });
 
@@ -114,8 +114,8 @@ $(document).ready(function () {
         let toggleOn = $(this).find('.btn-toggle').hasClass('active');
 
         let card = $(this).parents('.card')
-        let ch = card.find('.panel-child');
-        let gch = card.find('.panel-grandchild');
+        let ch = card.find('.pane-child');
+        let gch = card.find('.pane-grandchild');
 
         (toggleOn ? gch : ch).collapse('hide');
         (toggleOn ? ch : gch).collapse('show');
@@ -127,59 +127,59 @@ $(document).ready(function () {
         (toggleOn ? gchLbl : chLbl).hide();
         (toggleOn ? chLbl : gchLbl).show();
 
-        card.find('.select-collection-panel').collapse('show'); // always make visible
+        card.find('.select-collection-panel').collapse('show');    // make charts visible when toggling
 
     });
 
-
-
-
-    // filter button click              ...calls reDrawCharts
+    // filter button click              ...calls reDrawPanel
     $('.select-filter-btn').click(function () {
+
+        $(this).hasClass('active') ? $(this).removeClass("active") : $(this).addClass("active");
 
         let panel = $(this).parents('.select-collection-panel');
         if (!panel.hasClass('redraw')) panel.addClass('redraw');
-
-        reDrawCharts();
+        
+        reDrawPanel();
 
     });
 
-    // filter buttons reset click       ...calls reDrawCharts
+    // filter buttons reset click       ...calls reDrawPanel
     $(".select-filter-reset").click(function () {
 
         let resetState;
-
+        
         $(this).parents('.card-body').find('.select-filter-btn').each(function () {
 
             isActive = $(this).hasClass('active');
-            resetState = resetState == undefined ? !isActive : resetState;      // decide resetState for all buttons from the state fo the first button 
+            resetState = (resetState == undefined) ? !isActive : resetState;      // decide resetState for all buttons from the state fo the first button 
 
             if (!resetState == isActive) {
                 isActive ? $(this).removeClass("active") : $(this).addClass("active");
             }
 
         });
-
+        
         let panel = $(this).parents('.select-collection-panel');
         if (!panel.hasClass('redraw')) panel.addClass('redraw');
 
-        reDrawCharts();
+        reDrawPanel();
+
     });
 
-    // filter buttons visibility click
+    // filter buttons visibility click      ... calls reDrawPanel (needed only for fitler reset hide)
     $(".select-filter-visibility").click(function () {
 
-        let panel = $(this).parents('.card').find('.select-filter-btn-panel');
-        let reset = $(this).parents('.card').find('.select-filter-reset');
+        let btnPanel = $(this).parents('.card').find('.select-filter-btn-panel');
 
-        wasActive = panel.hasClass('show');
+        let wasActive = btnPanel.hasClass('show');
 
-        wasActive ? reset.hide() : reset.show();
-        panel.collapse(wasActive ? 'hide' : 'show');
+        btnPanel.collapse(wasActive ? 'hide' : 'show');
+        
+        reDrawPanel();
 
     });
 
-    // sum/avg button click             ...calls reDrawCharts
+    // sum/avg button click             ...calls reDrawPanel
     $('#btnSumAvg').click(function () {
 
         $(this).hasClass('active') ? $(this).removeClass("active") : $(this).addClass("active");
@@ -191,7 +191,7 @@ $(document).ready(function () {
             }
         });
 
-        reDrawCharts();
+        reDrawPanel();
     });
 
 
@@ -201,31 +201,46 @@ $(document).ready(function () {
 /** 
  * functions
  */
-function reDrawCharts() {
+// redraws flagged panels and hides the filter reset button 
+function reDrawPanel() {
 
     let sumAvg = getGroupOption();
-    let debugStr = [];
 
     $('.accordion').find('.card').find('.select-collection-panel').each(function () {
 
-        if ($(this).hasClass('show') && $(this).hasClass('redraw')) {
+        let panelIndex = $(this).attr('index');
+        if ($(this).hasClass('show')) {
 
-            let panelIndex = $(this).attr('index');
-            let childFilterVals = getFilterValues(panelIndex, 'child');
-            let grandchildFilterVals = getFilterValues(panelIndex, 'grandchild');
+            let childPane = $(this).find('.pane-child');
+            let grandchildPane = $(this).find('.pane-grandchild');
 
-            // let chartObj = collection_panels['chart_' + panelIndex]
-            debugStr.push('panel ' + panelIndex + ' ' + sumAvg + ' , filters ' + childFilterVals + ' | ' + grandchildFilterVals + '...');
+            // redraw charts ----
+            if ($(this).hasClass('redraw')) {
 
-            $(this).removeClass('redraw');
+                let childFilterVals = getFilterShowButtons(childPane);
+                let grandchildFilterVals = getFilterShowButtons(grandchildPane);
 
-        };
+                // 2DO call dreawChart and.. let chartObj = collection_panels['chart_' + panelIndex]
+
+                $(this).removeClass('redraw');      // clear the 'redraw' flag 
+
+            };
+
+            // hide filter reset button ---- if filter btn panel hidden and no filters active 
+            let activePane = (childPane.hasClass('show') ? childPane : grandchildPane);
+            let btnPanelVisible = $(this).find('.select-filter-btn-panel').hasClass('show');
+
+            $(this).find('.select-filter-reset').collapse(isFiltered(activePane) || btnPanelVisible ? 'show' : 'hide');
+        }
+
     });
 
+    // let debugStr = [];
+    //debugStr.push('panel ' + panelIndex + ' ' + sumAvg + ' , filters ' + childFilterVals + ' | ' + grandchildFilterVals + ' |');
     // if (debugStr.length > 0) alert(debugStr);
 
 }
-
+ 
 // returns whether sum or avg has been selected
 function getGroupOption() {
 
@@ -234,22 +249,38 @@ function getGroupOption() {
 
 }
 
-// returns an array of selected filter button indexes for the panel and pane (child / grandchild)
-function getFilterValues(panelIndex, pane) {
-    // each button index represents the datatable value which is to be displayed 
-
-    let filterVals = [];
+// returns an array of unselected ('show') filter button indexes for the (child/grandchild) pane 
+function getFilterShowButtons(pane) {
+    
+    let showButtons = [];
     let btnNdx = 0;
-    let paneClassName = (pane == 'child' ? 'panel-child' : 'panel-grandchild');
 
-    $('.accordion').find('.card').eq(panelIndex).find('.' + paneClassName).find('.btn-block').each(function () {
+    pane.find('.btn-block').each(function () {
         if ($(this).find('.btn').hasClass('active')) {
-            filterVals.push(btnNdx);
+            showButtons.push(btnNdx);
         }
         ++btnNdx;
     });
-    return filterVals;
+    return showButtons;
 }
+
+// returns true if at least one filter is unselected ('hide') or if *all* filters are unselected ('hide') as this is also taken to mean that there is no filter active
+function isFiltered(pane) {
+    
+    let totalButtons = 0; 
+    let showButtons = 0;
+
+    pane.find('.btn-block').each(function () {
+        if ($(this).find('.btn').hasClass('active')) {          // 'hide' has been selected
+            ++showButtons;  
+        }
+        ++totalButtons;
+    });
+    
+    return (showButtons < totalButtons) || (showButtons == 0);
+    
+}
+
 
 // just get the text without child element's text  
 jQuery.fn.justtext = function () {
@@ -261,58 +292,3 @@ jQuery.fn.justtext = function () {
         .text();
 };
 
-
-// TEMP / TEST -----------------------------------------------------
-$(".testButton2").click(function () {
-    let btnId = $(this).justtext().trim();
-    //alert(btnId);
-    if (btnId == 'Store') {
-        
-    } else if (btnId == 'Enjoy') {
-
-    }
-});
-
-$(".testButton").click(function () {
-    // alert($(this).text());
-
-    //chart_1.setSelection([{"row":2,"column":1}]);
-    // chart_1.setSelection([{"column":1}]);
-    //("#childChartWrapper_1").setView({
-    //    columns: [0, 3, 4, 6]
-    //});
-    //("#childChartWrapper_1").draw(document.getElementById('childChartDiv_1'));
-
-    // /*
-    let btnId = $(this).justtext().trim();
-    //alert(btnId);
-    if (btnId == 'Store') {
-        // childChart_1.setSelection();
-
-        alert(getGroupOption());
-
-    } else if (btnId == 'Enjoy') {
-        //alert(getFilterValues(0, 'child'));
-        //let x = $('.accordion').find('.card').find('.select-collection-panel')[panelIndex].text
-        //let x = $('.accordion').find('.card').find('.card-body, panel-grandchild').attr('class');
-        //let x = $('.accordion').find('.card').eq(0).find('.panel-grandchild').find('.btn-block').eq(2);
-        //let y = x.find('.btn').hasClass('active');
-        //let y = x.find('.btn').hasClass('active');
-        alert(getFilterValues(0, 'grandchild'));
-
-        //grandchildChart_1.setSelection();
-        //selected = childChart_1.getSelection();
-        //{"row":0,"column":5}
-        /*
-        childChart_1.setSelection([
-            {"row":0,"column":5},
-            {"row":1,"column":5},
-            {"row":2,"column":5},
-            {"row":3,"column":5},
-            {"row":4,"column":5},
-            {"row":5,"column":5},
-        ]);
-        */
-    }
-    // */
-});

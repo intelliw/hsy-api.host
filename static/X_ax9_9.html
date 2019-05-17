@@ -16,6 +16,7 @@
     <script src="/static/js/cloudflare.com_ajax_libs_popper.js_1.14.7_umd_popper.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
     <script src="/static/js/collection.js"></script>
+    <script src="/static/js/energy-charts.js"></script>
     <script type="text/javascript" src="/static/js/gstatic_charts_loader.js"></script>
 
     <script type="text/javascript">
@@ -135,7 +136,7 @@
                 selectionMode: 'multiple',
                 tooltip: { trigger: 'selection', showColorCode: true },
                 aggregationTarget: 'category',
-                fontName: 'Open Sans', fontSize: 14,
+                fontName: 'Open Sans', fontSize: '0.80rem',
                 dataOpacity: 0.8,
                 legend: { position: 'top', maxLines: 2, alignment: 'center' },
                 vAxis: {
@@ -149,7 +150,7 @@
                 hAxis: {
                     title: '',
                     textPosition: 'none',
-                    textStyle: { fontSize: 14 },
+                    textStyle: { fontSize: '0.80rem' },
                     gridlines: { color: 'none' }, baselineColor: 'none',
                     titleTextStyle: { italic: 'true' }
                 },
@@ -186,8 +187,8 @@
                     oddTableRow: ' sundaya-font-row',
                     selectedTableRow: '',
                     hoverTableRow: '',
-                    headerCell: 'text-left bg-secondary text-white border-bottom border-top border-right-0 border-dark',
-                    tableCell: 'sundaya-font-row border-bottom border-right-0 border-secondary',
+                    headerCell: 'text-left bg-white text-secondary border-bottom border-right-0 border-secondary',
+                    tableCell: 'sundaya-font-row border-bottom border-right-0 border-default',
                     rowNumberCell: ''
                 }
             }
@@ -408,10 +409,10 @@
 
 
 
-    <div id="childTableDiv_0" class="card border border-secondary rounded-0 pt-1 m-2"></div>
+    <div id="childTableDiv_0" class="card border border-default rounded-0 pt-0 m-2"></div>
 
-    <div id="grandchildColumnChartDiv_0" class="card border border-secondary rounded-0 pt-1 m-2"></div>
-    <div id="grandchildTableDiv_0" class="card border border-secondary rounded-0 pt-1 ml-2"></div>
+    <div id="grandchildColumnChartDiv_0" class="card border border-default rounded-0 pt-1 m-2"></div>
+    <div id="grandchildTableDiv_0" class="card border border-default rounded-0 pt-0 ml-2"></div>
 
 </body>
 

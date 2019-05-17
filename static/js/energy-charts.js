@@ -9,32 +9,7 @@ $(document).ready(function () {
 /** 
  * functions
  */
-function reDrawCharts() {
 
-    let sumAvg = getGroupOption();
-    let debugStr = [];
-
-    $('.accordion').find('.card').find('.select-collection-panel').each(function () {
-
-        if ($(this).hasClass('show') && $(this).hasClass('redraw')) {
-
-            let panelIndex = $(this).attr('index');
-            let childFilterVals = getUnfilteredButtonIndexes(panelIndex, 'pane-child');
-            let grandchildFilterVals = getUnfilteredButtonIndexes(panelIndex, 'pane-grandchild');
-
-            // let chartObj = collection_panels['chart_' + panelIndex]
-            debugStr.push('panel ' + panelIndex + ' ' + sumAvg + ' , filters ' + childFilterVals + ' | ' + grandchildFilterVals + ' |');
-
-
-            // clear the 'redraw' flag 
-            $(this).removeClass('redraw');
-
-        };
-    });
-
-    // if (debugStr.length > 0) alert(debugStr);
-
-}
 
 // TEMP / TEST -----------------------------------------------------
 $(".testButton2").click(function () {
