@@ -100,10 +100,10 @@ $(document).ready(function () {
         panel.collapse(isActive ? 'hide' : 'show');
     });
 
-    // collection panel shown           ...calls reDrawPanel
+    // collection panel shown           ...calls reDrawPanels
     $('.select-collection-panel').on('shown.bs.collapse', function () {
 
-        reDrawPanel();
+        reDrawPanels();
 
     });
 
@@ -131,7 +131,7 @@ $(document).ready(function () {
 
     });
 
-    // filter button click              ...calls reDrawPanel
+    // filter button click              ...calls reDrawPanels
     $('.select-filter-btn').click(function () {
 
         $(this).hasClass('active') ? $(this).removeClass("active") : $(this).addClass("active");
@@ -139,11 +139,11 @@ $(document).ready(function () {
         let panel = $(this).parents('.select-collection-panel');
         if (!panel.hasClass('redraw')) panel.addClass('redraw');
         
-        reDrawPanel();
+        reDrawPanels();
 
     });
 
-    // filter buttons reset click       ...calls reDrawPanel
+    // filter buttons reset click       ...calls reDrawPanels
     $(".select-filter-reset").click(function () {
 
         let resetState;
@@ -162,11 +162,11 @@ $(document).ready(function () {
         let panel = $(this).parents('.select-collection-panel');
         if (!panel.hasClass('redraw')) panel.addClass('redraw');
 
-        reDrawPanel();
+        reDrawPanels();
 
     });
 
-    // filter buttons visibility click      ... calls reDrawPanel (needed only for fitler reset hide)
+    // filter buttons visibility click      ... calls reDrawPanels (needed only for fitler reset hide)
     $(".select-filter-visibility").click(function () {
 
         let btnPanel = $(this).parents('.card').find('.select-filter-btn-panel');
@@ -175,11 +175,11 @@ $(document).ready(function () {
 
         btnPanel.collapse(wasActive ? 'hide' : 'show');
         
-        reDrawPanel();
+        reDrawPanels();
 
     });
 
-    // sum/avg button click             ...calls reDrawPanel
+    // sum/avg button click             ...calls reDrawPanels
     $('#btnSumAvg').click(function () {
 
         $(this).hasClass('active') ? $(this).removeClass("active") : $(this).addClass("active");
@@ -191,7 +191,7 @@ $(document).ready(function () {
             }
         });
 
-        reDrawPanel();
+        reDrawPanels();
     });
 
 
@@ -202,7 +202,7 @@ $(document).ready(function () {
  * functions
  */
 // redraws flagged panels and hides the filter reset button 
-function reDrawPanel() {
+function reDrawPanels() {
 
     let sumAvg = getGroupOption();
 
@@ -221,6 +221,7 @@ function reDrawPanel() {
                 let grandchildFilterVals = getFilterShowButtons(grandchildPane);
 
                 // 2DO call dreawChart and.. let chartObj = collection_panels['chart_' + panelIndex]
+                //redrawChart(panelIndex);
 
                 $(this).removeClass('redraw');      // clear the 'redraw' flag 
 
@@ -264,7 +265,7 @@ function getFilterShowButtons(pane) {
     return showButtons;
 }
 
-// returns true if at least one filter is unselected ('hide') or if *all* filters are unselected ('hide') as this is also taken to mean that there is no filter active
+// returns true if at least one filter is unselected ('hide') and *all* filters are NOT unselected ('hide') as this is also taken to mean that there is no filter active
 function isFiltered(pane) {
     
     let totalButtons = 0; 
@@ -277,7 +278,7 @@ function isFiltered(pane) {
         ++totalButtons;
     });
     
-    return (showButtons < totalButtons) || (showButtons == 0);
+    return (showButtons < totalButtons) && (showButtons > 0);
     
 }
 

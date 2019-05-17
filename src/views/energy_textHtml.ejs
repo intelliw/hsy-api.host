@@ -214,7 +214,8 @@
                                                     <div class="sundaya-font-row py-0 mt-1 px-0 text-secondary font-weight-bold">
                                                         Total Megajoules (MJ) / Day</div>  
 
-                                                    <button type="button" class="btn btn-outline-light chart-selection-reset btn-sm py-0 mx-0 px-0">
+                                                    <button type="button" class="btn btn-outline-light chart-selection-reset btn-sm py-0 mx-0 px-0"
+                                                         onclick="alert('panelMap[<%= n_cols %>].<%= pane === 'pane-child' ? 'child' : 'grandchild' %>.chart.setSelection()')">
                                                         <i id="btnDone" class="material-icons" data-toggle="tooltip" title="clear selection"
                                                             style="font-size:18px;color:darkgrey;">bar_chart</i>
                                                     </button>
@@ -380,15 +381,15 @@
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
     
-    <script type="text/javascript" src="/static/js/gstatic_charts_loader.js"></script>
-
     <script src="/static/js/bootstrap.min.js"></script>
     <script src="/static/js/collection.js"></script>
     <script src="/static/js/energy-charts.js"></script>
 
+    <script type="text/javascript" src="/static/js/gstatic_charts_loader.js"></script>
+
     <script type="text/javascript">
         
-        google.charts.load('current', { packages: ['table', 'corechart'], callback: reDrawCharts });
+        google.charts.load('current', { packages: ['table', 'corechart'], callback: reDrawPanels });
 
         // constants for client side - some of these are used by energy.js as well
         const API_BASE_URL = '<%= API_BASE_URL %>';     // e.g.  'http://api.endpoints.sundaya.cloud.goog'
@@ -398,22 +399,9 @@
         const isEnjoy = <%= isEnjoy %>;
         const isGrid = <%= isGrid %>;
 
-        const dataCols = [
-                { id: '0', type: 'number', label: 'Day' },            // v: 0, f: 'Mon Feb 4th'
-                { id: '1', type: 'number', label: 'Timeofday' },       // v: 0, f: 'Night'
-                { id: '2', type: 'number', label: 'Harvest' },
-                { id: '3', type: 'number', label: 'Enjoy' },
-                { id: '4', type: 'number', label: 'Store in' },
-                { id: '5', type: 'number', label: 'Store out' },
-                { id: '6', type: 'number', label: '(Store)' },
-                { id: '7', type: 'number', label: 'Grid out' },
-                { id: '8', type: 'number', label: 'Grid in' },
-                { id: '9', type: 'number', label: '(Grid)' }];
-        
-        let panelMap = {
-            panel_1: { colChart: {}, doThis: 'do this1' },
-            panel_2: { colChart: {}, doThis: 'do this2' }
-        };
+        function redrawChart(index) {
+            alert('redrawChart' + index);
+        }
 
     </script>
 
