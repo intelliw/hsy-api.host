@@ -69,16 +69,15 @@ $(document).ready(function () {
         window.location.href = apiUrl;
     });
 
-    // navbar title period click - copllapses all panes
+    // navbar title period click - collapses all panes
     $("#titlePeriod").click(function () {
 
         $('.accordion').find('.card').find('.select-collection-panel').each(function () {
-            let isOpen = $(this).hasClass('show');
-            if (isOpen) $(this).removeClass("show");
+            if ($(this).hasClass('show')) $(this).removeClass("show");
         });
     });
 
-    // navbar show             ...shows the title period badge 
+    // navbar show                          ...shows the title period badge 
     $('#navbarAPI').on('show.bs.collapse', function () {
         $('#titlePeriod').hide();
     });
@@ -93,26 +92,26 @@ $(document).ready(function () {
     // collection panel header click
     $(".select-toggle-collection").click(function () {
 
-        // toggle the panel for each collection 
+        // toggle collection panel visibility 
         let panel = $(this).parents('.card').find('.select-collection-panel');
-        let isActive = panel.hasClass('show');
+        
+        panel.collapse(panel.hasClass('show') ? 'hide' : 'show');
 
-        panel.collapse(isActive ? 'hide' : 'show');
     });
 
-    // collection panel shown           ...calls reDrawPanels
+    // collection panel after shown           ...calls redrawPanels
     $('.select-collection-panel').on('shown.bs.collapse', function () {
 
-        reDrawPanels();
+        redrawPanels();
 
     });
 
     // child / grandchild pane toggle button click 
     $(".select-toggle-grandchild").click(function () {
 
-        // toggle the child / grandchild card visiblity 
         let toggleOn = $(this).find('.btn-toggle').hasClass('active');
 
+        // toggle card visiblity 
         let card = $(this).parents('.card')
         let ch = card.find('.pane-child');
         let gch = card.find('.pane-grandchild');
@@ -120,30 +119,37 @@ $(document).ready(function () {
         (toggleOn ? gch : ch).collapse('hide');
         (toggleOn ? ch : gch).collapse('show');
 
-        // toggle the child / grandchild name header visibility
+        // toggle name header visibility
         let chLbl = card.find('.name-toggle-child');
         let gchLbl = card.find('.name-toggle-grandchild');
 
         (toggleOn ? gchLbl : chLbl).hide();
         (toggleOn ? chLbl : gchLbl).show();
 
-        card.find('.select-collection-panel').collapse('show');    // make charts visible when toggling
+        card.find('.select-collection-panel').collapse('show');    // make panel visible when toggling
+
+    });
+    
+    // child/grandchil pane after shown
+    $('.pane-child, .pane-grandchild').on('shown.bs.collapse', function () {
+        
+         revealFilterResetButtons($(this));     
 
     });
 
-    // filter button click              ...calls reDrawPanels
+    // filter button click              ...calls redrawPanels
     $('.select-filter-btn').click(function () {
 
         $(this).hasClass('active') ? $(this).removeClass("active") : $(this).addClass("active");
 
         let panel = $(this).parents('.select-collection-panel');
         if (!panel.hasClass('redraw')) panel.addClass('redraw');
-        
-        reDrawPanels();
+
+        redrawPanels();
 
     });
 
-    // filter buttons reset click       ...calls reDrawPanels
+    // filter buttons reset click       ...calls redrawPanels
     $(".select-filter-reset").click(function () {
 
         let resetState;
@@ -151,7 +157,7 @@ $(document).ready(function () {
         $(this).parents('.card-body').find('.select-filter-btn').each(function () {
 
             isActive = $(this).hasClass('active');
-            resetState = (resetState == undefined) ? !isActive : resetState;      // decide resetState for all buttons from the state fo the first button 
+            resetState = (resetState == undefined) ? !isActive : resetState;      // decide resetState for all buttons from the state of the first button 
 
             if (!resetState == isActive) {
                 isActive ? $(this).removeClass("active") : $(this).addClass("active");
@@ -159,14 +165,16 @@ $(document).ready(function () {
 
         });
         
+        $(this).parents('.card').find('.select-filter-btn-panel').collapse('show');    // make buttons visible when resetting
+
         let panel = $(this).parents('.select-collection-panel');
         if (!panel.hasClass('redraw')) panel.addClass('redraw');
 
-        reDrawPanels();
+        redrawPanels();
 
     });
 
-    // filter buttons visibility click      ... calls reDrawPanels (needed only for fitler reset hide)
+    // filter button panel visibility click      
     $(".select-filter-visibility").click(function () {
 
         let btnPanel = $(this).parents('.card').find('.select-filter-btn-panel');
@@ -174,24 +182,28 @@ $(document).ready(function () {
         let wasActive = btnPanel.hasClass('show');
 
         btnPanel.collapse(wasActive ? 'hide' : 'show');
-        
-        reDrawPanels();
+
+    });
+    // filter button panel after shown/hidden
+    $('.select-filter-btn-panel').on('shown.bs.collapse hidden.bs.collapse', function () {
+
+        revealFilterResetButtons($(this));     
 
     });
 
-    // sum/avg button click             ...calls reDrawPanels
+    // sum/avg button click             ...calls redrawPanels
     $('#btnSumAvg').click(function () {
 
         $(this).hasClass('active') ? $(this).removeClass("active") : $(this).addClass("active");
 
-        $('.accordion').find('.card').find('.select-collection-panel').each(function () {
+        $('.select-collection-panel').each(function () {
 
             if (!$(this).hasClass('redraw')) {
                 $(this).addClass('redraw');
             }
         });
 
-        reDrawPanels();
+        redrawPanels();
     });
 
 
@@ -201,47 +213,47 @@ $(document).ready(function () {
 /** 
  * functions
  */
-// redraws flagged panels and hides the filter reset button 
-function reDrawPanels() {
+// redraws panels flagged with 'redraw' . if source is provide the panel is flagged first  
+function redrawPanels(source) {
 
-    let sumAvg = getGroupOption();
+    if (source) {
+        let panel = source.closest('.select-collection-panel');
+        if (!resetBtn.hasClass('redraw')) resetBtn.addClass('redraw');
+    }
 
-    $('.accordion').find('.card').find('.select-collection-panel').each(function () {
 
-        let panelIndex = $(this).attr('index');
-        if ($(this).hasClass('show')) {
+    $('.select-collection-panel.show.redraw').each(function () {
+    
+        // 2DO call redrawChart and.. let chartObj = ...
+        redrawChart($(this));
 
-            let childPane = $(this).find('.pane-child');
-            let grandchildPane = $(this).find('.pane-grandchild');
-
-            // redraw charts ----
-            if ($(this).hasClass('redraw')) {
-
-                let childFilterVals = getFilterShowButtons(childPane);
-                let grandchildFilterVals = getFilterShowButtons(grandchildPane);
-
-                // 2DO call dreawChart and.. let chartObj = collection_panels['chart_' + panelIndex]
-                //redrawChart(panelIndex);
-
-                $(this).removeClass('redraw');      // clear the 'redraw' flag 
-
-            };
-
-            // hide filter reset button ---- if filter btn panel hidden and no filters active 
-            let activePane = (childPane.hasClass('show') ? childPane : grandchildPane);
-            let btnPanelVisible = $(this).find('.select-filter-btn-panel').hasClass('show');
-
-            $(this).find('.select-filter-reset').collapse(isFiltered(activePane) || btnPanelVisible ? 'show' : 'hide');
-        }
+        $(this).removeClass('redraw');      // clear the 'redraw' flag 
 
     });
 
-    // let debugStr = [];
-    //debugStr.push('panel ' + panelIndex + ' ' + sumAvg + ' , filters ' + childFilterVals + ' | ' + grandchildFilterVals + ' |');
-    // if (debugStr.length > 0) alert(debugStr);
+}
+
+//  reveals filter reset buttons flagged with 'reveal'. if source is provide the closest reset button is flagged first  
+function revealFilterResetButtons(source) {
+        
+    if (source) {
+        let resetBtn = source.closest('.select-collection-panel').find('.select-filter-reset');
+        if (!resetBtn.hasClass('reveal')) resetBtn.addClass('reveal');
+    }
+
+    $('.select-filter-reset.reveal').each(function () {
+            
+        let activePane = getActivePane($(this).closest('.select-collection-panel'));
+        let btnsVisible = $(this).closest('.select-filter').find('.select-filter-btn-panel').hasClass('show');
+
+        isFiltered(activePane) || btnsVisible ? $(this).show() : $(this).hide();
+        
+        $(this).removeClass('reveal');      // clear the 'reveal' flag 
+    });
 
 }
- 
+
+
 // returns whether sum or avg has been selected
 function getGroupOption() {
 
@@ -251,7 +263,7 @@ function getGroupOption() {
 }
 
 // returns an array of unselected ('show') filter button indexes for the (child/grandchild) pane 
-function getFilterShowButtons(pane) {
+function getActiveFilterButtons(pane) {
     
     let showButtons = [];
     let btnNdx = 0;
@@ -265,7 +277,7 @@ function getFilterShowButtons(pane) {
     return showButtons;
 }
 
-// returns true if at least one filter is unselected ('hide') and *all* filters are NOT unselected ('hide') as this is also taken to mean that there is no filter active
+// returns true if at least one filter is unselected ('hide') and *all* filters are NOT unselected - as 'all hidden' means no filters apply
 function isFiltered(pane) {
     
     let totalButtons = 0; 
@@ -281,7 +293,11 @@ function isFiltered(pane) {
     return (showButtons < totalButtons) && (showButtons > 0);
     
 }
-
+// returns the active child or grandchild pane for the panel
+function getActivePane(panel) {
+    childPane = panel.find('.pane-child');
+    return (childPane.hasClass('show') ? childPane : panel.find('.pane-grandchild'));
+}
 
 // just get the text without child element's text  
 jQuery.fn.justtext = function () {

@@ -298,7 +298,7 @@
                         </div>
 
                         <!-- PERIOD n BODY panel FILTER BUTTONS -->                    
-                        <div class="pr-1 my-2">
+                        <div class="select-filter pr-1 my-2">
                             
                             <div class="flex-wrap pl-1 pr-0">
 
@@ -389,7 +389,7 @@
 
     <script type="text/javascript">
         
-        google.charts.load('current', { packages: ['table', 'corechart'], callback: reDrawPanels });
+        google.charts.load('current', { packages: ['table', 'corechart'], callback: redrawPanels });
 
         // constants for client side - some of these are used by energy.js as well
         const API_BASE_URL = '<%= API_BASE_URL %>';     // e.g.  'http://api.endpoints.sundaya.cloud.goog'
@@ -399,8 +399,15 @@
         const isEnjoy = <%= isEnjoy %>;
         const isGrid = <%= isGrid %>;
 
-        function redrawChart(index) {
-            alert('redrawChart' + index);
+        function redrawChart(collectionPanel) {
+            
+            let panelIndex = collectionPanel.attr('index');
+            
+            let sumAvg = getGroupOption();
+            let childFilterVals = getActiveFilterButtons(collectionPanel.find('.pane-child'));
+            let grandchildFilterVals = getActiveFilterButtons(collectionPanel.find('.pane-grandchild'));
+            
+            console.dir('redrawChart ' + panelIndex + ' | ' + childFilterVals + ' | ' + grandchildFilterVals + ' | ' + sumAvg);
         }
 
     </script>

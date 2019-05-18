@@ -28,7 +28,7 @@
 
     <script type="text/javascript">
 
-        google.charts.load('current', { packages: ['table', 'corechart'], callback: reDrawPanels });
+        google.charts.load('current', { packages: ['table', 'corechart'], callback: redrawPanels });
 
         const RAWDATA_CHILD_FORMATTED_COLUMN = 0;
         const RAWDATA_GRANDCHILD_FORMATTED_COLUMN = 1;
@@ -40,12 +40,13 @@
 
 
         let panelMap = [
-            { child:        { dataTable: undefined, chart: undefined },
-              grandchild:   { dataTable: undefined, chart: undefined } 
+            {
+                child: { dataTable: undefined, chart: undefined, table: undefined },
+                grandchild: { chart: undefined, table: undefined }
             }
         ];
 
-        function reDrawPanels() {
+        function redrawPanels() {
 
             redrawChart(0);
             //drawGrandchildPane('grandchildColumnChartDiv_0', 'grandchildTableDiv_0', 'Timeofday', [0, 1, 2, 3]);
@@ -71,7 +72,7 @@
             let grandchildFilterVals = [0, 1, 2, 3, 4, 5, 6];
             let sumAvg = 'sum';
 
-            // datatables    
+            // child datatable   
             if (!panelMapObj.child.dataTable) {
                 dt = new google.visualization.DataTable(jsonData);
 
@@ -86,7 +87,7 @@
                 panelMapObj.child.dataTable = dt;
             }
 
-            // filters
+            // child filter
             filteredData = new google.visualization.DataView(panelMapObj.child.dataTable);
             if (childFilterVals) {
                 let rows = filteredData.getFilteredRows([{
@@ -103,15 +104,15 @@
             }
             filteredData.setColumns(ALL_COLUMNS);
 
-            // aggregates
+            // child aggregate + draw
             aggregateData = getAggregateData(filteredData, RAWDATA_CHILD_FORMATTED_COLUMN, sumAvg);
             panelMapObj.child.chart = drawColumnChart(aggregateData, CHILD_CHART_DIV, AGGDATA_CHART_COLUMNS);
-            drawTableChart(filteredData, CHILD_TABLE_DIV);
+            panelMapObj.child.table = drawTableChart(filteredData, CHILD_TABLE_DIV);
 
             // grandchild pane
             //filteredData = getFilteredData(RAWDATA_CHILD_FORMATTED_COLUMN, grandchildFilterVals, ALL_COLUMNS, panelMapObj.child.dataTable);
 
-            // filters
+            // grandchild filter
             filteredData = new google.visualization.DataView(panelMapObj.child.dataTable);
             if (grandchildFilterVals) {
                 let rows = filteredData.getFilteredRows([{
@@ -127,12 +128,12 @@
                 filteredData.setRows(rows);
             }
             filteredData.setColumns(ALL_COLUMNS);
-            
+
             aggregateData = getAggregateData(filteredData, RAWDATA_GRANDCHILD_FORMATTED_COLUMN, sumAvg);
-            
+
             panelMapObj.grandchild.chart = drawColumnChart(aggregateData, GRANDCHILD_CHART_DIV, AGGDATA_CHART_COLUMNS);
-            
-            drawTableChart(aggregateData, GRANDCHILD_TABLE_DIV);
+
+            panelMapObj.grandchild.table = drawTableChart(aggregateData, GRANDCHILD_TABLE_DIV);
 
         }
 
@@ -177,7 +178,7 @@
 
             let chart = new google.visualization.ColumnChart(document.getElementById(div));
             chart.draw(chartView, chartOptions);
-            
+
             return chart;
         }
 
@@ -205,9 +206,39 @@
                     rowNumberCell: ''
                 }
             }
-            
+
             var table = new google.visualization.Table(document.getElementById(div));
             table.draw(dataView, tableOptions);
+
+            google.visualization.events.addListener(table, 'select', tableSelectHandler);
+
+            return table;
+
+        }
+
+        function tableSelectHandler(e) {
+            let chartColumn;
+            const KEY_COLUMN = 0;
+            const SEL_ITEM = 0;
+            
+            let panel = 0;
+            let sel = panelMap[panel].child.table.getSelection();
+                     
+            if (sel[SEL_ITEM]) {
+                chartColumn = panelMap[panel].child.dataTable.getValue(sel[SEL_ITEM].row, KEY_COLUMN);
+                // panelMap[panel].child.chart.setSelection();
+                panelMap[panel].child.chart.setSelection([
+                        { row: chartColumn, column: 1 }, 
+                        { row: chartColumn, column: 2 },
+                        { row: chartColumn, column: 3 },
+                        { row: chartColumn, column: 4 },
+                        { row: chartColumn, column: 5 },
+                        { row: chartColumn, column: 6 }
+                ]);
+            } else  {
+                panelMap[panel].child.chart.setSelection();
+            } 
+
 
         }
 
@@ -217,7 +248,7 @@
             filterValues = filterValues ? (filterValues.length == 0 ? undefined : filterValues) : undefined;
 
             // let dt = new google.visualization.DataTable(getJsonChartData(0));
-            
+
             let formatter = new google.visualization.ColorFormat();
             formatter.addRange(0, null, 'red', '');
             formatter.format(dt, 6);
@@ -332,7 +363,7 @@
                     ];
                     break;
             }
-            
+
             return { 'cols': dataCols, 'rows': dataRows }
 
         }
