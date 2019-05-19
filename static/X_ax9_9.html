@@ -24,299 +24,168 @@
     <script src="/static/js/collection.js"></script>
     <script src="/static/js/energy-charts.js"></script>
 
-    <script type="text/javascript" src="/static/js/gstatic_charts_loader.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
     <script type="text/javascript">
 
         google.charts.load('current', { packages: ['table', 'corechart'], callback: redrawPanels });
 
-        const RAWDATA_CHILD_FORMATTED_COLUMN = 0;
-        const RAWDATA_GRANDCHILD_FORMATTED_COLUMN = 1;
         const RAWDATA_HSE_COLUMNS = [2, 3, 4, 5, 6, 7, 8, 9];
-
-        const AGGDATA_ID_COLUMN = 0;
-        const AGGDATA_HSE_COLUMNS = [1, 2, 3, 4, 5, 6, 7, 8];
-        const AGGDATA_JOIN_FORMATTED_COLUMN = 9;
-
 
         let panelMap = [
             {
                 child: { dataTable: undefined, chart: undefined, table: undefined },
-                grandchild: { chart: undefined, table: undefined }
+                grandchild: { dataTable: undefined, chart: undefined, table: undefined }
             }
         ];
 
+        // equivalent to redrawPanels jquery function in collection.js  
         function redrawPanels() {
 
             redrawChart(0);
             //drawGrandchildPane('grandchildColumnChartDiv_0', 'grandchildTableDiv_0', 'Timeofday', [0, 1, 2, 3]);
         }
 
-        function redrawChart(index) {
+        function redrawChart(panelIndex) {
+
+            const FORMATTED_DATA_CHILD_COLUMN = 0;
+            const FORMATTED_DATA_GRANDCHILD_COLUMN = 1;
+
+            const ALL_COLUMNS = [FORMATTED_DATA_CHILD_COLUMN, FORMATTED_DATA_GRANDCHILD_COLUMN].concat(RAWDATA_HSE_COLUMNS);
             const AGGDATA_CHART_COLUMNS = [0, 1, 2, 3, 4, 6, 7];
-            const ALL_COLUMNS = [RAWDATA_CHILD_FORMATTED_COLUMN, RAWDATA_GRANDCHILD_FORMATTED_COLUMN].concat(RAWDATA_HSE_COLUMNS);
-
-            const CHILD_CHART_DIV = 'childColumnChartDiv_' + index;
-            const GRANDCHILD_CHART_DIV = 'grandchildColumnChartDiv_' + index;
-            const CHILD_TABLE_DIV = 'childTableDiv_' + index;
-            const GRANDCHILD_TABLE_DIV = 'grandchildTableDiv_' + index;
-
-            const panelMapObj = panelMap[index];
 
             let filteredData;
             let aggregateData;
             let dt;
+            let filterColumn;
+            let groupColumn;
 
-            let jsonData = getJsonChartData(index);
+            let sumAvg = 'sum';
             let childFilterVals = [0, 1, 2, 3];
             let grandchildFilterVals = [0, 1, 2, 3, 4, 5, 6];
-            let sumAvg = 'sum';
 
-            // child datatable   
+            // child format datatable
+            let panelMapObj = panelMap[panelIndex];
             if (!panelMapObj.child.dataTable) {
-                dt = new google.visualization.DataTable(jsonData);
-
-                let formatter = new google.visualization.ColorFormat();
-                formatter.addRange(0, null, 'red', '');
-                formatter.format(dt, 6);
-
-                formatter = new google.visualization.ColorFormat();
-                formatter.addRange(null, 0, 'red', '');
-                formatter.format(dt, 9);
-
+                dt = new google.visualization.DataTable(getJsonChartData(panelIndex));
+                colorFormatDataTable(dt, 6, 9);
                 panelMapObj.child.dataTable = dt;
             }
 
-            // child filter
-            filteredData = new google.visualization.DataView(panelMapObj.child.dataTable);
-            if (childFilterVals) {
-                let rows = filteredData.getFilteredRows([{
-                    column: RAWDATA_GRANDCHILD_FORMATTED_COLUMN,
+            // child filter 
+            filterColumn = FORMATTED_DATA_GRANDCHILD_COLUMN;
+            filteredData = filterDataTable(panelMapObj.child.dataTable, filterColumn, childFilterVals, ALL_COLUMNS);
 
-                    test: function (value, row, column, table) {
-                        //return filterValues.includes(table.getFormattedValue(row, column));    // if filers are a string array of formatted values
-                        let includeRow = childFilterVals.includes(table.getValue(row, column));
-                        return includeRow;
-                    }
-                }]);
+            // child aggregate 
+            groupColumn = FORMATTED_DATA_CHILD_COLUMN;
+            aggregateData = getAggregateData(filteredData, groupColumn, sumAvg);
 
-                filteredData.setRows(rows);
-            }
-            filteredData.setColumns(ALL_COLUMNS);
-
-            // child aggregate + draw
-            aggregateData = getAggregateData(filteredData, RAWDATA_CHILD_FORMATTED_COLUMN, sumAvg);
-            panelMapObj.child.chart = drawColumnChart(aggregateData, CHILD_CHART_DIV, AGGDATA_CHART_COLUMNS);
-            panelMapObj.child.table = drawTableChart(filteredData, CHILD_TABLE_DIV);
-
-            // grandchild pane
-            //filteredData = getFilteredData(RAWDATA_CHILD_FORMATTED_COLUMN, grandchildFilterVals, ALL_COLUMNS, panelMapObj.child.dataTable);
+            // child draw table and chart                
+            panelMapObj.child.table = drawTableChart(filteredData, panelIndex, 'child');
+            panelMapObj.child.chart = drawColumnChart(aggregateData, panelIndex, 'child', AGGDATA_CHART_COLUMNS);
+            addTableEventHandler(panelMapObj.child, AGGDATA_CHART_COLUMNS.length - 1);     // skip the id column
 
             // grandchild filter
-            filteredData = new google.visualization.DataView(panelMapObj.child.dataTable);
-            if (grandchildFilterVals) {
-                let rows = filteredData.getFilteredRows([{
-                    column: RAWDATA_CHILD_FORMATTED_COLUMN,
+            filterColumn = FORMATTED_DATA_CHILD_COLUMN;
+            filteredData = filterDataTable(panelMapObj.child.dataTable, filterColumn, grandchildFilterVals, ALL_COLUMNS);
 
-                    test: function (value, row, column, table) {
-                        //return filterValues.includes(table.getFormattedValue(row, column));    // if filers are a string array of formatted values
-                        let includeRow = grandchildFilterVals.includes(table.getValue(row, column));
-                        return includeRow;
-                    }
-                }]);
+            // grandchild aggregate
+            groupColumn = FORMATTED_DATA_GRANDCHILD_COLUMN;
+            aggregateData = getAggregateData(filteredData, groupColumn, sumAvg);
 
-                filteredData.setRows(rows);
-            }
-            filteredData.setColumns(ALL_COLUMNS);
+            // grandchild format datatable
+            dt = aggregateData.toDataTable();
+            colorFormatDataTable(dt, 5, 8);
+            panelMapObj.grandchild.dataTable = dt;
 
-            aggregateData = getAggregateData(filteredData, RAWDATA_GRANDCHILD_FORMATTED_COLUMN, sumAvg);
-
-            panelMapObj.grandchild.chart = drawColumnChart(aggregateData, GRANDCHILD_CHART_DIV, AGGDATA_CHART_COLUMNS);
-
-            panelMapObj.grandchild.table = drawTableChart(aggregateData, GRANDCHILD_TABLE_DIV);
+            // grandchild draw table and chart
+            panelMapObj.grandchild.table = drawTableChart(dt, panelIndex, 'grandchild');
+            panelMapObj.grandchild.chart = drawColumnChart(dt, panelIndex, 'grandchild', AGGDATA_CHART_COLUMNS);
 
         }
 
-        // draws a column chart in the div
-        function drawColumnChart(dataView, div, columns) {
+        function addTableEventHandler(paneObj, numChartColumns) {
 
-            // Set chart options
-            let chartOptions = {
-                width: 700,
-                height: 400,
-                chartArea: { left: 45, top: 30, right: 0, bottom: 15, width: '95%', height: '95%' },
-                bar: { groupWidth: '75.0%' },
-                isStacked: true,
-                selectionMode: 'multiple',
-                tooltip: { trigger: 'selection', showColorCode: true },
-                aggregationTarget: 'category',
-                fontName: 'Open Sans', fontSize: '0.80rem',
-                dataOpacity: 0.8,
-                legend: { position: 'top', maxLines: 2, alignment: 'center' },
-                vAxis: {
-                    title: 'Megajoules (MJ)',
-                    textPosition: 'out',
-                    titleTextStyle: { italic: 'false' },
-                    gridlines: { count: 10, color: 'none' }, baselineColor: 'black',
-                    viewWindowMode: 'pretty',
-                    format: '##.####'
-                },
-                hAxis: {
-                    title: '',
-                    textPosition: 'none',
-                    textStyle: { fontSize: '0.80rem' },
-                    gridlines: { color: 'none' }, baselineColor: 'none',
-                    titleTextStyle: { italic: 'true' }
-                },
-                axisTitlesPosition: 'none', titlePosition: 'none',
-                backgroundColor: { fill: 'none', stroke: 'none', strokeWidth: 4 },
-                colors: ['#28a745', '#FF0000', '#007bff', '#007bff', '#000000', '#000000']
-            };
-
-            let chartView = new google.visualization.DataView(dataView);
-            chartView.setColumns(columns);
-
-            let chart = new google.visualization.ColumnChart(document.getElementById(div));
-            chart.draw(chartView, chartOptions);
-
-            return chart;
+            google.visualization.events.addListener(paneObj.table, 'select', function () {
+                handleTableSelectEvent(paneObj, numChartColumns);
+            });
         }
 
-        // draws a table chart in the div    
-        function drawTableChart(dataView, div) {
+        function handleTableSelectEvent(paneObj, numChartColumns) {
 
-            const INITIAL_SORT_COL = 0;
-
-            // Set chart options
-            let tableOptions = {
-                width: 800, height: '100%',     // 100% if paged 
-                alternatingRowStyle: false,
-                showRowNumber: false,
-                allowHtml: true,
-                sortColumn: INITIAL_SORT_COL,
-                page: 'enable', pageSize: 10,
-                cssClassNames: {
-                    headerRow: 'header-badge',
-                    tableRow: 'sundaya-font-row',
-                    oddTableRow: ' sundaya-font-row',
-                    selectedTableRow: '',
-                    hoverTableRow: '',
-                    headerCell: 'text-left bg-white text-secondary border-bottom border-right-0 border-secondary',
-                    tableCell: 'sundaya-font-row border-bottom border-right-0 border-default',
-                    rowNumberCell: ''
-                }
-            }
-
-            var table = new google.visualization.Table(document.getElementById(div));
-            table.draw(dataView, tableOptions);
-
-            google.visualization.events.addListener(table, 'select', tableSelectHandler);
-
-            return table;
-
-        }
-
-        function tableSelectHandler(e) {
-            let chartColumn;
             const KEY_COLUMN = 0;
             const SEL_ITEM = 0;
-            
-            let panel = 0;
-            let sel = panelMap[panel].child.table.getSelection();
-                     
+
+            let col;
+            let sel = paneObj.table.getSelection();
+
             if (sel[SEL_ITEM]) {
-                chartColumn = panelMap[panel].child.dataTable.getValue(sel[SEL_ITEM].row, KEY_COLUMN);
-                // panelMap[panel].child.chart.setSelection();
-                panelMap[panel].child.chart.setSelection([
-                        { row: chartColumn, column: 1 }, 
-                        { row: chartColumn, column: 2 },
-                        { row: chartColumn, column: 3 },
-                        { row: chartColumn, column: 4 },
-                        { row: chartColumn, column: 5 },
-                        { row: chartColumn, column: 6 }
-                ]);
-            } else  {
-                panelMap[panel].child.chart.setSelection();
-            } 
 
+                let dataColumn = paneObj.dataTable.getValue(sel[SEL_ITEM].row, KEY_COLUMN);
 
-        }
+                let chartSel = [];
+                for (let i = 1; i <= numChartColumns; i++) {
+                    chartSel.push({ row: dataColumn, column: i });
+                }
+                paneObj.chart.setSelection(chartSel);
 
-        // returns filtered data rows from the rawDataTable. filterValues is a numeric array.
-        function getFilteredData(filterColumn, filterValues, columns, dt) {
-            // if filtervalues are empty or udnefined return data without filtering
-            filterValues = filterValues ? (filterValues.length == 0 ? undefined : filterValues) : undefined;
-
-            // let dt = new google.visualization.DataTable(getJsonChartData(0));
-
-            let formatter = new google.visualization.ColorFormat();
-            formatter.addRange(0, null, 'red', '');
-            formatter.format(dt, 6);
-
-            formatter = new google.visualization.ColorFormat();
-            formatter.addRange(null, 0, 'red', '');
-            formatter.format(dt, 9);
-
-            let filteredData = new google.visualization.DataView(dt);
-
-            if (filterValues) {
-                let rows = filteredData.getFilteredRows([{
-                    column: filterColumn,
-                    test: function (value, row, column, table) {
-                        //return filterValues.includes(table.getFormattedValue(row, column));    // if filers are a strign array of formatted values
-                        let includeRow = filterValues.includes(table.getValue(row, column));
-                        return includeRow;
-                    }
-                }]);
-
-                filteredData.setRows(rows);
+            } else {
+                paneObj.chart.setSelection();
             }
 
-            filteredData.setColumns(columns);
-
-            return filteredData;
         }
 
 
         // returns aggregate (sum or average) from the raw data.
-        function getAggregateData(filteredData, rawDataGroupColumn, aggMethod) {
+        function getAggregateData(filteredData, groupColumn, groupOption) {
 
-            // choose the agg function based on request {sum' or avg')
-            aggMethod = aggMethod ? aggMethod.toLowerCase() : 'sum';
-            aggFunction = aggMethod === 'sum' ? google.visualization.data.sum : google.visualization.data.avg;
+            const AGGDATA_ID_COLUMN = 0;
+            const AGGDATA_HSE_COLUMNS = [1, 2, 3, 4, 5, 6, 7, 8];
 
+            const GROUP_OPTION_SUM = 'sum';
+            const JOIN_OPTION_LEFT = 'left';
 
-            //alert(colsArray[0].column);
+            // group and aggregate 
+            let groupFunction = (groupOption === GROUP_OPTION_SUM) ? google.visualization.data.sum : google.visualization.data.avg;
 
-            // group and aggregate the data
             let groupedData = google.visualization.data.group(
                 filteredData,
-                [   // group by these columns and include them in the output
-                    { column: rawDataGroupColumn },
-
+                [   // group by these columns and include in output
+                    { column: groupColumn },
                 ],
-                // in addition output these columns  e.g. { column: RAWDATA_HSE_COLUMNS[0], aggregation: aggFunction, type: 'number' }
+                // in addition output these columns  e.g. { column: RAWDATA_HSE_COLUMNS[0], aggregation: groupFunction, type: 'number' }
                 RAWDATA_HSE_COLUMNS.map(function (hseColumn) {
                     return {
                         column: hseColumn,
-                        aggregation: aggFunction,
+                        aggregation: groupFunction,
                         type: 'number'
                     };
                 })
-
             );
 
-            // join with raw data to get the formatted key column (as the group drops all formatting) 
-            let joinedData = google.visualization.data.join(groupedData, filteredData, 'left', [[AGGDATA_ID_COLUMN, rawDataGroupColumn]], AGGDATA_HSE_COLUMNS, [rawDataGroupColumn]);
-            joinedData = new google.visualization.DataView(joinedData);
-            joinedData.setColumns([AGGDATA_JOIN_FORMATTED_COLUMN].concat(AGGDATA_HSE_COLUMNS));
+            // join with raw data to get formatted key column (as grouping drops all formatting..) 
+            let joinedFormatDataColumn = AGGDATA_HSE_COLUMNS.length + 1;
+            let joinedData = new google.visualization.DataView(
+                google.visualization.data.join(groupedData,
+                    filteredData,
+                    JOIN_OPTION_LEFT,
+                    [[AGGDATA_ID_COLUMN, groupColumn]], AGGDATA_HSE_COLUMNS, [groupColumn])
+            );
+            joinedData.setColumns([joinedFormatDataColumn].concat(AGGDATA_HSE_COLUMNS));
 
             return joinedData;
         }
 
+        // ============================== move to energy-charts.js
+
+
+        // ============================== move to energy_textHtml.ejs 
+
+        // get json for a panel (period)
         function getJsonChartData(panelIndex) {
 
             let dataRows;
+
             const dataCols = [
                 { id: '0', type: 'number', label: 'Day' },            // v: 0, f: 'Mon Feb 4th'
                 { id: '1', type: 'number', label: 'Timeofday' },       // v: 0, f: 'Night'
@@ -362,10 +231,14 @@
                         { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 3, f: 'Morning' }, { v: 7.448 }, { v: -12.414 }, { v: -16.431 }, { v: 14.193 }, { v: -2.238 }, { v: 18.548 }, { v: -9.476 }, { v: -9.072 }] }
                     ];
                     break;
+
+                default:        // if panelIndex is missing returns column headings with empty rows
+                    dataRows = [];
+                    break;
+
             }
 
             return { 'cols': dataCols, 'rows': dataRows }
-
         }
 
     </script>

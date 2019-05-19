@@ -7,18 +7,18 @@
 const enums = require('./enums');
 
 // capitalise first letter of first word or all words
-module.exports.capitalise = (str, allWords) => { 
-    
+module.exports.capitalise = (str, allWords) => {
+
     const SPACE_DELIMITER = ' ';
-    let outStr= '';
+    let outStr = '';
 
     allWords = allWords || false;           // if true all words are capitalised
-    
+
     if (allWords) {
         let words = str.split(SPACE_DELIMITER);     // get the words
-        
+
         words.forEach(word => {
-          outStr += word.charAt(0).toUpperCase() + word.slice(1) + SPACE_DELIMITER;
+            outStr += word.charAt(0).toUpperCase() + word.slice(1) + SPACE_DELIMITER;
         });
         outStr = outStr.trim();
 
@@ -26,8 +26,8 @@ module.exports.capitalise = (str, allWords) => {
         outStr = str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-    return outStr; 
-};       
+    return outStr;
+};
 
 /**
  * returns a number sequence (e.g. days of the month '01 02 ..' etc) in a delimited string with zero padding
@@ -55,9 +55,21 @@ module.exports.createSequence = (startNum, howMany, delimiter, prefix) => {
         zerosToPad = maxDigits - num.length;
         seqStr += PAD_ZERO.repeat(zerosToPad) + num + (i <= maxNum - 1 ? delimiter : "");
     }
-    
+
     return seqStr.trim();
 
+}
+
+// returns an array of numbers
+module.exports.createNumberSequence = (startNum, howMany) => {
+
+    let seqNum = [];
+    let maxNum = startNum + (howMany - 1);
+
+    for (let i = startNum; i <= maxNum; i++) {
+        seqNum.push(i);
+    }
+    return seqNum;
 }
 
 // pads leading zeros if the number is less than the width

@@ -256,9 +256,11 @@ function revealFilterResetButtons(source) {
 
 // returns whether sum or avg has been selected
 function getGroupOption() {
+    const AVERAGE = 'avg';
+    const SUM = 'sum';
 
     let isAvg = $('body').find('#btnSumAvg').hasClass('active');
-    return (isAvg ? 'Avg' : 'Sum');
+    return (isAvg ? AVERAGE : SUM);
 
 }
 

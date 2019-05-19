@@ -385,7 +385,7 @@
     <script src="/static/js/collection.js"></script>
     <script src="/static/js/energy-charts.js"></script>
 
-    <script type="text/javascript" src="/static/js/gstatic_charts_loader.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
     <script type="text/javascript">
         
@@ -407,8 +407,11 @@
             let childFilterVals = getActiveFilterButtons(collectionPanel.find('.pane-child'));
             let grandchildFilterVals = getActiveFilterButtons(collectionPanel.find('.pane-grandchild'));
             
-            console.dir('redrawChart ' + panelIndex + ' | ' + childFilterVals + ' | ' + grandchildFilterVals + ' | ' + sumAvg);
+            // console.dir('redrawChart ' + panelIndex + ' | ' + childFilterVals + ' | ' + grandchildFilterVals + ' | ' + sumAvg);
+
+
         }
+
 
     </script>
 
