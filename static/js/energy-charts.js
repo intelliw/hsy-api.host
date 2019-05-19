@@ -1,4 +1,28 @@
 
+// selects corresponding chart column when a table row is selected 
+function handleTableSelectEvent(paneObj, numChartColumns) {
+
+    const KEY_COLUMN = 0;
+    const SEL_ITEM = 0;
+
+    let col;
+    let sel = paneObj.table.getSelection();
+
+    if (sel[SEL_ITEM]) {
+
+        let dataColumn = paneObj.dataTable.getValue(sel[SEL_ITEM].row, KEY_COLUMN);
+
+        let chartSel = [];
+        for (let i = 1; i <= numChartColumns; i++) {
+            chartSel.push({ row: dataColumn, column: i });
+        }
+        paneObj.chart.setSelection(chartSel);
+
+    } else {
+        paneObj.chart.setSelection();
+    }
+
+}
 
 // filter datatable and return a dataview. includeRows is an array of active filter button indexes
 function filterDataTable(dt, filterColumn, includeRows, includeColumns) {

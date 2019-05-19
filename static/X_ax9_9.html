@@ -30,7 +30,7 @@
 
         google.charts.load('current', { packages: ['table', 'corechart'], callback: redrawPanels });
 
-        const RAWDATA_HSE_COLUMNS = [2, 3, 4, 5, 6, 7, 8, 9];
+        const RAWDATA_HSE_COLUMNS = [2, 3, 4, 5, 6, 7, 8, 9];       // 8 cols for hse,  '2,3' if store or grid, otherwise '2'
 
         let panelMap = [
             {
@@ -52,7 +52,7 @@
             const FORMATTED_DATA_GRANDCHILD_COLUMN = 1;
 
             const ALL_COLUMNS = [FORMATTED_DATA_CHILD_COLUMN, FORMATTED_DATA_GRANDCHILD_COLUMN].concat(RAWDATA_HSE_COLUMNS);
-            const AGGDATA_CHART_COLUMNS = [0, 1, 2, 3, 4, 6, 7];
+            const AGGDATA_CHART_COLUMNS = [0, 1, 2, 3, 4, 6, 7];    // 1 more than the # collection items in a child period 
 
             let filteredData;
             let aggregateData;
@@ -83,7 +83,10 @@
             // child draw table and chart                
             panelMapObj.child.table = drawTableChart(filteredData, panelIndex, 'child');
             panelMapObj.child.chart = drawColumnChart(aggregateData, panelIndex, 'child', AGGDATA_CHART_COLUMNS);
+            
+            // child event handlers
             addTableEventHandler(panelMapObj.child, AGGDATA_CHART_COLUMNS.length - 1);     // skip the id column
+            //addChartEventHandler(panelMapObj.child);
 
             // grandchild filter
             filterColumn = FORMATTED_DATA_CHILD_COLUMN;
@@ -102,8 +105,13 @@
             panelMapObj.grandchild.table = drawTableChart(dt, panelIndex, 'grandchild');
             panelMapObj.grandchild.chart = drawColumnChart(dt, panelIndex, 'grandchild', AGGDATA_CHART_COLUMNS);
 
+            // grandchild event handlers
+            addTableEventHandler(panelMapObj.grandchild, AGGDATA_CHART_COLUMNS.length - 1);     // skip the id column
+            //addChartEventHandler(panelMapObj.child);
+
         }
 
+        // register table select event 
         function addTableEventHandler(paneObj, numChartColumns) {
 
             google.visualization.events.addListener(paneObj.table, 'select', function () {
@@ -111,30 +119,20 @@
             });
         }
 
-        function handleTableSelectEvent(paneObj, numChartColumns) {
+        // register chart select event 
+        function addChartEventHandler(paneObj) {
 
-            const KEY_COLUMN = 0;
-            const SEL_ITEM = 0;
-
-            let col;
-            let sel = paneObj.table.getSelection();
-
-            if (sel[SEL_ITEM]) {
-
-                let dataColumn = paneObj.dataTable.getValue(sel[SEL_ITEM].row, KEY_COLUMN);
-
-                let chartSel = [];
-                for (let i = 1; i <= numChartColumns; i++) {
-                    chartSel.push({ row: dataColumn, column: i });
-                }
-                paneObj.chart.setSelection(chartSel);
-
-            } else {
-                paneObj.chart.setSelection();
-            }
-
+            google.visualization.events.addListener(paneObj.chart, 'select', function () {
+                handleChartSelectEvent(paneObj);
+            });
         }
 
+        function handleChartSelectEvent(paneObj) {
+            
+            // let sel = paneObj.chart.getSelection();
+            // alert(paneObj.chart.getSelection()[6].row + ' '  + paneObj.chart.getSelection()[6].column);
+
+        }
 
         // returns aggregate (sum or average) from the raw data.
         function getAggregateData(filteredData, groupColumn, groupOption) {
