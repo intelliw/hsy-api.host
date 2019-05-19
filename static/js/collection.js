@@ -221,11 +221,13 @@ function redrawPanels(source) {
         if (!resetBtn.hasClass('redraw')) resetBtn.addClass('redraw');
     }
 
+    // redrawPanes - wil redraw any panes which were invisible and flagged for later redraw
 
     $('.select-collection-panel.show.redraw').each(function () {
     
-        // 2DO call redrawChart and.. let chartObj = ...
-        redrawChart($(this));
+        redrawActivePane($(this));
+        
+        setChartTitles($(this));
 
         $(this).removeClass('redraw');      // clear the 'redraw' flag 
 
@@ -253,6 +255,16 @@ function revealFilterResetButtons(source) {
 
 }
 
+// sets the chjart titles
+function setChartTitles(panel) {
+    
+    let sum = getGroupOption() == 'sum';
+    
+    panel.find('.pane-child').find('.select-chart-title').text((sum ? 'Total' : 'Timeofday' + ' Average') + ' Megajoules (MJ) / ' + 'DAY');
+    panel.find('.pane-grandchild').find('.select-chart-title').text((sum ? 'Total' : ' Average') + ' Megajoules (MJ) / ' + (sum ? 'Timeofday' : 'Day'));
+
+}
+
 
 // returns whether sum or avg has been selected
 function getGroupOption() {
@@ -268,15 +280,20 @@ function getGroupOption() {
 function getActiveFilterButtons(pane) {
     
     let showButtons = [];
+    let allButtons = [];
+
     let btnNdx = 0;
 
     pane.find('.btn-block').each(function () {
         if ($(this).find('.btn').hasClass('active')) {
             showButtons.push(btnNdx);
         }
+        allButtons.push(btnNdx);
         ++btnNdx;
     });
-    return showButtons;
+
+    // 'all hidden' means no filters apply sp return all buttons
+    return (showButtons.length > 0 ? showButtons : allButtons) ;
 }
 
 // returns true if at least one filter is unselected ('hide') and *all* filters are NOT unselected - as 'all hidden' means no filters apply

@@ -192,7 +192,7 @@
            returned columns are: 'AGGDATA_ID_COLUMN (e.g: 0),  'AGGDATA_CHILD_LABEL  (e.g: Mon Feb 4th)
                         'Harvest', Enjoy', 'Store in' 'Store out', 'Grid in', 'Grid out'
         */
-        function getAggregateData(filteredData, rawDataGroupColumn, aggMethod) {
+        function groupFilteredData(filteredData, rawDataGroupColumn, aggMethod) {
 
             // choose the agg function based on request {sum' or avg')
             aggMethod = aggMethod ? aggMethod.toLowerCase() : 'sum';
@@ -238,7 +238,7 @@
             let aggregationMethod = getAggregationMethod();
             let filteredData = getFilteredData(FILTER_COLUMN, filterValues);
 
-            let aggregateData = getAggregateData(filteredData, GROUP_COLUMN, aggregationMethod);
+            let aggregateData = groupFilteredData(filteredData, GROUP_COLUMN, aggregationMethod);
             childChart_1 = drawColumnChart(aggregateData, chartDiv, period);
 
             // grandchild table is the raw filtered data
@@ -254,7 +254,7 @@
             let aggregationMethod = getAggregationMethod();
             let filteredData = getFilteredData(FILTER_COLUMN, filterValues);
 
-            let aggregateData = getAggregateData(filteredData, GROUP_COLUMN, aggregationMethod);
+            let aggregateData = groupFilteredData(filteredData, GROUP_COLUMN, aggregationMethod);
             grandchildChart_1 = drawColumnChart(aggregateData, chartDiv, period);
 
             // child table - rawdata/filtered/grouped-by-child,  

@@ -5,6 +5,8 @@
                                                         class - redraw
             class - select-collection-panel.card-body   class <pane-child | pane-grandchild>
             class - select-filter-btn-panel                 .find('.btn-block').hasClass('active');
+            pane-child, pane-grandchild
+                    select-chart-title 
         custom IDs 
             titlePeriod, 
             navbarMain, navbarAPI, 
@@ -211,21 +213,18 @@
                                                 
                                                 <div class="d-flex flex-grow-1 justify-content-between py-0 border-bottom">
                                                     
-                                                    <div class="sundaya-font-row py-0 mt-1 px-0 text-secondary font-weight-bold">
+                                                    <div class="select-chart-title sundaya-font-row py-0 mt-1 px-0 text-secondary font-weight-bold">
                                                         Total Megajoules (MJ) / Day</div>  
 
                                                     <button type="button" class="btn btn-outline-light chart-selection-reset btn-sm py-0 mx-0 px-0"
-                                                         onclick="alert('panelMap[<%= n_cols %>].<%= pane === 'pane-child' ? 'child' : 'grandchild' %>.chart.setSelection()')">
+                                                         onclick="panelMap[<%= n_cols %>].<%= pane === 'pane-child' ? 'child' : 'grandchild' %>.chart.setSelection()">
                                                         <i id="btnDone" class="material-icons" data-toggle="tooltip" title="clear selection"
                                                             style="font-size:18px;color:darkgrey;">bar_chart</i>
                                                     </button>
                                                 </div>
                                                 
-                                                <div id="<%= pane === 'pane-child' ? 'childColumnChartDiv_' : 'grandchildColumnChartDiv_' %><%= n_cols %>" class="px-0">
-                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                                    incididunt
-                                                    ut labore
-                                                    et dolore magna aliqua.
+                                                <div id="<%= pane === 'pane-child' ? 'childColumnChartDiv_' : 'grandchildColumnChartDiv_' %><%= n_cols %>" class="px-0 mt-2 container-fluid">
+                                                    <img src="#.jpg" height="300px" width="400px"> 
                                                 </div>    
 
                                                 <div class="btn-group btn-group-sm flex-wrap" 
@@ -248,44 +247,8 @@
                                             </div>
                                             
                                             <div class="col-md px-1 mb-2 mr-2 border border-default">
-                                                <div class="d-flex flex-grow-1 justify-content-end py-0 border-bottom"> 
-                                                    <button type="button" class="btn btn-outline-light chart-selection-reset btn-sm py-0 mx-0 px-0">
-                                                        <i id="btnDone" class="material-icons" data-toggle="tooltip" title="clear selection"
-                                                            style="font-size:18px;color:darkgrey;">bar_chart</i>
-                                                    </button>
-                                                </div>
-
                                                 <div id="<%= pane === 'pane-child' ? 'childTableDiv_' : 'grandchildTableDiv_' %><%= n_cols %>" class="px-0">
-                                                    Lorem apsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                                    et dolore magna aliqua.
                                                 </div>
-                                            </div>
-
-                                        </div>
-
-                                        <!-- PERIOD n BODY panel HSE BUTTONS -->
-                                        <div class="d-flex pt-0 pb-0">
-                                            <div class="flex-grow-1 mr-2">
-                                                <div class="testButton btn btn-success badge pr-0 mb-1 mr-1<% if (!isHarvest) { %> disabled<% } %>">Harvest
-                                                    <button type="button" class="btn btn-sm btn-success btn-toggle active<% if (!isHarvest) { %> invisible<% } %>"
-                                                        data-toggle="button">
-                                                        <div class="handle"></div>
-                                                    </button></div>
-                                                <div class="testButton btn btn-primary badge pr-0 mb-1 mr-1<% if (!isStore) { %> disabled<% } %>">Store
-                                                    <button type="button" class="btn btn-sm btn-primary btn-toggle active<% if (!isStore) { %> invisible<% } %>"
-                                                        data-toggle="button">
-                                                        <div class="handle"></div>
-                                                    </button></div>
-                                                <div class="testButton btn btn-danger badge pr-0 mb-1 mr-1<% if (!isEnjoy) { %> disabled<% } %>">Enjoy
-                                                    <button type="button" class="btn btn-sm btn-danger btn-toggle active<% if (!isEnjoy) { %> invisible<% } %>"
-                                                        data-toggle="button">
-                                                        <div class="handle"></div>
-                                                    </button></div>
-                                                <div class="testButton btn btn-dark badge pr-0 mb-1 mr-1<% if (!isGrid) { %> disabled<% } %>">Grid
-                                                    <button type="button" class="btn btn-sm btn-dark btn-toggle active<% if (!isGrid) { %> invisible<% } %>"
-                                                        data-toggle="button">
-                                                        <div class="handle"></div>
-                                                    </button></div>
                                             </div>
 
                                         </div>
@@ -388,30 +351,153 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
     <script type="text/javascript">
-        
-        google.charts.load('current', { packages: ['table', 'corechart'], callback: redrawPanels });
 
-        // constants for client side - some of these are used by energy.js as well
         const API_BASE_URL = '<%= API_BASE_URL %>';     // e.g.  'http://api.endpoints.sundaya.cloud.goog'
 
         const isHarvest = <%= isHarvest %>;
         const isStore = <%= isStore %>;
         const isEnjoy = <%= isEnjoy %>;
         const isGrid = <%= isGrid %>;
+        
+        let panelMap = [
+            {
+                child: { dataTable: undefined, chart: undefined, table: undefined },
+                grandchild: { dataTable: undefined, chart: undefined, table: undefined }
+            }
+        ];
 
-        function redrawChart(collectionPanel) {
+        google.charts.load('current', { packages: ['table', 'corechart'], callback: redrawPanels });
+
+        // draws the active pane and flags the other for redraw. calls drawChildPane and drawGrandchildPane depending on which is active
+        function redrawActivePane(collectionPanel) {
             
-            let panelIndex = collectionPanel.attr('index');
+            const AGGDATA_CHART_COLUMNS = [0, 1, 2, 3, 4, 6, 7];    // 1 more than the # collection items in a child period 
+            const RAWDATA_HSE_COLUMNS = [2, 3, 4, 5, 6, 7, 8, 9];       // 8 cols for hse,  '2,3' if store or grid, otherwise '2'
+            const AGGDATA_HSE_COLUMNS = [1, 2, 3, 4, 5, 6, 7, 8];       // 8 cols for hse,  '1,2' if store or grid, otherwise '1'
+
+            const FORMATTED_DATA_CHILD_COLUMN = 0;
+            const FORMATTED_DATA_GRANDCHILD_COLUMN = 1;
+
+            const ALL_COLUMNS = [FORMATTED_DATA_CHILD_COLUMN, FORMATTED_DATA_GRANDCHILD_COLUMN].concat(RAWDATA_HSE_COLUMNS);
+
+            let filteredChildData; 
+            let filteredGrandchildData; 
+            let aggregateChildData;
+            let aggregateGrandchildData;
+            let dt;
+            let filterColumn;
+            let groupColumn;
+
+            let panelIndex = Number(collectionPanel.attr('index'));
             
             let sumAvg = getGroupOption();
             let childFilterVals = getActiveFilterButtons(collectionPanel.find('.pane-child'));
             let grandchildFilterVals = getActiveFilterButtons(collectionPanel.find('.pane-grandchild'));
             
-            // console.dir('redrawChart ' + panelIndex + ' | ' + childFilterVals + ' | ' + grandchildFilterVals + ' | ' + sumAvg);
+            // console.dir('redrawActivePane ' + panelIndex + ' | ' + childFilterVals + ' | ' + grandchildFilterVals + ' | ' + sumAvg);
 
+            // child format datatable
+            let panelMapObj = panelMap[panelIndex];
+            if (!panelMapObj.child.dataTable) {
+                dt = new google.visualization.DataTable(getJsonChartData(panelIndex));
+                colorFormatDataTable(dt, 6, 9);
+                panelMapObj.child.dataTable = dt;
+            }
+
+            // child filter 
+            filterColumn = FORMATTED_DATA_GRANDCHILD_COLUMN;
+            filteredChildData = filterDataTable(panelMapObj.child.dataTable, filterColumn, childFilterVals, ALL_COLUMNS);
+
+            // child aggregate 
+            groupColumn = FORMATTED_DATA_CHILD_COLUMN;
+            aggregateChildData = groupFilteredData(filteredChildData, groupColumn, sumAvg, RAWDATA_HSE_COLUMNS, AGGDATA_HSE_COLUMNS);
+
+            // draw child
+            panelMapObj.child.table = drawTableChart(filteredChildData, panelIndex, 'child');
+            panelMapObj.child.chart = drawColumnChart(aggregateChildData, panelIndex, 'child', AGGDATA_CHART_COLUMNS);
+
+            // grandchild filter
+            filterColumn = FORMATTED_DATA_CHILD_COLUMN;
+            filteredGrandchildData = filterDataTable(panelMapObj.child.dataTable, filterColumn, grandchildFilterVals, ALL_COLUMNS);
+
+            // grandchild aggregate
+            groupColumn = FORMATTED_DATA_GRANDCHILD_COLUMN;
+            aggregateGrandchildData = groupFilteredData(filteredGrandchildData, groupColumn, sumAvg, RAWDATA_HSE_COLUMNS, AGGDATA_HSE_COLUMNS);
+
+            // grandchild format datatable
+            dt = aggregateGrandchildData.toDataTable();
+            colorFormatDataTable(dt, 5, 8);
+            panelMapObj.grandchild.dataTable = dt;
+
+            // draw grandchild
+            panelMapObj.grandchild.table = drawTableChart(dt, panelIndex, 'grandchild');
+            panelMapObj.grandchild.chart = drawColumnChart(dt, panelIndex, 'grandchild', AGGDATA_CHART_COLUMNS);
+
+            // register event handlers
+            addTableEventHandler(panelMapObj.child, AGGDATA_CHART_COLUMNS.length - 1);     // skip the id column
+            addTableEventHandler(panelMapObj.grandchild, AGGDATA_CHART_COLUMNS.length - 1);     // skip the id column
+                //addChartEventHandler(panelMapObj.grandchild);
 
         }
 
+        function getJsonChartData(panelIndex) {
+
+            let dataRows;
+
+            const dataCols = [
+                { id: '0', type: 'number', label: 'Day' },            // v: 0, f: 'Mon Feb 4th'
+                { id: '1', type: 'number', label: 'Timeofday' },       // v: 0, f: 'Night'
+                { id: '2', type: 'number', label: 'Harvest' },
+                { id: '3', type: 'number', label: 'Enjoy' },
+                { id: '4', type: 'number', label: 'Store in' },
+                { id: '5', type: 'number', label: 'Store out' },
+                { id: '6', type: 'number', label: '(Store)' },
+                { id: '7', type: 'number', label: 'Grid out' },
+                { id: '8', type: 'number', label: 'Grid in' },
+                { id: '9', type: 'number', label: '(Grid)' }];
+
+            switch (panelIndex) {
+                case 0:
+                    dataRows = [
+                        { c: [{ v: 0, f: 'Mon Feb 4th' }, { v: 0, f: 'Night' }, { v: 16.825 }, { v: -18.196 }, { v: -6.566 }, { v: 16.273 }, { v: 9.707 }, { v: 8.519 }, { v: -18.152 }, { v: 9.633 }] },
+                        { c: [{ v: 0, f: 'Mon Feb 4th' }, { v: 1, f: 'Afternoon' }, { v: 18.229 }, { v: -3.603 }, { v: -2.950 }, { v: 15.211 }, { v: 12.261 }, { v: 14.878 }, { v: -18.491 }, { v: 3.613 }] },
+                        { c: [{ v: 0, f: 'Mon Feb 4th' }, { v: 2, f: 'Evening' }, { v: 20.447 }, { v: -3.137 }, { v: -4.857 }, { v: 16.841 }, { v: 11.984 }, { v: 11.742 }, { v: -17.249 }, { v: 5.507 }] },
+                        { c: [{ v: 0, f: 'Mon Feb 4th' }, { v: 3, f: 'Morning' }, { v: 9.415 }, { v: -8.049 }, { v: -14.471 }, { v: 20.649 }, { v: 6.178 }, { v: 6.458 }, { v: -15.513 }, { v: 9.055 }] },
+                        { c: [{ v: 1, f: 'Tue Feb 5th' }, { v: 0, f: 'Night' }, { v: 14.648 }, { v: -9.859 }, { v: -17.979 }, { v: 11.470 }, { v: -6.509 }, { v: 6.792 }, { v: -11.471 }, { v: 4.679 }] },
+                        { c: [{ v: 1, f: 'Tue Feb 5th' }, { v: 1, f: 'Afternoon' }, { v: 20.593 }, { v: -4.866 }, { v: -4.875 }, { v: 3.434 }, { v: -1.441 }, { v: 2.815 }, { v: -4.383 }, { v: 1.568 }] },
+                        { c: [{ v: 1, f: 'Tue Feb 5th' }, { v: 2, f: 'Evening' }, { v: 10.735 }, { v: -19.601 }, { v: -16.177 }, { v: 9.115 }, { v: -7.062 }, { v: 8.004 }, { v: -10.967 }, { v: 2.963 }] },
+                        { c: [{ v: 1, f: 'Tue Feb 5th' }, { v: 3, f: 'Morning' }, { v: 14.871 }, { v: -13.650 }, { v: -7.390 }, { v: 13.455 }, { v: 6.065 }, { v: 18.081 }, { v: -11.698 }, { v: -6.383 }] },
+                        { c: [{ v: 2, f: 'Wed Feb 6th' }, { v: 0, f: 'Night' }, { v: 10.095 }, { v: -10.221 }, { v: -9.128 }, { v: 19.591 }, { v: 10.463 }, { v: 5.588 }, { v: -3.434 }, { v: -2.154 }] },
+                        { c: [{ v: 2, f: 'Wed Feb 6th' }, { v: 1, f: 'Afternoon' }, { v: 6.934 }, { v: -15.391 }, { v: -8.238 }, { v: 9.431 }, { v: 1.193 }, { v: 6.856 }, { v: -9.843 }, { v: 2.987 }] },
+                        { c: [{ v: 2, f: 'Wed Feb 6th' }, { v: 2, f: 'Evening' }, { v: 6.354 }, { v: -17.232 }, { v: -3.951 }, { v: 15.713 }, { v: 11.762 }, { v: 19.696 }, { v: -17.337 }, { v: -2.359 }] },
+                        { c: [{ v: 2, f: 'Wed Feb 6th' }, { v: 3, f: 'Morning' }, { v: 9.793 }, { v: -6.816 }, { v: -12.542 }, { v: 5.666 }, { v: -6.876 }, { v: 13.171 }, { v: -11.950 }, { v: -1.221 }] },
+                        { c: [{ v: 3, f: 'Thu Feb 7th' }, { v: 0, f: 'Night' }, { v: 20.497 }, { v: -14.924 }, { v: -4.945 }, { v: 9.182 }, { v: 4.237 }, { v: 3.490 }, { v: -16.642 }, { v: 13.152 }] },
+                        { c: [{ v: 3, f: 'Thu Feb 7th' }, { v: 1, f: 'Afternoon' }, { v: 14.572 }, { v: -9.392 }, { v: -19.099 }, { v: 13.920 }, { v: -5.179 }, { v: 20.537 }, { v: -16.914 }, { v: -3.623 }] },
+                        { c: [{ v: 3, f: 'Thu Feb 7th' }, { v: 2, f: 'Evening' }, { v: 3.546 }, { v: -14.066 }, { v: -10.432 }, { v: 3.447 }, { v: -6.985 }, { v: 10.173 }, { v: -12.269 }, { v: 2.096 }] },
+                        { c: [{ v: 3, f: 'Thu Feb 7th' }, { v: 3, f: 'Morning' }, { v: 9.007 }, { v: -14.670 }, { v: -9.497 }, { v: 15.301 }, { v: 5.804 }, { v: 6.515 }, { v: -8.791 }, { v: 2.276 }] },
+                        { c: [{ v: 4, f: 'Fri Feb 8th' }, { v: 0, f: 'Night' }, { v: 15.891 }, { v: -18.566 }, { v: -3.019 }, { v: 4.127 }, { v: 1.108 }, { v: 6.495 }, { v: -6.130 }, { v: -0.365 }] },
+                        { c: [{ v: 4, f: 'Fri Feb 8th' }, { v: 1, f: 'Afternoon' }, { v: 12.017 }, { v: -20.318 }, { v: -20.189 }, { v: 7.685 }, { v: -12.504 }, { v: 11.664 }, { v: -18.634 }, { v: 6.970 }] },
+                        { c: [{ v: 4, f: 'Fri Feb 8th' }, { v: 2, f: 'Evening' }, { v: 13.551 }, { v: -16.470 }, { v: -5.462 }, { v: 17.209 }, { v: 11.747 }, { v: 6.206 }, { v: -15.027 }, { v: 8.821 }] },
+                        { c: [{ v: 4, f: 'Fri Feb 8th' }, { v: 3, f: 'Morning' }, { v: 13.120 }, { v: -12.507 }, { v: -16.939 }, { v: 7.234 }, { v: -9.705 }, { v: 12.925 }, { v: -6.384 }, { v: -6.541 }] },
+                        { c: [{ v: 5, f: 'Sat Feb 9th' }, { v: 0, f: 'Night' }, { v: 16.552 }, { v: -15.924 }, { v: -19.386 }, { v: 18.615 }, { v: -0.771 }, { v: 18.373 }, { v: -9.758 }, { v: -8.615 }] },
+                        { c: [{ v: 5, f: 'Sat Feb 9th' }, { v: 1, f: 'Afternoon' }, { v: 4.763 }, { v: -3.811 }, { v: -19.493 }, { v: 8.221 }, { v: -11.272 }, { v: 3.924 }, { v: -3.381 }, { v: -0.543 }] },
+                        { c: [{ v: 5, f: 'Sat Feb 9th' }, { v: 2, f: 'Evening' }, { v: 12.947 }, { v: -13.392 }, { v: -19.124 }, { v: 6.174 }, { v: -12.950 }, { v: 17.276 }, { v: -17.566 }, { v: 0.290 }] },
+                        { c: [{ v: 5, f: 'Sat Feb 9th' }, { v: 3, f: 'Morning' }, { v: 16.586 }, { v: -3.160 }, { v: -19.840 }, { v: 12.753 }, { v: -7.087 }, { v: 10.506 }, { v: -3.780 }, { v: -6.726 }] },
+                        { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 0, f: 'Night' }, { v: 10.436 }, { v: -14.932 }, { v: -12.818 }, { v: 14.797 }, { v: 1.979 }, { v: 6.025 }, { v: -13.962 }, { v: 7.937 }] },
+                        { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 1, f: 'Afternoon' }, { v: 12.537 }, { v: -11.915 }, { v: -6.735 }, { v: 19.594 }, { v: 12.859 }, { v: 6.106 }, { v: -12.372 }, { v: 6.266 }] },
+                        { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 2, f: 'Evening' }, { v: 18.173 }, { v: -18.794 }, { v: -11.612 }, { v: 5.048 }, { v: -6.564 }, { v: 11.320 }, { v: -16.855 }, { v: 5.535 }] },
+                        { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 3, f: 'Morning' }, { v: 7.448 }, { v: -12.414 }, { v: -16.431 }, { v: 14.193 }, { v: -2.238 }, { v: 18.548 }, { v: -9.476 }, { v: -9.072 }] }
+                    ];
+                    break;
+
+                default:        // if panelIndex is missing returns column headings with empty rows
+                    dataRows = [];
+                    break;
+
+            }
+
+            return { 'cols': dataCols, 'rows': dataRows }
+        }
 
     </script>
 

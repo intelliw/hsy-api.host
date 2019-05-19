@@ -30,8 +30,6 @@
 
         google.charts.load('current', { packages: ['table', 'corechart'], callback: redrawPanels });
 
-        const RAWDATA_HSE_COLUMNS = [2, 3, 4, 5, 6, 7, 8, 9];       // 8 cols for hse,  '2,3' if store or grid, otherwise '2'
-
         let panelMap = [
             {
                 child: { dataTable: undefined, chart: undefined, table: undefined },
@@ -42,17 +40,20 @@
         // equivalent to redrawPanels jquery function in collection.js  
         function redrawPanels() {
 
-            redrawChart(0);
+            redrawActivePane(0);
             //drawGrandchildPane('grandchildColumnChartDiv_0', 'grandchildTableDiv_0', 'Timeofday', [0, 1, 2, 3]);
         }
 
-        function redrawChart(panelIndex) {
+        function redrawActivePane(panelIndex) {
+
+            const AGGDATA_CHART_COLUMNS = [0, 1, 2, 3, 4, 6, 7];    // 1 more than the # collection items in a child period 
+            const RAWDATA_HSE_COLUMNS = [2, 3, 4, 5, 6, 7, 8, 9];       // 8 cols for hse,  '2,3' if store or grid, otherwise '2'
+            const AGGDATA_HSE_COLUMNS = [1, 2, 3, 4, 5, 6, 7, 8];       // 8 cols for hse,  '1,2' if store or grid, otherwise '1'
 
             const FORMATTED_DATA_CHILD_COLUMN = 0;
             const FORMATTED_DATA_GRANDCHILD_COLUMN = 1;
 
             const ALL_COLUMNS = [FORMATTED_DATA_CHILD_COLUMN, FORMATTED_DATA_GRANDCHILD_COLUMN].concat(RAWDATA_HSE_COLUMNS);
-            const AGGDATA_CHART_COLUMNS = [0, 1, 2, 3, 4, 6, 7];    // 1 more than the # collection items in a child period 
 
             let filteredData;
             let aggregateData;
@@ -68,6 +69,7 @@
             let panelMapObj = panelMap[panelIndex];
             if (!panelMapObj.child.dataTable) {
                 dt = new google.visualization.DataTable(getJsonChartData(panelIndex));
+                alert(dt.getNumberOfRows());
                 colorFormatDataTable(dt, 6, 9);
                 panelMapObj.child.dataTable = dt;
             }
@@ -78,7 +80,7 @@
 
             // child aggregate 
             groupColumn = FORMATTED_DATA_CHILD_COLUMN;
-            aggregateData = getAggregateData(filteredData, groupColumn, sumAvg);
+            aggregateData = groupFilteredData(filteredData, groupColumn, sumAvg, RAWDATA_HSE_COLUMNS, AGGDATA_HSE_COLUMNS);
 
             // child draw table and chart                
             panelMapObj.child.table = drawTableChart(filteredData, panelIndex, 'child');
@@ -94,7 +96,7 @@
 
             // grandchild aggregate
             groupColumn = FORMATTED_DATA_GRANDCHILD_COLUMN;
-            aggregateData = getAggregateData(filteredData, groupColumn, sumAvg);
+            aggregateData = groupFilteredData(filteredData, groupColumn, sumAvg, RAWDATA_HSE_COLUMNS, AGGDATA_HSE_COLUMNS);
 
             // grandchild format datatable
             dt = aggregateData.toDataTable();
@@ -110,74 +112,6 @@
             //addChartEventHandler(panelMapObj.child);
 
         }
-
-        // register table select event 
-        function addTableEventHandler(paneObj, numChartColumns) {
-
-            google.visualization.events.addListener(paneObj.table, 'select', function () {
-                handleTableSelectEvent(paneObj, numChartColumns);
-            });
-        }
-
-        // register chart select event 
-        function addChartEventHandler(paneObj) {
-
-            google.visualization.events.addListener(paneObj.chart, 'select', function () {
-                handleChartSelectEvent(paneObj);
-            });
-        }
-
-        function handleChartSelectEvent(paneObj) {
-            
-            // let sel = paneObj.chart.getSelection();
-            // alert(paneObj.chart.getSelection()[6].row + ' '  + paneObj.chart.getSelection()[6].column);
-
-        }
-
-        // returns aggregate (sum or average) from the raw data.
-        function getAggregateData(filteredData, groupColumn, groupOption) {
-
-            const AGGDATA_ID_COLUMN = 0;
-            const AGGDATA_HSE_COLUMNS = [1, 2, 3, 4, 5, 6, 7, 8];
-
-            const GROUP_OPTION_SUM = 'sum';
-            const JOIN_OPTION_LEFT = 'left';
-
-            // group and aggregate 
-            let groupFunction = (groupOption === GROUP_OPTION_SUM) ? google.visualization.data.sum : google.visualization.data.avg;
-
-            let groupedData = google.visualization.data.group(
-                filteredData,
-                [   // group by these columns and include in output
-                    { column: groupColumn },
-                ],
-                // in addition output these columns  e.g. { column: RAWDATA_HSE_COLUMNS[0], aggregation: groupFunction, type: 'number' }
-                RAWDATA_HSE_COLUMNS.map(function (hseColumn) {
-                    return {
-                        column: hseColumn,
-                        aggregation: groupFunction,
-                        type: 'number'
-                    };
-                })
-            );
-
-            // join with raw data to get formatted key column (as grouping drops all formatting..) 
-            let joinedFormatDataColumn = AGGDATA_HSE_COLUMNS.length + 1;
-            let joinedData = new google.visualization.DataView(
-                google.visualization.data.join(groupedData,
-                    filteredData,
-                    JOIN_OPTION_LEFT,
-                    [[AGGDATA_ID_COLUMN, groupColumn]], AGGDATA_HSE_COLUMNS, [groupColumn])
-            );
-            joinedData.setColumns([joinedFormatDataColumn].concat(AGGDATA_HSE_COLUMNS));
-
-            return joinedData;
-        }
-
-        // ============================== move to energy-charts.js
-
-
-        // ============================== move to energy_textHtml.ejs 
 
         // get json for a panel (period)
         function getJsonChartData(panelIndex) {

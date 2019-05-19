@@ -159,7 +159,7 @@
            returned columns are: 'AGGDATA_CHILD_ID (e.g: 0),  'AGGDATA_CHILD_LABEL  (e.g: Mon Feb 4th)
                         'Harvest', Enjoy', 'Store in' 'Store out', 'Grid in', 'Grid out'
         */
-        function getAggregateData(rawData) {
+        function groupFilteredData(rawData) {
             
             let aggregateData = google.visualization.data.group (
                 rawData, 
@@ -185,7 +185,7 @@
 
             var dt = getRawData('Day', 'Timeofday');
 
-            var groupedChildData = getAggregateData(dt);
+            var groupedChildData = groupFilteredData(dt);
 
             var columnData = new google.visualization.DataView(groupedChildData);
             columnData.setColumns([AGGDATA_CHILD_LABEL].concat(AGGDATA_HSE_COLUMNS));
