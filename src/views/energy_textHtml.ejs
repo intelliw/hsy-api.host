@@ -5,7 +5,7 @@
         id = titlePeriod
         navbar.ejs                                      <!-- ENERGY NAVBAR    
             select-parent
-            id = navbarMain, navbarAPI, navDuration
+            id = navbarMain, navbarAPI, navDuration, navSite
                 select-value, select-justtext 
     accordion
         card-header                                     <!-- PERIOD n NAV row --> 
@@ -17,8 +17,8 @@
                 ...                                             <!-- PERIOD n BODY pane CHARTs  -->    
                     select-chart-title
                     chart-selection-reset 
-                    id = childColumnChartDiv_n, grandchildColumnChartDiv_n
-                    id = childTableDiv_n, grandchildTableDiv_n
+                    pane-column-chart-div  pane-table-chart-div
+
                 select-filter                           <!-- PERIOD n BODY pane FILTER BUTTONS -->
                         ...
                             select-filter-reset
@@ -239,7 +239,7 @@
                                                     </button>
                                                 </div>
                                                 
-                                                <div class="pane-chart-div px-0 mt-2" 
+                                                <div class="pane-column-chart-div px-0 mt-2" 
                                                     style="width:400px; height:300px"></div>    
 
                                                 <div class="btn-group btn-group-sm flex-wrap" 
@@ -262,7 +262,7 @@
                                             </div>
                                             
                                             <div class="col-md px-1 mb-2 mr-2 border border-default">
-                                                <div class="pane-table-div px-0">
+                                                <div class="pane-table-chart-div px-0">
                                                 </div>
                                             </div>
 
@@ -395,8 +395,8 @@
 
             let filterColumn; let groupColumn;
 
-            const chartDiv = pane.find('.pane-chart-div');
-            const tableDiv = pane.find('.pane-table-div');
+            const chartDiv = pane.find('.pane-column-chart-div');
+            const tableDiv = pane.find('.pane-table-chart-div');
             
             let panelIndex = Number(pane.closest('.select-collection-panel').attr('index'));
             let panelMapObj = panelMap[panelIndex];            
@@ -455,7 +455,6 @@
 
             } 
 
-
         }
 
         function getJsonChartData(panelIndex) {
@@ -463,8 +462,8 @@
             let dataRows;
 
             const dataCols = [
-                { id: '0', type: 'number', label: 'Day' },            // v: 0, f: 'Mon Feb 4th'
-                { id: '1', type: 'number', label: 'Timeofday' },       // v: 0, f: 'Night'
+                { id: '0', type: 'number', label: '<%= utils.capitalise(child_period) %>' },            // v: 0, f: 'Mon Feb 4th'
+                { id: '1', type: 'number', label: '<%= utils.capitalise(grandchild_period) %>' },       // v: 0, f: 'Night'
                 { id: '2', type: 'number', label: 'Harvest' },
                 { id: '3', type: 'number', label: 'Enjoy' },
                 { id: '4', type: 'number', label: 'Store in' },

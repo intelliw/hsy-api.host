@@ -52,9 +52,8 @@ $(document).ready(function () {
             + "/" + $("#navEpochYear").html() + $("#navEpochMonth").html() + $("#navEpochDay").html()
             + "T" + $("#navEpochHour").html().replace(/\s: /g, '')
             + "/" + $("#navDuration").html()
-            + "?site=" + $("#navSite").html()
+            + "?site=" + $("#navSite").html();
 
-        // alert(apiUrl);
         window.location.href = apiUrl;
     });
 
@@ -64,8 +63,8 @@ $(document).ready(function () {
         let apiUrl = API_BASE_URL
             + "/energy/" + $("#navEnergy").html()
             + "/period/" + $("#navPeriod").html()
-            + "?site=" + $("#navSite").html()
-        // alert(apiUrl);
+            + "?site=" + $("#navSite").html();
+
         window.location.href = apiUrl;
     });
 
@@ -218,7 +217,7 @@ function flagPanelForRedraw(panel) {
 
 // redraws panels flagged with 'redraw' . if source is provide the panel is flagged first  
 function redrawPanels(source) {
-
+    
     if (source) {
         let panel = source.closest('.select-collection-panel');
         flagPanelForRedraw(panel);
@@ -262,7 +261,7 @@ function setChartTitles(pane) {
     
     let sum = getGroupOption() == 'sum';
     
-    if (pane.hasClass('.pane-child')) {
+    if (pane.hasClass('pane-child')) {
         pane.find('.select-chart-title').text((sum ? 'Total' : 'Average') + ' Megajoules (MJ) / ' + childPeriod + (sum ? '' : ' / ' + grandchildPeriod));
     } else {
         pane.find('.select-chart-title').text((sum ? 'Total' : ' Average') + ' Megajoules (MJ) / ' + (sum ? grandchildPeriod : childPeriod));
