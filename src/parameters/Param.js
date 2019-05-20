@@ -19,7 +19,7 @@ class Param {
      * constructor validates and stores parameter name and value. 
      * if the value is missing the default is used if provided. 
      * By default the param is mandatory 
-     * isValid is true if the 
+     * isValid is true if the param passes the enumtest and is present if it is mandatory
      * if the value was provided it will be validated against the enum 
      * the default value is used if the provided value is missing 
      */
@@ -36,7 +36,7 @@ class Param {
 
 
         // isOptional & isValid                          // isValid if 1) enumTest passes and 2) there must be a value unless isOptional
-        this.isOptional = (optional != consts.NONE? optional: OPTIONAL_DEFAULT);
+        this.isOptional = (optional ? optional: OPTIONAL_DEFAULT);
         this.isValid = enumTest && (this.isOptional ? true : this.value);       // there must be a value unless isOptional    
 
     }

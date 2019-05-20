@@ -147,7 +147,6 @@ function createItemData(energy, childPeriod, site) {
     if (grandChildPeriod) {
 
       isFuture = grandChildPeriod.isFutureEpoch();                                              // check if this is in the future
-
       grandChildMinMax = utils.MOCK_periodMinMax(grandChildPeriod, dailyHigh, dailyLow);        // get an adjusted minmax for the childperiod
 
       // for each energy type.. harvest, store.in etc

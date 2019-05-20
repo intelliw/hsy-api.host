@@ -142,10 +142,7 @@ $(document).ready(function () {
 
         $(this).hasClass('active') ? $(this).removeClass("active") : $(this).addClass("active");
 
-        let panel = $(this).parents('.select-collection-panel');
-        if (!panel.hasClass('redraw')) panel.addClass('redraw');
-
-        redrawPanels();
+        redrawPanels($(this));
 
     });
 
@@ -167,10 +164,7 @@ $(document).ready(function () {
         
         $(this).parents('.card').find('.select-filter-btn-panel').collapse('show');    // make buttons visible when resetting
 
-        let panel = $(this).parents('.select-collection-panel');
-        if (!panel.hasClass('redraw')) panel.addClass('redraw');
-
-        redrawPanels();
+        redrawPanels($(this));
 
     });
 
@@ -197,10 +191,7 @@ $(document).ready(function () {
         $(this).hasClass('active') ? $(this).removeClass("active") : $(this).addClass("active");
 
         $('.select-collection-panel').each(function () {
-
-            if (!$(this).hasClass('redraw')) {
-                $(this).addClass('redraw');
-            }
+            flagPanelForRedraw($(this));
         });
 
         redrawPanels();
@@ -211,20 +202,31 @@ $(document).ready(function () {
 
 
 /** 
- * functions
+ * functions -----
  */
+// marks the panel with a redraw flag
+function flagPanelForRedraw(panel) {
+
+    panel.find('.pane-child, .pane-grandchild').each(function () {
+        if (!$(this).hasClass('redraw')) {
+            $(this).addClass('redraw');
+        }
+    });
+    
+   
+}
+
 // redraws panels flagged with 'redraw' . if source is provide the panel is flagged first  
 function redrawPanels(source) {
 
     if (source) {
         let panel = source.closest('.select-collection-panel');
-        if (!resetBtn.hasClass('redraw')) resetBtn.addClass('redraw');
+        flagPanelForRedraw(panel);
     }
 
-    // redrawPanes - wil redraw any panes which were invisible and flagged for later redraw
-
-    $('.select-collection-panel.show.redraw').each(function () {
-    
+    // redrawPanes - wil redraw any panes visible panes if flagged for redraw
+    $('.pane-child.show.redraw, .pane-grandchild.show.redraw').each(function () {
+        
         redrawActivePane($(this));
         
         setChartTitles($(this));
@@ -255,13 +257,16 @@ function revealFilterResetButtons(source) {
 
 }
 
-// sets the chjart titles
-function setChartTitles(panel) {
+// sets the chart titles
+function setChartTitles(pane) {
     
     let sum = getGroupOption() == 'sum';
     
-    panel.find('.pane-child').find('.select-chart-title').text((sum ? 'Total' : 'Timeofday' + ' Average') + ' Megajoules (MJ) / ' + 'DAY');
-    panel.find('.pane-grandchild').find('.select-chart-title').text((sum ? 'Total' : ' Average') + ' Megajoules (MJ) / ' + (sum ? 'Timeofday' : 'Day'));
+    if (pane.hasClass('.pane-child')) {
+        pane.find('.select-chart-title').text((sum ? 'Total' : 'Average') + ' Megajoules (MJ) / ' + childPeriod + (sum ? '' : ' / ' + grandchildPeriod));
+    } else {
+        pane.find('.select-chart-title').text((sum ? 'Total' : ' Average') + ' Megajoules (MJ) / ' + (sum ? grandchildPeriod : childPeriod));
+    }
 
 }
 

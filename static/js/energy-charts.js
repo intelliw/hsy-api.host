@@ -1,6 +1,5 @@
 // register table select event 
 function addTableEventHandler(paneObj, numChartColumns) {
-
     google.visualization.events.addListener(paneObj.table, 'select', function () {
         handleTableSelectEvent(paneObj, numChartColumns);
     });
@@ -8,16 +7,13 @@ function addTableEventHandler(paneObj, numChartColumns) {
 
 // register chart select event 
 function addChartEventHandler(paneObj) {
-
     google.visualization.events.addListener(paneObj.chart, 'select', function () {
-        handleChartSelectEvent(paneObj);
+        // handleChartSelectEvent(paneObj);
     });
 }
 
 function handleChartSelectEvent(paneObj) {
-
     // alert(paneObj.chart.getSelection()[6].row + ' '  + paneObj.chart.getSelection()[6].column);
-
 }
 
 // selects corresponding chart column when a table row is selected 
@@ -125,8 +121,8 @@ function drawColumnChart(dataView, panelIndex, pane, columns) {
 
     // Set chart options
     let chartOptions = {
-        width: 400,
-        height: 300,
+        width: '100%',
+        height: '100%',
         chartArea: { left: 45, top: 30, right: 10, bottom: 15, width: '95%', height: '95%' },
         bar: { groupWidth: '75.0%' },
         isStacked: true,
