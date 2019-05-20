@@ -70,7 +70,7 @@
             if (!panelMapObj.child.dataTable) {
                 dt = new google.visualization.DataTable(getJsonChartData(panelIndex));
                 alert(dt.getNumberOfRows());
-                colorFormatDataTable(dt, 6, 9);
+                colorDataTable(dt, 6, 9);
                 panelMapObj.child.dataTable = dt;
             }
 
@@ -100,7 +100,7 @@
 
             // grandchild format datatable
             dt = aggregateData.toDataTable();
-            colorFormatDataTable(dt, 5, 8);
+            colorDataTable(dt, 5, 8);
             panelMapObj.grandchild.dataTable = dt;
 
             // grandchild draw table and chart

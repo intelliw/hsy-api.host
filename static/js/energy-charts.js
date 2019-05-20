@@ -1,23 +1,23 @@
 // register table select event 
 function addTableEventHandler(paneObj, numChartColumns) {
     google.visualization.events.addListener(paneObj.table, 'select', function () {
-        handleTableSelectEvent(paneObj, numChartColumns);
+        tableSelectEvent(paneObj, numChartColumns);
     });
 }
 
 // register chart select event 
 function addChartEventHandler(paneObj) {
     google.visualization.events.addListener(paneObj.chart, 'select', function () {
-        // handleChartSelectEvent(paneObj);
+        // chartSelectEvent(paneObj);
     });
 }
 
-function handleChartSelectEvent(paneObj) {
+function chartSelectEvent(paneObj) {
     // alert(paneObj.chart.getSelection()[6].row + ' '  + paneObj.chart.getSelection()[6].column);
 }
 
 // selects corresponding chart column when a table row is selected 
-function handleTableSelectEvent(paneObj, numChartColumns) {
+function tableSelectEvent(paneObj, numChartColumns) {
 
     const KEY_COLUMN = 0;
     const SEL_ITEM = 0;
@@ -102,7 +102,7 @@ function filterDataTable(dt, filterColumn, includeRows, includeColumns) {
 }
 
 // format datatable in red 
-function colorFormatDataTable(dt, storeColIndex, gridColIndex) {
+function colorDataTable(dt, storeColIndex, gridColIndex) {
     const COLOR = 'red';
 
     let formatter = new google.visualization.ColorFormat();
@@ -115,9 +115,7 @@ function colorFormatDataTable(dt, storeColIndex, gridColIndex) {
 }
 
 // draws a column chart in the div for this panelIndex, pane
-function drawColumnChart(dataView, panelIndex, pane, columns) {
-
-    const div = pane + 'ColumnChartDiv_' + panelIndex;          //'childColumnChartDiv_n'
+function drawColumnChart(dataView, div, columns) {
 
     // Set chart options
     let chartOptions = {
@@ -155,18 +153,22 @@ function drawColumnChart(dataView, panelIndex, pane, columns) {
     let chartView = new google.visualization.DataView(dataView);
     chartView.setColumns(columns);
 
-    let chart = new google.visualization.ColumnChart(document.getElementById(div));
+    let chart = new google.visualization.ColumnChart(div[0]);   // first element of jquery object is html dom object
     chart.draw(chartView, chartOptions);
 
     return chart;
 }
 
 // draws a table chart in the div div for this panelIndex, pane   
-function drawTableChart(dataView, panelIndex, pane) {
+function drawTableChart(dataView, div, table) {
 
     const INITIAL_SORT_COL = 0;
 
-    const div = pane + 'TableDiv_' + panelIndex;          //'childTableDiv_n'
+    // get the current sort
+    let sortObj;
+    if (table) {
+        sortObj = table.getSortInfo()
+    }
 
     // Set chart options
     let tableOptions = {
@@ -174,7 +176,8 @@ function drawTableChart(dataView, panelIndex, pane) {
         alternatingRowStyle: false,
         showRowNumber: false,
         allowHtml: true,
-        sortColumn: INITIAL_SORT_COL,
+        sortColumn: (sortObj ? sortObj.column : INITIAL_SORT_COL),
+        sortAscending: (sortObj ? sortObj.ascending : true),
         page: 'enable', pageSize: 15,
         cssClassNames: {
             headerRow: 'header-badge ',
@@ -188,10 +191,9 @@ function drawTableChart(dataView, panelIndex, pane) {
         }
     }
 
-    var table = new google.visualization.Table(document.getElementById(div));
+    var table = new google.visualization.Table(div[0]);         // first element of jquery object is html dom object
     table.draw(dataView, tableOptions);
 
     return table;
 }
-
 
