@@ -134,7 +134,7 @@ function drawColumnChart(dataView, div, columns) {
             title: 'Megajoules (MJ)',
             textPosition: 'out',
             titleTextStyle: { italic: 'false' },
-            gridlines: { count: 10, color: 'none' }, baselineColor: 'black',
+            gridlines: { count: 10, color: 'none' }, baselineColor: '#343a40',
             viewWindowMode: 'pretty',
             format: '##.####'
         },
@@ -196,4 +196,3 @@ function drawTableChart(dataView, div, table) {
 
     return table;
 }
-

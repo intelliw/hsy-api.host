@@ -30,19 +30,21 @@ module.exports.capitalise = (str, allWords) => {
 };
 
 /**
- * returns a number sequence (e.g. days of the month '01 02 ..' etc) in a delimited string with zero padding
+ * returns a number sequence (e.g. days of the month '01 02 ..' etc) in a delimited string with zero pads
  * howMany is the number of numbers to output including the startNum 
- * prefix is an optional lead string 
+ * prefix is an optional lead string
+ * pad is a boolean for whether to pad - default is true 
  *  if provided it is prepended to the sequence to optimise performance by reducing the iterations needed 
  * e.g. startNum = 1, howMany = 10, delimiter = " ", prefix = '01 02 03 04 05 06 07'
  *  ->  '01 02 03 04 05 06 07 08 09 10'
-  */
-module.exports.createSequence = (startNum, howMany, delimiter, prefix) => {
+*/
+module.exports.createSequence = (startNum, howMany, delimiter, prefix, pad) => {
 
     const PAD_ZERO = "0";
 
     let zerosToPad; let digits; let num;
 
+    pad = pad ? pad : true;
     let seqStr = prefix ? prefix.trim() : "";                      // prepend prefix if provided
     let maxNum = Number(startNum) + (howMany - 1);
     let maxDigits = maxNum.toString().length;
@@ -52,13 +54,14 @@ module.exports.createSequence = (startNum, howMany, delimiter, prefix) => {
     for (i = startNum; i <= maxNum; i++) {
 
         num = i.toString();
-        zerosToPad = maxDigits - num.length;
+        zerosToPad = pad ? maxDigits - num.length : 0;
         seqStr += PAD_ZERO.repeat(zerosToPad) + num + (i <= maxNum - 1 ? delimiter : "");
     }
 
     return seqStr.trim();
 
 }
+
 
 // returns an array of numbers
 module.exports.createNumberSequence = (startNum, howMany) => {
@@ -108,7 +111,6 @@ module.exports.findByPropertyValue = (findInObjectArray, findProperty, findValue
 
     return foundItems;
 }
-
 // returns the index of the first property with a matching value. Returns -1 if missing. 
 module.exports.indexFromValue = (obj, value) => {
 

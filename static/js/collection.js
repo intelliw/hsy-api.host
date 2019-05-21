@@ -68,12 +68,24 @@ $(document).ready(function () {
         window.location.href = apiUrl;
     });
 
-    // navbar title period click - collapses all panes
+    // navbar title period click - collapses all panels     ...calls redrawPanels
     $("#titlePeriod").click(function () {
 
-        $('.accordion').find('.card').find('.select-collection-panel').each(function () {
-            if ($(this).hasClass('show')) $(this).removeClass("show");
+        let collapsedAll; 
+        $('.select-collection-panel.show').each(function () {
+            $(this).removeClass("show");
+            collapsedAll = true;
         });
+
+        if (!collapsedAll) {
+            $('.select-collection-panel').each(function () {
+                $(this).addClass("show");
+                collapsedAll = true;
+            });
+
+            redrawPanels();
+        }
+        
     });
 
     // navbar show                          ...shows the title period badge 
@@ -148,19 +160,19 @@ $(document).ready(function () {
     // filter buttons reset click       ...calls redrawPanels
     $(".select-filter-reset").click(function () {
 
-        let resetState;
+        let resetActive;
         
-        $(this).parents('.card-body').find('.select-filter-btn').each(function () {
-
-            isActive = $(this).hasClass('active');
-            resetState = (resetState == undefined) ? !isActive : resetState;      // decide resetState for all buttons from the state of the first button 
-
-            if (!resetState == isActive) {
-                isActive ? $(this).removeClass("active") : $(this).addClass("active");
-            }
-
+        $(this).closest('.select-filter').find('.select-filter-btn.active').each(function () {
+            $(this).removeClass("active");
+            resetActive = true;
         });
-        
+
+        if (!resetActive) { 
+            $(this).closest('.select-filter').find('.select-filter-btn').each(function () {
+                if (!$(this).hasClass("active")) { $(this).addClass("active"); }
+            });
+        }            
+
         $(this).parents('.card').find('.select-filter-btn-panel').collapse('show');    // make buttons visible when resetting
 
         redrawPanels($(this));
@@ -211,7 +223,6 @@ function flagPanelForRedraw(panel) {
             $(this).addClass('redraw');
         }
     });
-    
    
 }
 
@@ -223,14 +234,16 @@ function redrawPanels(source) {
         flagPanelForRedraw(panel);
     }
 
-    // redrawPanes - wil redraw any panes visible panes if flagged for redraw
+    // redrawPanes - wil redraw any panes visible panes if flagged for redraw and if the panel is open 
     $('.pane-child.show.redraw, .pane-grandchild.show.redraw').each(function () {
-        
-        redrawActivePane($(this));
-        
-        setChartTitles($(this));
 
-        $(this).removeClass('redraw');      // clear the 'redraw' flag 
+        if ($(this).closest('.select-collection-panel').hasClass('show')) {         // check if panel open
+            redrawActivePane($(this));
+            
+            setChartTitles($(this));
+
+            $(this).removeClass('redraw');      // clear the 'redraw' flag 
+        }
 
     });
 
@@ -262,9 +275,9 @@ function setChartTitles(pane) {
     let sum = getGroupOption() == 'sum';
     
     if (pane.hasClass('pane-child')) {
-        pane.find('.select-chart-title').text((sum ? 'Total' : 'Average') + ' Megajoules (MJ) / ' + childPeriod + (sum ? '' : ' / ' + grandchildPeriod));
+        pane.find('.select-chart-title').text((sum ? 'Total' : 'Average') + ' Megajoules (MJ) / ' + CHILD_PERIOD + (sum ? '' : ' / ' + GRANDCHILD_PERIOD));
     } else {
-        pane.find('.select-chart-title').text((sum ? 'Total' : ' Average') + ' Megajoules (MJ) / ' + (sum ? grandchildPeriod : childPeriod));
+        pane.find('.select-chart-title').text((sum ? 'Total' : ' Average') + ' Megajoules (MJ) / ' + (sum ? GRANDCHILD_PERIOD : CHILD_PERIOD));
     }
 
 }
