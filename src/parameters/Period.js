@@ -597,8 +597,8 @@ function datetimePromptStr(instant, periodEnum) {
         case enums.period.week:                 // 'Week 27 2019'
             label = `Week ${utils.padZero(moment.utc(instant).isoWeek(), 2)} ${moment.utc(instant).isoWeekYear()}`;
             break;
-        case enums.period.hour:                 // 'Hour 2100'
-            label = `Hour ${moment.utc(instant).format('HH')}00`;
+        case enums.period.hour:                 // '2100'
+            label = `${moment.utc(instant).format('HH')}00`;
             break;
         case enums.period.year:                 // '2019'
             label = `${year}`;
