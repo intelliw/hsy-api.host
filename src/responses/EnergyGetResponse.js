@@ -33,21 +33,21 @@ class EnergyGetResponse extends Response {
 
 // perform the energy data operation and return a collections array
 function executeEnergyGet(params) {
-  
+
   const ADD_CHILD_DESCRIPTION = true;
-  
+
   let links;
   let items;
   let collections = new Collections();                                            // stores an array of collections, one for each period in the duration 
-  
+
   // get a collection for each period in the duration
   let periods = params.period.getEach();                                          // break up the period duration into individual periods (though typically there is only 1 period) 
   periods.forEach(period => {
-  
+
     // create the collection links  
     let selfDescription = `${params.energy.value} ${period.value} ${period.epoch} ${period.duration} ${params.site.value}`;    // e.g hse week 20190204 1 999   (this is the self description format for energy periods) 
     links = new Links.EnergyLinks(params.energy, period, params.site, selfDescription);   // constructor creates a 'self' link with an energy and epoch description
-    
+
     let child = period.getChild(ADD_CHILD_DESCRIPTION);                           // create the child link with a period description (if one has been configured for it in consts.periodChildDescription)
     if (child) {                                                                  // intant does not have a child
       links.addLink(child, enums.linkRender.none, child.description);               // child collection link - not rendered, with a period description
@@ -57,7 +57,7 @@ function executeEnergyGet(params) {
     if (grandchild) {                                                             // second for example does not have a grandchild
       links.addLink(grandchild, enums.linkRender.none, grandchild.description);   // create grandchild with a period description
     }
-    
+
     links.addLink(period.getParent(), enums.linkRender.link);
     links.addLink(period.getNext(), enums.linkRender.link);
     links.addLink(period.getPrev(), enums.linkRender.link);
@@ -67,7 +67,7 @@ function executeEnergyGet(params) {
     // add each collection to the collections array
     collections.add(consts.CURRENT_VERSION, links.href, links, items);
   });
- 
+
   return collections.getElements();
 
 }
@@ -84,9 +84,9 @@ function createItems(energy, period, site) {
   let MOCK_skip;
 
   periods.forEach(childPeriod => {                                                // this can be upto 1000 if child is instant
-    
+
     const WITHOUT_DESCRIPTION = false;
-    
+
     if (childPeriod) {
 
       // get data
@@ -95,7 +95,7 @@ function createItems(energy, period, site) {
 
         // make the item links 
         let itemLinks = new Links.EnergyLinks(energy, childPeriod, site, consts.NONE);              // constructor creates a self link (for the child) without a description (NONE)
-        
+
         let grandchildPeriod = childPeriod.getChild(WITHOUT_DESCRIPTION);
         if (grandchildPeriod) {                                                                     // second for example does not have a grandchild
           itemLinks.addLink(grandchildPeriod, enums.linkRender.none, grandchildPeriod.description);   // child collection link - not rendered, description if requested by caller
@@ -166,7 +166,7 @@ function createItemData(energy, childPeriod, site) {
         grandChildData.add(energyName, energyNameValues);                                       // grandchild has the SSV values
       }
 
-    // if there was no grandchild..
+      // if there was no grandchild..
     } else {
 
       // ..create data just for child only  

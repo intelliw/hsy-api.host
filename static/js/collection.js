@@ -275,9 +275,9 @@ function setChartTitles(pane) {
     let sum = getGroupOption() == 'sum';
     
     if (pane.hasClass('pane-child')) {
-        pane.find('.select-chart-title').text((sum ? 'Total' : 'Average') + ' Megajoules (MJ) / ' + CHILD_PERIOD + (sum ? '' : ' / ' + GRANDCHILD_PERIOD));
+        pane.find('.select-chart-title').text((sum ? '' : 'Average') + ' Megajoules (MJ) / ' + CHILD_PERIOD + (sum ? '' : ' / ' + GRANDCHILD_PERIOD));
     } else {
-        pane.find('.select-chart-title').text((sum ? 'Total' : ' Average') + ' Megajoules (MJ) / ' + (sum ? GRANDCHILD_PERIOD : CHILD_PERIOD));
+        pane.find('.select-chart-title').text((sum ? '' : ' Average') + ' Megajoules (MJ) / ' + (sum ? GRANDCHILD_PERIOD : CHILD_PERIOD));
     }
 
 }

@@ -29,8 +29,9 @@
     */ 
 
     // constants - soime of these are placed into client side script blocks at the bottom of this page
-    const API_BASE_URL = consts.API_SCHEME + '://' + consts.API_HOST;     // e.g.  'http://api.endpoints.sundaya.cloud.goog'
+    const API_BASE_URL = consts.API_SCHEME + '://' + consts.API_HOST;           // e.g.  'http://api.endpoints.sundaya.cloud.goog'
     const PANES = ['pane-child', 'pane-grandchild'];
+    const DEBUG = false;                                                        
 
     // parameters from the first self link, these are common across all collections
     let links = collections[0].collection.links; 
@@ -495,42 +496,106 @@
                 case <%= n_cols %>:
                     dataRows = [ <% for(var n_items=0; n_items < items.length; n_items++) { 
                         child_prompt = items[n_items].links[0].prompt; 
-                        grandchild_item_data = items[n_items].data[1].data;                     // e.g. grandchild_item_data[0].name = 'harvest' etc
+                        chart_json_header_col_0 = `{ v: ${n_items}, f: '${child_prompt}' }`;
 
-                        if (isHse) {
-                            chart_data_harvest = grandchild_item_data[0].value.split(' ');      // harvest
-                            chart_data_store_in = grandchild_item_data[1].value.split(' ');     // store.in
-                            chart_data_store_out = grandchild_item_data[2].value.split(' ');    // store.out
-                            chart_data_enjoy = grandchild_item_data[3].value.split(' ');        // enjoy    
-                            chart_data_grid_in = grandchild_item_data[4].value.split(' ');      // grid.in
-                            chart_data_grid_out = grandchild_item_data[5].value.split(' ');     // grid.out
-                            
-                        } else if (isStore || isGrid ) { 
-                            chart_data_in = grandchild_item_data[0].value.split(' ');           // store.in or grid.in
-                            chart_data_out = grandchild_item_data[1].value.split(' ');          // grid.in or grid.out
+                        grandchild_item_data = items[n_items].data[1].data;                            // e.g. grandchild_item_data[0].name = 'harvest' , ..[1].name = 'store.in' etc
+                        num_item_data_items = grandchild_item_data[0].value.split(' ').length;         // get the length of the granchhild data array from the first item
 
-                        } else {
-                            chart_data_any = grandchild_item_data[0].value.split(' ');          // harvest or enjoy   
-                        }
-                        %> 
-                        <% for(var n_gch=0; n_gch < grandchild_descriptions.length; n_gch++) { 
+                        for (var n_gch_desc=0; n_gch_desc < num_item_data_items; n_gch_desc++) { 
+                            chart_json_header_col_1 = `{ v: ${n_gch_desc}, f: '${grandchild_descriptions[n_gch_desc]}' }`;
+
                             if (isHse) {
-                                // order is harvest, enjoy, storein/out/store, gridout/in/grid 
-                                chart_data_string = `{ v: ${chart_data_harvest[n_gch]} }, { v: ${chart_data_enjoy[n_gch] * -1} }, { v: ${chart_data_store_in[n_gch] * -1} }, { v: ${chart_data_store_out[n_gch]} }, { v: ${(eval(chart_data_store_out[n_gch]) + eval(chart_data_store_in[n_gch] * -1)).toFixed(4)} }, { v: ${chart_data_grid_out[n_gch]} }, { v: ${chart_data_grid_in[n_gch] * -1} }, { v: ${(eval(chart_data_grid_out[n_gch]) + eval(chart_data_grid_in[n_gch] * -1)).toFixed(4)} }`;
-                            } else if (isStore || isGrid ) { 
-                                chart_data_string = `{ v: ${chart_data_in[n_gch] * -1} }, { v: ${chart_data_out[n_gch]} }, { v: ${(eval(chart_data_out[n_gch]) + eval(chart_data_n[n_gch] * -1)).toFixed(4)} }`;
-                            } else {
+                                if (n_gch_desc==0) {                                                   // load the itemdata arrays only once, the first time         
+                                    item_data_harvest = grandchild_item_data[0].value.split(' ');      // harvest
+                                    item_data_store_in = grandchild_item_data[1].value.split(' ');     // store.in
+                                    item_data_store_out = grandchild_item_data[2].value.split(' ');    // store.out
+                                    item_data_enjoy = grandchild_item_data[3].value.split(' ');        // enjoy    
+                                    item_data_grid_in = grandchild_item_data[4].value.split(' ');      // grid.in
+                                    item_data_grid_out = grandchild_item_data[5].value.split(' ');     // grid.out
+                                }
+                                // chart order must be  harvest, enjoy, storein/out/store, gridout/in/grid 
+                                chart_json_data_harvest = `{ v: ${item_data_harvest[n_gch_desc] || 0} }`;
+                                chart_json_data_enjoy = `{ v: ${(item_data_enjoy[n_gch_desc] || 0) * -1} }`;
+                                chart_json_data_store = `{ v: ${(item_data_store_in[n_gch_desc] || 0) * -1} }, { v: ${item_data_store_out[n_gch_desc] || 0} }, { v: ${(eval(item_data_store_out[n_gch_desc]) + eval(item_data_store_in[n_gch_desc]) * -1).toFixed(4)} }`;
+                                chart_json_data_grid = `{ v: ${item_data_grid_out[n_gch_desc] || 0} }, { v: ${(item_data_grid_in[n_gch_desc] || 0) * -1} }, { v: ${(eval(item_data_grid_out[n_gch_desc]) + eval(item_data_grid_in[n_gch_desc]) * -1).toFixed(4)} }`;
+
+                                chart_json_data_cols = chart_json_data_harvest + ', ' + chart_json_data_enjoy + ', ' + chart_json_data_store + ', ' + chart_json_data_grid;
+
+                            } else if (isStore) { 
+                                if (n_gch_desc==0) {
+                                    item_data_store_in = grandchild_item_data[0].value.split(' ');     // store.in
+                                    item_data_store_out = grandchild_item_data[1].value.split(' ');    // store.out
+                                }
+                                chart_json_data_store = `{ v: ${(item_data_store_in[n_gch_desc] || 0) * -1} }, { v: ${item_data_store_out[n_gch_desc] || 0} }, { v: ${(eval(item_data_store_out[n_gch_desc]) + eval(item_data_store_in[n_gch_desc]) * -1).toFixed(4)} }`;
+                                chart_json_data_cols = chart_json_data_store;
+
+                            } else if (isGrid) { 
+                                if (n_gch_desc==0) {
+                                    item_data_grid_in = grandchild_item_data[0].value.split(' ');      // grid.in
+                                    item_data_grid_out = grandchild_item_data[1].value.split(' ');     // grid.out
+                                }
+                                chart_json_data_grid = `{ v: ${item_data_grid_out[n_gch_desc] || 0}, { v: ${(item_data_grid_in[n_gch_desc] || 0) * -1} }, { v: ${(eval(item_data_grid_out[n_gch_desc]) + eval(item_data_grid_in[n_gch_desc]) * -1).toFixed(4)} }`;
+                                chart_json_data_cols = chart_json_data_grid;
+
+                            } else if (isHarvest) {                            
+                                if (n_gch_desc==0) {
+                                    item_data_harvest = grandchild_item_data[0].value.split(' ');      // harvest
+                                }
+                                chart_json_data_harvest = `{ v: ${item_data_harvest[n_gch_desc] || 0} }`;
+                                chart_json_data_cols = chart_json_data_harvest;
+
+                            } else if (isEnjoy) {  
+                                if (n_gch_desc==0) {
+                                    item_data_enjoy = grandchild_item_data[0].value.split(' ');        // enjoy        
+                                }
+                                chart_json_data_enjoy = `{ v: ${(item_data_enjoy[n_gch_desc] || 0) * -1} }`;
+                                chart_json_data_cols = chart_json_data_enjoy;
+                                
                             }
                          %>
-                    { c: [{ v: <%= n_items %>, f: '<%= child_prompt %>' }, { v: <%= n_gch %>, f: '<%= grandchild_descriptions[n_gch] %>' }, <%- chart_data_string %> ] }<% if (n_items < (items.length - 1) || n_gch < (grandchild_descriptions.length - 1)) { %>,<% } %> <% } %> <% } %>
+                    { c: [<%- chart_json_header_col_0 %>, <%- chart_json_header_col_1 %>, <%- chart_json_data_cols %> ] }<% if (n_items < (items.length - 1) || n_gch_desc < (grandchild_descriptions.length - 1)) { %>,<% } %> <% } %>
+                    <% } %>
                     ];  
                     break; 
             <% } %>
+                <% if (DEBUG) {  %> 
+                case 999999:
+                    dataRows = [
+                        { c: [{ v: 0, f: 'Mon Feb 4th' }, { v: 0, f: 'Night' }, { v: 16.825 }, { v: -18.196 }, { v: -6.566 }, { v: 16.273 }, { v: 9.707 }, { v: 8.519 }, { v: -18.152 }, { v: 9.633 }] },
+                        { c: [{ v: 0, f: 'Mon Feb 4th' }, { v: 1, f: 'Morning' }, { v: 18.229 }, { v: -3.603 }, { v: -2.950 }, { v: 15.211 }, { v: 12.261 }, { v: 14.878 }, { v: -18.491 }, { v: 3.613 }] },
+                        { c: [{ v: 0, f: 'Mon Feb 4th' }, { v: 2, f: 'Afternoon' }, { v: 20.447 }, { v: -3.137 }, { v: -4.857 }, { v: 16.841 }, { v: 11.984 }, { v: 11.742 }, { v: -17.249 }, { v: 5.507 }] },
+                        { c: [{ v: 0, f: 'Mon Feb 4th' }, { v: 3, f: 'Evening' }, { v: 9.415 }, { v: -8.049 }, { v: -14.471 }, { v: 20.649 }, { v: 6.178 }, { v: 6.458 }, { v: -15.513 }, { v: 9.055 }] },
+                        { c: [{ v: 1, f: 'Tue Feb 5th' }, { v: 0, f: 'Night' }, { v: 14.648 }, { v: -9.859 }, { v: -17.979 }, { v: 11.470 }, { v: -6.509 }, { v: 6.792 }, { v: -11.471 }, { v: 4.679 }] },
+                        { c: [{ v: 1, f: 'Tue Feb 5th' }, { v: 1, f: 'Morning' }, { v: 20.593 }, { v: -4.866 }, { v: -4.875 }, { v: 3.434 }, { v: -1.441 }, { v: 2.815 }, { v: -4.383 }, { v: 1.568 }] },
+                        { c: [{ v: 1, f: 'Tue Feb 5th' }, { v: 2, f: 'Afternoon' }, { v: 10.735 }, { v: -19.601 }, { v: -16.177 }, { v: 9.115 }, { v: -7.062 }, { v: 8.004 }, { v: -10.967 }, { v: 2.963 }] },
+                        { c: [{ v: 1, f: 'Tue Feb 5th' }, { v: 3, f: 'Evening' }, { v: 14.871 }, { v: -13.650 }, { v: -7.390 }, { v: 13.455 }, { v: 6.065 }, { v: 18.081 }, { v: -11.698 }, { v: -6.383 }] },
+                        { c: [{ v: 2, f: 'Wed Feb 6th' }, { v: 0, f: 'Night' }, { v: 10.095 }, { v: -10.221 }, { v: -9.128 }, { v: 19.591 }, { v: 10.463 }, { v: 5.588 }, { v: -3.434 }, { v: -2.154 }] },
+                        { c: [{ v: 2, f: 'Wed Feb 6th' }, { v: 1, f: 'Morning' }, { v: 6.934 }, { v: -15.391 }, { v: -8.238 }, { v: 9.431 }, { v: 1.193 }, { v: 6.856 }, { v: -9.843 }, { v: 2.987 }] },
+                        { c: [{ v: 2, f: 'Wed Feb 6th' }, { v: 2, f: 'Afternoon' }, { v: 6.354 }, { v: -17.232 }, { v: -3.951 }, { v: 15.713 }, { v: 11.762 }, { v: 19.696 }, { v: -17.337 }, { v: -2.359 }] },
+                        { c: [{ v: 2, f: 'Wed Feb 6th' }, { v: 3, f: 'Evening' }, { v: 9.793 }, { v: -6.816 }, { v: -12.542 }, { v: 5.666 }, { v: -6.876 }, { v: 13.171 }, { v: -11.950 }, { v: -1.221 }] },
+                        { c: [{ v: 3, f: 'Thu Feb 7th' }, { v: 0, f: 'Night' }, { v: 20.497 }, { v: -14.924 }, { v: -4.945 }, { v: 9.182 }, { v: 4.237 }, { v: 3.490 }, { v: -16.642 }, { v: 13.152 }] },
+                        { c: [{ v: 3, f: 'Thu Feb 7th' }, { v: 1, f: 'Morning' }, { v: 14.572 }, { v: -9.392 }, { v: -19.099 }, { v: 13.920 }, { v: -5.179 }, { v: 20.537 }, { v: -16.914 }, { v: -3.623 }] },
+                        { c: [{ v: 3, f: 'Thu Feb 7th' }, { v: 2, f: 'Afternoon' }, { v: 3.546 }, { v: -14.066 }, { v: -10.432 }, { v: 3.447 }, { v: -6.985 }, { v: 10.173 }, { v: -12.269 }, { v: 2.096 }] },
+                        { c: [{ v: 3, f: 'Thu Feb 7th' }, { v: 3, f: 'Evening' }, { v: 9.007 }, { v: -14.670 }, { v: -9.497 }, { v: 15.301 }, { v: 5.804 }, { v: 6.515 }, { v: -8.791 }, { v: 2.276 }] },
+                        { c: [{ v: 4, f: 'Fri Feb 8th' }, { v: 0, f: 'Night' }, { v: 15.891 }, { v: -18.566 }, { v: -3.019 }, { v: 4.127 }, { v: 1.108 }, { v: 6.495 }, { v: -6.130 }, { v: -0.365 }] },
+                        { c: [{ v: 4, f: 'Fri Feb 8th' }, { v: 1, f: 'Morning' }, { v: 12.017 }, { v: -20.318 }, { v: -20.189 }, { v: 7.685 }, { v: -12.504 }, { v: 11.664 }, { v: -18.634 }, { v: 6.970 }] },
+                        { c: [{ v: 4, f: 'Fri Feb 8th' }, { v: 2, f: 'Afternoon' }, { v: 13.551 }, { v: -16.470 }, { v: -5.462 }, { v: 17.209 }, { v: 11.747 }, { v: 6.206 }, { v: -15.027 }, { v: 8.821 }] },
+                        { c: [{ v: 4, f: 'Fri Feb 8th' }, { v: 3, f: 'Evening' }, { v: 13.120 }, { v: -12.507 }, { v: -16.939 }, { v: 7.234 }, { v: -9.705 }, { v: 12.925 }, { v: -6.384 }, { v: -6.541 }] },
+                        { c: [{ v: 5, f: 'Sat Feb 9th' }, { v: 0, f: 'Night' }, { v: 16.552 }, { v: -15.924 }, { v: -19.386 }, { v: 18.615 }, { v: -0.771 }, { v: 18.373 }, { v: -9.758 }, { v: -8.615 }] },
+                        { c: [{ v: 5, f: 'Sat Feb 9th' }, { v: 1, f: 'Morning' }, { v: 4.763 }, { v: -3.811 }, { v: -19.493 }, { v: 8.221 }, { v: -11.272 }, { v: 3.924 }, { v: -3.381 }, { v: -0.543 }] },
+                        { c: [{ v: 5, f: 'Sat Feb 9th' }, { v: 2, f: 'Afternoon' }, { v: 12.947 }, { v: -13.392 }, { v: -19.124 }, { v: 6.174 }, { v: -12.950 }, { v: 17.276 }, { v: -17.566 }, { v: 0.290 }] },
+                        { c: [{ v: 5, f: 'Sat Feb 9th' }, { v: 3, f: 'Evening' }, { v: 16.586 }, { v: -3.160 }, { v: -19.840 }, { v: 12.753 }, { v: -7.087 }, { v: 10.506 }, { v: -3.780 }, { v: -6.726 }] },
+                        { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 0, f: 'Night' }, { v: 10.436 }, { v: -14.932 }, { v: -12.818 }, { v: 14.797 }, { v: 1.979 }, { v: 6.025 }, { v: -13.962 }, { v: 7.937 }] },
+                        { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 1, f: 'Morning' }, { v: 12.537 }, { v: -11.915 }, { v: -6.735 }, { v: 19.594 }, { v: 12.859 }, { v: 6.106 }, { v: -12.372 }, { v: 6.266 }] },
+                        { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 2, f: 'Afternoon' }, { v: 18.173 }, { v: -18.794 }, { v: -11.612 }, { v: 5.048 }, { v: -6.564 }, { v: 11.320 }, { v: -16.855 }, { v: 5.535 }] },
+                        { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 3, f: 'Evening' }, { v: 7.448 }, { v: -12.414 }, { v: -16.431 }, { v: 14.193 }, { v: -2.238 }, { v: 18.548 }, { v: -9.476 }, { v: -9.072 }] }
+                    ];
+                    break;    
+                <% } %>
                 
-                default:        // if panelIndex is missing return column headings with empty rows
+                default:        // if panelIndex missing return column headings with empty rows
                     dataRows = [];
                     break;
-                
             }
 
             return { 'cols': dataCols, 'rows': dataRows }
