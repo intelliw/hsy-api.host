@@ -219,7 +219,7 @@
                             <div class="flex-grow-1">
 
                                 <!-- PERIOD n BODY pane HEADER -->
-                                <h3 class="display-5 text-secondary"><small data-toggle="tooltip" title="<%= utils.capitalise((pane === 'pane-child' ? link_col_children : link_col_grandchildren).name.split('.')[1]) %>"><%= pane === 'pane-child' ? link_col_children.prompt : link_col_grandchildren.prompt %></small>
+                                <h3 class="display-5 text-secondary"><small data-toggle="tooltip" title=""><span class="font-weight-light align-text-top"><%= pane === 'pane-child' ? utils.capitalise(child_period) : utils.capitalise(grandchild_period) %> </span><%= pane === 'pane-child' ? link_col_children.prompt : link_col_grandchildren.prompt %></small>
                                 </h3>
 
                                 <!-- PERIOD n BODY pane CHARTs  -->
@@ -236,7 +236,7 @@
                                                         </div>  
 
                                                     <button type="button" class="chart-selection-reset btn-outline-light btn btn-sm mx-0 py-0 px-0"
-                                                         onclick="panelMap[<%= n_cols %>].<%= pane === 'pane-child' ? 'child' : 'grandchild' %>.chart.setSelection()">
+                                                         onclick="clearSelection(panelMap[<%= n_cols %>].<%= pane === 'pane-child' ? 'child' : 'grandchild' %>)">
                                                         <i class="material-icons" data-toggle="tooltip" title="clear selection"
                                                             style="font-size:18px;color:darkgrey;">bar_chart</i>
                                                     </button>
@@ -252,7 +252,7 @@
 
                                                     <% for(var n_btns=0; n_btns < (pane === 'pane-child' ? child_descriptions : grandchild_descriptions).length; n_btns++) { %>
 
-                                                        <button type="button" class="btn btn-light border border-default py-0 m-0 mb-1 mr-1" 
+                                                        <button type="button" class="btn btn-light border border-secondary rounded py-0 m-0 mb-1 mr-1" 
                                                             <% if (pane === 'pane-child') { %>
                                                                 data-toggle="tooltip" title="<%= items[n_btns].links[0].prompt %>" onclick="window.location.href = '<%= items[n_btns].links[0].href %>'"
                                                             <% } %>>
@@ -387,14 +387,45 @@
             const AGGDATA_CHART_COLUMNS = [0, 1, 2, 3, 4, 6, 7];    // if hse chart 0 and all columns except (store=5) and (grid=8) deficit columns, if store/grid = 0, 1 ,2, 3,  others = 0, 1) 
             const RAWDATA_HSE_COLUMNS = [2, 3, 4, 5, 6, 7, 8, 9];   // 8 cols for hse,  '2,3,4' if store or grid, otherwise '2'
             const AGGDATA_HSE_COLUMNS = [1, 2, 3, 4, 5, 6, 7, 8];   // 8 cols for hse,  '1,2,3' if store or grid, otherwise '1'
-        <% } else if (isStore || isGrid ) { %> 
-            const AGGDATA_CHART_COLUMNS = [0, 1, 2, 3];     
+            const STORE_CHILD_COLUMN = 6;  
+            const GRID_CHILD_COLUMN = 9; 
+            const STORE_GRANDCHILD_COLUMN = 5; 
+            const GRID_GRANDCHILD_COLUMN = 8; 
+            const CHART_COLORS = ['#28a745', '#FF0000', '#007bff', '#007bff', '#000000', '#000000'];
+
+        <% } else if (isStore) { %> 
+            const AGGDATA_CHART_COLUMNS = [0, 1, 2];     
             const RAWDATA_HSE_COLUMNS = [2, 3, 4];   
             const AGGDATA_HSE_COLUMNS = [1, 2, 3];   
+            const STORE_CHILD_COLUMN = 4;  
+            const GRID_CHILD_COLUMN = undefined; 
+            const STORE_GRANDCHILD_COLUMN = 3;  
+            const GRID_GRANDCHILD_COLUMN = undefined; 
+            const CHART_COLORS = ['#007bff', '#007bff'];
+
+        <% } else if (isGrid) { %> 
+            const AGGDATA_CHART_COLUMNS = [0, 1, 2];     
+            const RAWDATA_HSE_COLUMNS = [2, 3, 4];   
+            const AGGDATA_HSE_COLUMNS = [1, 2, 3];   
+            const STORE_CHILD_COLUMN = undefined; 
+            const GRID_CHILD_COLUMN = 4; 
+            const STORE_GRANDCHILD_COLUMN = undefined; 
+            const GRID_GRANDCHILD_COLUMN = 3; 
+            const CHART_COLORS = ['#000000', '#000000'];
+
         <% } else { %>
             const AGGDATA_CHART_COLUMNS = [0, 1];     
             const RAWDATA_HSE_COLUMNS = [2];   
             const AGGDATA_HSE_COLUMNS = [1];   
+            const STORE_CHILD_COLUMN = undefined; 
+            const GRID_CHILD_COLUMN =  undefined; 
+            const STORE_GRANDCHILD_COLUMN = undefined; 
+            const GRID_GRANDCHILD_COLUMN = undefined; 
+            <% if (isHarvest) { %> 
+                const CHART_COLORS = ['#28a745'];
+            <% } else if (isEnjoy) { %> 
+                const CHART_COLORS = ['#FF0000'];
+            <% } %>    
         <% } %>
 
             const FORMATTED_DATA_CHILD_COLUMN = 0;
@@ -417,7 +448,7 @@
             if (!panelMapObj.child.dataTable) {
 
                 let dt = new google.visualization.DataTable(getJsonChartData(panelIndex));
-                colorDataTable(dt, 6, 9);
+                colorDataTable(dt, STORE_CHILD_COLUMN, GRID_CHILD_COLUMN);
                 panelMapObj.child.dataTable = dt;
                 
             }
@@ -434,7 +465,7 @@
 
                 // draw child
                 panelMapObj.child.table = drawTableChart(filteredData, tableDiv, panelMapObj.child.table);
-                panelMapObj.child.chart = drawColumnChart(groupedData, chartDiv, AGGDATA_CHART_COLUMNS);
+                panelMapObj.child.chart = drawColumnChart(groupedData, chartDiv, AGGDATA_CHART_COLUMNS, CHART_COLORS);
 
                 // register child event handlers
                 addTableEventHandler(panelMapObj.child, AGGDATA_CHART_COLUMNS.length - 1);     // skip the id column
@@ -451,12 +482,12 @@
 
                 // format grandchild datatable
                 let dt = groupedData.toDataTable();
-                colorDataTable(dt, 5, 8);
+                colorDataTable(dt, STORE_GRANDCHILD_COLUMN, GRID_GRANDCHILD_COLUMN);
                 panelMapObj.grandchild.dataTable = dt;
 
                 // draw grandchild
                 panelMapObj.grandchild.table = drawTableChart(dt, tableDiv, panelMapObj.grandchild.table);
-                panelMapObj.grandchild.chart = drawColumnChart(dt, chartDiv, AGGDATA_CHART_COLUMNS);
+                panelMapObj.grandchild.chart = drawColumnChart(dt, chartDiv, AGGDATA_CHART_COLUMNS, CHART_COLORS);
 
                 // register grandchild event handlers
                 addTableEventHandler(panelMapObj.grandchild, AGGDATA_CHART_COLUMNS.length - 1);     // skip the id column
@@ -534,7 +565,7 @@
                                     item_data_grid_in = grandchild_item_data[0].value.split(' ');      // grid.in
                                     item_data_grid_out = grandchild_item_data[1].value.split(' ');     // grid.out
                                 }
-                                chart_json_data_grid = `{ v: ${item_data_grid_out[n_gch_desc] || 0}, { v: ${(item_data_grid_in[n_gch_desc] || 0) * -1} }, { v: ${(eval(item_data_grid_out[n_gch_desc]) + eval(item_data_grid_in[n_gch_desc]) * -1).toFixed(4)} }`;
+                                chart_json_data_grid = `{ v: ${item_data_grid_out[n_gch_desc] || 0}}, { v: ${(item_data_grid_in[n_gch_desc] || 0) * -1} }, { v: ${(eval(item_data_grid_out[n_gch_desc]) + eval(item_data_grid_in[n_gch_desc]) * -1).toFixed(4)} }`;
                                 chart_json_data_cols = chart_json_data_grid;
 
                             } else if (isHarvest) {                            
@@ -550,7 +581,7 @@
                                 }
                                 chart_json_data_enjoy = `{ v: ${(item_data_enjoy[n_gch_desc] || 0) * -1} }`;
                                 chart_json_data_cols = chart_json_data_enjoy;
-                                
+
                             }
                          %>
                     { c: [<%- chart_json_header_col_0 %>, <%- chart_json_header_col_1 %>, <%- chart_json_data_cols %> ] }<% if (n_items < (items.length - 1) || n_gch_desc < (grandchild_descriptions.length - 1)) { %>,<% } %> <% } %>

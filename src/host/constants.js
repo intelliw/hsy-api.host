@@ -50,6 +50,21 @@ module.exports.periodChildDescription = {
     fiveyearyear: this.NONE                     // fiveyearyear is derived dynamically
 };
 
+// space delimited labels to diisplay as headers for grandchild periods. 
+module.exports.periodGrandchildDescription = {
+    secondinstant: this.NONE,
+    minutesecond: '01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60',
+    hourminute: '01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60',
+    timeofdayhour: { 'night': '1st 2nd 3rd 4th 5th 6th', 'morning': '1st 2nd 3rd 4th 5th 6th', 'afternoon': '1st 2nd 3rd 4th 5th 6th', 'evening': '1st 2nd 3rd 4th 5th 6th' },
+    daytimeofday: 'Night Morning Afternoon Evening',
+    weekday: 'Mon Tue Wed Thu Fri Sat Sun',
+    // monthday is constant for all grandchild months
+    monthday: '1st 2nd 3rd 4th 5th 6th 7th 8th 9th 10th 11th 12th 13th 14th 15th 16th 17th 18th 19th 20th 21st 22nd 23rd 24th 25th 26th 27th 28th 29th 30th 31st',
+    quartermonth: { 'Q1': '1st-Month 2nd-Month 3rd-Month', 'Q2': '1st-Month 2nd-Month 3rd-Month', 'Q3': '1st-Month 2nd-Month 3rd-Month', 'Q4': '1st-Month 2nd-Month 3rd-Month' },
+    yearquarter: 'Q1 Q2 Q3 Q4',
+    fiveyearyear: this.NONE                     // fiveyearyear is derived dynamically
+};
+
 // parent periods
 module.exports.periodParent = {
     instant: enums.period.second,

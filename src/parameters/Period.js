@@ -236,6 +236,7 @@ class Period extends Param {
     *  the grandchild period is created with a description (if one has been configured for it in consts.periodChildDescription)
     */
     getGrandchild() {
+        const IS_GRANDCHILD = true;
 
         let grandchild;
 
@@ -254,7 +255,7 @@ class Period extends Param {
                 let totalDuration = Number(childDuration) * Number(grandchildDuration)      // total is 28
 
                 // get the description label e.g.  'Mon Tue Wed Thu Fri Sat Sun'
-                let descr = periodChildDescription(childEnum, this.epochInstant);
+                let descr = periodChildDescription(childEnum, this.epochInstant, IS_GRANDCHILD);
 
                 //create the grandchild with the total duration 
                 grandchild = new Period(grandchildEnum, this.epochInstant, totalDuration);   // construct grandchild with total duration  
@@ -387,8 +388,8 @@ function periodChildDuration(periodEnum, epochInstant) {
 
 }
 
-// returns the labels to diisplay as headers for child periods 
-function periodChildDescription(periodEnum, epochInstant) {
+// returns the labels to diisplay as headers for child periods. if isGrandchild the headers are taken from consts.periodGrandchildDescription
+function periodChildDescription(periodEnum, epochInstant, isGrandchild) {
 
     const childEnum = consts.periodChild[periodEnum];
     let descr;
@@ -396,8 +397,8 @@ function periodChildDescription(periodEnum, epochInstant) {
 
     if (childEnum) {
 
-        descr = consts.periodChildDescription[`${periodEnum}${childEnum}`];             // e.g. periodChildLabel.weekday  
-
+        descr = isGrandchild ? consts.periodGrandchildDescription[`${periodEnum}${childEnum}`] : consts.periodChildDescription[`${periodEnum}${childEnum}`];        // e.g. periodChildLabel.weekday  
+        
         switch (periodEnum) {
 
             // literals from constants for these period/children
@@ -415,10 +416,10 @@ function periodChildDescription(periodEnum, epochInstant) {
                 descr = descr[todLbl];                                                  //  extract subvalue from label e.g. '06 07 08 09 10 11'
                 break;
 
-            case enums.period.month:                // monthday         
-
+            case enums.period.month:                                                    // monthday         
+            
                 const DEFAULT_START = 1;
-
+                    
                 let duration = moment.utc(epochInstant).daysInMonth();                  // get the days for this month  
                 let start = descr ? (descr.split(SPACE_DELIMITER).length) + 1 : DEFAULT_START; // get the days in the constant - this should be 28
 

@@ -50,7 +50,7 @@ function executeEnergyGet(params) {
 
     let child = period.getChild(ADD_CHILD_DESCRIPTION);                           // create the child link with a period description (if one has been configured for it in consts.periodChildDescription)
     if (child) {                                                                  // intant does not have a child
-      links.addLink(child, enums.linkRender.none, child.description);               // child collection link - not rendered, with a period description
+      links.addLink(child, enums.linkRender.none, child.description);             // child collection link - not rendered, with a period description
     }
 
     let grandchild = period.getGrandchild();

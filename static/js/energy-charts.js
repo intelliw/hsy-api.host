@@ -102,20 +102,24 @@ function filterDataTable(dt, filterColumn, includeRows, includeColumns) {
 }
 
 // format datatable in red 
-function colorDataTable(dt, storeColIndex, gridColIndex) {
+function colorDataTable(dt, storeTotalColumn, gridTotalColumn) {
     const COLOR = 'red';
+    let formatter;
 
-    let formatter = new google.visualization.ColorFormat();
-    formatter.addRange(0, null, COLOR, '');
-    formatter.format(dt, storeColIndex);
-
-    formatter = new google.visualization.ColorFormat();
-    formatter.addRange(null, 0, COLOR, '');
-    formatter.format(dt, gridColIndex);
+    if (storeTotalColumn) {
+        formatter = new google.visualization.ColorFormat();
+        formatter.addRange(0, null, COLOR, '');
+        formatter.format(dt, storeTotalColumn);
+    }
+    if (gridTotalColumn) {    
+        formatter = new google.visualization.ColorFormat();
+        formatter.addRange(null, 0, COLOR, '');
+        formatter.format(dt, gridTotalColumn);
+    }
 }
 
 // draws a column chart in the div for this panelIndex, pane
-function drawColumnChart(dataView, div, columns) {
+function drawColumnChart(dataView, div, columns, chartColors) {
 
     // Set chart options
     let chartOptions = {
@@ -146,9 +150,9 @@ function drawColumnChart(dataView, div, columns) {
             titleTextStyle: { italic: 'true' }
         },
         axisTitlesPosition: 'none', titlePosition: 'none',
-        backgroundColor: { fill: 'none', stroke: 'none', strokeWidth: 4 },
-        colors: ['#28a745', '#FF0000', '#007bff', '#007bff', '#000000', '#000000']
+        backgroundColor: { fill: 'none', stroke: 'none', strokeWidth: 4 }
     };
+    chartOptions.colors = chartColors;
 
     let chartView = new google.visualization.DataView(dataView);
     chartView.setColumns(columns);
@@ -195,4 +199,10 @@ function drawTableChart(dataView, div, table) {
     table.draw(dataView, tableOptions);
 
     return table;
+}
+
+// clears the selection from the chart and table on the specified pane
+function clearSelection(panelMapPane) {
+    panelMapPane.chart.setSelection();
+    panelMapPane.table.setSelection();
 }
