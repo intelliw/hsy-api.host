@@ -135,7 +135,6 @@
 
             panel_map += '{child: { dataTable: undefined, chart: undefined, table: undefined }, grandchild: { dataTable: undefined, chart: undefined, table: undefined } }' + (n_cols < collections.length - 1 ? ', ' : '');
             
-            
         %>
 
         <!-- PERIOD n PANEL -->
@@ -219,7 +218,11 @@
                             <div class="flex-grow-1">
 
                                 <!-- PERIOD n BODY pane HEADER -->
-                                <h3 class="display-5 text-secondary"><small data-toggle="tooltip" title=""><span class="font-weight-light align-text-top"><%= pane === 'pane-child' ? utils.capitalise(child_period) : utils.capitalise(grandchild_period) %> </span><%= pane === 'pane-child' ? link_col_children.prompt : link_col_grandchildren.prompt %></small>
+                                <h3 class="display-5 text-secondary">
+                                    <small class="font-weight-light"><%= pane === 'pane-child' ? utils.capitalise(child_period) + 's ': utils.capitalise(grandchild_period) + 's / ' + utils.capitalise(child_period) %></small>
+                                    <small class="" data-toggle="tooltip" title="<%= pane === 'pane-child' ? 
+                                        utils.capitalise(child_period) + 's ' + link_col_children.title : utils.capitalise(grandchild_period) + 's / ' + utils.capitalise(child_period) + ' ' + link_col_children.prompt %>"
+                                        ><%= pane === 'pane-child' ? link_col_children.prompt : link_col_grandchildren.prompt %></small>
                                 </h3>
 
                                 <!-- PERIOD n BODY pane CHARTs  -->
@@ -247,7 +250,7 @@
 
                                                 <div class="btn-group btn-group-sm flex-wrap" 
                                                     <% if (pane === 'pane-grandchild') { %>
-                                                        data-toggle="tooltip" title="<%= utils.capitalise(grandchild_period) %> (<%= link_col_grandchildren.title %>)" onclick="window.location.href = '<%= link_col_grandchildren.href %>'"
+                                                        data-toggle="tooltip" title="<%= utils.capitalise(grandchild_period) + 's' %> (<%= link_col_grandchildren.title %>)" onclick="window.location.href = '<%= link_col_grandchildren.href %>'"
                                                     <% } %>>
 
                                                     <% for(var n_btns=0; n_btns < (pane === 'pane-child' ? child_descriptions : grandchild_descriptions).length; n_btns++) { %>
