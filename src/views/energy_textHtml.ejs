@@ -1,6 +1,4 @@
-
-<%  
-    /* custom attributes and classes added to elements
+<%  /* custom attributes and classes added to elements
     navbar
         id = titlePeriod
         navbar.ejs                                      <!-- ENERGY NAVBAR    
@@ -57,15 +55,14 @@
     let isGrid = params_energy == 'grid';
 
     let panel_map = '';
-
-%> 
-
+%>
 <!doctype html>
 <html lang="en">
 
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/energy-button-toggle.css">
@@ -92,7 +89,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- ENERGY NAVBAR --------------------------------------------------------------------------------------------------->
+        <!-- ENERGY NAVBAR -->
         <div class="collapse navbar-collapse" id="navbarMain">
             <ul id="navbarAPI" class="navbar-nav mt-auto collapse">
 
@@ -104,7 +101,7 @@
 
     </nav>
 
-    <!-- PANELS  ------------------------------------------------------------------------------------------------------------->
+    <!-- PANELS  -->
     <div class="accordion">
 
         <% for(var n_cols=0; n_cols < collections.length; n_cols++) { 
@@ -185,8 +182,8 @@
                 <div class="d-flex flex-nowrap pt-1 mb-0 pr-3">
 
                     <div class="d-flex px-1">
-                        <% if (bHasChildren) { %> <h3 class="display-5 text-secondary text-capitalize name-toggle-child collapse show"><small><%= utils.capitalise(child_period) %></small></small></h3> <% } %>
-                        <% if (bHasGrandchildren) { %> <h3 class="display-5 text-secondary text-capitalize name-toggle-grandchild collapse hide"><small><%= utils.capitalise(grandchild_period) %></small></small></h3> <% } %>
+                        <% if (bHasChildren) { %> <h3 class="display-5 text-secondary text-capitalize name-toggle-child collapse show"><small><%= utils.capitalise(child_period) %></small></h3> <% } %>
+                        <% if (bHasGrandchildren) { %> <h3 class="display-5 text-secondary text-capitalize name-toggle-grandchild collapse hide"><small><%= utils.capitalise(grandchild_period) %></small></h3> <% } %>
                     </div>
 
                     <% if (bHasChildren && bHasGrandchildren) { %>
@@ -336,14 +333,14 @@
         
     </div>
     
-    <!-- FOOTER  ------------------------------------------------------------------------------------------------------------->
+    <!-- FOOTER  -->
     <nav class="navbar navbar-expand-md navbar-dark bg-light border-top border-primary py-0 pr-3">
         
-        <div class="d-flex flex-grow-1 justify-content-end">&nbsp
+        <div class="d-flex flex-grow-1 justify-content-end">&nbsp;
 
             <% if (bHasChildren && bHasGrandchildren) { %> 
 
-            <!-- SUM/AVG --->
+            <!-- SUM/AVG -->
             <span class="mb-1 mr-1" data-toggle="tooltip" data-placement="right" title="Total | Average/<%= grandchild_period %>">
                 <button id="btnSumAvg" type="button" class="btn btn-sm btn-outline-default btn-avg-sum btn-primary btn-toggle">
                     <div class="handle"></div>
@@ -382,6 +379,12 @@
         let panelMap = [<%= panel_map %>];
 
         google.charts.load('current', { packages: ['table', 'corechart'], callback: redrawPanels });
+        
+        // clears the selection from the chart and table on the specified pane
+        function clearSelection(panelMapPane) {
+            panelMapPane.chart.setSelection();
+            panelMapPane.table.setSelection();
+        }
 
         // draws the active pane
         function redrawActivePane(pane) {
@@ -634,6 +637,7 @@
 
             return { 'cols': dataCols, 'rows': dataRows }
         }
+
 
     </script>
 

@@ -201,8 +201,3 @@ function drawTableChart(dataView, div, table) {
     return table;
 }
 
-// clears the selection from the chart and table on the specified pane
-function clearSelection(panelMapPane) {
-    panelMapPane.chart.setSelection();
-    panelMapPane.table.setSelection();
-}
