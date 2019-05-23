@@ -5,8 +5,6 @@ $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
 
 
-
-
     // navbar dropdown item click       ...justtext without badges
     $(".select-justtext a").click(function () {
 
