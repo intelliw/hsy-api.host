@@ -176,7 +176,7 @@ function drawTableChart(dataView, div, table) {
 
     // Set chart options
     let tableOptions = {
-        width: '100%', height: '100%',     // 100% if paged 
+        width: '100%', height: '100%',     // height 100% if paged 
         alternatingRowStyle: false,
         showRowNumber: false,
         allowHtml: true,
