@@ -163,7 +163,7 @@ function drawColumnChart(dataView, div, columns, chartColors) {
     return chart;
 }
 
-// draws a table chart in the div div for this panelIndex, pane   
+// draws a table chart in the div div for this panelIndex, pane. table is a panelMapObj.child.table   
 function drawTableChart(dataView, div, table) {
 
     const INITIAL_SORT_COL = 0;
@@ -199,5 +199,18 @@ function drawTableChart(dataView, div, table) {
     table.draw(dataView, tableOptions);
 
     return table;
+}
+
+// sets the chart titles
+function setChartTitles(pane) {
+    
+    let sum = getGroupOption() == 'sum';
+    
+    if (pane.hasClass('pane-child')) {
+        pane.find('.select-chart-title').text((sum ? '' : 'Average') + ' Megajoules (MJ) / ' + CHILD_PERIOD + (sum ? '' : ' / ' + GRANDCHILD_PERIOD));
+    } else {
+        pane.find('.select-chart-title').text((sum ? '' : ' Average') + ' Megajoules (MJ) / ' + (sum ? GRANDCHILD_PERIOD : CHILD_PERIOD));
+    }
+
 }
 

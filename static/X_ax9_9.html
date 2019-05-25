@@ -65,11 +65,14 @@
             let childFilterVals = [0, 1, 2, 3];
             let grandchildFilterVals = [0, 1, 2, 3, 4, 5, 6];
 
+            const chartDiv = $(this).find('.pane-column-chart-div');
+            const tableDiv = $(this).find('.pane-table-chart-div');
+            const CHART_COLORS = ['#28a745', '#FF0000', '#007bff', '#007bff', '#000000', '#000000'];
+            
             // child format datatable
             let panelMapObj = panelMap[panelIndex];
             if (!panelMapObj.child.dataTable) {
                 dt = new google.visualization.DataTable(getJsonChartData(panelIndex));
-                alert(dt.getNumberOfRows());
                 colorDataTable(dt, 6, 9);
                 panelMapObj.child.dataTable = dt;
             }
@@ -83,8 +86,8 @@
             aggregateData = groupFilteredData(filteredData, groupColumn, sumAvg, RAWDATA_HSE_COLUMNS, AGGDATA_HSE_COLUMNS);
 
             // child draw table and chart                
-            panelMapObj.child.table = drawTableChart(filteredData, panelIndex, 'child');
-            panelMapObj.child.chart = drawColumnChart(aggregateData, panelIndex, 'child', AGGDATA_CHART_COLUMNS);
+            panelMapObj.child.table = drawTableChart(filteredData, tableDiv);
+            panelMapObj.child.chart = drawColumnChart(aggregateData, chartDiv, AGGDATA_CHART_COLUMNS, CHART_COLORS);
             
             // child event handlers
             addTableEventHandler(panelMapObj.child, AGGDATA_CHART_COLUMNS.length - 1);     // skip the id column

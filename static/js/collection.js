@@ -148,7 +148,7 @@ $(document).ready(function () {
 
     // filter button click              ...calls redrawPanels
     $('.select-filter-btn').click(function () {
-
+        
         $(this).hasClass('active') ? $(this).removeClass("active") : $(this).addClass("active");
 
         redrawPanels($(this));
@@ -160,18 +160,18 @@ $(document).ready(function () {
 
         let resetActive;
         
-        $(this).closest('.select-filter').find('.select-filter-btn.active').each(function () {
+        $(this).closest('.card-body').find('.select-filter-btn.active').each(function () {
             $(this).removeClass("active");
             resetActive = true;
         });
 
         if (!resetActive) { 
-            $(this).closest('.select-filter').find('.select-filter-btn').each(function () {
+            $(this).closest('.card-body').find('.select-filter-btn').each(function () {
                 if (!$(this).hasClass("active")) { $(this).addClass("active"); }
             });
         }            
 
-        $(this).parents('.card').find('.select-filter-btn-panel').collapse('show');    // make buttons visible when resetting
+        $(this).parents('.card-body').find('.select-filter-btn-panel').collapse('show');    // make buttons visible when resetting
 
         redrawPanels($(this));
 
@@ -180,13 +180,14 @@ $(document).ready(function () {
     // filter button panel visibility click      
     $(".select-filter-visibility").click(function () {
 
-        let btnPanel = $(this).parents('.card').find('.select-filter-btn-panel');
+        let wasActive = $(this).closest('.card-body').find('.select-filter-btn-panel').hasClass('show');
 
-        let wasActive = btnPanel.hasClass('show');
-
-        btnPanel.collapse(wasActive ? 'hide' : 'show');
+        $(this).closest('.select-collection-panel').find('.select-filter-btn-panel').each(function () {
+            $(this).collapse(wasActive ? 'hide' : 'show');
+        });
 
     });
+
     // filter button panel after shown/hidden
     $('.select-filter-btn-panel').on('shown.bs.collapse hidden.bs.collapse', function () {
 
@@ -228,6 +229,7 @@ function flagPanelForRedraw(panel) {
 function redrawPanels(source) {
     
     if (source) {
+        
         let panel = source.closest('.select-collection-panel');
         flagPanelForRedraw(panel);
     }
@@ -249,34 +251,21 @@ function redrawPanels(source) {
 
 //  reveals filter reset buttons flagged with 'reveal'. if source is provide the closest reset button is flagged first  
 function revealFilterResetButtons(source) {
-        
+
     if (source) {
-        let resetBtn = source.closest('.select-collection-panel').find('.select-filter-reset');
+        let resetBtn = source.hasClass('.card-body') ? source : source.closest('.card-body').find('.select-filter-reset');
         if (!resetBtn.hasClass('reveal')) resetBtn.addClass('reveal');
     }
 
     $('.select-filter-reset.reveal').each(function () {
             
         let activePane = getActivePane($(this).closest('.select-collection-panel'));
-        let btnsVisible = $(this).closest('.select-filter').find('.select-filter-btn-panel').hasClass('show');
+        let btnsVisible = activePane.find('.select-filter-btn-panel').hasClass('show');
 
         isFiltered(activePane) || btnsVisible ? $(this).show() : $(this).hide();
         
         $(this).removeClass('reveal');      // clear the 'reveal' flag 
     });
-
-}
-
-// sets the chart titles
-function setChartTitles(pane) {
-    
-    let sum = getGroupOption() == 'sum';
-    
-    if (pane.hasClass('pane-child')) {
-        pane.find('.select-chart-title').text((sum ? '' : 'Average') + ' Megajoules (MJ) / ' + CHILD_PERIOD + (sum ? '' : ' / ' + GRANDCHILD_PERIOD));
-    } else {
-        pane.find('.select-chart-title').text((sum ? '' : ' Average') + ' Megajoules (MJ) / ' + (sum ? GRANDCHILD_PERIOD : CHILD_PERIOD));
-    }
 
 }
 
