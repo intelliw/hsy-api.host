@@ -147,7 +147,7 @@ $(document).ready(function () {
     });
 
     // filter button click              ...calls redrawPanels
-    $('.select-filter-btn').click(function () {
+    $('.period-filter-btn').click(function () {
         
         $(this).hasClass('active') ? $(this).removeClass("active") : $(this).addClass("active");
 
@@ -155,41 +155,41 @@ $(document).ready(function () {
 
     });
 
-    // filter buttons reset click       ...calls redrawPanels
-    $(".select-filter-reset").click(function () {
+    // period filter buttons reset click       ...calls redrawPanels
+    $(".period-filter-reset").click(function () {
 
         let resetActive;
         
-        $(this).closest('.card-body').find('.select-filter-btn.active').each(function () {
+        $(this).closest('.card-body').find('.period-filter-btn.active').each(function () {
             $(this).removeClass("active");
             resetActive = true;
         });
 
         if (!resetActive) { 
-            $(this).closest('.card-body').find('.select-filter-btn').each(function () {
+            $(this).closest('.card-body').find('.period-filter-btn').each(function () {
                 if (!$(this).hasClass("active")) { $(this).addClass("active"); }
             });
         }            
 
-        $(this).parents('.card-body').find('.select-filter-btn-panel').collapse('show');    // make buttons visible when resetting
+        $(this).parents('.card-body').find('.period-filter-btn-panel').collapse('show');    // make buttons visible when resetting
 
         redrawPanels($(this));
 
     });
 
     // filter button panel visibility click      
-    $(".select-filter-visibility").click(function () {
+    $(".period-filter-visibility").click(function () {
 
-        let wasActive = $(this).closest('.card-body').find('.select-filter-btn-panel').hasClass('show');
+        let wasActive = $(this).closest('.card-body').find('.period-filter-btn-panel').hasClass('show');
 
-        $(this).closest('.select-collection-panel').find('.select-filter-btn-panel').each(function () {
+        $(this).closest('.select-collection-panel').find('.period-filter-btn-panel').each(function () {
             $(this).collapse(wasActive ? 'hide' : 'show');
         });
 
     });
 
     // filter button panel after shown/hidden
-    $('.select-filter-btn-panel').on('shown.bs.collapse hidden.bs.collapse', function () {
+    $('.period-filter-btn-panel').on('shown.bs.collapse hidden.bs.collapse', function () {
 
         revealFilterResetButtons($(this));     
 
@@ -207,6 +207,41 @@ $(document).ready(function () {
         redrawPanels();
     });
 
+    // hse (live) filter button click             ...calls redrawPanels
+    $('.hse-filter-btn.live').click(function () {
+        
+        $(this).hasClass('active') ? $(this).removeClass("active") : $(this).addClass("active");
+
+        $('.select-collection-panel').each(function () {
+            flagPanelForRedraw($(this));
+        });
+
+        redrawPanels();
+    });
+
+    // hse filter buttons reset click       ...calls redrawPanels
+    $(".hse-filter-reset").click(function () {
+
+        let resetActive;
+        
+        $('.hse-filter-btn.active.live').each(function () {
+            $(this).removeClass("active");
+            resetActive = true;
+        });
+
+        if (!resetActive) { 
+            $('.hse-filter-btn.live').each(function () {
+                if (!$(this).hasClass("active")) { $(this).addClass("active"); }
+            });
+        }            
+
+        $('.select-collection-panel').each(function () {
+            flagPanelForRedraw($(this));
+        });
+
+        redrawPanels($(this));
+
+    });
 
 });
 
@@ -253,14 +288,14 @@ function redrawPanels(source) {
 function revealFilterResetButtons(source) {
 
     if (source) {
-        let resetBtn = source.hasClass('.card-body') ? source : source.closest('.card-body').find('.select-filter-reset');
+        let resetBtn = source.hasClass('.card-body') ? source : source.closest('.card-body').find('.period-filter-reset');
         if (!resetBtn.hasClass('reveal')) resetBtn.addClass('reveal');
     }
 
-    $('.select-filter-reset.reveal').each(function () {
+    $('.period-filter-reset.reveal').each(function () {
             
         let activePane = getActivePane($(this).closest('.select-collection-panel'));
-        let btnsVisible = activePane.find('.select-filter-btn-panel').hasClass('show');
+        let btnsVisible = activePane.find('.period-filter-btn-panel').hasClass('show');
 
         isFiltered(activePane) || btnsVisible ? $(this).show() : $(this).hide();
         
@@ -281,7 +316,7 @@ function getGroupOption() {
 }
 
 // returns an array of unselected ('show') filter button indexes for the (child/grandchild) pane 
-function getActiveFilterButtons(pane) {
+function getActivePeriodFilters(pane) {
     
     let showButtons = [];
     let allButtons = [];
@@ -306,8 +341,8 @@ function isFiltered(pane) {
     let totalButtons = 0; 
     let showButtons = 0;
 
-    pane.find('.btn-block').each(function () {
-        if ($(this).find('.btn').hasClass('active')) {          // 'hide' has been selected
+    pane.find('.period-filter-btn-panel').find('.btn-block').each(function () {
+        if ($(this).find('.btn').hasClass('active')) {          // 'hide' 
             ++showButtons;  
         }
         ++totalButtons;

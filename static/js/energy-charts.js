@@ -120,6 +120,11 @@ function colorDataTable(dt, storeTotalColumn, gridTotalColumn) {
 
 // draws a column chart in the div for this panelIndex, pane
 function drawColumnChart(dataView, div, columns, chartColors) {
+    
+    const VAXIS_COLUMN = 0;
+
+    // add the vaxis columnn as the first column
+    columns.unshift(VAXIS_COLUMN);
 
     // Set chart options
     let chartOptions = {
@@ -156,7 +161,7 @@ function drawColumnChart(dataView, div, columns, chartColors) {
 
     let chartView = new google.visualization.DataView(dataView);
     chartView.setColumns(columns);
-
+    
     let chart = new google.visualization.ColumnChart(div[0]);   // first element of jquery object is html dom object
     chart.draw(chartView, chartOptions);
 
@@ -214,3 +219,66 @@ function setChartTitles(pane) {
 
 }
 
+/* get columns and colours based on hse filters. the returned filter object has an array of columns and colours 
+   order of elements in allColumns and allColours are: vAxis + harvest(0), enjoy(1), storein/out(2,3), gridout/in(4,5) 
+*/
+function getActiveHseFilters(allColumns, allColours) {
+    
+    const HARVEST = 0;
+    const ENJOY = 1;
+    const STORE_IN = 2;  const STORE_OUT = 3;
+    const GRID_IN = 4;   const GRID_OUT = 5;
+
+    const ALL_FILTERS_ADDED = 4;
+
+    let numFilters = 0;
+
+    // initialise     
+    let filterObj = { columns:[], colours:[] }; 
+       
+
+    // add columns and colours depending on which hse buttons are active and live    
+
+    // harvest
+    if ($('.hse-filter-btn.btn-success.live').hasClass('active')) {              
+        numFilters++;
+        filterObj.columns.push(allColumns[HARVEST]);
+        filterObj.colours.push(allColours[HARVEST]);
+    }
+    
+    // enjoy
+    if ($('.hse-filter-btn.btn-danger.live').hasClass('active')) {              
+        numFilters++;
+        filterObj.columns.push(allColumns[ENJOY]);
+        filterObj.colours.push(allColours[ENJOY]);
+
+    }
+
+    // store
+    if ($('.hse-filter-btn.btn-primary.live').hasClass('active')) {              
+        numFilters++;
+        filterObj.columns.push(allColumns[STORE_IN]);
+        filterObj.colours.push(allColours[STORE_IN]);
+
+        filterObj.columns.push(allColumns[STORE_OUT]);
+        filterObj.colours.push(allColours[STORE_OUT]);
+    }
+
+    // grid
+    if ($('.hse-filter-btn.btn-dark.live').hasClass('active')) {              
+        numFilters++;
+        filterObj.columns.push(allColumns[GRID_IN]);
+        filterObj.colours.push(allColours[GRID_IN]);
+
+        filterObj.columns.push(allColumns[GRID_OUT]);
+        filterObj.colours.push(allColours[GRID_OUT]);
+
+    }
+
+    
+    // if none or all were added then just return the original columns and colours 
+    filterObj = numFilters == 0 || numFilters == ALL_FILTERS_ADDED ?  { columns: allColumns, colours: allColours } : filterObj;
+
+    return filterObj;
+
+}
