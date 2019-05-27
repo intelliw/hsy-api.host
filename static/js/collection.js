@@ -132,7 +132,7 @@ $(document).ready(function () {
 
     });
     
-    // child/grandchil pane after shown
+    // child/grandchild pane after shown
     $('.pane-child, .pane-grandchild').on('shown.bs.collapse', function () {
         
          revealFilterResetButtons($(this));     
@@ -178,7 +178,11 @@ $(document).ready(function () {
         $(this).closest('.select-collection-panel').find('.period-filter-btn-panel').each(function () {
             $(this).collapse(wasActive ? 'hide' : 'show');
         });
-
+        
+        $(this).closest('.select-collection-panel').find('.period-filter-title').each(function () {
+            $(this).collapse(wasActive ? 'hide' : 'show');
+        });
+        
     });
 
     // filter button panel after shown/hidden

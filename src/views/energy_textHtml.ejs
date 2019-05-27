@@ -16,6 +16,7 @@
                     ...                                             <!-- PERIOD n BODY pane HEADER -->
                         period-filter-reset
                         period-filter-visibility 
+                        period-filter-title
 
                     ...                                             <!-- PERIOD n BODY pane CHARTs  -->    
                         select-chart-title
@@ -209,7 +210,7 @@
                     <!-- PERIOD n BODY pane HEADER -->
                     <div class="d-flex justify-content-md-between px-0">
 
-                        <div class="mt-2"> 
+                        <div class="text-secondary mt-2"> 
                             <button type="button" class="period-filter-visibility btn btn-outline-light btn-sm py-0 px-0">
                                 <i class="material-icons" data-toggle="tooltip" title="show filters"
                                     style="font-size:24px;color:darkgrey;">storage</i>
@@ -219,6 +220,9 @@
                                 <i class="material-icons" data-toggle="tooltip" title="reset filters"
                                     style="font-size:24px;color:darkgrey;">link_off</i>
                             </button>
+
+                            <span class="period-filter-title collapse hide"><%= pane === 'pane-child' ? utils.capitalise(grandchild_period): utils.capitalise(child_period) %>s</span>
+
                         </div>    
 
                         <h3 class="display-5 text-secondary ml-3 pr-2" data-toggle="tooltip" title="<%= pane === 'pane-child' ? 
