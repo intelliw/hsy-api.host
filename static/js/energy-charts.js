@@ -122,6 +122,7 @@ function colorDataTable(dt, storeTotalColumn, gridTotalColumn) {
 function drawColumnChart(dataView, div, columns, chartColors) {
     
     const VAXIS_COLUMN = 0;
+    let prevSelection; 
 
     // add the vaxis columnn as the first column
     columns.unshift(VAXIS_COLUMN);
@@ -159,13 +160,15 @@ function drawColumnChart(dataView, div, columns, chartColors) {
     };
     chartOptions.colors = chartColors;
 
+    // setup dataview
     let chartView = new google.visualization.DataView(dataView);
     chartView.setColumns(columns);
     
-    let chart = new google.visualization.ColumnChart(div[0]);   // first element of jquery object is html dom object
-    chart.draw(chartView, chartOptions);
+    // draw chart
+    let newChart = new google.visualization.ColumnChart(div[0]);   // first element of jquery object is html dom object
+    newChart.draw(chartView, chartOptions);
 
-    return chart;
+    return newChart;
 }
 
 // draws a table chart in the div div for this panelIndex, pane. table is a panelMapObj.child.table   
@@ -179,7 +182,7 @@ function drawTableChart(dataView, div, table) {
         sortObj = table.getSortInfo()
     }
 
-    // Set chart options
+    // Set chart options with current sort
     let tableOptions = {
         width: '100%', height: '100%',     // height 100% if paged 
         alternatingRowStyle: false,
@@ -200,10 +203,10 @@ function drawTableChart(dataView, div, table) {
         }
     }
 
-    var table = new google.visualization.Table(div[0]);         // first element of jquery object is html dom object
-    table.draw(dataView, tableOptions);
+    let newTable = new google.visualization.Table(div[0]);         // first element of jquery object is html dom object
+    newTable.draw(dataView, tableOptions);
 
-    return table;
+    return newTable;
 }
 
 // sets the chart titles

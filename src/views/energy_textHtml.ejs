@@ -517,8 +517,9 @@
                 let groupedData = groupFilteredData(filteredData, groupColumn, sumAvg, RAWDATA_HSE_COLUMNS, AGGDATA_HSE_COLUMNS);
 
                 // draw child
+                
                 panelMapObj.child.table = drawTableChart(filteredData, tableDiv, panelMapObj.child.table);
-                panelMapObj.child.chart = drawColumnChart(groupedData, chartDiv, hseFilter.columns, hseFilter.colours);
+                panelMapObj.child.chart = drawColumnChart(groupedData, chartDiv, hseFilter.columns, hseFilter.colours, panelMapObj.child.chart);
 
                 // register child event handlers
                 addTableEventHandler(panelMapObj.child, hseFilter.columns.length-1);                // skip the id column
@@ -540,7 +541,7 @@
 
                 // draw grandchild
                 panelMapObj.grandchild.table = drawTableChart(dt, tableDiv, panelMapObj.grandchild.table);
-                panelMapObj.grandchild.chart = drawColumnChart(dt, chartDiv, hseFilter.columns, hseFilter.colours);
+                panelMapObj.grandchild.chart = drawColumnChart(dt, chartDiv, hseFilter.columns, hseFilter.colours, panelMapObj.child.chart);
 
                 // register grandchild event handlers
                 addTableEventHandler(panelMapObj.grandchild, hseFilter.columns.length-1);         // skip the id column
