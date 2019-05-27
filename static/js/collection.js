@@ -128,13 +128,6 @@ $(document).ready(function () {
         (toggleOn ? gch : ch).collapse('hide');
         (toggleOn ? ch : gch).collapse('show');
 
-        // toggle name header visibility
-        let chLbl = card.find('.name-toggle-child');
-        let gchLbl = card.find('.name-toggle-grandchild');
-
-        (toggleOn ? gchLbl : chLbl).hide();
-        (toggleOn ? chLbl : gchLbl).show();
-
         card.find('.select-collection-panel').collapse('show');    // make panel visible when toggling
 
     });

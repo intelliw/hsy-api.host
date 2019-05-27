@@ -85,8 +85,8 @@
             <a class="navbar-brand pl-1" href="#navbarAPI, #navbarMain" data-toggle="collapse">Sundaya Energy API</a>
 
             <ul id="titlePeriod" class="navbar-nav show" data-toggle="tooltip" data-placement="right" title="<%= params_duration %> <%=params_period%><%= params_duration > 1 ? 's' : ''%>">
-                <a class="nav-link pl-1" href="#" data-toggle="collapse">
-                    <i class="material-icons align-middle" style="font-size:16px;color:#80bdff;">expand_more</i>
+                <a class="nav-link pl-0" href="#" data-toggle="collapse">
+                    <i class="material-icons align-middle" style="font-size:18px;color:#80bdff;">filter_<%= params_duration <= 9 ? params_duration : '9_plus' %></i>
                 </a>
             </ul>
         </span>
@@ -178,7 +178,10 @@
                 </h2>
 
                 <!-- PERIOD n NAV row CHILD / GRANDCHILD toggle -->
-                <div class="d-flex flex-nowrap pt-1 mb-0 pr-3">
+                <div class="justify-content-md-end flex-grow-1 d-flex flex-nowrap pt-1 mb-0 pr-3">
+                    
+                    <span class="flex-md-grow-1 select-toggle-collection">
+                    </span>
 
                     <% if (bHasChildren && bHasGrandchildren) { %>
 
@@ -376,9 +379,9 @@
             </div>                    
 
             <% if (bHasChildren && bHasGrandchildren) { %> 
-            <!-- SUM/AVG -->
-            <div class="mb-2 ml-2 mr-2" data-toggle="tooltip" data-placement="bottom" title="Total | Average/<%= grandchild_period %>">
-                <button id="btnSumAvg" type="button" class="btn btn-sm btn-outline-default btn-avg-sum btn-primary btn-toggle">
+            <!-- SUM/AVERAGE -->
+            <div class="mb-2 ml-2" data-toggle="tooltip" data-placement="bottom" title="Total | Average/<%= grandchild_period %>">
+                <button id="btnSumAvg" type="button" class="btn btn-sm btn-outline-default btn-avg-sum btn-primary btn-toggle mr-2">
                     <div class="handle"></div>
                 </button>
             </div>

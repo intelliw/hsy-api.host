@@ -125,7 +125,7 @@ module.exports.periodMaxDurationsAllowed = {
     hour: '1',
     timeofday: '8',                                         // max allowed for time-of-day is 8 (2 days)  
     day: '31',                                              // only 4 items per day    
-    week: '8',
+    week: '12',
     month: '3',                                             // there are 31 items in a month.. so cap to 3 (1 quarter)
     quarter: '8',
     year: '5',
