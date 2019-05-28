@@ -490,7 +490,7 @@
 
             // get the filters 
             let sumAvg = getGroupOption();
-            let filterVals = getActivePeriodFilters(pane);
+            let periodFilters = getActivePeriodFilters(pane);
         <% if (isHse) {  %>  
             let hseFilter = getActiveHseFilters(AGGDATA_CHART_COLUMNS, CHART_COLORS);
         <% } else { %>
@@ -513,15 +513,14 @@
                 groupColumn = FORMATTED_DATA_CHILD_COLUMN;
                 
                 // filter & aggregate child 
-                let filteredData = filterDataTable(panelMapObj.child.dataTable, filterColumn, filterVals, ALL_COLUMNS);
+                let filteredData = filterDataTable(panelMapObj.child.dataTable, filterColumn, periodFilters, ALL_COLUMNS);
                 let groupedData = groupFilteredData(filteredData, groupColumn, sumAvg, RAWDATA_HSE_COLUMNS, AGGDATA_HSE_COLUMNS);
 
                 // draw child
-                
                 panelMapObj.child.table = drawTableChart(filteredData, tableDiv, panelMapObj.child.table);
                 panelMapObj.child.chart = drawColumnChart(groupedData, chartDiv, hseFilter.columns, hseFilter.colours, panelMapObj.child.chart);
 
-                // register child event handlers
+                // register child event handlers                                                    // currently not using addChartEventHandler(panelMapObj.grandchild);  
                 addTableEventHandler(panelMapObj.child, hseFilter.columns.length-1);                // skip the id column
                 
             // draw grandchild
@@ -531,7 +530,7 @@
                 groupColumn = FORMATTED_DATA_GRANDCHILD_COLUMN;
 
                 // filter & aggregate grandchild 
-                let filteredData = filterDataTable(panelMapObj.child.dataTable, filterColumn, filterVals, ALL_COLUMNS);
+                let filteredData = filterDataTable(panelMapObj.child.dataTable, filterColumn, periodFilters, ALL_COLUMNS);
                 let groupedData = groupFilteredData(filteredData, groupColumn, sumAvg, RAWDATA_HSE_COLUMNS, AGGDATA_HSE_COLUMNS);
 
                 // format grandchild datatable
@@ -543,9 +542,8 @@
                 panelMapObj.grandchild.table = drawTableChart(dt, tableDiv, panelMapObj.grandchild.table);
                 panelMapObj.grandchild.chart = drawColumnChart(dt, chartDiv, hseFilter.columns, hseFilter.colours, panelMapObj.child.chart);
 
-                // register grandchild event handlers
+                // register grandchild event handlers                                             // currently not using addChartEventHandler(panelMapObj.grandchild);  
                 addTableEventHandler(panelMapObj.grandchild, hseFilter.columns.length-1);         // skip the id column
-                //addChartEventHandler(panelMapObj.grandchild);
 
             } 
 
