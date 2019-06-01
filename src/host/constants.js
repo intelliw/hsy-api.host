@@ -56,6 +56,7 @@ module.exports.descendentParent = {
     minute: enums.period.hour,
     hour: enums.period.day,
     day: enums.period.month,
+    timeofday: enums.period.day,    
     week: enums.period.month,
     month: enums.period.quarter,
     quarter: enums.period.year,

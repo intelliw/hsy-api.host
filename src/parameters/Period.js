@@ -138,8 +138,8 @@ class Period extends Param {
         let parent = this.parent;
         let self = this.value;  
 
-        // select the parent period enum based on a descendent-partent lookop
-        let parentEnum = consts.descendentParent[`${parent ? parent : ''}${self}`];         
+        // select the parent period enum based on a descendent-parent lookop
+        let parentEnum = consts.descendentParent[`${parent ? parent : ''}${self}`];
 
         if (parentEnum) {                                                                       // fiveyear has no p[arent]    
             //create the period and sets its relationship

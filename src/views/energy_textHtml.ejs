@@ -355,7 +355,7 @@
         
     
             <!-- HSE filter BUTTONS -->
-            <div class="row flex-nowrap pl-3">     
+            <div class="row flex-nowrap pl-1 ml-0">     
                 <div class="d-flex my-1" data-toggle="tooltip" data-placement="bottom" title="filter by Energy type">
                         <div class="btn btn-success badge pr-0 mb-1 mr-1<%= !isHse && !isHarvest ? ' disabled' : '' %>">Harvest
                             <button type="button" class="hse-filter-btn btn btn-sm btn-success btn-toggle<%= !isHse ? (isHarvest ? ' active static' : ' invisible') : ' active live' %>">
@@ -378,7 +378,7 @@
                             </button>
                         </div>
                 </div>
-                <button type="button" class="hse-filter-reset btn btn-outline-light collapse<%= !isHse ? ' hide' : ' show' %> btn-sm m-0 py-0 pr-3">
+                <button type="button" class="hse-filter-reset btn collapse<%= !isHse ? ' hide' : ' show' %> btn-sm m-0 py-0 pr-3">
                     <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="reset energy filters"
                         style="font-size:24px;color:darkgrey;">link_off</i>
                 </button>
