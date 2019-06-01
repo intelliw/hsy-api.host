@@ -411,7 +411,7 @@
 
 
 .sundaya-font-row {
-  font-family: 'Open Sans';
+  font-family: 'Open Sans', sans-serif;
   font-size: 0.70rem;
   padding: 0.25em 0.4em;
   line-height: 1.4;
@@ -420,10 +420,10 @@
 
 .header-badge {
   padding: 0.25em 0.4em;
-  font-family: 'Open Sans';
+  font-family: 'Open Sans', sans-serif;
   font-size: 0.70rem;
   font-weight: 700;
-  line-height: 2.10;
+  line-height: 2.00;
   text-align: left;
   white-space: nowrap;
   vertical-align: baseline;
