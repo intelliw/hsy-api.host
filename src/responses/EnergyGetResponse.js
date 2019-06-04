@@ -98,7 +98,7 @@ function createItems(energy, period, site) {
       if (itemData) {
 
         // make the item links 
-        let itemLinks = new Links.EnergyLinks(energy, childPeriod, site, consts.NONE);                // constructor creates a self link (for the child) without a description (NONE)
+        let itemLinks = new Links.EnergyLinks(energy, childPeriod, site, consts.NONE);                // constructor creates a self link (for the child) without a description (consts.NONE)
 
         if (grandchildPeriod) {                                                                       // 'second' for example does not have a grandchild
           itemLinks.addLink(grandchildPeriod, enums.linkRender.none, grandchildPeriod.description);   // child collection link - not rendered, description if requested by caller
@@ -120,6 +120,12 @@ function createItems(energy, period, site) {
  * returns a data object with two elements for this child period 
   - an element for the child data and an element for the grandchildren data.  
   if there is no data returns an empty data object 
+  energy is a param object e.g.
+    Param {
+    name: 'energy',
+    value: 'hse',
+    isOptional: false,
+    isValid: 'hse' }
  */
 function createItemData(energy, childPeriod, grandChildPeriod, site) {
 
@@ -142,7 +148,7 @@ function createItemData(energy, childPeriod, grandChildPeriod, site) {
 
   // grandchild - create data for grandchild and child
   energyNames.forEach(energyName => {
-
+    
     // create space delimited value list 
     energyNameValues = '';
     energyNameTotal = 0;
