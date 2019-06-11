@@ -277,7 +277,6 @@ function getActiveHseFilters(allColumns, allColours) {
         filterObj.colours.push(allColours[GRID_OUT]);
 
     }
-
     
     // if none or all were added then just return the original columns and colours 
     filterObj = numFilters == 0 || numFilters == ALL_FILTERS_ADDED ?  { columns: allColumns, colours: allColours } : filterObj;

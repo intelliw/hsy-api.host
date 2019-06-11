@@ -158,7 +158,7 @@ class Period extends Param {
         const periodEnum = this.value;
 
         //create the clone and sets its relationship
-        let clone = new Period(periodEnum, epoch, consts.DEFAULT_DURATION);
+        let clone = new Period(periodEnum, epoch, consts.DEFAULT_DURATION);     
 
         clone.context = this.context
         clone.epochInstant = this.epochInstant

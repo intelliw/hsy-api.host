@@ -1,10 +1,10 @@
 {
   "name": "endpoints",
-  "description": "Sundaya Energy Management endpoints, for Node.js/Google Compute Engine (gcr.io/google_appengine/nodejs)",
+  "description": "Sundaya Energy API endpoints, for Node.js/Google Compute Engine (docker: FROM gcr.io/google_appengine/nodejs)",
   "version": "0.0.1",
   "private": true,
   "license": "Apache-2.0",
-  "author": "Sundaya",
+  "author": "Sundaya, M A Chanmugam",
   "repository": {
     "type": "git",
     "url": "https://github.com/intelliw/hse-api-host.git"
@@ -20,6 +20,7 @@
     "body-parser": "1.18.3",
     "ejs": "^2.6.1",
     "express": "4.16.4",
+    "kafkajs": "^1.8.0",
     "moment": "^2.24.0",
     "safe-buffer": "5.1.2"
   },

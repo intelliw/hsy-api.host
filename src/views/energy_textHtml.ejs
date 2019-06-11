@@ -1,7 +1,7 @@
 <%  /* custom attributes and classes added to elements
     navbar
         id = titlePeriod
-        navbar.ejs                                      <!-- ENERGY NAVBAR    
+        navbar.ejs                                                  <!-- ENERGY NAVBAR    
             select-parent
             id = navbarMain, navbarAPI, navDuration, navSite
                 select-value, select-justtext 
@@ -28,14 +28,14 @@
                             period-filter-btn
 
 
-        ...                                                 <!-- FOOTER 
+        ...                                                         <!-- FOOTER 
             id = btnSumAvg    
             hse-filter-btn
             hse-filter-reset btn
     */ 
 
     // constants - soime of these are placed into client side script blocks at the bottom of this page
-    const API_BASE_URL = consts.API_SCHEME + '://' + consts.API_HOST;           // e.g.  'http://api.endpoints.sundaya.cloud.goog'
+    const API_BASE_URL = consts.API_SCHEME + '://' + consts.API_HOST;       // e.g.  'http://api.endpoints.sundaya.cloud.goog'
     const PANES = ['pane-child', 'pane-grandchild'];
     const DEBUG = false;                                                        
 
@@ -43,7 +43,7 @@
     let links = collections[0].collection.links; 
 
     let link_self = utils.findByPropertyValue(links, 'rel', 'self')[0] ;
-    let self_descriptions = link_self.description.split(' ');       // e.g. 'hse week 20190204 1' 
+    let self_descriptions = link_self.description.split(' ');               // e.g. 'hse week 20190204 1' 
 
     let params_energy = self_descriptions[0]; 
     let params_period = self_descriptions[1];

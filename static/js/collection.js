@@ -66,7 +66,7 @@ $(document).ready(function () {
         window.location.href = apiUrl;
     });
 
-    // navbar title period click - collapses all panels     ...calls redrawPanels
+    // navbar title period click - toggles collapse on all panels     ...calls redrawPanels
     $("#titlePeriod").click(function () {
 
         let collapsedAll; 
@@ -294,7 +294,7 @@ function revealFilterResetButtons(source) {
         let activePane = getActivePane($(this).closest('.select-collection-panel'));
         let btnsVisible = activePane.find('.period-filter-btn-panel').hasClass('show');
 
-        isFiltered(activePane) || btnsVisible ? $(this).show() : $(this).hide();
+        isPeriodFiltered(activePane) || btnsVisible ? $(this).show() : $(this).hide();
         
         $(this).removeClass('reveal');      // clear the 'reveal' flag 
     });
@@ -332,8 +332,8 @@ function getActivePeriodFilters(pane) {
     return (showButtons.length > 0 ? showButtons : allButtons) ;
 }
 
-// returns true if at least one filter is unselected ('hide') and *all* filters are NOT unselected - as 'all hidden' means no filters apply
-function isFiltered(pane) {
+// returns true if at least one period filter is unselected ('hide') and *all* filters are NOT unselected - as 'all hidden' means no filters apply
+function isPeriodFiltered(pane) {
     
     let totalButtons = 0; 
     let showButtons = 0;
