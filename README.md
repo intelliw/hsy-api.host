@@ -1,4 +1,4 @@
-# Energy Managementy API Host
+# Energy Management API Host
 
 ## Docker
 

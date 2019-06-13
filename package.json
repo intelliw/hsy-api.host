@@ -7,7 +7,7 @@
   "author": "Sundaya, M A Chanmugam",
   "repository": {
     "type": "git",
-    "url": "https://github.com/intelliw/hse-api-host.git"
+    "url": "https://github.com/intelliw/hse-api.host.git"
   },
   "engines": {
     "node": ">=8.0.0"
