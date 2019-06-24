@@ -12,7 +12,7 @@ const GenericMessage = require('../definitions/GenericMessage');
 const GenericMessageDetail = require('../definitions/GenericMessageDetail');
 
 // REQUEST constants
-const VIEW_PREFIX = 'message_';
+const VIEW_PREFIX = 'message_';         // prefix for a generic response message 
 const RESPONSE_STATUS = enums.responseStatus[201];
 
 class DeviceDatasetGetResponse extends Response {

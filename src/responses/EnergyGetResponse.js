@@ -148,7 +148,7 @@ function createItemData(energy, childPeriod, grandChildPeriod, site) {
 
   // grandchild - create data for grandchild and child
   energyNames.forEach(energyName => {
-    
+
     // create space delimited value list 
     energyNameValues = '';
     energyNameTotal = 0;

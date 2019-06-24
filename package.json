@@ -19,7 +19,7 @@
   "dependencies": {
     "body-parser": "1.18.3",
     "ejs": "^2.6.1",
-    "express": "4.16.4",
+    "express": "^4.17.1",
     "kafkajs": "^1.8.0",
     "moment": "^2.24.0",
     "safe-buffer": "5.1.2"

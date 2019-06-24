@@ -145,4 +145,6 @@ module.exports.API_KEY_PARAM_NAME = 'api_key';              // header param, mus
 module.exports.ACCEPT_TYPE_PARAM_NAME = 'accept';
 // module.exports.API_HOST = 'api.endpoints.sundaya.cloud.goog';
 module.exports.API_HOST = 'localhost:8080';
+module.exports.KAFKA_HOST = '192.168.1.105';
+module.exports.KAFKA_BROKERS = [`${this.KAFKA_HOST}:9092`]   // array of kafka message brokers
 module.exports.API_SCHEME = 'http';

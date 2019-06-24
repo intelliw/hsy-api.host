@@ -43,7 +43,7 @@ module.exports.datasets = {
     PMSEPACK: 'PMS-EPACK'
 };
 
-module.exports.datasetsPMSEPACK = {
+module.exports.datasetPMSEPACK = {
     eventtime: 'eventTime',
     vcell01: 'vcell01',
     vcell02: 'vcell02',
@@ -68,7 +68,7 @@ module.exports.datasetsPMSEPACK = {
     cmosstatus: 'cmosStatus',
 };
 
-module.exports.datasetsMPPTSNMP = {
+module.exports.datasetMPPTSNMP = {
     eventtime: 'eventTime',
     pv1: 'pv1',
     pv2: 'pv2',
@@ -90,10 +90,10 @@ module.exports.timeOfDay = {
 
 // mime types used in headers
 module.exports.mimeTypes = {
-    applicationCollectionJson : 'application/vnd.collection+json',
-    applicationJson : 'application/json',
-    textHtml : 'text/html',
-    textPlain : 'text/plain'
+    applicationCollectionJson: 'application/vnd.collection+json',
+    applicationJson: 'application/json',
+    textHtml: 'text/html',
+    textPlain: 'text/plain'
 };
 module.exports.mimeTypes.default = this.mimeTypes.applicationCollectionJson;
 
@@ -110,7 +110,7 @@ module.exports.linkRelations = {
 module.exports.linkRender = {
     link: 'link',
     image: 'image',
-    none : global.undefined
+    none: global.undefined
 };
 module.exports.linkRender.default = this.linkRender.none;
 
@@ -119,15 +119,35 @@ module.exports.responseStatus = {
     '201': 'Created',
     '400': 'Bad Request',
     '401': 'Unauthorized',
-    '404' :'Not Found',
-    '415' :'Unsupported Media Type',
-    '500' :'Internal Server Error', 
+    '404': 'Not Found',
+    '415': 'Unsupported Media Type',
+    '500': 'Internal Server Error',
 }
 
 module.exports.apiKey = {
-    APIKey4 :'AIzaSyAosx2bIR7K5uyXJeEuwJrFZEpbFYliZ3Y',
-    APIKey3 :'AIzaSyDq97s15fdM99swOJuUIFtW8ifgQSBnymo',
-    APIKey2 :'AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0',
-    HokuappsKey1 :'AIzaSyASFQxf4PmOutVS1Dt99TPcZ4IQ8PDUMqY'
+    APIKey4: 'AIzaSyAosx2bIR7K5uyXJeEuwJrFZEpbFYliZ3Y',
+    APIKey3: 'AIzaSyDq97s15fdM99swOJuUIFtW8ifgQSBnymo',
+    APIKey2: 'AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0',
+    HokuappsKey1: 'AIzaSyASFQxf4PmOutVS1Dt99TPcZ4IQ8PDUMqY'
 }
+
+module.exports.dataLogger = {                       // kafka message broker
+    ack: {
+        all: -1,                                    // -1 = all replicas must acknowledge (default) 
+        none: 0,                                    //  0 = no acknowledgments 
+        leader: 1                                   //  1 = only waits for the leader to acknowledge 
+    },
+    topics: {                                       // convention is <message type>_<dataset>_<tablename>
+        MPPTSNMP: 'monitoring_devices_MPPTSNMP',    // enums.datasets.MPPTSNMP
+        PMSEPACK: 'monitoring_devices_PMSEPACK'     // enums.datasets.PMSEPACK
+    },
+    producers: {                                    // producer client Ids
+        devicesDatasets: 'devices.datasets'
+    },
+    consumers: {                                    // consumer client Ids
+        MPPTSNMP: 'devices.datasets.MPPTSNMP',    
+        PMSEPACK: 'devices.datasets.PMSEPACK'     
+    }
+}
+
 module.exports.apiKey.default = this.apiKey.AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0; 

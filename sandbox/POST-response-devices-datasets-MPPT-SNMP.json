@@ -1,0 +1,12 @@
+[
+  {
+      "status": "201",
+      "message": "Created",
+      "details": [
+          {
+              "message": "New datasets created",
+              "target": "device:BBC-PR1202-999 | dataset:MPPT-SNMP"
+          }
+      ]
+  }
+]
