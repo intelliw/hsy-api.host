@@ -3,7 +3,7 @@
     { "device": "BBC-PMS-999",
       "dataset": "PMS-EPACK",
       "data": [
-        { "name": "eventTime", "value": "20190209T150006.032-0700" ,
+        { "name": "eventTime", "value": "20190209T150006.032-0700",
           "data": [
             { "name": "vcell01", "value": "99" },
             { "name": "vcell02", "value": "99" },

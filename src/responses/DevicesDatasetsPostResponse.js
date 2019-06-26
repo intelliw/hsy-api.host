@@ -8,12 +8,12 @@ const enums = require('../host/enums');
 const utils = require('../host/utils');
 
 const Response = require('./Response');
-const DevicesDatasetsProducer = require('../dataloggers/DevicesDatasetsProducer');
+const Producer = require('../producers');
 
 const GenericMessage = require('../definitions/GenericMessage');
 const GenericMessageDetail = require('../definitions/GenericMessageDetail');
 
-// REQUEST constants
+// constants
 const VIEW_PREFIX = 'message_';     // prefix for a generic response  message
 const RESPONSE_STATUS = enums.responseStatus[201];
 
@@ -25,7 +25,7 @@ class DevicesDatasetsPostResponse extends Response {
   constructor(params, acceptParam) {
 
     let content = executeDevicesDatasetsPost(params);                                       // perform the post operation 
-    
+
 
     super(RESPONSE_STATUS, acceptParam, VIEW_PREFIX, content);
 
@@ -35,18 +35,14 @@ class DevicesDatasetsPostResponse extends Response {
 // perform the energy data operation and return a collections array
 function executeDevicesDatasetsPost(params) {
 
-  params.deviceDatasetItems.value.forEach(dataset => {
-    let producer = new DevicesDatasetsProducer(dataset); 
+  params.deviceDatasetItems.value.forEach(deviceDataset => {
+    
+    // create a produceer
+    let producer = selectProducer(deviceDataset);
+    producer.extractData();     
+    producer.sendToTopic(); 
 
-    // console.log(dataset.device);
-    //dataset.data
-    producer.sendMessages();
   });
-  
-  
-  //console.dir(params.deviceDatasetItems[0]);
-
-
 
 
   // prepare the response
@@ -58,6 +54,26 @@ function executeDevicesDatasetsPost(params) {
 
   return response.getElements();
 
+}
+
+// selects the producer responsible for the dataset received by the api endpoint 
+function selectProducer(deviceDataset) {
+
+  let producer;
+  let datasetName = deviceDataset.dataset;
+
+  switch (datasetName) {
+
+    case enums.datasets.PMSEPACK:
+      producer = new Producer.PmsEpackProducer(deviceDataset);
+      break;
+
+    case enums.datasets.MPPTSNMP:
+     //producer = new Producer.MpptSnmpProducer(deviceDataset);
+      break;
+
+    }
+  return producer;
 }
 
 
