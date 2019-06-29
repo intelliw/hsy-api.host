@@ -35,15 +35,27 @@ class DevicesDatasetsPostResponse extends Response {
 // perform the energy data operation and return a collections array
 function executeDevicesDatasetsPost(params) {
 
+  let producer;
+  let datasetName;
+
+  // produce messages for each dataset
   params.deviceDatasetItems.value.forEach(deviceDataset => {
-    
-    // create a produceer
-    let producer = selectProducer(deviceDataset);
-    producer.extractData();     
-    producer.sendToTopic(); 
+
+    // select a producer for this dataset
+    datasetName = deviceDataset.dataset;
+    switch (datasetName) {
+      case enums.datasets.PMSEPACK:
+        producer = new Producer.PmsEpackProducer(deviceDataset);
+        break;
+      case enums.datasets.MPPTSNMP:
+        //producer = new Producer.MpptSnmpProducer(deviceDataset);
+        break;
+    }
+
+    producer.extractData();
+    producer.sendToTopic();
 
   });
-
 
   // prepare the response
   let responseDetail = new GenericMessageDetail();
@@ -54,26 +66,6 @@ function executeDevicesDatasetsPost(params) {
 
   return response.getElements();
 
-}
-
-// selects the producer responsible for the dataset received by the api endpoint 
-function selectProducer(deviceDataset) {
-
-  let producer;
-  let datasetName = deviceDataset.dataset;
-
-  switch (datasetName) {
-
-    case enums.datasets.PMSEPACK:
-      producer = new Producer.PmsEpackProducer(deviceDataset);
-      break;
-
-    case enums.datasets.MPPTSNMP:
-     //producer = new Producer.MpptSnmpProducer(deviceDataset);
-      break;
-
-    }
-  return producer;
 }
 
 

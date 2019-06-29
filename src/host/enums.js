@@ -137,16 +137,16 @@ module.exports.dataLogger = {                       // kafka message broker
         none: 0,                                    //  0 = no acknowledgments 
         leader: 1                                   //  1 = only waits for the leader to acknowledge 
     },
-    topics: {                                       // convention is <message type>_<dataset>_<tablename>
-        MPPTSNMP: 'monitoring_devices_MPPTSNMP',    // enums.datasets.MPPTSNMP
-        PMSEPACK: 'monitoring_devices_PMSEPACK'     // enums.datasets.PMSEPACK
+    topics: {                                       // preferred convention is <message type>_<api base/db name>_<dataset /table name>
+        MPPTSNMP: 'MPPT-SNMP',                      // corresponds to enums.datasets.MPPTSNMP
+        PMSEPACK: 'PMS-EPACK'                       // corresponds to enums.datasets.PMSEPACK
     },
     producers: {                                    // producer client Ids
         devicesDatasets: 'devices.datasets'
     },
     consumers: {                                    // consumer client Ids
-        MPPTSNMP: 'devices.datasets.MPPTSNMP',    
-        PMSEPACK: 'devices.datasets.PMSEPACK'     
+        MPPTSNMP: 'devices.datasets.MPPT-SNMP',    
+        PMSEPACK: 'devices.datasets.PMS-EPACK'     
     }
 }
 

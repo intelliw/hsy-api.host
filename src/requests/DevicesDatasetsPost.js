@@ -29,13 +29,22 @@ class DevicesDatasetsPost extends Request {
     */
     constructor(req) {
         
-        // parameters                                                   // validate and default all parameters
-        let params = {};
-        
-        params.deviceDatasetItems = new Param('deviceDatasetItems', req.body.deviceDatasetItems);
-        
+        // there are no parameters                                      // validate and default all datasets
+        let params = {};                                                // there are no params for this request
+
+        // create a Dataset object for each datasets in the request                            // validate and default all datasets
+        let datasets = [];
+        let key, topic, datasetItems;
+        req.body.deviceDatasets.forEach(dataset => {
+            key = dataset.device;                                           // deviceId e.g. "BBC-PR1202-999" - this is the message key for all dataitems in this dataset
+            topic = dataset.topic;                                          // e.g. "MPPTSNMP" - the message key for all dataitems in this dataset 
+            datasetItems = dataset.dataset;                                 // [ ] array of data items
+            //
+            datasets.push(new Param.Dataset(key, topic, datasetItems));     // adds processingTime to each dataitem 
+        });
+
         // super - validate params, auth, accept header
-        super(req, params, DatasetsPostResponse.produces, DatasetsPostResponse.consumes);                    // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
+        super(req, params, DatasetsPostResponse.produces, DatasetsPostResponse.consumes, datasets);     // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
         
         // execute the response only if super isValid                   // if not isValid  super constuctor would have created a this.response = ErrorResponse 
         this.response = this.validation.isValid ? new Response.DevicesDatasetsPostResponse(this.params, this.accept) : this.response;

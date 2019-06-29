@@ -2,7 +2,7 @@
 "use strict";
 /**
  * ./parameters/Param.js
- *  supertype for all parameters
+ *  supertype for all get parameters, headers, and datasets posted through a request path
  *  parameter class validates the value in the constructor and stores the parameter name and value
  */
 const consts = require('../host/constants');
@@ -13,7 +13,7 @@ class Param {
      * instance attributes:  
         "name": "period", 
         "value": "week",
-        "isOptional": true,
+        "isOptional": true, whether the parameter is optional
         "isValid": true,
        
      * constructor validates and stores parameter name and value. 
@@ -22,10 +22,9 @@ class Param {
      * isValid is true if the param passes the enumtest and is present if it is mandatory
      * if the value was provided it will be validated against the enum 
      * the default value is used if the provided value is missing 
+     * parameters are mandatory unless optional is true
      */
-    constructor(name, value, defaultValue, enumsList, optional) {
-
-        const OPTIONAL_DEFAULT = false;                   // by default parameters are mandatory   
+    constructor(name, value, defaultValue, enumsList, optional = false) {
         
         // name & value                                   // use default if value not provided                                      
         this.name = name;
@@ -34,9 +33,8 @@ class Param {
         // validate enum                                  // if an enum was provided the value must exist in it  
         let enumTest = enumsList ? utils.valueExistsInObject(enumsList, this.value) : true;
 
-
         // isOptional & isValid                          // isValid if 1) enumTest passes and 2) there must be a value unless isOptional
-        this.isOptional = (optional ? optional: OPTIONAL_DEFAULT);
+        this.isOptional = optional;
         this.isValid = enumTest && (this.isOptional ? true : this.value);       // there must be a value unless isOptional    
 
     }

@@ -5,7 +5,7 @@
 
 module.exports = require('./Request');
 
-// subtypes  
+// Request subtypes  
 module.exports.EnergyGet = require('./EnergyGet');
 module.exports.DevicesDatasetsPost = require('./DevicesDatasetsPost');
 module.exports.DeviceDatasetGet = require('./DeviceDatasetGet');

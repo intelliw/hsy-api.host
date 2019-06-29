@@ -44,7 +44,7 @@ class Period extends Param {
     * @param {*} epoch     // date-time 
     * @param {*} duration  // positive integer
     */
-    constructor(reqPeriod, epoch, duration) {
+    constructor(reqPeriod, epoch, duration = consts.DEFAULT_DURATION) {
 
         // period, context
         super(THIS_PARAM_NAME, reqPeriod, enums.period.default, enums.period);                  // e.g. reqPeriod' ='week';' 
@@ -53,7 +53,7 @@ class Period extends Param {
         this.grandparent = consts.NONE;              // getChild sets this after construction
 
         // duration     
-        this.duration = duration ? duration : consts.DEFAULT_DURATION;
+        this.duration = duration;
 
         // epoch and end millisecond timestamps                                                 // validates and normalises the epoch and end for the supplied period and duration
         let valid = isEpochValid(epoch, MILLISECOND_FORMAT);                                    // make sure epoch is a valid date-time 

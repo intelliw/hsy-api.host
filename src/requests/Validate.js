@@ -13,7 +13,7 @@ const GenericMessageDetail = require('../definitions/GenericMessageDetail');
 class Validate {
 
     /**
-     * constructor validates the attributes of the Request and sets isValid
+     * constructor validates generic attributes of all Requests and sets isValid
     
      instance attributes:  
     "isValid": true if isAcceptTypeValid, isAuthorised,isParamsValid, and isContentTypeValid are all true

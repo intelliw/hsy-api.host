@@ -47,7 +47,7 @@ class Producer {
 
  /* adds a message to the message array
     * key is a string
-    * dataItem contains tiume headers and a data array of name-value objects
+    * dataItem contains time headers and a data array of name-value objects
     *   { "processingTime": "20190625T104257.097", "eventTime": "20190209T150006.032-0700". "data" : ["name": "vcell01", "value": "99", ..]   }     
     * headers are a json object (note: kafkajs produces a byte array for headers unlike messages which are a string buffer
     *   e.g. { 'correlation-id': '2bfb68bb-893a-423b-a7fa-7b568cad5b67', system-id': 'my-system' }  

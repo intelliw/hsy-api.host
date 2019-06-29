@@ -34,16 +34,18 @@ class Request {
     * @param {*} req                    // express request
     * @param {*} responseProduces       // list of mimetypes which this request's responder (EnergyResponder) is able to produce 
     * @param {*} params                 // list of validated params { }
+    * @param {*} datasets[]             // array of validated datasets [{ },{ }..] -  present only in post requests
     */
-    constructor(req, params, responseProduces, responseConsumes) {
+    constructor(req, params, responseProduces, responseConsumes, datasets = consts.NONE) {
 
         // update instance properties before validation 
         this.params = params;
+        this.datasets = datasets;
         this.apiKey = new Param(consts.API_KEY_PARAM_NAME, req.headers[consts.API_KEY_PARAM_NAME], enums.apiKey.default, enums.apiKey);
         this.accept = new Param.Accept(req, responseProduces);
         this.contentType = new Param.ContentType(req, responseConsumes);
-
-        //validate the request                                                                         // validates.. this.params, this.apikey, and this.accept
+        
+        //validate the raw request                                                                         // validates.. this.params, this.apikey, and this.accept
         this.validation = new Validate(req, this);
 
         // response
