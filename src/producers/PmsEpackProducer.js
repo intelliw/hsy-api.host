@@ -9,8 +9,8 @@ const enums = require('../host/enums');
 
 const Producer = require('../producers');
 
-const KAFKA_ACK = enums.dataLogger.ack.leader;
-const KAFKA_TOPIC = enums.dataLogger.topics.PMSEPACK;
+const KAFKA_ACK = enums.messageBroker.ack.leader;
+const KAFKA_TOPIC = enums.messageBroker.topics.PMSEPACK;
 
 /**
  * 
@@ -26,7 +26,7 @@ class PmsEpackProducer extends Producer {
     constructor(deviceDataset) {
 
         // call super
-        let clientId = enums.dataLogger.producers.devicesDatasets;      // e.g. 'devices.datasets'
+        let clientId = enums.messageBroker.producers.devicesDatasets;      // e.g. 'devices.datasets'
         super(clientId, KAFKA_TOPIC, KAFKA_ACK);
         
         this.dataset = deviceDataset;

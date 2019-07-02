@@ -10,7 +10,7 @@ const enums = require('../host/enums');
 const consts = require('../host/constants');
 const moment = require('moment');
 
-const KAFKA_DEFAULT_ACK = enums.dataLogger.ack.leader;
+const KAFKA_DEFAULT_ACK = enums.messageBroker.ack.leader;
 
 class Producer {
     /**
@@ -18,13 +18,13 @@ class Producer {
      "producerObj": kafka.producer()
      "_messages": []
      "clientId":  'devices.datasets'
-     "topic":      enums.dataLogger.topics..
-     "ack":        enums.dataLogger.ack.. 
+     "topic":      enums.messageBroker.topics..
+     "ack":        enums.messageBroker.ack.. 
 
      constructor arguments 
     * @param {*} clientId           //  consts.messaging.clientid   - e.g. devices.datasets
-    * @param {*} topic              //  enums.dataLogger.topics     - e.g. monitoring_devices_MPPTSNMP
-    * @param {*} ack                //  enums.dataLogger.ack        
+    * @param {*} topic              //  enums.messageBroker.topics     - e.g. monitoring_devices_MPPTSNMP
+    * @param {*} ack                //  enums.messageBroker.ack        
     */
     constructor(clientId, topic, ack) {
 

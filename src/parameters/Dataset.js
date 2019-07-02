@@ -29,18 +29,21 @@ class Dataset extends Param {
   /**
   instance attributes:  
    super.name: "dataset"
-   super.value: PMSEPACK  (topic)
+   super.value: (datasetTopic) e.g. PMSEPACK  
    super.isValid: true
-   dataItems = [{ "eventTime": "20190209T150006.032-0700" , "data": [{ },{ }..] }, ..]
   
+   key = (datasetKey) e.g. BBC-PMS-999
+   items = [{ "eventTime": "20190209T150006.032-0700" , "data": [{ },{ }..] }, ..]   
+   
    constructor arguments  
   * @param {*} deviceDatasets
   */
-  constructor(datasetId, datasetTopic, dataItems) {
+  constructor(datasetKey, datasetTopic, datasetItems) {
 
-    super(THIS_PARAM_NAME, datasetTopic, consts.NONE, enums.dataLogger.topics, false);
-    this.dataItems = dataItems;
-
+    super(THIS_PARAM_NAME, datasetTopic, consts.NONE, enums.messageBroker.topics);
+    
+    this.key = datasetKey;
+    this.items = datasetItems;
   }
 
 }

@@ -2,7 +2,6 @@
 /**
  * ./requests/index.js   
  */
-
 module.exports = require('./Request');
 
 // Request subtypes  

@@ -133,6 +133,15 @@ module.exports.periodMaxDurationsAllowed = {
     fiveyear: '5'
 }
 
+// returns max allowed durations for each period. each period cap is proportional to the large number of items in its collection
+module.exports.params = {
+    names: {
+        api_key: 'api_key',                                 // header param, must be lower case
+        accepttype:'accept',
+        datasets:'datasets'
+    } 
+}
+
 // system constants
 module.exports.ACTIVE_VERSIONS = '0.2 0.3';
 module.exports.CURRENT_VERSION = '0.3';
@@ -141,8 +150,6 @@ module.exports.NONE = global.undefined;
 // parameter constants 
 module.exports.DEFAULT_SITE = '999';
 module.exports.DEFAULT_DURATION = '1';
-module.exports.API_KEY_PARAM_NAME = 'api_key';              // header param, must be lower case
-module.exports.ACCEPT_TYPE_PARAM_NAME = 'accept';
 // module.exports.API_HOST = 'api.endpoints.sundaya.cloud.goog';
 // module.exports.KAFKA_HOST = '10.140.0.6';             // 35.201.177.2
 module.exports.API_HOST = 'localhost:8080';

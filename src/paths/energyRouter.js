@@ -17,7 +17,7 @@ energy, site, period -> including next/prev/parent/child periods, with durations
 param objects have all the data needed for the 
 [energy.period.epoch.duration.get]
  */
-router.route(['/',
+router.route([
     '/:energy?',
     '/:energy?/period/:period?',
     '/:energy?/period/:period?/:epoch?/:duration?'])
@@ -30,7 +30,7 @@ router.route(['/',
         //  execute if valid
         let response = request.response;                       // execute the operation and return a response 
         let collections = response.content;
-
+        
 
         // /* response
         res

@@ -37,12 +37,14 @@ function executeDevicesDatasetsPost(params) {
 
   let producer;
   let datasetName;
-
+  
   // produce messages for each dataset
-  params.deviceDatasetItems.value.forEach(deviceDataset => {
+  params.datasets.value.forEach(deviceDataset => {
 
     // select a producer for this dataset
-    datasetName = deviceDataset.dataset;
+    datasetName = deviceDataset.value;
+    console.dir(deviceDataset);
+
     switch (datasetName) {
       case enums.datasets.PMSEPACK:
         producer = new Producer.PmsEpackProducer(deviceDataset);

@@ -29,13 +29,14 @@ class Param {
         // name & value                                   // use default if value not provided                                      
         this.name = name;
         this.value = value ? value : defaultValue;
-
+        
         // validate enum                                  // if an enum was provided the value must exist in it  
         let enumTest = enumsList ? utils.valueExistsInObject(enumsList, this.value) : true;
 
         // isOptional & isValid                          // isValid if 1) enumTest passes and 2) there must be a value unless isOptional
         this.isOptional = optional;
-        this.isValid = enumTest && (this.isOptional ? true : this.value);       // there must be a value unless isOptional    
+        
+        this.isValid = enumTest && (this.isOptional === true ? true : this.value != consts.NONE);       // there must be a value unless isOptional    
 
     }
 }

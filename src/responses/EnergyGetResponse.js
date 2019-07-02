@@ -40,11 +40,11 @@ function executeEnergyGet(params) {
 
   let child;
   let grandchild;
-
+  
   // get a collection for each period in the duration
   let periods = params.period.getEach();                                          // break up the period duration into individual periods (though typically there is only 1 period) 
   periods.forEach(period => {
-
+    
     // create the collection links  
     let selfDescription = `${params.energy.value} ${period.value} ${period.epoch} ${period.duration} ${params.site.value}`;    // e.g hse week 20190204 1 999   (this is the self description format for energy periods) 
     links = new Links.EnergyLinks(params.energy, period, params.site, selfDescription);   // constructor creates a 'self' link with an energy and epoch description

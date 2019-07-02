@@ -29,7 +29,7 @@ class Validate {
     * @param {*} requestObj             // application Request object
     */
     constructor(req, requestObj) {
-
+        
         // errors
         this.errors = new GenericMessageDetail();                                                                   // each validation above added a detail elemeent to the errors object passed in by reference
 
@@ -38,7 +38,7 @@ class Validate {
         this.isAcceptTypeValid = validateAcceptType(req, requestObj.accept, this.errors);           // validate accept Type 
         this.isContentTypeValid = validateContentType(req, requestObj.contentType, this.errors);    // validate content-type 
         this.isParamsValid = validateParams(req, requestObj.params, this.errors);                   // validate params 
-
+        
         // isValid 
         this.isValid = this.isAcceptTypeValid
             && this.isContentTypeValid
@@ -76,7 +76,7 @@ function validateParams(req, params, errors) {
     const ERROR_MESSAGE = 'The client specified an invalid argument.';
 
     let param;
-
+    
     let allParamsValid = true;
     if (params) {
 
@@ -94,7 +94,7 @@ function validateParams(req, params, errors) {
         });
 
     }
-
+    
     return allParamsValid;
 
 }

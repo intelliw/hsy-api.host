@@ -241,7 +241,7 @@ class Period extends Param {
             child.description = consts.NONE;                                                // default is no description use add Description() to add one later 
 
         }
-
+        
         return child;
     }
 

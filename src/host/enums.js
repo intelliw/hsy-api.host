@@ -130,8 +130,9 @@ module.exports.apiKey = {
     APIKey2: 'AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0',
     HokuappsKey1: 'AIzaSyASFQxf4PmOutVS1Dt99TPcZ4IQ8PDUMqY'
 }
+module.exports.apiKey.default = this.apiKey.AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0; 
 
-module.exports.dataLogger = {                       // kafka message broker
+module.exports.messageBroker = {                       // kafka message broker
     ack: {
         all: -1,                                    // -1 = all replicas must acknowledge (default) 
         none: 0,                                    //  0 = no acknowledgments 
@@ -150,4 +151,3 @@ module.exports.dataLogger = {                       // kafka message broker
     }
 }
 
-module.exports.apiKey.default = this.apiKey.AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0; 

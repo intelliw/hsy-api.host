@@ -15,7 +15,6 @@ const sandbox = require('./sandbox');
 // [START setup]------------------------------
 const app = express();
 
-
 // initialise 
 host.config.initialise(app);                                                            // configuration settings
 
@@ -23,18 +22,17 @@ host.config.initialise(app);                                                    
 /* body parser
  * use  verify function to get raw body - bodyParser.raw applies only if bodyParser.json fails due to incorrect content-type header
  * this allows us to check if body is empty when validating the content-type header in ContentType constructor   */
- var rawBodySaver = function (req, res, buf, encoding) {
+var rawBodySaver = function (req, res, buf, encoding) {
     // if (buf && buf.length) { req.rawBody = buf.toString(encoding || 'utf8');}
 }
 app.use(bodyParser.json({ verify: rawBodySaver }));
 app.use(bodyParser.raw({ verify: rawBodySaver, type: function () { return true } }));   // for raw body parse function must return true
 
-
-// routes                                                                               // each openapi tag has a route handler 
-app.use('/energy', paths.energyRouter);                                                 // openapi tag: Energy 
-app.use(['/devices', '/device'], paths.devicesRouter);                                  // openapi tag: Devices
-app.use('/api', paths.diagnosticsRouter);                                               // openapi tag: Diagnostics
-app.use('/devtest', sandbox.devtest);                                                   // for testing and troubleshooting only    
+// routes        
+app.use('/energy', paths.energyRouter);                                             // openapi tag: Energy - this is als to the default route
+app.use(['/devices', '/device'], paths.devicesRouter);                              // openapi tag: Devices
+app.use('/api', paths.diagnosticsRouter);                                           // openapi tag: Diagnostics
+app.use('/devtest', sandbox.devtest);                                               // not in api: for testing and troubleshooting only    
 
 // static folders 
 app.use('/static', express.static(host.constants.folders.STATIC));

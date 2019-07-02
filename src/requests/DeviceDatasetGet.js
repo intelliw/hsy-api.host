@@ -42,7 +42,7 @@ class DeviceDatasetGet extends Request {
         super(req, params, DatasetsPostResponse.produces, DatasetsPostResponse.consumes);                    // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
         
         // execute the response only if super isValid                   // if not isValid  super constuctor would have created a this.response = ErrorResponse 
-        this.response = this.validation.isValid ? new Response.DeviceDatasetGetResponse(this.params, this.accept) : this.response;
+        this.response = this.validation.isValid  === true ? new Response.DeviceDatasetGetResponse(this.params, this.accept) : this.response;
         
     }
 

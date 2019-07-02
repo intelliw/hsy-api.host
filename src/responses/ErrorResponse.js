@@ -13,7 +13,6 @@ const GenericMessage = require('../definitions/GenericMessage');
 const Param = require('../parameters');
 
 const RESPONSE_VIEW_PREFIX = 'message_';
-const RESPONSE_CONTENT_TYPE = new Param(consts.ACCEPT_TYPE_PARAM_NAME, enums.mimeTypes.applicationJson);     // standard content type for generic message
 
 class ErrorResponse extends Response {
 
@@ -30,11 +29,13 @@ class ErrorResponse extends Response {
       let genericMessage = new GenericMessage(statusCode, statusEnum, validation.errors.getElements());
 
       // create the Response including the message content
+      let RESPONSE_CONTENT_TYPE = new Param(consts.params.names.accepttype, enums.mimeTypes.applicationJson);     // standard content type for generic message
       super(statusEnum, RESPONSE_CONTENT_TYPE, RESPONSE_VIEW_PREFIX, genericMessage.getElements())
 
     }
 
   }
+
 }
 
 // returns a status enum based on validation results  
