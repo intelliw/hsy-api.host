@@ -38,47 +38,10 @@ module.exports.period = {
 };
 module.exports.period.default = this.period.week;
 
-module.exports.datasets = {
-    MPPTSNMP: 'MPPT-SNMP',
-    PMSEPACK: 'PMS-EPACK'
-};
-
-module.exports.datasetPMSEPACK = {
-    eventtime: 'eventTime',
-    vcell01: 'vcell01',
-    vcell02: 'vcell02',
-    vcell03: 'vcell03',
-    vcell04: 'vcell04',
-    vcell05: 'vcell05',
-    vcell06: 'vcell06',
-    vcell07: 'vcell07',
-    vcell08: 'vcell08',
-    vcell09: 'vcell09',
-    vcell10: 'vcell10',
-    vcell11: 'vcell11',
-    vcell12: 'vcell12',
-    vcell13: 'vcell13',
-    vcell14: 'vcell14',
-    packsoc: 'pack.soc',
-    vpack: 'vpack',
-    packcurrent: 'packCurrent',
-    tempbottom: 'tempBottom',
-    tempmid: 'tempMid',
-    temptop: 'tempTop',
-    cmosstatus: 'cmosStatus',
-};
-
-module.exports.datasetMPPTSNMP = {
-    eventtime: 'eventTime',
-    pv1: 'pv1',
-    pv2: 'pv2',
-    chg1current: 'chg1Current',
-    chg2current: 'chg2Current',
-    battvoltage: 'battVoltage',
-    lvd1vsat: 'lvd1Vsat',
-    lvd2bts: 'lvd2Bts',
-    vsatcurrent: 'vsatCurrent',
-    btscurrent: 'btsCurrent'
+module.exports.datasets = {                     // kafka topics are based on enums.datasets. preferred convention is <message type>_<api base/db name>_<dataset /table name> 
+    PMSEPACK: 'pms-epack',                      // corresponds to enums.dataset.pms-epack
+    MPPTCTL: 'mppt-c',                          // corresponds to enums.dataset.mppt-c
+    INVCTL: 'inv-c'                             // corresponds to enums.dataset.inv-c
 };
 
 module.exports.timeOfDay = {
@@ -117,6 +80,7 @@ module.exports.linkRender.default = this.linkRender.none;
 module.exports.responseStatus = {
     '200': 'OK',
     '201': 'Created',
+    '204': 'Created',
     '400': 'Bad Request',
     '401': 'Unauthorized',
     '404': 'Not Found',
@@ -132,22 +96,19 @@ module.exports.apiKey = {
 }
 module.exports.apiKey.default = this.apiKey.AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0; 
 
-module.exports.messageBroker = {                       // kafka message broker
+module.exports.messageBroker = {                    // kafka message broker. topics are based on enums.datasets. 
     ack: {
         all: -1,                                    // -1 = all replicas must acknowledge (default) 
         none: 0,                                    //  0 = no acknowledgments 
         leader: 1                                   //  1 = only waits for the leader to acknowledge 
     },
-    topics: {                                       // preferred convention is <message type>_<api base/db name>_<dataset /table name>
-        MPPTSNMP: 'MPPT-SNMP',                      // corresponds to enums.datasets.MPPTSNMP
-        PMSEPACK: 'PMS-EPACK'                       // corresponds to enums.datasets.PMSEPACK
-    },
     producers: {                                    // producer client Ids
         devicesDatasets: 'devices.datasets'
     },
     consumers: {                                    // consumer client Ids
-        MPPTSNMP: 'devices.datasets.MPPT-SNMP',    
-        PMSEPACK: 'devices.datasets.PMS-EPACK'     
+        PMSEPACK: 'devices.dataset.pms-epack',     
+        MPPTCTL: 'devices.dataset.mppt-c',        
+        INVCTL: 'devices.dataset.inv-c'
     }
 }
 

@@ -29,7 +29,7 @@ class Dataset extends Param {
   /**
   instance attributes:  
    super.name: "dataset"
-   super.value: (datasetTopic) e.g. PMSEPACK  
+   super.value: (datasetTopic) e.g. pms-epack  
    super.isValid: true
   
    key = (datasetKey) e.g. BBC-PMS-999

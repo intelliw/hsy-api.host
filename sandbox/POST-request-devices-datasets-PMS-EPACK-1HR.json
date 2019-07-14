@@ -1,7 +1,7 @@
 {
   "deviceDatasets": [
     { "device": "BBC-PMS-999",
-      "dataset": "PMS-EPACK",
+      "dataset": "BBC-PMS-EPACK",
       "items": [
         { "eventTime": "20190209T150006.032-0700" ,
           "data": [

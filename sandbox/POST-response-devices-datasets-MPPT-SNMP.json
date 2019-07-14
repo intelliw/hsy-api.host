@@ -5,7 +5,7 @@
       "details": [
           {
               "message": "New datasets created",
-              "target": "device:BBC-PR1202-999 | dataset:MPPT-SNMP"
+              "target": "device:BBC-PR1202-999 | dataset:BBC-MPPT"
           }
       ]
   }

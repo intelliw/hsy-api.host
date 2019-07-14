@@ -10,7 +10,7 @@ const enums = require('../host/enums');
 const Producer = require('../producers');
 
 const KAFKA_ACK = enums.messageBroker.ack.leader;
-const KAFKA_TOPIC = enums.messageBroker.topics.PMSEPACK;
+const KAFKA_TOPIC = enums.datasets.PMSEPACK;
 
 /**
  * 
