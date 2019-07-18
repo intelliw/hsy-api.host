@@ -1,0 +1,14 @@
+{
+  "status": "201",
+  "message": "Created",
+  "details": [
+    {
+      "message": "New data events created",
+      "target": "device:CAB-01-001 | dataset:epack | events:8"
+    },
+    {
+      "message": "New data events created",
+      "target": "device:CAB-01-002 | dataset:epack | events:8"
+    }
+  ]
+}

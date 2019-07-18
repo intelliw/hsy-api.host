@@ -5,7 +5,7 @@
  * A dataset object posted through a request path. 
  * each dataset object contains a device identifier and topic header, and a data array with a eventTime header
  * [ {{ "device": "BBC-PR1202-999",
-        "topic": "MPPTSNMP",
+        "topic": "MPPT",
         "dataset": [
           { "eventTime": "20190209T150006.022-0700",
             "data": [            
@@ -29,7 +29,7 @@ class Dataset extends Param {
   /**
   instance attributes:  
    super.name: "dataset"
-   super.value: (datasetTopic) e.g. pms-epack  
+   super.value: (datasetTopic) e.g. epack  
    super.isValid: true
   
    key = (datasetKey) e.g. BBC-PMS-999

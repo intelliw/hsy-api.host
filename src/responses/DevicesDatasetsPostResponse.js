@@ -46,10 +46,12 @@ function executeDevicesDatasetsPost(params) {
     console.dir(deviceDataset);
 
     switch (datasetName) {
-      case enums.datasets.PMSEPACK:
+
+      case enums.datasets.EPACK:
         producer = new Producer.PmsEpackProducer(deviceDataset);
         break;
-      case enums.datasets.MPPTSNMP:
+
+      case enums.datasets.MPPT:
         //producer = new Producer.MpptSnmpProducer(deviceDataset);
         break;
     }
@@ -69,7 +71,6 @@ function executeDevicesDatasetsPost(params) {
   return response.getElements();
 
 }
-
 
 module.exports = DevicesDatasetsPostResponse;
 

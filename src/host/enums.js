@@ -39,9 +39,9 @@ module.exports.period = {
 module.exports.period.default = this.period.week;
 
 module.exports.datasets = {                     // kafka topics are based on enums.datasets. preferred convention is <message type>_<api base/db name>_<dataset /table name> 
-    PMSEPACK: 'pms-epack',                      // corresponds to enums.dataset.pms-epack
-    MPPTCTL: 'mppt-c',                          // corresponds to enums.dataset.mppt-c
-    INVCTL: 'inv-c'                             // corresponds to enums.dataset.inv-c
+    EPACK: 'epack',                      // corresponds to enums.dataset.epack
+    MPPT: 'mppt',                          // corresponds to enums.dataset.mppt
+    INVERTER: 'inverter'                             // corresponds to enums.dataset.inverter
 };
 
 module.exports.timeOfDay = {
@@ -106,9 +106,9 @@ module.exports.messageBroker = {                    // kafka message broker. top
         devicesDatasets: 'devices.datasets'
     },
     consumers: {                                    // consumer client Ids
-        PMSEPACK: 'devices.dataset.pms-epack',     
-        MPPTCTL: 'devices.dataset.mppt-c',        
-        INVCTL: 'devices.dataset.inv-c'
+        EPACK: 'devices.dataset.epack',     
+        MPPT: 'devices.dataset.mppt',        
+        INVERTER: 'devices.dataset.inverter'
     }
 }
 

@@ -37,7 +37,7 @@ class DevicesDatasetsPost extends Request {
 
         req.body.deviceDatasets.forEach(deviceDataset => {
             datasetKey = deviceDataset.device;                              // deviceId e.g. "BBC-PR1202-999" - this is the message key for all dataitems in this dataset
-            datasetTopic = deviceDataset.dataset;                           // e.g. "MPPTSNMP" - the message key for all dataitems in this dataset 
+            datasetTopic = deviceDataset.dataset;                           // e.g. "MPPT" - the message key for all dataitems in this dataset 
             datasetItems = deviceDataset.items;                             // [ ] array of data items
             //
             datasets.push(new Param.Dataset(datasetKey, datasetTopic, datasetItems));     // adds processingTime to each dataitem 

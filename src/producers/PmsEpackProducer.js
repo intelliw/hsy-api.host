@@ -10,7 +10,7 @@ const enums = require('../host/enums');
 const Producer = require('../producers');
 
 const KAFKA_ACK = enums.messageBroker.ack.leader;
-const KAFKA_TOPIC = enums.datasets.PMSEPACK;
+const KAFKA_TOPIC = enums.datasets.EPACK;
 
 /**
  * 
@@ -21,12 +21,12 @@ class PmsEpackProducer extends Producer {
     * dataset:
 
      constructor arguments  
-    * @param {*} deviceDataset                                          // post body from devices.datasets.post api operation
+    * @param {*} deviceDataset                                         // post body from devices.datasets.post api operation
     */
     constructor(deviceDataset) {
 
         // call super
-        let clientId = enums.messageBroker.producers.devicesDatasets;      // e.g. 'devices.datasets'
+        let clientId = enums.messageBroker.producers.devicesDatasets;  // e.g. 'devices.datasets'
         super(clientId, KAFKA_TOPIC, KAFKA_ACK);
         
         this.dataset = deviceDataset;
@@ -47,6 +47,5 @@ class PmsEpackProducer extends Producer {
     }
 
 }
-
 
 module.exports = PmsEpackProducer;
