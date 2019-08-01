@@ -41,7 +41,7 @@ class Producer {
         this.clientId = clientId;
         this.ack = ack ? ack: KAFKA_DEFAULT_ACK;        
     }
-    // implemented by subtype
+    // implemented by subtype, to extract data and call super's addMessage with the key, dataItem and optional header
     extractData() {
     }
 
@@ -55,16 +55,14 @@ class Producer {
     */
     addMessage(key, dataItem, headers) {
         
-        // prepend processing time to the dataitem
-        let processingTime = {name: 'processingTime', value: moment.utc().format(consts.periodDatetimeISO.instant)};
-        let messageValue = [];
-        messageValue.push(processingTime);
-        messageValue.push(dataItem); 
+        // prepend a processing time to the dataitem
+        let processingTime = moment.utc().format(consts.periodDatetimeISO.instant);
+        dataItem.processingTime = processingTime;
 
         // create the message
         let message = {
             key: key,
-            value: JSON.stringify(messageValue)
+            value: JSON.stringify(dataItem)
             };
         if (headers) {
             message.headers = JSON.stringify(headers);

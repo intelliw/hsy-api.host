@@ -39,9 +39,9 @@ module.exports.period = {
 module.exports.period.default = this.period.week;
 
 module.exports.datasets = {                     // kafka topics are based on enums.datasets. preferred convention is <message type>_<api base/db name>_<dataset /table name> 
-    EPACK: 'epack',                      // corresponds to enums.dataset.epack
-    MPPT: 'mppt',                          // corresponds to enums.dataset.mppt
-    INVERTER: 'inverter'                             // corresponds to enums.dataset.inverter
+    PMS: 'pms',                                 // corresponds to messageBroker.consumers.PMS
+    MPPT: 'mppt',                               // corresponds to messageBroker.consumers.MPPT
+    INVERTER: 'inverter'                        // corresponds to messageBroker.consumers.INVERTER
 };
 
 module.exports.timeOfDay = {
@@ -89,10 +89,10 @@ module.exports.responseStatus = {
 }
 
 module.exports.apiKey = {
-    APIKey4: 'AIzaSyAosx2bIR7K5uyXJeEuwJrFZEpbFYliZ3Y',
+    HokuappsKey1: 'AIzaSyASFQxf4PmOutVS1Dt99TPcZ4IQ8PDUMqY',
+    MartinKurnadiKey1: 'AIzaSyAosx2bIR7K5uyXJeEuwJrFZEpbFYliZ3Y',
     APIKey3: 'AIzaSyDq97s15fdM99swOJuUIFtW8ifgQSBnymo',
-    APIKey2: 'AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0',
-    HokuappsKey1: 'AIzaSyASFQxf4PmOutVS1Dt99TPcZ4IQ8PDUMqY'
+    APIKey2: 'AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0'
 }
 module.exports.apiKey.default = this.apiKey.AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0; 
 
@@ -103,10 +103,10 @@ module.exports.messageBroker = {                    // kafka message broker. top
         leader: 1                                   //  1 = only waits for the leader to acknowledge 
     },
     producers: {                                    // producer client Ids
-        devicesDatasets: 'devices.datasets'
+        deviceDatasets: 'device.datasets'
     },
     consumers: {                                    // consumer client Ids
-        EPACK: 'devices.dataset.epack',     
+        PMS: 'devices.dataset.pms',     
         MPPT: 'devices.dataset.mppt',        
         INVERTER: 'devices.dataset.inverter'
     }

@@ -24,7 +24,7 @@ class DevicesDatasetsPostResponse extends Response {
   */
   constructor(params, acceptParam) {
 
-    let content = executeDevicesDatasetsPost(params);                                       // perform the post operation 
+    let content = executePost(params);                                       // perform the post operation 
 
 
     super(RESPONSE_STATUS, acceptParam, VIEW_PREFIX, content);
@@ -32,43 +32,30 @@ class DevicesDatasetsPostResponse extends Response {
   }
 }
 
-// perform the energy data operation and return a collections array
-function executeDevicesDatasetsPost(params) {
+// perform the data operation 
+function executePost(params) {
 
   let producer;
   let datasetName;
+  let datasetItems;
+
+  datasetName = params.dataset.value;
+  datasetItems = params.datasets.value;
   
-  // produce messages for each dataset
-  params.datasets.value.forEach(deviceDataset => {
+  producer = new Producer.DeviceDatasetProducer(datasetName, datasetItems);
 
-    // select a producer for this dataset
-    datasetName = deviceDataset.value;
-    console.dir(deviceDataset);
-
-    switch (datasetName) {
-
-      case enums.datasets.EPACK:
-        producer = new Producer.PmsEpackProducer(deviceDataset);
-        break;
-
-      case enums.datasets.MPPT:
-        //producer = new Producer.MpptSnmpProducer(deviceDataset);
-        break;
-    }
-
-    producer.extractData();
-    producer.sendToTopic();
-
-  });
+  producer.extractData();
+  producer.sendToTopic();
 
   // prepare the response
   let responseDetail = new GenericMessageDetail();
-  responseDetail.add('New datasets created', `device:${params.deviceDatasetItems.value[0].device} | dataset:${params.deviceDatasetItems.value[0].dataset}`);
+  responseDetail.add('New datasets created', `dataset:${datasetName} | ${datasetItems.length}`);
 
   let statusCode = utils.keynameFromValue(enums.responseStatus, RESPONSE_STATUS);
   let response = new GenericMessage(statusCode, RESPONSE_STATUS, responseDetail.getElements());
-
+  
   return response.getElements();
+  
 
 }
 

@@ -9,30 +9,34 @@ const router = express.Router();
 
 const Request = require('../requests');
 
-/*  [devices.datasets.post] 
-
+/*  [devices.dataset.pms.post]
+    [devices.dataset.mppt.post]
+    [devices.dataset.inverter.post]
 */
-router.post('/datasets', (req, res, next) => {
+router.post('/dataset/:dataset',
+    (req, res, next) => {
 
-    // request ---------------------
-    let request = new Request.DevicesDatasetsPost(req);
+        // request ---------------------                                
+        let request = new Request.DevicesDatasetsPost(req);
 
-    //  execute if valid
-    let response = request.response;                            // execute the operation and return a response 
-    let items = response.content;
-    
-    // response
-    res
-        .status(response.statusCode)
-        .type(response.contentType)
-        .render(response.view, {
-            collections: items
-        });
+        //  execute if valid
+        let response = request.response;                                // execute the operation and return a response 
+        let items = response.content;
+
+        // response
+        res
+            .status(response.statusCode)
+            .type(response.contentType)
+            .render(response.view, {
+                collections: items
+            });
 
 });
 
 /* [device.dataset.period.epoch.duration.get]
     Returns device data for a period. 
+    BTW     :XXX means it's a URL parameter. (i.e. req.params.XXX)
+            ? means that the parameter is optional
 */
 router.get(['/:device?/dataset/:dataset?',
     '/:device?/dataset/:dataset?/period/:period?',
@@ -41,7 +45,7 @@ router.get(['/:device?/dataset/:dataset?',
 
         // request ---------------------
         let request = new Request.DeviceDatasetGet(req);
-        
+
         //  execute if valid
         let response = request.response;                            // execute the operation and return a response 
         let items = response.content;
@@ -54,7 +58,7 @@ router.get(['/:device?/dataset/:dataset?',
                 collections: items
             });
 
-    });
+});
 
 
 /* [devices.device.config.epoch.get] /devices/{device}/config/{epoch}

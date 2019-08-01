@@ -39,7 +39,7 @@ class Validate {
         this.isContentTypeValid = validateContentType(req, requestObj.contentType, this.errors);    // validate content-type 
         this.isParamsValid = validateParams(req, requestObj.params, this.errors);                   // validate params 
         
-        // isValid 
+        // check if Request isValid 
         this.isValid = this.isAcceptTypeValid
             && this.isContentTypeValid
             && this.isParamsValid

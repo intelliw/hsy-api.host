@@ -22,17 +22,25 @@ class DeviceDatasetGetResponse extends Response {
   */
   constructor(params, acceptParam) {
 
-    let content = "";   // 2DO
-    
-    let detail = new GenericMessageDetail();
-    detail.add('datasets retrieved', `device:${params.device.value} | dataset:${params.dataset.value}`);
+    let content = executeGet(params);
 
-    let statusCode = utils.keynameFromValue(enums.responseStatus, RESPONSE_STATUS);
-    let genericMessage = new GenericMessage(statusCode, RESPONSE_STATUS, detail.getElements());
-
-    super(RESPONSE_STATUS, acceptParam, VIEW_PREFIX, genericMessage.getElements());
+    super(RESPONSE_STATUS, acceptParam, VIEW_PREFIX, content);
 
   }
+}
+
+// perform the data operation 
+function executeGet(params) {
+
+  let content = "";   // 2DO
+
+  let responseDetail = new GenericMessageDetail();
+  responseDetail.add('datasets retrieved', `device:${params.device.value} | dataset:${params.dataset.value}`);
+
+  let statusCode = utils.keynameFromValue(enums.responseStatus, RESPONSE_STATUS);
+  let response = new GenericMessage(statusCode, RESPONSE_STATUS, responseDetail.getElements());
+
+  return response.getElements();
 }
 
 

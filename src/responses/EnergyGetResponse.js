@@ -24,7 +24,7 @@ class EnergyGetResponse extends Response {
   */
   constructor(params, acceptParam) {
 
-    let content = executeEnergyGet(params);                                       // perform the data retrieval operation 
+    let content = executeGet(params);                                       // perform the data retrieval operation 
 
     super(RESPONSE_STATUS, acceptParam, VIEW_PREFIX, content);
 
@@ -32,7 +32,7 @@ class EnergyGetResponse extends Response {
 }
 
 // perform the energy data operation and return a collections array
-function executeEnergyGet(params) {
+function executeGet(params) {
 
   let links;
   let items;
@@ -69,7 +69,7 @@ function executeEnergyGet(params) {
     items = createItems(params.energy, period, params.site);
 
     // add each collection to the collections array
-    collections.add(consts.CURRENT_VERSION, links.href, links, items);
+    collections.add(consts.api.version, links.href, links, items);
   });
 
   return collections.getElements();

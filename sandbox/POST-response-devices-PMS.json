@@ -1,0 +1,26 @@
+{
+  "status": "201",
+  "message": "Created",
+  "details": [
+    {
+      "message": "New data events created",
+      "target": "device:PMS-01-001 | dataset:pms | events:8"
+    },
+    {
+      "message": "New data events created",
+      "target": "device:PMS-01-002 | dataset:pms | events:8"
+    }
+  ]
+}
+
+
+{
+  "status": "200",
+  "message": "ok",
+  "details": [
+    {
+      "message": "Data queued for processing.",
+      "target": "dataset:pms"
+    }
+  ]
+}

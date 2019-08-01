@@ -32,7 +32,7 @@ app.use(bodyParser.raw({ verify: rawBodySaver, type: function () { return true }
 app.use('/energy', paths.energyRouter);                                             // openapi tag: Energy - this is als to the default route
 app.use(['/devices', '/device'], paths.devicesRouter);                              // openapi tag: Devices
 app.use('/api', paths.diagnosticsRouter);                                           // openapi tag: Diagnostics
-app.use('/devtest', sandbox.devtest);                                               // not in api: for testing and troubleshooting only    
+app.use('/devtest', sandbox.devtest);                                               // not in openapi spec: for testing and troubleshooting only
 
 // static folders 
 app.use('/static', express.static(host.constants.folders.STATIC));

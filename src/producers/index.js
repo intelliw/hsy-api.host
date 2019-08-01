@@ -5,4 +5,4 @@
  * producers 
  */
 module.exports = require('./Producer');
-module.exports.PmsEpackProducer = require('./PmsEpackProducer');
+module.exports.DeviceDatasetProducer = require('./DeviceDatasetProducer');

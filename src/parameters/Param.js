@@ -36,7 +36,9 @@ class Param {
         // isOptional & isValid                          // isValid if 1) enumTest passes and 2) there must be a value unless isOptional
         this.isOptional = optional;
         
-        this.isValid = enumTest && (this.isOptional === true ? true : this.value != consts.NONE);       // there must be a value unless isOptional    
+        // check if Param isValid 
+        this.isValid = enumTest 
+            && (this.isOptional === true ? true : this.value != consts.NONE);       // there must be a value unless isOptional    
 
     }
 }

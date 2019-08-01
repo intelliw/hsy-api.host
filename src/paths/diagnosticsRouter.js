@@ -14,7 +14,7 @@ router.get('/versions', (req, res, next) => {
 
     res
     .status(200)
-    .json({ versions: consts.ACTIVE_VERSIONS })
+    .json({ versions: consts.api.supportedversions })
     .end();
 
 });

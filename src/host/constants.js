@@ -133,26 +133,30 @@ module.exports.periodMaxDurationsAllowed = {
     fiveyear: '5'
 }
 
-// returns max allowed durations for each period. each period cap is proportional to the large number of items in its collection
+// parameter definitions
 module.exports.params = {
     names: {
         api_key: 'api_key',                                 // header param, must be lower case
-        accepttype:'accept',
-        datasets:'datasets'
+        accepttype:'accept'
     } 
 }
 
+// system constants for the api and host
+module.exports.api = {
+    supportedversions: '0.2 0.3',
+    version: '0.3',
+    scheme: 'http',
+    host: 'localhost:8080'
+    // host: 'api.endpoints.sundaya.cloud.goog'
+}
+
 // system constants
-module.exports.ACTIVE_VERSIONS = '0.2 0.3';
-module.exports.CURRENT_VERSION = '0.3';
 module.exports.DATE_FORMAT = 'YYYYMMDDTHHmmss.SSS±HHmm';
 module.exports.NONE = global.undefined;
 // parameter constants 
 module.exports.DEFAULT_SITE = '999';
 module.exports.DEFAULT_DURATION = '1';
-// module.exports.API_HOST = 'api.endpoints.sundaya.cloud.goog';
 // module.exports.KAFKA_HOST = '10.140.0.6';             // 35.201.177.2
-module.exports.API_HOST = 'localhost:8080';
-module.exports.KAFKA_HOST = '192.168.1.105';                // 10.140.0.6 / 35.201.177.2     192.168.1.105 
+module.exports.KAFKA_HOST = '192.168.1.106';                // 10.140.0.6 / 35.201.177.2     192.168.1.105 
 module.exports.KAFKA_BROKERS = [`${this.KAFKA_HOST}:9092`]  // array of kafka message brokers
-module.exports.API_SCHEME = 'http';
+

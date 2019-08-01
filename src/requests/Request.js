@@ -36,7 +36,7 @@ class Request {
     * @param {*} params                 // list of validated params { }
     */
     constructor(req, params, responseProduces, responseConsumes) {
-
+        
         // update instance properties before validation 
         this.params = params;
         this.apiKey = new Param(consts.params.names.api_key, req.headers[consts.params.names.api_key], enums.apiKey.default, enums.apiKey);
