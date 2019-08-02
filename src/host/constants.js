@@ -157,12 +157,12 @@ module.exports.api = {
 // system constants for the environment
 module.exports.environment = {
     api: {
-        host: 'localhost:8080'
-        // host: 'api.endpoints.sundaya.cloud.goog'         
+        // host: 'localhost:8080'
+        host: 'api.endpoints.sundaya.cloud.goog'         
     },
     kafka: {
-        host: '192.168.1.106',                              // localhost
-        // host: '10.140.0.11'                              // kafka-1-vm             
+        // host: '192.168.1.106',                               // localhost
+        host: '10.140.0.11'                                     // kafka-1-vm             
     }
 }
 module.exports.KAFKA_BROKERS = [`${this.environment.kafka.host}:9092`]  // array of kafka message brokers
