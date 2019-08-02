@@ -38,7 +38,7 @@ class EnergyGet extends Request {
         let params = {};
         params.energy = new Param('energy', req.params.energy, enums.energy.default, enums.energy);
         params.period = new Param.Period(req.params.period, req.params.epoch, req.params.duration);
-        params.site = new Param('site', req.query.site, consts.DEFAULT_SITE);
+        params.site = new Param('site', req.query.site, consts.params.defaults.site);
         params.productCatalogItems = new Param('productCatalogItems', req.body.productCatalogItems, consts.NONE, consts.NONE, OPTIONAL);
         
         // cap the number of durations for this period

@@ -133,30 +133,42 @@ module.exports.periodMaxDurationsAllowed = {
     fiveyear: '5'
 }
 
-// parameter definitions
+// parameter constants 
 module.exports.params = {
     names: {
         api_key: 'api_key',                                 // header param, must be lower case
         accepttype:'accept'
+    },
+    defaults: {
+        site: '999',
+        duration: '1'                                       // energy apiu duration parameter 
     } 
 }
 
 // system constants for the api and host
 module.exports.api = {
-    supportedversions: '0.2 0.3',
-    version: '0.3',
-    scheme: 'http',
-    host: 'localhost:8080'
-    // host: 'api.endpoints.sundaya.cloud.goog'
+    versions: {
+        supported: '0.2 0.3',
+        current: '0.3',
+    },
+    scheme: 'http'
 }
+
+// system constants for the environment
+module.exports.environment = {
+    api: {
+        host: 'localhost:8080'
+        // host: 'api.endpoints.sundaya.cloud.goog'         
+    },
+    kafka: {
+        host: '192.168.1.106',                              // localhost
+        // host: '10.140.0.11'                              // kafka-1-vm             
+    }
+}
+module.exports.KAFKA_BROKERS = [`${this.environment.kafka.host}:9092`]  // array of kafka message brokers
 
 // system constants
 module.exports.DATE_FORMAT = 'YYYYMMDDTHHmmss.SSS±HHmm';
 module.exports.NONE = global.undefined;
-// parameter constants 
-module.exports.DEFAULT_SITE = '999';
-module.exports.DEFAULT_DURATION = '1';
-// module.exports.KAFKA_HOST = '10.140.0.6';             // 35.201.177.2
-module.exports.KAFKA_HOST = '192.168.1.106';                // 10.140.0.6 / 35.201.177.2     192.168.1.105 
-module.exports.KAFKA_BROKERS = [`${this.KAFKA_HOST}:9092`]  // array of kafka message brokers
+
 

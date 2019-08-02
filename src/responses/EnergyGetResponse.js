@@ -69,7 +69,7 @@ function executeGet(params) {
     items = createItems(params.energy, period, params.site);
 
     // add each collection to the collections array
-    collections.add(consts.api.version, links.href, links, items);
+    collections.add(consts.api.versions.current, links.href, links, items);
   });
 
   return collections.getElements();

@@ -23,9 +23,9 @@ router.get('/energy/:energy?/:period?/:epoch?/:duration?', (req, res, next) => {
     let noEnum = consts.NONE;
 
     // validate and default all parameters 
-    let site = new Param('site', req.query.site, consts.DEFAULT_SITE);
+    let site = new Param('site', req.query.site, consts.params.defaults.site);
     let energy = new Param('energy', req.params.energy, enums.energy.default, enums.energy);
-    let duration = new Param('duration', req.params.duration, consts.DEFAULT_DURATION, noEnum);
+    let duration = new Param('duration', req.params.duration, consts.params.defaults.duration, noEnum);
     let period = new Param.Period(req.params.period, req.params.epoch, duration.value);
 
     let msg;

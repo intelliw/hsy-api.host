@@ -44,7 +44,7 @@ class Period extends Param {
     * @param {*} epoch     // date-time 
     * @param {*} duration  // positive integer
     */
-    constructor(reqPeriod, epoch, duration = consts.DEFAULT_DURATION) {
+    constructor(reqPeriod, epoch, duration = consts.params.defaults.duration) {
 
         // period, context
         super(THIS_PARAM_NAME, reqPeriod, enums.period.default, enums.period);                  // e.g. reqPeriod' ='week';' 
@@ -110,7 +110,7 @@ class Period extends Param {
 
         //create the period and sets its relationship
         const periodEnum = this.value;
-        let next = new Period(periodEnum, epoch, consts.DEFAULT_DURATION);
+        let next = new Period(periodEnum, epoch, consts.params.defaults.duration);
         next.rel = enums.linkRelations.next;
 
         return next;
@@ -125,7 +125,7 @@ class Period extends Param {
 
         //create the period and sets its relationship
         const periodEnum = this.value;
-        let prev = new Period(periodEnum, epoch, consts.DEFAULT_DURATION);
+        let prev = new Period(periodEnum, epoch, consts.params.defaults.duration);
         prev.rel = enums.linkRelations.prev;
 
         return prev;
@@ -143,7 +143,7 @@ class Period extends Param {
 
         if (parentEnum) {                                                                       // fiveyear has no p[arent]    
             //create the period and sets its relationship
-            parent = new Period(parentEnum, this.epochInstant, consts.DEFAULT_DURATION);
+            parent = new Period(parentEnum, this.epochInstant, consts.params.defaults.duration);
             parent.rel = enums.linkRelations.up;                                                // up is the rel for the parent
         }
 
@@ -158,7 +158,7 @@ class Period extends Param {
         const periodEnum = this.value;
 
         //create the clone and sets its relationship
-        let clone = new Period(periodEnum, epoch, consts.DEFAULT_DURATION);     
+        let clone = new Period(periodEnum, epoch, consts.params.defaults.duration);     
 
         clone.context = this.context
         clone.epochInstant = this.epochInstant
@@ -188,7 +188,7 @@ class Period extends Param {
         for (p = 1; p <= duration; p++) {
 
             // create a period object and add it to the array 
-            let period = new Period(periodEnum, epoch, consts.DEFAULT_DURATION);
+            let period = new Period(periodEnum, epoch, consts.params.defaults.duration);
             period.parent = this.parent;
             period.grandparent = this.grandparent;
             period.context = this.context;
