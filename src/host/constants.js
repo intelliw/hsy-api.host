@@ -56,7 +56,7 @@ module.exports.descendentParent = {
     minute: enums.period.hour,
     hour: enums.period.day,
     day: enums.period.month,
-    timeofday: enums.period.day,    
+    timeofday: enums.period.day,
     week: enums.period.month,
     month: enums.period.quarter,
     quarter: enums.period.year,
@@ -137,12 +137,12 @@ module.exports.periodMaxDurationsAllowed = {
 module.exports.params = {
     names: {
         api_key: 'api_key',                                 // header param, must be lower case
-        accepttype:'accept'
+        accepttype: 'accept'
     },
     defaults: {
         site: '999',
         duration: '1'                                       // energy apiu duration parameter 
-    } 
+    }
 }
 
 // system constants for the api and host
@@ -155,17 +155,21 @@ module.exports.api = {
 }
 
 // system constants for the environment
-module.exports.environment = {
-    api: {
-        // host: 'localhost:8080'
-        host: 'api.endpoints.sundaya.cloud.goog'         
+module.exports.environments = {
+    local: {                                                        
+        api: { host: 'localhost:8080' },
+        kafka: { host: 'localhost'}                                     // localhost   | 192.168.1.106
     },
-    kafka: {
-        // host: '192.168.1.106',                               // localhost
-        host: '10.140.0.11'                                     // kafka-1-vm             
+    cloud: {
+        api: { host: 'api.endpoints.sundaya.cloud.goog' },
+        kafka: {host: 'kafka-1-vm' }                                    // kafka-1-vm  | 10.140.0.11 
     }
 }
-module.exports.KAFKA_BROKERS = [`${this.environment.kafka.host}:9092`]  // array of kafka message brokers
+
+// the active environment - change this to one of the environments in consts.environments -0 eg. change to 'cloud' before release
+module.exports.env = 'cloud';                                           // local or cloud        
+
+module.exports.KAFKA_BROKERS = [`${this.environments[this.env].kafka.host}:9092`]               // array of kafka message brokers
 
 // system constants
 module.exports.DATE_FORMAT = 'YYYYMMDDTHHmmss.SSS±HHmm';
