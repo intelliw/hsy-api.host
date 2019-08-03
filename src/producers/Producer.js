@@ -30,7 +30,7 @@ class Producer {
 
         // create the producer
         const kafka = new Kafka({
-            brokers: consts.KAFKA_BROKERS,              //  e.g. [`${this.KAFKA_HOST}:9092`, `${this.KAFKA_HOST}:9094`]
+            brokers: consts.environments[consts.env].kafka.brokers,              //  e.g. [`${this.KAFKA_HOST}:9092`, `${this.KAFKA_HOST}:9094`]
             clientId: clientId,
         })
         this.producerObj = kafka.producer();
