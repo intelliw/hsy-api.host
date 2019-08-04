@@ -162,22 +162,22 @@ module.exports.environments = {
             brokers: ['localhost:9092']                                 // localhost   | 192.168.1.106        
         }                                     
     },
-    devcloud: {
+    devcloud: {                                                         // single instance kafka
         api: { host: 'api.endpoints.sundaya.cloud.goog' },
         kafka: {
             brokers: ['kafka-1-vm:9092']                                // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
         }                                    
     },
-    prodcluster: {
+    prodcloud: {                                                        // kafka cluster
         api: { host: 'api.endpoints.sundaya.cloud.goog' },
         kafka: {
-            brokers: ['kafka-1-cluster-m-0:9092', 'kafka-1-cluster-m-1:9092', 'kafka-1-cluster-m-2:9092']                                // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
+            brokers: ['kafka-c-1-m-0:9092', 'kafka-c-1-m-1:9092', 'kafka-c-1-m-2:9092']                                // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
         }                                    
-    },
+    }
 }
 
-// the active environment - change this to one of the environments in consts.environments -0 eg. change to 'cloud' before release
-module.exports.env = 'prodcluster';                                           // local or devcloud or prodcluster        
+// the active environment - change this to one of the environments in consts.environments -0 eg. change to 'devcloud' before release
+module.exports.env = 'prodcloud';                                           // local or devcloud or prodcloud
 
 // system constants
 module.exports.DATE_FORMAT = 'YYYYMMDDTHHmmss.SSS±HHmm';
