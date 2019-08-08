@@ -14,6 +14,10 @@ const KAFKA_DEFAULT_ACK = enums.messageBroker.ack.leader;
 
 class Producer {
     /**
+     * superclass - 
+     * clients of subtypes must first call extractData(), then sendToTopic()
+     *  subtypes implement extactData by calling this superclass's addMessage() for each dataitem 
+     * 
     instance attributes:  
      "producerObj": kafka.producer()
      "_messages": []

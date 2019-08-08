@@ -48,13 +48,13 @@ class DeviceDatasetProducer extends Producer {
 
         let status = false;
 
-        let datasetName = this.topic;                                    // e.g. pms
+        let datasetName = this.topic;                                    // e.g. pms - 
 
         // extract and add messages to super 
         this.datasets.forEach(dataset => {
-            key = dataset[datasetName].id;                              // e.g. "pms": { "id": "PMS-01-001" }
+            key = dataset[datasetName].id;                              // e.g. "pms": { "id": "PMS-01-001" }, "data": [ .. ]
             
-            // add each data item in the dataset as an indoividual message
+            // add each data item in the dataset as an individual message
             dataset.data.forEach(dataItem => {                          // e.g. "data": [
                super.addMessage(key, dataItem);                             // adds processingTime to each dataitem 
             });

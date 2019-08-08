@@ -20,7 +20,7 @@ module.exports.timeOfDayStart = {
     night: '0'
 };
 
-/* child period and duration lookup.  the lookup is parent => child or parent-+-child => grandchild. The fields are c: for child and d: for duration
+/* child period ('c') and duration ('d') lookup.  the lookup is parent => child or parent-+-child => grandchild. The fields are c: for child and d: for duration
 this lookup needs to be commutatively equivalent to the descendentParent lookup
 */
 module.exports.ancestorChild = {
@@ -149,7 +149,7 @@ module.exports.params = {
 module.exports.api = {
     versions: {
         supported: '0.2 0.3',
-        current: '0.3',
+        current: '0.3'
     },
     scheme: 'http'
 }
@@ -177,7 +177,9 @@ module.exports.environments = {
 }
 
 // the active environment - change this to one of the environments in consts.environments -0 eg. change to 'devcloud' before release
-module.exports.env = 'prodcloud';                                           // local or devcloud or prodcloud
+// module.exports.env = 'local';                                           // local or devcloud or prodcloud
+// module.exports.env = 'devcloud';                                        // local or devcloud or prodcloud
+module.exports.env = 'prodcloud';                                       // local or devcloud or prodcloud
 
 // system constants
 module.exports.DATE_FORMAT = 'YYYYMMDDTHHmmss.SSS±HHmm';
