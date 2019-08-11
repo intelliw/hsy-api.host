@@ -154,10 +154,24 @@ module.exports.api = {
     scheme: 'http'
 }
 
+// kafkajs client configuration options
+module.exports.kafkajs = {
+    retry: {                                                             // retry options  https://kafka.js.org/docs/configuration
+        maxRetryTime: 10000,                                             // max milliseconds wait for a retry (30000)
+        initialRetryTime: 100,                                           // initial value in milliseconds, randomized after first time (300)
+        factor:	0.2,                                                     // Randomization factor	   
+        multiplier:	2,                                                   // Exponential factor
+        retries: 8,                                                      // max number of retries per call (5)
+        maxInFlightRequests: 200                                         // max num requestsin progress at any time. If falsey then no limit (null)
+    },
+    connectionTimeout: 3000,                                             // milliseconds to wait for a successful connection   
+    requestTimeout: 25000                                                // milliseconds to wait for a successful request.    
+}
+
 // system constants for the environment
 module.exports.environments = {
     local: {                                                        
-        api: { host: 'localhost:8080' },
+        api: { host: 'localhost:8082' },
         kafka: { 
             brokers: ['localhost:9092']                                 // localhost   | 192.168.1.106        
         }                                     
@@ -177,12 +191,11 @@ module.exports.environments = {
 }
 
 // the active environment - change this to one of the environments in consts.environments -0 eg. change to 'devcloud' before release
-// module.exports.env = 'local';                                           // local or devcloud or prodcloud
+module.exports.env = 'local';                                           // local or devcloud or prodcloud
 // module.exports.env = 'devcloud';                                        // local or devcloud or prodcloud
-module.exports.env = 'prodcloud';                                       // local or devcloud or prodcloud
+// module.exports.env = 'prodcloud';                                       // local or devcloud or prodcloud
 
 // system constants
 module.exports.DATE_FORMAT = 'YYYYMMDDTHHmmss.SSS±HHmm';
 module.exports.NONE = global.undefined;
-
 

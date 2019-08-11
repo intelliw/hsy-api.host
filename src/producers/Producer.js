@@ -22,32 +22,33 @@ class Producer {
      "producerObj": kafka.producer()
      "_messages": []
      "clientId":  'devices.datasets'
-     "topic":      enums.messageBroker.topics..
      "ack":        enums.messageBroker.ack.. 
 
      constructor arguments 
     * @param {*} clientId           //  consts.messaging.clientid   - e.g. devices.datasets
-    * @param {*} topic              //  enums.messageBroker.topics     - e.g. monitoring_devices_MPPTSNMP
+    * @param {*} topic              //  enums.datasets              - e.g. pms
     * @param {*} ack                //  enums.messageBroker.ack        
     */
-    constructor(clientId, topic, ack) {
-
+    constructor(clientId, ack) {
+        
         // create the producer
         const kafka = new Kafka({
             brokers: consts.environments[consts.env].kafka.brokers,              //  e.g. [`${this.KAFKA_HOST}:9092`, `${this.KAFKA_HOST}:9094`]
             clientId: clientId,
+            retry: consts.kafkajs.retry,                                         // retry options  https://kafka.js.org/docs/configuration   
+            connectionTimeout: consts.kafkajs.connectionTimeout,                 // milliseconds to wait for a successful connection   
+            requestTimeout: consts.kafkajs.requestTimeout                        // milliseconds to wait for a successful request.     
         })
         this.producerObj = kafka.producer();
 
         // setup instance variables
-        this._messages = [];                            // start with an empty array and use addMessages() 
-        this.topic = topic;
+        this._messages = [];                            // start with an empty array and later call addMessage() 
         this.clientId = clientId;
         this.ack = ack ? ack : KAFKA_DEFAULT_ACK;
     }
 
     // implemented by subtype: extracts data and calls super's (this) addMessage with the key, dataItem and optional header
-    extractData() {
+    extractData(datasetName, datasets) {
     }
 
     /* adds a message to the message array
@@ -55,32 +56,37 @@ class Producer {
     * dataItem contains the message value 
     * headers are a json object (note: kafkajs produces a byte array for headers unlike messages which are a string buffer
     *   e.g. { 'correlation-id': '2bfb68bb-893a-423b-a7fa-7b568cad5b67', system-id': 'my-system' }  
-    * this function adds a processing time to the headers
+    * this function prepends the processing time to the data object
     */
-    addMessage(key, dataItem, headers) {
+    addMessage(key, data, headers) {
 
         // prepend a processing time to the dataitem
         let processingTime = moment.utc().format(consts.periodDatetimeISO.instant);
-        dataItem.processingTime = processingTime;
+        data = { time_processingutc: processingTime, ...data };                     // prepend 'time_processingutc' to the dataitem
+        
+        console.log(JSON.stringify(data)); 
 
         // create the message
         let message = {
             key: key,
-            value: JSON.stringify(dataItem)
+            value: JSON.stringify(data)
         };
+        
         if (headers) {
             message.headers = JSON.stringify(headers);
         }
         this._messages.push(message);       // add to the message array
     }
 
-    // sends the message to the broker
-    async sendToTopic() {
+    /* sends the message to the broker
+        "topic":      enums.messageBroker.topics..
+    */
+    async sendToTopic(topic) {
 
         await this.producerObj.connect();
 
         let result = await this.producerObj.send({
-            topic: this.topic,
+            topic: topic,
             messages: this._messages,
             acks: this.ack,
         })

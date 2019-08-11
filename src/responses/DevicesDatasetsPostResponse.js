@@ -37,19 +37,19 @@ function executePost(params) {
 
   let producer;
   let datasetName;
-  let datasetItems;
+  let datasets;
 
-  datasetName = params.dataset.value;
-  datasetItems = params.datasets.value;
+  datasetName = params.dataset.value;                                          //  enums.datasets              - e.g. pms  
+  datasets = params.datasets.value;
   
-  producer = new Producer.DeviceDatasetProducer(datasetName, datasetItems);
-
-  producer.extractData();
-  producer.sendToTopic();
+  producer = new Producer.DeviceDatasetProducer();
+  
+  producer.extractData(datasetName, datasets);
+  producer.sendToTopic(datasetName);                                           // datasetName is the topic
 
   // prepare the response
   let responseDetail = new GenericMessageDetail();
-  responseDetail.add('New datasets created', `dataset:${datasetName} | ${datasetItems.length}`);
+  responseDetail.add('New datasets created', `dataset:${datasetName} | ${datasets.length}`);
 
   let statusCode = utils.keynameFromValue(enums.responseStatus, RESPONSE_STATUS);
   let response = new GenericMessage(statusCode, RESPONSE_STATUS, responseDetail.getElements());

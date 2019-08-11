@@ -11,5 +11,5 @@ WORKDIR /app
 RUN npm install
 RUN npm install -g nodemon
 
-ENV PORT=8080
+ENV PORT=8082
 ENTRYPOINT ['nodemon', 'start']
