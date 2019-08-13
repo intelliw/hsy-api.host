@@ -21,7 +21,7 @@ router.route([
     '/:energy?',
     '/:energy?/period/:period?',
     '/:energy?/period/:period?/:epoch?/:duration?'])
-
+    
     .get((req, res, next) => {
 
         // request ---------------------

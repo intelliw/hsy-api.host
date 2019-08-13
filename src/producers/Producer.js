@@ -77,7 +77,7 @@ class Producer {
                   time_utc: eventTimeUtc,
                   time_local: eventTimeLocal,
                   id: key,
-               ...data };
+               ...data };                                                       // append the data last
         
         // console.log(JSON.stringify(data)); 
 

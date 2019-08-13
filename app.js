@@ -49,7 +49,7 @@ app.use((err, req, res, next) => {
 // listen for requests---------------------------
 if (module === require.main) {
 
-    const PORT = process.env.PORT || 8082;
+    const PORT = process.env.PORT || 8080;
 
     app.listen(PORT, () => {
         console.log(`App listening (inside container) on port ${PORT}`);

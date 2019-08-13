@@ -171,7 +171,7 @@ module.exports.kafkajs = {
 // system constants for the environment
 module.exports.environments = {
     local: {                                                        
-        api: { host: 'localhost:8082' },
+        api: { host: 'localhost:8080' },
         kafka: { 
             brokers: ['localhost:9092']                                 // localhost   | 192.168.1.106        
         }                                     
@@ -191,9 +191,9 @@ module.exports.environments = {
 }
 
 // the active environment - change this to one of the environments in consts.environments -0 eg. change to 'devcloud' before release
-// module.exports.env = 'local';                                           // local or devcloud or prodcloud
-module.exports.env = 'devcloud';                                        // local or devcloud or prodcloud
-// module.exports.env = 'prodcloud';                                       // local or devcloud or prodcloud
+module.exports.env = 'local';                                            // local or devcloud or prodcloud
+// module.exports.env = 'devcloud';                                            // local or devcloud or prodcloud
+// module.exports.env = 'prodcloud';                                        // local or devcloud or prodcloud
 
 // system constants
 module.exports.DATE_FORMAT = 'YYYYMMDDTHHmmss.SSS±HHmm';

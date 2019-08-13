@@ -9,5 +9,5 @@ ADD . /app
 WORKDIR /app
 
 RUN npm install
-ENV PORT=8082
+ENV PORT=8080
 ENTRYPOINT ["npm", "start"]

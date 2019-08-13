@@ -533,6 +533,16 @@ function datetimeFormatISO(instant, periodEnum) {
 
 }
 
+
+// formats the instant in general datetime format
+function datetimeFormatGeneral(instant, periodEnum) {
+
+    const format = consts.periodDatetimeGeneral[periodEnum];                            // get the format string without copmpression
+    return moment.utc(instant).format(format);                                          // return formatted 
+
+}
+
+
 // returns a formatted label for the period and instant  (e.g. "Week 13 2019")
 function datetimePromptStr(instant, periodEnum) {
     let label;
