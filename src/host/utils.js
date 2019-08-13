@@ -150,10 +150,10 @@ module.exports.datetimeToUTC = (instant) => {
 
     // if it is a UTC time with a trailing z 
     if (zuluStart > 0 > 0) {
-        utcTime = instant.slice(0, zuluStart) + consts.UTC_ZERO_OFFSET;                        // // return instant as is, without the zulu but formatted with +0000 offset;                                                            
+        utcTime = instant.slice(0, zuluStart) + consts.UTC_ZERO_OFFSET;                                 // // return instant as is, without the zulu but formatted with +0000 offset;                                                            
 
         // if not a local time and not UTC - return an 'invalid' response 
-    } else if (offsetSubstringStart <= 0) {                                                            // it does not contain a trailing +/- offset
+    } else if (offsetSubstringStart <= 0) {                                                             // it does not contain a trailing +/- offset
 
         utcTime = INVALID_LOCAL_TIME;                                                                   // return empty string to signify an invalid instant
 
