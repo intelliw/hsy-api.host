@@ -90,7 +90,7 @@ module.exports.childDescription = {
 
 // returns a format string for UTC compresed datetime for use in links and identifiers
 module.exports.periodDatetimeISO = {
-    instant: 'YYYYMMDDTHHmmss.SSS',
+    instant: 'YYYYMMDDTHHmmss.SSSS',
     second: 'YYYYMMDDTHHmmss',
     minute: 'YYYYMMDDTHHmm',
     hour: 'YYYYMMDDTHHmm',
@@ -105,7 +105,7 @@ module.exports.periodDatetimeISO = {
 
 // returns a format string for uncompressed date time for use in display properties  
 module.exports.periodDatetimeGeneral = {
-    instant: 'DD/MM/YY HHmmss.SSS',
+    instant: 'DD/MM/YY HHmmss.SSSS',
     second: 'DD/MM/YY HHmm:ss',
     minute: 'DD/MM/YY HH:mm',
     hour: 'DD/MM/YY HH:mm',
@@ -176,13 +176,13 @@ module.exports.environments = {
             brokers: ['localhost:9092']                                 // localhost   | 192.168.1.106        
         }                                     
     },
-    devcloud: {                                                         // single instance kafka
+    devcloud: {                                                         // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: 'api.endpoints.sundaya.cloud.goog' },
         kafka: {
-            brokers: ['kafka-1-vm:9092']                                // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
+            brokers: ['kafka-c-1-m:9092']                                // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
         }                                    
     },
-    prodcloud: {                                                        // kafka cluster
+    prodcloud: {                                                        // Kafka HA - 3 masters, N workers
         api: { host: 'api.endpoints.sundaya.cloud.goog' },
         kafka: {
             brokers: ['kafka-c-1-m-0:9092', 'kafka-c-1-m-1:9092', 'kafka-c-1-m-2:9092']                                // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
@@ -198,4 +198,5 @@ module.exports.env = 'local';                                           // local
 // system constants
 module.exports.DATE_FORMAT = 'YYYYMMDDTHHmmss.SSS±HHmm';
 module.exports.NONE = global.undefined;
+module.exports.UTC_ZERO_OFFSET = '+0000';
 

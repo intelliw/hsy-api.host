@@ -35,7 +35,7 @@ class DeviceDatasetProducer extends Producer {
     e.g. 
     { "pms": { "id": "PMS-01-001" }, 
       "data": [
-        { "time": "20190209T150006.032-0700",
+        { "time": "20190209T150006.032+0700",
             "pack": { "id": "0241", "dock": 1, "volts": "55.1", "amps": "-1.601", "temp": ["35.0", "33.0", "34.0"] },
             "cell": { "open": [1, 6],
             "volts": ["3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.91"] },
@@ -44,6 +44,7 @@ class DeviceDatasetProducer extends Producer {
     */
     extractData(datasetName, datasets) {
         let key;
+        let eventTime;
         let status = false;
         
         // extract and add messages to super 
@@ -53,8 +54,14 @@ class DeviceDatasetProducer extends Producer {
             
             // add each data item in the dataset as an individual message
             dataset.data.forEach(dataItem => {                          // e.g. "data": [
-               dataItem = { id: key, ...dataItem };                     // prepend the id field to each dataitem
-               super.addMessage(key, dataItem);                         // addMessage will append a processingTime to the dataitem 
+               
+               // extract eventTime and delete the attribute 
+               eventTime = dataItem.time_local;                         // "data": [ { "time_local": "20190209T150017.020+0700",
+               delete dataItem.time_local;                              // addMessage will prepend 3 standard time attributes to the dataitem
+
+               // add the message the producer buffer
+               super.addMessage(key, dataItem, eventTime);              
+
             });
         });
 

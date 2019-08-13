@@ -3,8 +3,10 @@
  * PACKAGE: ./host/index.js
  * schemas and constants
  */
-
 const enums = require('./enums');
+const consts = require('../host/constants');
+
+const moment = require('moment');
 
 // capitalise first letter of first word or all words
 module.exports.capitalise = (str, allWords) => {
@@ -73,6 +75,96 @@ module.exports.createNumberSequence = (startNum, howMany) => {
         seqNum.push(i);
     }
     return seqNum;
+}
+
+/* converts an instant to Local time and returns a compressed ISO datetime format including a trailing +/- UTC offset.
+   the function may be called with one of the two following options for instant and offsetHours:
+   1) instant in local time - with included +/- UTC offset (e.g. 20190209T1630+0700). The offsetHours paramter is not required and will be ignored.
+    - the instant is simply returned as the local time, including the trailing +/- offset 
+   2) instant in UTC time - with the required offsetHours parameter - (e.g. 20190209T1630Z and '7.5')  
+    - offsetHours must be an float value which provides fractional hours offset from UTC (e.g. 7.5 for +0730, and -7.5 for -0730). 
+    - the local time is calculated by adding the (positive or negative) offset in hours, to the UTC instant
+    an empty value is returned if:
+    - the instant does not contain a trailing +/- offset, and the instant is not in UTC format (no trailing 'Z') 
+    - the instant is in UTC format but the required offsetHourse parameter is missing    ..as there is no way to determine local time
+*/
+module.exports.datetimeToLocal = (instant, offsetHours) => {
+
+    let offsetSubstringStart = -1;
+    let localTime = '';
+
+    const INVALID_INSTANT = '';
+
+    const format = consts.periodDatetimeISO.instant;                                    // get the comnpressed format string 
+
+    // get start of trailing +/- offset substring in the instant                                               
+    offsetSubstringStart = instant.indexOf('-');                                        // the instant must have a +/- offset
+    if (offsetSubstringStart <= 0) offsetSubstringStart = instant.indexOf('+');
+
+    // if it is a local time with a trailing +/- offset 
+    if (offsetSubstringStart > 0) {
+        localTime = instant;                                                            // return instant as is
+
+        // if not a local time the offsetHours must be a valid - if not return an 'invalid' response 
+    } else if (offsetHours === "" || offsetHours == consts.NONE || isNaN(offsetHours)) {     // if offsetHours is not valid
+        localTime = INVALID_INSTANT;                                                    // return empty string to signify an invalid instant
+
+        // if not already a local time and the offset is valid, then convert (UTC) instant to a localtime
+    } else {
+
+        offsetHours = parseFloat(offsetHours);                                          // get float value of offset
+        localTime = moment.utc(instant).add(offsetHours, 'hours').format(format);       // add-subtract the offset
+
+    }
+
+    return localTime;                                                                   // return formatted 
+
+}
+
+/*  converts an instant to UTC time and returns a compressed ISO datetime format including a trailing +0000 to signify zero offset as it is UTC.
+    the function may be called with one of the two following options for instant :
+   1) instant in local time - with included +/- UTC offset (e.g.20190209T150017.020+0700). 
+    - the UTC time is calculated by using a moment.js function to convert the local time instant (with positive or negative) offset in hours, to the UTC time 
+   2) instant in UTC time (e.g. 20190209T1630Z or 20190209T1630+0000)  
+    - the instant is simply returned as the UTC time, including a trailing +0000 offset
+   an empty value is returned if: 
+    - the instant is not a local time as it does not contain a trailing +/- offset, and the instant is not in UTC format (no trailing 'Z' or +0000 offset) 
+*/
+module.exports.datetimeToUTC = (instant) => {
+
+    let offsetSubstringStart = -1;
+    let zuluStart = -1;
+    let utcTime = '';
+
+    const INVALID_INSTANT = '';
+
+    const format = consts.periodDatetimeISO.instant + consts.UTC_ZERO_OFFSET;                           // UTC is comnpressed format string and trailing Z
+
+    // get start of trailing +/- offset substring in the instant                                               
+    offsetSubstringStart = instant.indexOf('-');                                                        // the instant must have a +/- offset
+    if (offsetSubstringStart <= 0) offsetSubstringStart = instant.indexOf('+');
+
+    // check if there is Z or '+0000' to denote UTC 
+    if (offsetSubstringStart <= 0) zuluStart = instant.toUpperCase().indexOf('Z');                      // check if Z has been specified 
+
+
+    // if it is a UTC time with a trailing z 
+    if (zuluStart > 0 > 0) {
+        utcTime = instant.slice(0, zuluStart) + consts.UTC_ZERO_OFFSET;                        // // return instant as is, without the zulu but formatted with +0000 offset;                                                            
+
+        // if not a local time and not UTC - return an 'invalid' response 
+    } else if (offsetSubstringStart <= 0) {                                                            // it does not contain a trailing +/- offset
+
+        utcTime = INVALID_LOCAL_TIME;                                                                   // return empty string to signify an invalid instant
+
+        // if instant in local time - with included +/- UTC offset (e.g. 20190209T150017.020+0700)
+    } else {
+
+        utcTime = moment.utc(instant).format(format);                                                   // UTC:20190209T080017.0200+0000
+    }
+
+    return utcTime;
+
 }
 
 // pads leading zeros if the number is less than the width
@@ -207,7 +299,6 @@ module.exports.selectFirstMatch = (findInCVL, find, defaultIfNotFound) => {
     }
     return selectedItem;
 }
-
 
 // returns a min and max value for the average energy consumed in this period
 module.exports.MOCK_periodMinMax = (period, dailyHigh, dailyLow) => {

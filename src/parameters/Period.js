@@ -40,9 +40,9 @@ class Period extends Param {
      "description": "Mon Tue Wed Thu Fri Sat Sun"         ..if period retrieved through get Child() otherwise undefined
     
      constructor arguments  
-    * @param {*} reqPeriod    // enums.period
-    * @param {*} epoch     // date-time 
-    * @param {*} duration  // positive integer
+    * @param {*} reqPeriod      // enums.period             e.g. 'week'
+    * @param {*} epoch          // date-time 
+    * @param {*} duration       // positive integer
     */
     constructor(reqPeriod, epoch, duration = consts.params.defaults.duration) {
 
@@ -136,7 +136,7 @@ class Period extends Param {
     getParent() {
 
         let parent = this.parent;
-        let self = this.value;  
+        let self = this.value;
 
         // select the parent period enum based on a descendent-parent lookop
         let parentEnum = consts.descendentParent[`${parent ? parent : ''}${self}`];
@@ -158,7 +158,7 @@ class Period extends Param {
         const periodEnum = this.value;
 
         //create the clone and sets its relationship
-        let clone = new Period(periodEnum, epoch, consts.params.defaults.duration);     
+        let clone = new Period(periodEnum, epoch, consts.params.defaults.duration);
 
         clone.context = this.context
         clone.epochInstant = this.epochInstant
@@ -207,7 +207,7 @@ class Period extends Param {
     getChild(withDescription) {
 
 
-        let child; 
+        let child;
         let duration;
 
         // get ancestry
@@ -217,16 +217,16 @@ class Period extends Param {
         // lookup child period
         let childMap = consts.ancestorChild[`${grandparent ? grandparent : ''}${parent}`];
         let childEnum = childMap.c;
-        
+
         if (childEnum) {                                                                    // e.g. instant has no child    
-            
+
             // duration - if monthday get the nubmer of days for the month
             if (parent == enums.period.month && childEnum == enums.period.day) {
-                duration = monthdayDuration(this.epochInstant)     
+                duration = monthdayDuration(this.epochInstant)
             } else {
                 duration = childMap.d;
             }
-            
+
             // if grandchild calculate total duration including parent                      // e.g 28 if perent (week.day) is 7 and child (day.timeofday) is 4 
             if (grandparent) {
                 duration = Number(this.duration) * Number(duration);
@@ -241,7 +241,7 @@ class Period extends Param {
             child.description = consts.NONE;                                                // default is no description use add Description() to add one later 
 
         }
-        
+
         return child;
     }
 
@@ -361,7 +361,7 @@ function periodEnd(periodEnum, epoch, duration, format) {
 
 // returns the number (as a string) of child periods in the period 
 function monthdayDuration(epochInstant) {
-        
+
     let duration = moment.utc(epochInstant).daysInMonth().toString();               // get the days for this month  
 
     return duration;
@@ -525,22 +525,13 @@ function selectTimeOfDayEnum(epoch) {
     return todEnum;
 }
 
-// formats the instant in compressed ISO datetime format
+// formats the instant in compressed ISO datetime format. Period enum determines the format
 function datetimeFormatISO(instant, periodEnum) {
 
     const format = consts.periodDatetimeISO[periodEnum];                                // get the comnpressed format string 
     return moment.utc(instant).format(format);                                          // return formatted 
 
 }
-
-// formats the instant in general datetime format
-function datetimeFormatGeneral(instant, periodEnum) {
-
-    const format = consts.periodDatetimeGeneral[periodEnum];                            // get the format string without copmpression
-    return moment.utc(instant).format(format);                                          // return formatted 
-
-}
-
 
 // returns a formatted label for the period and instant  (e.g. "Week 13 2019")
 function datetimePromptStr(instant, periodEnum) {

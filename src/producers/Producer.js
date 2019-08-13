@@ -8,6 +8,8 @@ const { Kafka } = require('kafkajs');
 
 const enums = require('../host/enums');
 const consts = require('../host/constants');
+const utils = require('../host/utils');
+
 const moment = require('moment');
 
 const KAFKA_DEFAULT_ACK = enums.messageBroker.ack.leader;
@@ -56,15 +58,28 @@ class Producer {
     * dataItem contains the message value 
     * headers are a json object (note: kafkajs produces a byte array for headers unlike messages which are a string buffer
     *   e.g. { 'correlation-id': '2bfb68bb-893a-423b-a7fa-7b568cad5b67', system-id': 'my-system' }  
-    * this function prepends the processing time to the data object
+    * this function prepends the processing time, utc time, local time, and the id - to the data object
     */
-    addMessage(key, data, headers) {
-
-        // prepend a processing time to the dataitem
-        let processingTime = moment.utc().format(consts.periodDatetimeISO.instant);
-        data = { time_processingutc: processingTime, ...data };                     // prepend 'time_processingutc' to the dataitem
+    addMessage(key, data, eventTime, headers) {
         
-        console.log(JSON.stringify(data)); 
+        // prepare time values
+        const format = consts.periodDatetimeISO.instant + consts.UTC_ZERO_OFFSET;                               // UTC is comnpressed format string and trailing Z
+
+        let processingTime = moment.utc().format(format);
+        let eventTimeUtc = utils.datetimeToUTC(eventTime);
+        let eventTimeLocal = utils.datetimeToLocal(eventTime);
+        
+        // console.log(`${eventTime} | UTC:${eventTimeUtc} | Local:${eventTimeLocal}`);
+
+        // prepend processing time, utc time, local time, and id to the dataitem to the data item
+        data = { 
+                  time_processing_utc: processingTime,                      
+                  time_utc: eventTimeUtc,
+                  time_local: eventTimeLocal,
+                  id: key,
+               ...data };
+        
+        // console.log(JSON.stringify(data)); 
 
         // create the message
         let message = {
