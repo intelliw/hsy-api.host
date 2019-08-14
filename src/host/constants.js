@@ -173,26 +173,33 @@ module.exports.environments = {
     local: {                                                        
         api: { host: 'localhost:8080' },
         kafka: { 
-            brokers: ['localhost:9092']                                 // localhost   | 192.168.1.106        
+            brokers: ['localhost:9092']                                     // localhost   | 192.168.1.106        
         }                                     
     },
-    devcloud: {                                                         // single node kafka, or Kafka Std - 1 master, N workers
+    devcloudtest: {                                                             // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: 'api.endpoints.sundaya.cloud.goog' },
         kafka: {
-            brokers: ['kafka-c-1-m:9092']                                // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
+            brokers: ['kafka-1-vm:9092']                                   // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
         }                                    
     },
-    prodcloud: {                                                        // Kafka HA - 3 masters, N workers
+    devcloud: {                                                             // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: 'api.endpoints.sundaya.cloud.goog' },
         kafka: {
-            brokers: ['kafka-c-1-m-0:9092', 'kafka-c-1-m-1:9092', 'kafka-c-1-m-2:9092']                                // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
+            brokers: ['kafka-1-vm:9092']                                   // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
+        }                                    
+    },
+    prodcloud: {                                                            // Kafka HA - 3 masters, N workers
+        api: { host: 'api.endpoints.sundaya.cloud.goog' },
+        kafka: {
+            brokers: ['kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']           // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
         }                                    
     }
 }
 
 // the active environment - change this to one of the environments in consts.environments -0 eg. change to 'devcloud' before release
 // module.exports.env = 'local';                                            // local or devcloud or prodcloud
-module.exports.env = 'devcloud';                                            // local or devcloud or prodcloud
+module.exports.env = 'devcloudtest';                                            // local or devcloud or prodcloud
+// module.exports.env = 'devcloud';                                            // local or devcloud or prodcloud
 // module.exports.env = 'prodcloud';                                        // local or devcloud or prodcloud
 
 // system constants
