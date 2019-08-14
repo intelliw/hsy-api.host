@@ -15,7 +15,7 @@ const GenericMessageDetail = require('../definitions/GenericMessageDetail');
 
 // constants
 const VIEW_PREFIX = 'message_';     // prefix for a generic response  message
-const RESPONSE_STATUS = enums.responseStatus[201];
+const RESPONSE_STATUS = enums.responseStatus[200];
 
 class DevicesDatasetsPostResponse extends Response {
 
@@ -49,7 +49,7 @@ function executePost(params) {
 
   // prepare the response
   let responseDetail = new GenericMessageDetail();
-  responseDetail.add('New datasets created', `dataset:${datasetName} | ${datasets.length}`);
+  responseDetail.add('Data queued for processing.', `dataset:${datasetName} | ${datasets.length}`);
 
   let statusCode = utils.keynameFromValue(enums.responseStatus, RESPONSE_STATUS);
   let response = new GenericMessage(statusCode, RESPONSE_STATUS, responseDetail.getElements());
