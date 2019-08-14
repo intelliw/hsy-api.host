@@ -107,7 +107,7 @@ class Producer {
         })
             .catch(e => console.error(`[${this.clientId}] ${e.message}`, e));
 
-        console.log(`${this._messages.length} messages [offset: ${result[0].baseOffset}-${Number(result[0].baseOffset) + (this._messages.length - 1)}]`)
+        console.log(`${this._messages.length} messages [${topic}, offset: ${result[0].baseOffset}-${Number(result[0].baseOffset) + (this._messages.length - 1)}]`)
 
         await this.producerObj.disconnect();
 
