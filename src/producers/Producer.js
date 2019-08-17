@@ -63,9 +63,9 @@ class Producer {
     addMessage(key, data, eventTime, headers) {
         
         // prepare time values
-        const format = consts.periodDatetimeISO.instant + consts.UTC_ZERO_OFFSET;                               // UTC is comnpressed format string and trailing Z
+        const formatUtc = consts.dateTime.bigqueryTimestampFormat + consts.dateTime.utcZeroOffset;      // UTC 
 
-        let processingTime = moment.utc().format(format);
+        let processingTime = moment.utc().format(formatUtc);
         let eventTimeUtc = utils.datetimeToUTC(eventTime);
         let eventTimeLocal = utils.datetimeToLocal(eventTime);
         

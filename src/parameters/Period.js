@@ -12,7 +12,7 @@ const consts = require('../host/constants');
 const utils = require('../host/utils');
 
 const Param = require('./Param');
-const MILLISECOND_FORMAT = consts.periodDatetimeISO.instant;                                    // the default format, YYYYMMDDTHHmmss.SSS
+const MILLISECOND_FORMAT = consts.period.datetimeISO.instant;                                    // the default format, YYYYMMDDTHHmmss.SSS
 const THIS_PARAM_NAME = 'period';
 
 /**
@@ -78,7 +78,7 @@ class Period extends Param {
         this._links = consts.NONE;                                                              // undefined until requested through links()
     }
 
-    // the child period's description wil be added (if one has been configured for it in consts.childDescription)
+    // the child period's description wil be added (if one has been configured for it in consts.period.childDescription)
     addDescription() {
 
         // get the description label e.g.  'Mon Tue Wed Thu Fri Sat Sun'            
@@ -96,7 +96,7 @@ class Period extends Param {
 
     // returns true if this is a time-based period (hour minute etc) false if it is a date period (timeofday day month year etc)
     isTimePeriod() {
-        const MAX_DATE_PERIOD_EPOCH_LENGTH = consts.periodDatetimeISO.day.length;
+        const MAX_DATE_PERIOD_EPOCH_LENGTH = consts.period.datetimeISO.day.length;
         const isTime = this.epoch.length > MAX_DATE_PERIOD_EPOCH_LENGTH;
 
         return isTime;                  // timeofday is also considered a time period
@@ -139,7 +139,7 @@ class Period extends Param {
         let self = this.value;
 
         // select the parent period enum based on a descendent-parent lookop
-        let parentEnum = consts.descendentParent[`${parent ? parent : ''}${self}`];
+        let parentEnum = consts.period.descendentParent[`${parent ? parent : ''}${self}`];
 
         if (parentEnum) {                                                                       // fiveyear has no p[arent]    
             //create the period and sets its relationship
@@ -215,7 +215,7 @@ class Period extends Param {
         let grandparent = this.parent;                                                      // grandparent is presents only if a child creates a child
 
         // lookup child period
-        let childMap = consts.ancestorChild[`${grandparent ? grandparent : ''}${parent}`];
+        let childMap = consts.period.ancestorChild[`${grandparent ? grandparent : ''}${parent}`];
         let childEnum = childMap.c;
 
         if (childEnum) {                                                                    // e.g. instant has no child    
@@ -381,7 +381,7 @@ function parentChildDescription(periodObj) {
 
     if (parent) {
 
-        descr = consts.childDescription[`${parent}${self}`]
+        descr = consts.period.childDescription[`${parent}${self}`]
 
         switch (`${parent}${self}`) {
 
@@ -528,7 +528,7 @@ function selectTimeOfDayEnum(epoch) {
 // formats the instant in compressed ISO datetime format. Period enum determines the format
 function datetimeFormatISO(instant, periodEnum) {
 
-    const format = consts.periodDatetimeISO[periodEnum];                                // get the comnpressed format string 
+    const format = consts.period.datetimeISO[periodEnum];                                // get the comnpressed format string 
     return moment.utc(instant).format(format);                                          // return formatted 
 
 }
@@ -537,7 +537,7 @@ function datetimeFormatISO(instant, periodEnum) {
 // formats the instant in general datetime format
 function datetimeFormatGeneral(instant, periodEnum) {
 
-    const format = consts.periodDatetimeGeneral[periodEnum];                            // get the format string without copmpression
+    const format = consts.period.datetimeGeneral[periodEnum];                            // get the format string without copmpression
     return moment.utc(instant).format(format);                                          // return formatted 
 
 }
@@ -583,7 +583,7 @@ function datetimePromptStr(instant, periodEnum) {
             const FIVE_YEARS_IN_TOTAL = 4;
 
             // get the start of the five year period - as moment.js does not have a fiveyear concept 
-            let normalisedInstant = periodEpoch(enums.period.fiveyear, instant, consts.periodDatetimeISO.instant);
+            let normalisedInstant = periodEpoch(enums.period.fiveyear, instant, consts.period.datetimeISO.instant);
             year = moment.utc(normalisedInstant).format('YYYY');
 
             label = `5 Years ${year}-${moment.utc(normalisedInstant).add(FIVE_YEARS_IN_TOTAL, 'years').format('YYYY')}`;

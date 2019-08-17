@@ -42,7 +42,7 @@ class EnergyGet extends Request {
         params.productCatalogItems = new Param('productCatalogItems', req.body.productCatalogItems, consts.NONE, consts.NONE, OPTIONAL);
         
         // cap the number of durations for this period
-        let maxDurationsAllowed = Number(consts.periodMaxDurationsAllowed[params.period.value]);  
+        let maxDurationsAllowed = Number(consts.period.maxDurationsAllowed[params.period.value]);  
         params.period.duration = (params.period.duration > maxDurationsAllowed ? maxDurationsAllowed : params.period.duration);
 
         // super - validate params, auth, accept header

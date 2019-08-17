@@ -95,7 +95,7 @@ module.exports.datetimeToLocal = (instant, offsetHours) => {
 
     const INVALID_INSTANT = '';
 
-    const format = consts.periodDatetimeISO.instant;                                    // get the comnpressed format string 
+    const format = consts.period.datetimeISO.instant;                                    // get the comnpressed format string 
 
     // get start of trailing +/- offset substring in the instant                                               
     offsetSubstringStart = instant.indexOf('-');                                        // the instant must have a +/- offset
@@ -138,7 +138,7 @@ module.exports.datetimeToUTC = (instant) => {
 
     const INVALID_INSTANT = '';
 
-    const format = consts.periodDatetimeISO.instant + consts.UTC_ZERO_OFFSET;                           // UTC is comnpressed format string and trailing Z
+    const format = consts.period.datetimeISO.instant + consts.UTC_ZERO_OFFSET;                           // UTC is comnpressed format string and trailing Z
 
     // get start of trailing +/- offset substring in the instant                                               
     offsetSubstringStart = instant.indexOf('-');                                                        // the instant must have a +/- offset
