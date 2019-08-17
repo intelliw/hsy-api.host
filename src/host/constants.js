@@ -141,9 +141,7 @@ module.exports.period = {
 
 // constants for dates and timestamps
 module.exports.dateTime = {
-    bigqueryTimestampFormat: 'YYYY-MM-DDTHH:mm:ss.SSSS',                    // plus offset ±HHmm
-    defaultApiTimestampFormat: 'YYYYMMDDTHHmmss.SSS',                        // plus offset ±HHmm
-    utcZeroOffset: '+0000'
+    bigqueryUtcTimestampFormat: 'YYYY-MM-DDTHH:mm:ss.SSSSZ',                 // "2019-02-09T16:00:17.0200+08:00"
 }
 
 // parameter constants 

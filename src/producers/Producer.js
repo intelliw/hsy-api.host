@@ -63,11 +63,10 @@ class Producer {
     addMessage(key, data, eventTime, headers) {
         
         // prepare time values
-        const formatUtc = consts.dateTime.bigqueryTimestampFormat + consts.dateTime.utcZeroOffset;      // UTC 
 
-        let processingTime = moment.utc().format(formatUtc);
-        let eventTimeUtc = utils.datetimeToUTC(eventTime);
-        let eventTimeLocal = utils.datetimeToLocal(eventTime);
+        let processingTime = moment.utc().format(consts.dateTime.bigqueryUtcTimestampFormat);
+        let eventTimeUtc = utils.datetimeToUTC(eventTime, consts.dateTime.bigqueryUtcTimestampFormat);
+        let eventTimeLocal = utils.datetimeToLocal(eventTime, consts.dateTime.bigqueryUtcTimestampFormat);
         
         // console.log(`${eventTime} | UTC:${eventTimeUtc} | Local:${eventTimeLocal}`);
 
