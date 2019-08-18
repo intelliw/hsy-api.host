@@ -77,12 +77,11 @@ module.exports.createNumberSequence = (startNum, howMany) => {
     return seqNum;
 }
 
-/* converts an instant to Local time and returns a datetime in the specified return format
+/* converts and formats a localtime or UTC instant, to Local time. Returns a datetime in the specified return format
    the function may be called with one of the following options:
-   1) instant in local time with +/- UTC offset included (e.g. 20190209T1630+0700). 
-    - the offsetHours parameter is not supported and will be ignored.
-    - the instant is simply formatted and returned as local time, including the trailing +/- offset 
-   2) instant in UTC time with the required offsetHours parameter - (e.g. 20190209T1630Z and '7.5')
+   1) instant is local time with +/- UTC offset (e.g. 20190209T1630+0700). 
+    - the instant is simply formatted and returned, as local time including the trailing +/- offset 
+   2) instant is in UTC time with the required offsetHours parameter - (e.g. 20190209T1630Z and '7.5')
     - offsetHours must be a float value which provides fractional hours offset from UTC (e.g. 7.5 for +0730, and -7.5 for -0730). 
     - the local time is calculated by adding the (positive or negative) offset in hours, to the UTC instant, with +00:00 as the offset 
     - if offsetHourse is missing or invalid ..assume zero offset hours (i.e the instant *is* 'local' UTC time)

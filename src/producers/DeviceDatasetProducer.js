@@ -46,21 +46,24 @@ class DeviceDatasetProducer extends Producer {
         let key;
         let eventTime;
         let status = false;
-        
+
         // extract and add messages to super 
         datasets.forEach(dataset => {
 
             key = dataset[datasetName].id;                              // e.g. id from.. "pms": { "id": "PMS-01-001" }, "data": [ .. ]
-            
+
             // add each data item in the dataset as an individual message
             dataset.data.forEach(dataItem => {                          // e.g. "data": [
-               
-               // extract eventTime and delete the attribute 
-               eventTime = dataItem.time_local;                         // "data": [ { "time_local": "20190209T150017.020+0700",
-               delete dataItem.time_local;                              // addMessage will prepend 3 standard time attributes to the dataitem
 
-               // add the message the producer buffer
-               super.addMessage(key, dataItem, eventTime);              
+                // add 'watts' data elements into the dataset
+                dataItem = addWatts(datasetName, dataItem);
+
+                // extract eventTime and delete the attribute 
+                eventTime = dataItem.time_local;                         // "data": [ { "time_local": "20190209T150017.020+0700",
+                delete dataItem.time_local;                              // addMessage will prepend 3 standard time attributes to the dataitem
+
+                // add the message to the producer buffer
+                super.addMessage(key, dataItem, eventTime);
 
             });
         });
@@ -70,6 +73,22 @@ class DeviceDatasetProducer extends Producer {
         return status;
     }
 
+}
+
+// calculates and adds data elements for 'watts' into the dataitem, and returns it  
+function addWatts(datasetName, dataItem) {
+
+    const SQ_ROOT_OF_3 = 1.732;
+
+    switch (datasetName) {
+        case enums.datasets.pms:
+            break;
+        case enums.datasets.mppt:
+            break;
+        case enums.datasets.inverter:
+            break;
+    }
+    return dataItem;
 }
 
 module.exports = DeviceDatasetProducer;
