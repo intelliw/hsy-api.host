@@ -14,10 +14,10 @@ module.exports.capitalise = (str, allWords) => {
     const SPACE_DELIMITER = ' ';
     let outStr = '';
 
-    allWords = allWords || false;           // if true all words are capitalised
+    allWords = allWords || false;                                   // if true all words are capitalised
 
     if (allWords) {
-        let words = str.split(SPACE_DELIMITER);     // get the words
+        let words = str.split(SPACE_DELIMITER);                     // get the words
 
         words.forEach(word => {
             outStr += word.charAt(0).toUpperCase() + word.slice(1) + SPACE_DELIMITER;

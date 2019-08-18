@@ -56,7 +56,7 @@ class DeviceDatasetProducer extends Producer {
             dataset.data.forEach(dataItem => {                          // e.g. "data": [
 
                 // add 'watts' data elements into the dataset
-                dataItem = addWatts(datasetName, dataItem);
+                dataItem = addAttributes(datasetName, dataItem);
 
                 // extract eventTime and delete the attribute 
                 eventTime = dataItem.time_local;                         // "data": [ { "time_local": "20190209T150017.020+0700",
@@ -76,16 +76,68 @@ class DeviceDatasetProducer extends Producer {
 }
 
 // calculates and adds data elements for 'watts' into the dataitem, and returns it  
-function addWatts(datasetName, dataItem) {
+function addAttributes(datasetName, dataItem) {
+    
+    let attrArray = [];
+    let watts;
 
     const SQ_ROOT_OF_3 = 1.732;
+    const PRECISION = 3;
 
     switch (datasetName) {
+
+        // pms - just append pack.watts
         case enums.datasets.pms:
+            watts = (dataItem.pack.volts * dataItem.pack.amps).toFixed(PRECISION);
+            dataItem.pack.watts = parseFloat(watts);
+
             break;
+
+        // mppt - append array of pv.watts and load.watts
         case enums.datasets.mppt:
+            
+            // pv.watts
+            for (let i = 0; i < dataItem.pv.volts.length; i++) {
+                watts = (dataItem.pv.volts[i] * dataItem.pv.amps[i]).toFixed(PRECISION)
+                attrArray.push(parseFloat(watts)); 
+            };
+            dataItem.pv.watts = attrArray;
+
+            // load.watts
+            attrArray = [];
+            for (let i = 0; i < dataItem.load.volts.length; i++) {
+                watts = (dataItem.load.volts[i] * dataItem.load.amps[i]).toFixed(PRECISION);    
+                attrArray.push(parseFloat(watts));    
+            };
+            dataItem.load.watts = attrArray;
+
             break;
+
+        // inverter - append array of pv.watts, load.watts, and grid.watts
         case enums.datasets.inverter:
+            // pv.watts
+            for (let i = 0; i < dataItem.pv.volts.length; i++) {
+                watts = (dataItem.pv.volts[i] * dataItem.pv.amps[i]).toFixed(PRECISION);                   
+                attrArray.push(parseFloat(watts)); 
+            };
+            dataItem.pv.watts = attrArray;
+
+            // load.watts
+            attrArray = [];
+            for (let i = 0; i < dataItem.load.volts.length; i++) {
+                watts = (dataItem.load.volts[i] * dataItem.load.amps[i]).toFixed(PRECISION);    
+                attrArray.push(parseFloat(watts));
+            };
+            dataItem.load.watts = attrArray;
+
+            // grid.watts == V x I x pf x 1.732 
+            attrArray = [];
+            for (let i = 0; i < dataItem.grid.volts.length; i++) {
+                watts = (dataItem.grid.volts[i] * dataItem.grid.amps[i] * dataItem.grid.pf[i] * SQ_ROOT_OF_3).toFixed(PRECISION); 
+                attrArray.push(parseFloat(watts));    
+            };
+            dataItem.grid.watts = attrArray;
+
             break;
     }
     return dataItem;
