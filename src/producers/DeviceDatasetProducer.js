@@ -81,8 +81,8 @@ function addAttributes(datasetName, dataItem) {
     let attrArray = [];
     let watts;
 
-    const SQ_ROOT_OF_3 = 1.732;
     const PRECISION = 3;
+
 
     switch (datasetName) {
 
@@ -130,10 +130,12 @@ function addAttributes(datasetName, dataItem) {
             };
             dataItem.load.watts = attrArray;
 
-            // grid.watts == V x I x pf x 1.732 
+            // grid.watts == V x I x pf x √3  
             attrArray = [];
+            let sqRootOfThree = Math.sqrt(3);
+
             for (let i = 0; i < dataItem.grid.volts.length; i++) {
-                watts = (dataItem.grid.volts[i] * dataItem.grid.amps[i] * dataItem.grid.pf[i] * SQ_ROOT_OF_3).toFixed(PRECISION); 
+                watts = (dataItem.grid.volts[i] * dataItem.grid.amps[i] * dataItem.grid.pf[i] * sqRootOfThree).toFixed(PRECISION); 
                 attrArray.push(parseFloat(watts));    
             };
             dataItem.grid.watts = attrArray;
