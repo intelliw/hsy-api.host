@@ -141,7 +141,8 @@ module.exports.period = {
 
 // constants for dates and timestamps
 module.exports.dateTime = {
-    bigqueryUtcTimestampFormat: 'YYYY-MM-DDTHH:mm:ss.SSSSZ',                 // "2019-02-09T16:00:17.0200+08:00"
+    bigqueryUtcTimestampFormat: 'YYYY-MM-DD HH:mm:ss.SSSSZ',                 // "2019-02-09T16:00:17.0200+08:00"
+    bigqueryZonelessTimestampFormat: 'YYYY-MM-DD HH:mm:ss.SSSS',             // "2019-02-09T16:00:17.0200"          use this format to force bigquery to store local time without converting to utc          
 }
 
 // parameter constants 
@@ -208,10 +209,10 @@ module.exports.environments = {
 }
 
 // env sets the active environment - change this to one of the environments in consts.environments -0 eg. change to 'devcloud' before release
-module.exports.env = 'local';                                            // local or devcloud or prodcloud
-// module.exports.env = 'devcloudtest';                                            // local or devcloud or prodcloud
-// module.exports.env = 'devcloud';                                            // local or devcloud or prodcloud
-// module.exports.env = 'prodcloud';                                        // local or devcloud or prodcloud
+module.exports.env = 'local';                                               // local or devcloud or prodcloud
+// module.exports.env = 'devcloudtest';                                  
+// module.exports.env = 'devcloud';                                      
+// module.exports.env = 'prodcloud';                                     
 
 // system constants
 module.exports.NONE = global.undefined;

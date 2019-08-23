@@ -24,7 +24,7 @@ class DevicesDatasetsPostResponse extends Response {
   */
   constructor(params, acceptParam) {
 
-    let content = executePost(params);                                       // perform the post operation 
+    let content = executePost(params);                                        // perform the post operation 
 
 
     super(RESPONSE_STATUS, acceptParam, VIEW_PREFIX, content);
@@ -37,15 +37,17 @@ function executePost(params) {
 
   let producer;
   let datasetName;
+  let topicName;
   let datasets;
 
-  datasetName = params.dataset.value;                                          //  enums.datasets              - e.g. pms  
+  datasetName = params.dataset.value;                                           //  enums.datasets              - e.g. pms  
+  topicName = enums.messageBroker.monitoringTopics[datasetName];                //  lookup topic name based on datasetname
   datasets = params.datasets.value;
   
   producer = new Producer.DeviceDatasetProducer();
   
   producer.extractData(datasetName, datasets);
-  producer.sendToTopic(datasetName);                                           // datasetName is the topic
+  producer.sendToTopic(topicName);                                              // datasetName is the topic
 
   // prepare the response
   let responseDetail = new GenericMessageDetail();
