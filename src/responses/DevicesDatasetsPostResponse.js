@@ -41,7 +41,7 @@ function executePost(params) {
   let datasets;
 
   datasetName = params.dataset.value;                                           //  enums.datasets              - e.g. pms  
-  topicName = enums.messageBroker.monitoringTopics[datasetName];                //  lookup topic name based on datasetname
+  topicName = enums.messageBroker.topics.monitoring[datasetName];                //  lookup topic name based on datasetname
   datasets = params.datasets.value;
   
   producer = new Producer.DeviceDatasetProducer();

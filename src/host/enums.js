@@ -105,10 +105,12 @@ module.exports.messageBroker = {                    // kafka message broker. top
     producers: {                                    // producer client Ids
         deviceDatasets: 'device.datasets'
     },
-    monitoringTopics: {                             //  topic names for monitoring datasets, based on device dataset names
-        pms: 'pms_monitoring',     
-        mppt: 'mppt_monitoring',        
-        inverter: 'inverter_monitoring'
+    topics: {                                       //  topic names 
+        monitoring: {                               //  topics for monitoring datasets
+            pms: 'monitoring.pms',     
+            mppt: 'monitoring.mppt',        
+            inverter: 'monitoring.inverter'
+        }
     }
 }
 
