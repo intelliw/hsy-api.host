@@ -51,7 +51,7 @@ function executePost(params) {
 
   // prepare the response
   let responseDetail = new GenericMessageDetail();
-  responseDetail.add('Data queued for processing.', `dataset:${datasetName} | ${datasets.length}`);
+  responseDetail.add('Data queued for processing.', `datasets:${datasetName} | ${datasets.length}`);
 
   let statusCode = utils.keynameFromValue(enums.responseStatus, RESPONSE_STATUS);
   let response = new GenericMessage(statusCode, RESPONSE_STATUS, responseDetail.getElements());

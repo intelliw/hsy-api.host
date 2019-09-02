@@ -33,14 +33,13 @@ class DeviceDatasetProducer extends Producer {
     datasets    object array of dataset items. 
         each dataset item has an id and an array of data objects each with an event timestamp
     e.g. 
-    { "pms": { "id": "PMS-01-001" }, 
-      "data": [
-        { "time": "20190209T150006.032+0700",
-            "pack": { "id": "0241", "dock": 1, "volts": "55.1", "amps": "-1.601", "temp": ["35.0", "33.0", "34.0"] },
-            "cell": { "open": [1, 6],
-            "volts": ["3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.91"] },
-            "fet": { "open": [1, 2], "temp": ["34.1", "32.2", "33.5"] }
-        },
+            { "pms": { "id": "PMS-01-001" }, 
+            "data": [
+                { "time": "20190209T150006.032+0700",
+                  "pack": { "id": "0241", "dock": 1, "amps": "-1.601", "temp": ["35.0", "33.0", "34.0"] },
+                  "cell": { "open": [1, 6], "volts": ["3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.91"] },
+                  "fet": { "open": [1, 2], "temp": ["34.1", "32.2", "33.5"] }
+                },
     */
     extractData(datasetName, datasets) {
         let key;
@@ -55,10 +54,10 @@ class DeviceDatasetProducer extends Producer {
             // add each data item in the dataset as an individual message
             dataset.data.forEach(dataItem => {                          // e.g. "data": [
 
-                // add 'watts' data elements into the dataset
+                // add data elements into the dataset
                 dataItem = addAttributes(datasetName, dataItem);
 
-                // extract eventTime and delete the attribute 
+                // extract eventTime and delete the attribute - timestamps are added in the Producerr supertype addMessage() method 
                 eventTime = dataItem.time_local;                         // "data": [ { "time_local": "20190209T150017.020+0700",
                 delete dataItem.time_local;                              // addMessage will prepend 3 standard time attributes to the dataitem
 
@@ -75,11 +74,12 @@ class DeviceDatasetProducer extends Producer {
 
 }
 
-// calculates and adds data elements for 'watts' into the dataitem, and returns it  
+// adds calculated data elements into the dataitem e.g. 'pack.volts' and 'pack.watts'
 function addAttributes(datasetName, dataItem) {
     
     let attrArray = [];
     let watts;
+    let volts;
 
     const PRECISION = 3;
 
@@ -88,10 +88,29 @@ function addAttributes(datasetName, dataItem) {
 
         // pms - just append pack.watts
         case enums.datasets.pms:
-            watts = (dataItem.pack.volts * dataItem.pack.amps).toFixed(PRECISION);
-            dataItem.pack.watts = parseFloat(watts);
+            let p = dataItem.pack;
+
+            // pack.volts
+            volts = dataItem.pack.cell.volts.reduce((sum, x) => sum + x).toFixed(PRECISION);            // sum all the cell volts to get pack volts
+            
+            // pack.watts
+            watts = (volts * dataItem.pack.amps).toFixed(PRECISION);
+
+            //  reconstruct dataitem with new attributes 
+            dataItem.pack = {
+                id: p.id,
+                dock: p.dock,
+                amps: p.amps,
+                temp: p.temp,
+                volts: parseFloat(volts),
+                watts: parseFloat(watts),
+                cell: p.cell,
+                fet: p.fet
+            }
 
             break;
+
+
 
         // mppt - append array of pv.watts and load.watts
         case enums.datasets.mppt:
@@ -112,6 +131,8 @@ function addAttributes(datasetName, dataItem) {
             dataItem.load.watts = attrArray;
 
             break;
+
+
 
         // inverter - append array of pv.watts, load.watts, and grid.watts
         case enums.datasets.inverter:
