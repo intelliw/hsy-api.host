@@ -91,7 +91,7 @@ function addAttributes(datasetName, dataItem) {
             let p = dataItem.pack;
             let vcl = Math.min(...p.cell.volts);
             let vch = Math.max(...p.cell.volts);
-            let dvcl = p.cell.volts.map(element => (parseFloat(((element - vcl) * TO_MILLIVOLTS).toFixed(0))));
+            let dvcl = p.cell.volts.map(element => (parseFloat(((element - vcl) * TO_MILLIVOLTS).toFixed())));
             
             // pack.volts
             volts = dataItem.pack.cell.volts.reduce((sum, x) => sum + x).toFixed(PRECISION);            // sum all the cell volts to get pack volts
