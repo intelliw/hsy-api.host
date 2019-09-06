@@ -82,14 +82,17 @@ function addAttributes(datasetName, dataItem) {
     let volts;
 
     const PRECISION = 3;
-
+    const TO_MILLIVOLTS = 1000
 
     switch (datasetName) {
 
         // pms - just append pack.watts
         case enums.datasets.pms:
             let p = dataItem.pack;
-
+            let vcl = Math.min(...p.cell.volts);
+            let vch = Math.max(...p.cell.volts);
+            let dvcl = p.cell.volts.map(element => (parseFloat(((element - vcl) * TO_MILLIVOLTS).toFixed(0))));
+            
             // pack.volts
             volts = dataItem.pack.cell.volts.reduce((sum, x) => sum + x).toFixed(PRECISION);            // sum all the cell volts to get pack volts
             
@@ -100,11 +103,11 @@ function addAttributes(datasetName, dataItem) {
             dataItem.pack = {
                 id: p.id,
                 dock: p.dock,
-                amps: p.amps,
-                temp: p.temp,
                 volts: parseFloat(volts),
+                amps: p.amps,
                 watts: parseFloat(watts),
-                cell: p.cell,
+                temp: p.temp,
+                cell: {...p.cell, vcl: vcl, vch: vch, dvcl: dvcl},
                 fet: p.fet
             }
 
