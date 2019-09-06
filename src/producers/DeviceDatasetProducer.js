@@ -82,7 +82,7 @@ function addAttributes(datasetName, dataItem) {
     let volts;
 
     const PRECISION = 3;
-    const TO_MILLIVOLTS = 1000
+    const TO_MILLIVOLTS = 1000;
 
     switch (datasetName) {
 
