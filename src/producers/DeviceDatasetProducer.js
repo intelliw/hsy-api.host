@@ -22,7 +22,7 @@ class DeviceDatasetProducer extends Producer {
     constructor() {
 
         // call super
-        let clientId = enums.messageBroker.producers.deviceDatasets;        // e.g. 'device.datasets'
+        let clientId = enums.messageBroker.producers.clientId.devices;      // e.g. 'device.datasets'
         super(clientId, enums.messageBroker.ack.leader);                    // only waits for the leader to acknowledge 
 
     }
@@ -57,7 +57,7 @@ class DeviceDatasetProducer extends Producer {
                 // add data elements into the dataset
                 dataItem = addAttributes(datasetName, dataItem);
 
-                // extract eventTime and delete the attribute - timestamps are added in the Producerr supertype addMessage() method 
+                // extract eventTime and delete the attribute - timestamps are added in the Producer supertype's addMessage() method 
                 eventTime = dataItem.time_local;                         // "data": [ { "time_local": "20190209T150017.020+0700",
                 delete dataItem.time_local;                              // addMessage will prepend 3 standard time attributes to the dataitem
 

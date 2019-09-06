@@ -18,7 +18,7 @@ class Producer {
     /**
      * superclass - 
      * clients of subtypes must first call extractData(), then sendToTopic()
-     *  subtypes implement extactData by calling this superclass's addMessage() for each dataitem 
+     *  subtypes implement extractData by calling this superclass's addMessage() for each dataitem 
      * 
     instance attributes:  
      "producerObj": kafka.producer()

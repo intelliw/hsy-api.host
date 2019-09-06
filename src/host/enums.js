@@ -103,7 +103,9 @@ module.exports.messageBroker = {                    // kafka message broker. top
         leader: 1                                   //  1 = only waits for the leader to acknowledge 
     },
     producers: {                                    // producer client Ids
-        deviceDatasets: 'device.datasets'
+        clientId: {                                 
+            devices: 'device.datasets'              // producer client id convention = <api path>.<api path>
+        }
     },
     topics: {                                       //  topic names 
         monitoring: {                               //  topics for monitoring datasets
