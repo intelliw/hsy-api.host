@@ -17,13 +17,13 @@ class DeviceDatasetProducer extends Producer {
     instance attributes:  
 
      constructor arguments  
-    * @param {*} deviceDataset                                              // post body from devices.datasets.post api operation
+    * @param {*} dataSource         //  identifies the source of the data. this value is added to sys.source attribute in addMessage()
     */
-    constructor() {
+    constructor(dataSource) {
 
         // call super
         let clientId = enums.messageBroker.producers.clientId.devices;      // e.g. 'device.datasets'
-        super(clientId, enums.messageBroker.ack.leader);                    // only waits for the leader to acknowledge 
+        super(clientId, enums.messageBroker.ack.leader, dataSource);                    // only waits for the leader to acknowledge 
 
     }
 
@@ -32,7 +32,7 @@ class DeviceDatasetProducer extends Producer {
     datasetName this is also the topic                                      // e.g. pms - 
     datasets    object array of dataset items. 
         each dataset item has an id and an array of data objects each with an event timestamp
-    e.g. 
+        e.g. 
             { "pms": { "id": "PMS-01-001" }, 
             "data": [
                 { "time": "20190209T150006.032+0700",
@@ -40,8 +40,9 @@ class DeviceDatasetProducer extends Producer {
                   "cell": { "open": [1, 6], "volts": ["3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.91"] },
                   "fet": { "open": [1, 2], "temp": ["34.1", "32.2", "33.5"] }
                 },
+    datasource - is based on the api key and identifies the source of the data. this value is added to sys.source attribute
     */
-    extractData(datasetName, datasets) {
+    extractData(datasetName, datasets, datasource) {
         let key;
         let eventTime;
         let status = false;
@@ -55,7 +56,7 @@ class DeviceDatasetProducer extends Producer {
             dataset.data.forEach(dataItem => {                          // e.g. "data": [
 
                 // add data elements into the dataset
-                dataItem = addAttributes(datasetName, dataItem);
+                dataItem = addAttributes(key, datasetName, dataItem);
 
                 // extract eventTime and delete the attribute - timestamps are added in the Producer supertype's addMessage() method 
                 eventTime = dataItem.time_local;                         // "data": [ { "time_local": "20190209T150017.020+0700",
@@ -75,7 +76,7 @@ class DeviceDatasetProducer extends Producer {
 }
 
 // adds calculated data elements into the dataitem e.g. 'pack.volts' and 'pack.watts'
-function addAttributes(datasetName, dataItem) {
+function addAttributes(key, datasetName, dataItem) {
     
     let attrArray = [];
     let watts;
@@ -88,18 +89,21 @@ function addAttributes(datasetName, dataItem) {
 
         // pms - just append pack.watts
         case enums.datasets.pms:
-            let p = dataItem.pack;
+            let p = dataItem.pack;                                                                      // all data objects in the sent message are inside pack
             let vcl = Math.min(...p.cell.volts);
             let vch = Math.max(...p.cell.volts);
             let dvcl = p.cell.volts.map(element => (parseFloat(((element - vcl) * TO_MILLIVOLTS).toFixed())));
             
-            // pack.volts
+            // pack.volts,  pack.watts
             volts = dataItem.pack.cell.volts.reduce((sum, x) => sum + x).toFixed(PRECISION);            // sum all the cell volts to get pack volts
-            
-            // pack.watts
             watts = (volts * dataItem.pack.amps).toFixed(PRECISION);
 
-            //  reconstruct dataitem with new attributes 
+            //  reconstruct dataitem - add new attributes and flatten cell and fet as peers of pack
+            dataItem = {
+                pms_id: key,
+                ...dataItem
+            }
+
             dataItem.pack = {
                 id: p.id,
                 dock: p.dock,
@@ -107,17 +111,22 @@ function addAttributes(datasetName, dataItem) {
                 amps: p.amps,
                 watts: parseFloat(watts),
                 temp: p.temp,
-                cell: {...p.cell, vcl: vcl, vch: vch, dvcl: dvcl},
-                fet: p.fet
-            }
+            };
+            dataItem.cell = {...p.cell, vcl: vcl, vch: vch, dvcl: dvcl};
+            dataItem.fet = p.fet;
 
             break;
 
 
-
         // mppt - append array of pv.watts and load.watts
         case enums.datasets.mppt:
-            
+
+            //  reconstruct dataitem - add new attributes 
+            dataItem = {
+                mppt_id: key,
+                ...dataItem
+            }
+        
             // pv.watts
             for (let i = 0; i < dataItem.pv.volts.length; i++) {
                 watts = (dataItem.pv.volts[i] * dataItem.pv.amps[i]).toFixed(PRECISION)
@@ -139,6 +148,13 @@ function addAttributes(datasetName, dataItem) {
 
         // inverter - append array of pv.watts, load.watts, and grid.watts
         case enums.datasets.inverter:
+
+            //  reconstruct dataitem - add new attributes 
+            dataItem = {
+                inverter_id: key,
+                ...dataItem
+            }
+
             // pv.watts
             for (let i = 0; i < dataItem.pv.volts.length; i++) {
                 watts = (dataItem.pv.volts[i] * dataItem.pv.amps[i]).toFixed(PRECISION);                   

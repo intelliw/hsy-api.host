@@ -21,12 +21,32 @@ class DevicesDatasetsPostResponse extends Response {
 
   /**
   * posts dataset data and responds with a generic 201 response
+  * constructor arguments 
+    * @param {*} params           // dataset, datasets, apiKey
+    { dataset:
+    Param {
+      name: 'dataset',
+      value: 'pms',
+      isOptional: false,
+      isValid: true },
+    datasets:
+    Param {
+      name: 'datasets',
+      value: [ [Object], [Object], [Object], [Object] ],
+      isOptional: false,
+      isValid: true },
+    apiKey:
+    Param {
+      name: 'api_key',
+      value: 'AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0',
+      isOptional: false,
+      isValid: true } }
+    * 
   */
   constructor(params, acceptParam) {
 
-    let content = executePost(params);                                        // perform the post operation 
-
-
+    let content = executePost(params);                                          // perform the post operation 
+    
     super(RESPONSE_STATUS, acceptParam, VIEW_PREFIX, content);
 
   }
@@ -35,16 +55,14 @@ class DevicesDatasetsPostResponse extends Response {
 // perform the data operation 
 function executePost(params) {
 
-  let producer;
-  let datasetName;
-  let topicName;
-  let datasets;
+  let producer, datasetName, topicName, datasets, dataSource;
 
   datasetName = params.dataset.value;                                           //  enums.datasets              - e.g. pms  
-  topicName = enums.messageBroker.topics.monitoring[datasetName];                //  lookup topic name based on datasetname
-  datasets = params.datasets.value;
+  topicName = enums.messageBroker.topics.monitoring[datasetName];               //  lookup topic name based on datasetname
+  datasets = params.datasets.value;                                             //  array of datasets
   
-  producer = new Producer.DeviceDatasetProducer();
+  dataSource = utils.keynameFromValue(enums.apiKey, params.apiKey.value);       // the datasource is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
+  producer = new Producer.DeviceDatasetProducer(dataSource);
   
   producer.extractData(datasetName, datasets);
   producer.sendToTopic(topicName);                                              // datasetName is the topic

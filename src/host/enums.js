@@ -89,10 +89,11 @@ module.exports.responseStatus = {
 }
 
 module.exports.apiKey = {
-    HokuappsKey1: 'AIzaSyASFQxf4PmOutVS1Dt99TPcZ4IQ8PDUMqY',
-    MartinKurnadiKey1: 'AIzaSyAosx2bIR7K5uyXJeEuwJrFZEpbFYliZ3Y',
-    APIKey3: 'AIzaSyDq97s15fdM99swOJuUIFtW8ifgQSBnymo',
-    APIKey2: 'AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0'
+    S000: 'AIzaSyD3IbFpxrydZuMKgEluHWDAvFl-P7dgPC8',
+    S001: 'AIzaSyAZ4nuWP-ZXUg2aGQhrQjkvF2BFvukgv7w',
+    S002: 'AIzaSyDq97s15fdM99swOJuUIFtW8ifgQSBnymo',
+    S003: 'AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0',
+    V001: 'AIzaSyASFQxf4PmOutVS1Dt99TPcZ4IQ8PDUMqY'
 }
 module.exports.apiKey.default = this.apiKey.AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0; 
 
