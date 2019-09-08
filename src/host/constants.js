@@ -183,9 +183,9 @@ module.exports.kafkajs = {
 // system constants for the environment
 module.exports.environments = {
     local: {
-        api: { host: 'localhost:8080' },
+        api: { host: '192.168.1.106:8080' },
         kafka: {
-            brokers: ['localhost:9092']                                     // localhost   | 192.168.1.106        
+            brokers: ['192.168.1.106:9092']                                     // localhost   | 192.168.1.106        
         }
     },
     devcloudtest: {                                                             // single node kafka, or Kafka Std - 1 master, N workers
