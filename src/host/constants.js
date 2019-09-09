@@ -176,6 +176,9 @@ module.exports.kafkajs = {
         retries: 8,                                                      // max number of retries per call (5)
         maxInFlightRequests: 200                                         // max num requestsin progress at any time. If falsey then no limit (null)
     },
+    send: {                                                              // https://kafka.js.org/docs/producing   
+        timeout: 30000
+    },
     connectionTimeout: 3000,                                             // milliseconds to wait for a successful connection   
     requestTimeout: 25000                                                // milliseconds to wait for a successful request.    
 }

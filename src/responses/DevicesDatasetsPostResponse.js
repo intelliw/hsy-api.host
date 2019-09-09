@@ -55,18 +55,18 @@ class DevicesDatasetsPostResponse extends Response {
 // perform the data operation 
 function executePost(params) {
 
-  let producer, datasetName, topicName, datasets, dataSource;
+  let producer, datasetName, datasets, dataSource;
 
+  // construct a producer
   datasetName = params.dataset.value;                                           //  enums.datasets              - e.g. pms  
-  topicName = enums.messageBroker.topics.monitoring[datasetName];               //  lookup topic name based on datasetname
   datasets = params.datasets.value;                                             //  array of datasets
-  
   dataSource = utils.keynameFromValue(enums.apiKey, params.apiKey.value);       // the datasource is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
-  producer = new Producer.DeviceDatasetProducer(dataSource);
+  producer = new Producer.DeviceDatasetProducer(datasetName, datasets, dataSource);
   
-  producer.extractData(datasetName, datasets);
-  producer.sendToTopic(topicName);                                              // datasetName is the topic
-
+  // process the request
+  let status = producer.extractData();                                  // an array of modified data items 
+  producer.sendToTopic();                                               // send messages to the broker 
+  
   // prepare the response
   let responseDetail = new GenericMessageDetail();
   responseDetail.add('Data queued for processing.', `datasets:${datasetName} | ${datasets.length}`);
