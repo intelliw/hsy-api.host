@@ -59,7 +59,7 @@ class DeviceDatasetProducer extends Producer {
 
                 // add the message to the producer buffer
                 super.addMessage(key, dataItem);
-
+                console.log(key);
             });
         });
 
