@@ -58,7 +58,7 @@ class DeviceDatasetProducer extends Producer {
                 dataItem = addAttributes(key, datasetName, dataItem);
 
                 // add the message to the producer buffer
-                super.addMessage(key, dataItem, eventTime);
+                super.addMessage(key, dataItem);
 
             });
         });
