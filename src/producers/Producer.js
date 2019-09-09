@@ -61,19 +61,19 @@ class Producer {
     *   e.g. { 'correlation-id': '2bfb68bb-893a-423b-a7fa-7b568cad5b67', system-id': 'my-system' }  
     * this function prepends the id, processing time, utc time, local time, and data source - to the data object
     */
-    addMessage(key, data, eventTime, headers) {
+    addMessage(key, data, headers) {
 
-        /*
-         prepare time values - note that we use a timeformat without trailing offset hours (bigqueryZonelessTimestampFormat)
-            to force bigquery to store local time without converting to utc
-         */
+        // extract eventTime and delete the attribute - timestamps are added in the Producer supertype's addMessage() method 
+        let eventTime = data.time_local;                        // "data": [ { "time_local": "20190209T150017.020+0700",
+        delete data.time_local;                                 // addMessage will prepend 3 standard time attributes to the dataitem
+
+        /* prepend processing time, event utc time, event local time, and id to the dataitem to the data item
+        note that we use a timeformat without trailing offset hours (bigqueryZonelessTimestampFormat)
+        to force bigquery to store local time without converting to utc
+        */
         let processingTime = moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat);
         let eventTimeUtc = utils.datetimeToUTC(eventTime, consts.dateTime.bigqueryZonelessTimestampFormat);
         let eventTimeLocal = utils.datetimeToLocal(eventTime, consts.dateTime.bigqueryZonelessTimestampFormat);
-
-        // console.log(`${eventTime} | UTC:${eventTimeUtc} | Local:${eventTimeLocal}`);
-
-        // prepend processing time, event utc time, event local time, and id to the dataitem to the data item
         data = {
             ...data,
             sys: { source: this.dataSource },

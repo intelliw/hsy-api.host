@@ -44,7 +44,6 @@ class DeviceDatasetProducer extends Producer {
     */
     extractData(datasetName, datasets, datasource) {
         let key;
-        let eventTime;
         let status = false;
 
         // extract and add messages to super 
@@ -57,10 +56,6 @@ class DeviceDatasetProducer extends Producer {
 
                 // add data elements into the dataset
                 dataItem = addAttributes(key, datasetName, dataItem);
-
-                // extract eventTime and delete the attribute - timestamps are added in the Producer supertype's addMessage() method 
-                eventTime = dataItem.time_local;                         // "data": [ { "time_local": "20190209T150017.020+0700",
-                delete dataItem.time_local;                              // addMessage will prepend 3 standard time attributes to the dataitem
 
                 // add the message to the producer buffer
                 super.addMessage(key, dataItem, eventTime);
