@@ -125,6 +125,7 @@ class Producer {
             .catch(e => console.error(`[${this.clientId}] ${e.message}`, e));
             
         console.log(`${moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat)}, ${this.messages.length} messages [${topicName}, offset: ${result[0].baseOffset}-${Number(result[0].baseOffset) + (this.messages.length - 1)}]`)
+            // 2019-09-10 05:04:44.6630, 2 messages [monitoring.mppt, offset: 2-3]
         await this.producerObj.disconnect();
 
     }
