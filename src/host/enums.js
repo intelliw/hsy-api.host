@@ -116,4 +116,4 @@ module.exports.messageBroker = {                    // kafka message broker. top
         }
     }
 }
-
+module.exports.messageBroker.ack.default = this.messageBroker.ack.leader

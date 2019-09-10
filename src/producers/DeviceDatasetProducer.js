@@ -8,7 +8,7 @@ const consts = require('../host/constants');
 const enums = require('../host/enums');
 
 const Producer = require('../producers');
-
+const CLIENT_ID = enums.messageBroker.producers.clientId.devices;                   // e.g. 'device.datasets'
 /**
  * 
  */
@@ -17,19 +17,18 @@ class DeviceDatasetProducer extends Producer {
     instance attributes:  
 
      constructor arguments  
-    * @param {*} dataSource         //  identifies the source of the data. this value is added to sys.source attribute in addMessage()
+    * @param {*} sysSource                                                         //  identifies the source of the data. this value is added to sys.source attribute in addMessage()
     */
-    constructor(datasetName, datasets, dataSource) {
+    constructor(datasetName, datasets, sysSource) {
 
         // call super
-        let clientId = enums.messageBroker.producers.clientId.devices;      // e.g. 'device.datasets'
-        super(datasetName, datasets, dataSource, clientId, enums.messageBroker.ack.leader);                    // only waits for the leader to acknowledge 
+        super(datasetName, datasets, sysSource, CLIENT_ID);                        // only waits for the leader to acknowledge 
 
     }
 
     /**
      each dataset object has an object property named after the dataset e.g. "pms": { "id": "PMS-01-001" }    
-    datasetName this is also the topic                                      // e.g. pms - 
+    datasetName this is also the topic                                              // e.g. pms - 
     datasets    object array of dataset items. 
         each dataset item has an id and an array of data objects each with an event timestamp
         e.g. 
@@ -44,20 +43,20 @@ class DeviceDatasetProducer extends Producer {
     extractData() {
 
         let status = false
-        let key, topicName;
+        let key;
         let message = [];
 
         // extract and add messages to super 
-        this.datasets.forEach(dataset => {                                           // e.g. "pms": { "id": "PMS-01-001" }, "data": [ { time_local: '20190809T150006.032+0700', pack: [Object] }, ... ]
+        this.datasets.forEach(dataset => {                                          // e.g. "pms": { "id": "PMS-01-001" }, "data": [ { time_local: '20190809T150006.032+0700', pack: [Object] }, ... ]
 
-            key = dataset[this.datasetName].id;                                      // e.g. id from.. "pms": { "id": 
+            key = dataset[this.datasetName].id;                                     // e.g. id from.. "pms": { "id": 
             
             // add each data item in the dataset as an individual message
-            dataset.data.forEach(dataItem => {                                  // e.g. "data": [ { "time_local": "2
+            dataset.data.forEach(dataItem => {                                      // e.g. "data": [ { "time_local": "2
 
                 // add elements into the dataset
-                dataItem = this.addAttributes(key, dataItem);           // add dataset-specific attributes
-                dataItem = super.addAttributes(key, dataItem);          // add common attributes
+                dataItem = this.addAttributes(key, dataItem);                       // add dataset-specific attributes
+                dataItem = super.addAttributes(key, dataItem);                      // add common attributes
 
                 // add the message to the items buffer
                 message.push(dataItem);
@@ -68,7 +67,6 @@ class DeviceDatasetProducer extends Producer {
             message = [];
 
         });
-        
 
         status = true
         return status;
@@ -89,6 +87,7 @@ class DeviceDatasetProducer extends Producer {
 
             // pms - just append pack.watts
             case enums.datasets.pms:
+
                 let p = dataItem.pack;                                                                      // all data objects in the sent message are inside pack
                 let vcl = Math.min(...p.cell.volts);
                 let vch = Math.max(...p.cell.volts);
@@ -101,11 +100,11 @@ class DeviceDatasetProducer extends Producer {
                 //  reconstruct dataitem - add new attributes and flatten cell and fet as peers of pack
                 dataItem = {
                     pms_id: key,
+                    pack_id: p.id,
                     ...dataItem
                 }
 
                 dataItem.pack = {
-                    id: p.id,
                     dock: p.dock,
                     volts: parseFloat(volts),
                     amps: p.amps,

@@ -188,25 +188,25 @@ module.exports.environments = {
     local: {
         api: { host: '192.168.1.106:8080' },
         kafka: {
-            brokers: ['192.168.1.106:9092']                                     // localhost   | 192.168.1.106        
+            brokers: ['192.168.1.106:9092']                               // localhost   | 192.168.1.106        
         }
     },
-    devcloudtest: {                                                             // single node kafka, or Kafka Std - 1 master, N workers
+    devcloudtest: {                                                       // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: 'api.endpoints.sundaya.cloud.goog' },
         kafka: {
-            brokers: ['kafka-1-vm:9092']                                   // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
+            brokers: ['kafka-1-vm:9092']                                  // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
         }
     },
-    devcloud: {                                                             // single node kafka, or Kafka Std - 1 master, N workers
+    devcloud: {                                                           // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: 'api.endpoints.sundaya.cloud.goog' },
         kafka: {
-            brokers: ['kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']           // array of kafka message brokers         '[kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
+            brokers: ['kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']         // array of kafka message brokers         '[kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
         }
     },
-    prodcloud: {                                                            // Kafka HA - 3 masters, N workers
+    prodcloud: {                                                          // Kafka HA - 3 masters, N workers
         api: { host: 'api.endpoints.sundaya.cloud.goog' },
         kafka: {
-            brokers: ['kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']           // array of kafka message brokers         '[kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
+            brokers: ['kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']         // array of kafka message brokers         '[kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
         }
     }
 }
