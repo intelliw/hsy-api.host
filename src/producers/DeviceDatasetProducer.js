@@ -17,64 +17,18 @@ class DeviceDatasetProducer extends Producer {
     instance attributes:  
 
      constructor arguments  
-    * @param {*} sysSource                                                         //  identifies the source of the data. this value is added to sys.source attribute in addMessage()
+    * @param {*} sender                                                         //  identifies the source of the data. this value is added to sys.source attribute in addMessage()
     */
-    constructor(datasetName, datasets, sysSource) {
+    constructor(datasetName, datasets, sender) {
 
-        // call super
-        super(datasetName, datasets, sysSource, CLIENT_ID);                        // only waits for the leader to acknowledge 
+        // construct super
+        super(datasetName, datasets, sender, CLIENT_ID);                        // only waits for the leader to acknowledge 
 
     }
 
-    /**
-     each dataset object has an object property named after the dataset e.g. "pms": { "id": "PMS-01-001" }    
-    datasetName this is also the topic                                              // e.g. pms - 
-    datasets    object array of dataset items. 
-        each dataset item has an id and an array of data objects each with an event timestamp
-        e.g. 
-            { "pms": { "id": "PMS-01-001" }, 
-            "data": [
-                { "time": "20190209T150006.032+0700",
-                  "pack": { "id": "0241", "dock": 1, "amps": "-1.601", "temp": ["35.0", "33.0", "34.0"] },
-                  "cell": { "open": [1, 6], "volts": ["3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.91"] },
-                  "fet": { "open": [1, 2], "temp": ["34.1", "32.2", "33.5"] }
-                },
-    */
-    extractData() {
 
-        let status = false
-        let key;
-        let message = [];
-
-        // extract and add messages to super 
-        this.datasets.forEach(dataset => {                                          // e.g. "pms": { "id": "PMS-01-001" }, "data": [ { time_local: '20190809T150006.032+0700', pack: [Object] }, ... ]
-
-            key = dataset[this.datasetName].id;                                     // e.g. id from.. "pms": { "id": 
-            
-            // add each data item in the dataset as an individual message
-            dataset.data.forEach(dataItem => {                                      // e.g. "data": [ { "time_local": "2
-
-                // add elements into the dataset
-                dataItem = this.addAttributes(key, dataItem);                       // add dataset-specific attributes
-                dataItem = super.addAttributes(key, dataItem);                      // add common attributes
-
-                // add the message to the items buffer
-                message.push(dataItem);
-            });
-
-            // add the message to the buffer
-            super.addMessage(key, message);
-            message = [];
-
-        });
-
-        status = true
-        return status;
-
-    }
-
-    // adds calculated data elements into the dataitem e.g. 'pack.volts' and 'pack.watts'
-    addAttributes(key, dataItem) {
+    // adds calculated elements specific to this dataset, into the dataitem e.g. 'pack.volts' and 'pack.watts'
+    addDatasetAttributes(key, dataItem) {
 
         let attrArray = [];
         let watts;
@@ -82,7 +36,7 @@ class DeviceDatasetProducer extends Producer {
 
         const PRECISION = 3;
         const TO_MILLIVOLTS = 1000;
-
+        
         switch (this.datasetName) {
 
             // pms - just append pack.watts

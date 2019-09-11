@@ -28,10 +28,10 @@ class Producer {
      constructor arguments 
     * @param {*} datasetName                                                        // enums.datasets              - e.g. pms  
     * @param {*} datasets                                                           // an array of datasets
-    * @param {*} sysSource                                                          // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
+    * @param {*} sender                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
     * @param {*} clientId                                                           // consts.messaging.clientid   - e.g. devices.datasets
     */
-    constructor(datasetName, datasets, sysSource, clientId) {
+    constructor(datasetName, datasets, sender, clientId) {
 
         // create a kafka producer
         const kafka = new Kafka({
@@ -46,14 +46,83 @@ class Producer {
         // setup instance variables
         this.messages = [];                                                         // start with an empty array and later call addMessage()  
 
-        this.datasetName = datasetName; 
+        this.datasetName = datasetName;
         this.datasets = datasets;                                                   // array of datasets           
-        this.sysSource = sysSource;                                                 // is based on the api key and identifies the source of the data. this value is added to sys.source attribute
+        this.sender = sender;                                                       // is based on the api key and identifies the source of the data. this value is added to sys.source attribute
         this.clientId = clientId;                                                   // enums.messageBroker.producers.clientId
     }
 
-    // implemented by subtype: extracts data and calls super's sendToTopic() with the key, dataItems and optional header, the sysSource is the keyname of the apikey enum, sent in the POST request
-    extractData(d) {
+
+    // extracts an array of modified data items and sends these as messages to the broker 
+    async sendToTopic() {
+
+        if (this.extractData()) {
+
+            // send the message to the topic
+            let topicName = enums.messageBroker.topics.monitoring[this.datasetName];    //  lookup topic name based on datasetname           
+            await this.producerObj.connect();
+
+            let result = await this.producerObj.send({
+                topic: topicName,
+                messages: this.messages,
+                acks: KAFKA_ACK,
+                timeout: consts.kafkajs.send.timeout
+            })
+                .catch(e => console.error(`[${this.clientId}] ${e.message}`, e));
+
+            console.log(`${moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat)}, ${this.messages.length} messages [${topicName}, offset: ${result[0].baseOffset}-${Number(result[0].baseOffset) + (this.messages.length - 1)}]`)
+            // 2019-09-10 05:04:44.6630, 2 messages [monitoring.mppt, offset: 2-3]
+            await this.producerObj.disconnect();
+
+        }
+    }
+
+    /**
+     * extractData() creates an array of modified data items and returns true if successful
+     * each dataset object has a common structure and an object property named after the dataset 
+     * e.g. "pms": { "id": "PMS-01-001" }    
+     * datasetName this is also the topic                                              // e.g. pms - 
+     * datasets    object array of dataset items. 
+     * each dataset item has an id and an array of data objects each with an event timestamp
+     * e.g. 
+            { "pms": { "id": "PMS-01-001" }, 
+            "data": [
+                { "time": "20190209T150006.032+0700",
+                  "pack": { "id": "0241", "dock": 1, "amps": "-1.601", "temp": ["35.0", "33.0", "34.0"] },
+                  "cell": { "open": [1, 6], "volts": ["3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.92", "3.91"] },
+                  "fet": { "open": [1, 2], "temp": ["34.1", "32.2", "33.5"] } },           
+    */
+    extractData() {
+
+        let status = false
+        let key;
+        let message = [];
+
+        // extract and add messages to super 
+        this.datasets.forEach(dataset => {                                          // e.g. "pms": { "id": "PMS-01-001" }, "data": [ { time_local: '20190809T150006.032+0700', pack: [Object] }, ... ]
+
+            key = dataset[this.datasetName].id;                                     // e.g. id from.. "pms": { "id": 
+
+            // add each data item in the dataset as an individual message
+            dataset.data.forEach(dataItem => {                                      // e.g. "data": [ { "time_local": "2
+
+                // add elements into the dataset
+                dataItem = this.addDatasetAttributes(key, dataItem);                // add common attributes
+                dataItem = this.addGenericAttributes(key, dataItem);                // add dataset-specific attributes
+
+                // add the message to the items buffer
+                message.push(dataItem);
+            });
+
+            // add the message to the buffer
+            this.addMessage(key, message);
+            message = [];
+
+        });
+
+        status = true
+        return status;
+
     }
 
     /* this function adds attributes common to all datasets:
@@ -61,8 +130,9 @@ class Producer {
     *  this function should be called by the subtype after adding calling its own addAttributes() 
     *  key - is a string
     *  dataItem - contains the data object e.g. "data": [ { "time_local": "2
+    *  sysSource is the keyname of the apikey enum, sent in the POST request
     */
-    addAttributes(key, dataItem) {
+    addGenericAttributes(key, dataItem) {
 
         // extract eventTime and delete the attribute - timestamps are added in the Producer supertype's addMessage() method 
         let eventTime = dataItem.time_local;                                        // "data": [ { "time_local": "20190209T150017.020+0700",
@@ -78,13 +148,14 @@ class Producer {
 
         dataItem = {
             ...dataItem,
-            sys: { source: this.sysSource },                                        // is based on the api key and identifies the source of the data. this value is added to sys.source attribute
+            sys: { source: this.sender },                                        // is based on the api key and identifies the source of the data. this value is added to sys.source attribute
             time_utc: eventTimeUtc,
             time_local: eventTimeLocal,
             time_processing: processingTime
         };                                                                          // append the data last
 
         return dataItem;
+
     }
 
     /* adds a message to the message array
@@ -108,27 +179,6 @@ class Producer {
         this.messages.push(message);                                                // add to the message array
     }
 
-    /* sends the message to the broker 
-    */
-    async sendToTopic() {
-
-        // send the message to the topic
-        let topicName = enums.messageBroker.topics.monitoring[this.datasetName];    //  lookup topic name based on datasetname           
-        await this.producerObj.connect();
-
-        let result = await this.producerObj.send({
-            topic: topicName,
-            messages: this.messages,
-            acks: KAFKA_ACK,
-            timeout: consts.kafkajs.send.timeout
-        })
-            .catch(e => console.error(`[${this.clientId}] ${e.message}`, e));
-            
-        console.log(`${moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat)}, ${this.messages.length} messages [${topicName}, offset: ${result[0].baseOffset}-${Number(result[0].baseOffset) + (this.messages.length - 1)}]`)
-            // 2019-09-10 05:04:44.6630, 2 messages [monitoring.mppt, offset: 2-3]
-        await this.producerObj.disconnect();
-
-    }
 
 }
 
