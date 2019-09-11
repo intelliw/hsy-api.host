@@ -9,10 +9,7 @@ const { Kafka } = require('kafkajs');
 const enums = require('../host/enums');
 const consts = require('../host/constants');
 const utils = require('../host/utils');
-
 const moment = require('moment');
-
-const KAFKA_ACK = enums.messageBroker.ack.default;                                  // default is 'leader'
 
 class Producer {
     /**
@@ -52,7 +49,6 @@ class Producer {
         this.clientId = clientId;                                                   // enums.messageBroker.producers.clientId
     }
 
-
     // extracts an array of modified data items and sends these as messages to the broker 
     async sendToTopic() {
 
@@ -65,7 +61,7 @@ class Producer {
             let result = await this.producerObj.send({
                 topic: topicName,
                 messages: this.messages,
-                acks: KAFKA_ACK,
+                acks: enums.messageBroker.ack.default,                                  // default is 'leader'
                 timeout: consts.kafkajs.send.timeout
             })
                 .catch(e => console.error(`[${this.clientId}] ${e.message}`, e));
@@ -107,11 +103,12 @@ class Producer {
             dataset.data.forEach(dataItem => {                                      // e.g. "data": [ { "time_local": "2
 
                 // add elements into the dataset
-                dataItem = this.addDatasetAttributes(key, dataItem);                // add common attributes
-                dataItem = this.addGenericAttributes(key, dataItem);                // add dataset-specific attributes
+                dataItem = this.addDatasetAttributes(key, dataItem);                // add dataset-specific attributes in subclass
+                dataItem = this.addGenericAttributes(key, dataItem);                // add common attributes
 
                 // add the message to the items buffer
                 message.push(dataItem);
+
             });
 
             // add the message to the buffer
@@ -120,7 +117,7 @@ class Producer {
 
         });
 
-        status = true
+        status = true                                                                // todo: implement logic for status
         return status;
 
     }
@@ -152,7 +149,7 @@ class Producer {
             time_utc: eventTimeUtc,
             time_local: eventTimeLocal,
             time_processing: processingTime
-        };                                                                          // append the data last
+        };                                                                       
 
         return dataItem;
 

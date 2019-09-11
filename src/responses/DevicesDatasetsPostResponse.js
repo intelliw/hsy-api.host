@@ -59,9 +59,9 @@ function executePost(params) {
   let datasetName = params.dataset.value;                                           //  enums.datasets              - e.g. pms  
   let datasets = params.datasets.value;                                             //  array of datasets
   let sender = utils.keynameFromValue(enums.apiKey, params.apiKey.value);           // the datasource is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
-  let producer = new Producer.DeviceDatasetProducer(datasetName, datasets, sender);
-  
-  // process the request asynchronously. by now the dataset should have been validated and the only outcome is a 200 response
+  let producer = Producer.factory.getProducer(datasetName, datasets, sender);
+
+  // processes the message transaction (sendToTopic) asynchronously. by now the dataset should have been validated and the only outcome is a 200 response
   producer.sendToTopic();                                              // send messages to the broker 
   
   // prepare the response
