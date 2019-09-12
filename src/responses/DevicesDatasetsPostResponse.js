@@ -57,11 +57,11 @@ class DevicesDatasetsPostResponse extends Response {
 
 // perform the data operation 
 function executePost(params, reqContentType) {
-  let datasets;
+  let datasets, csvData;
 
   // get the datasets content
-  if (reqContentType == enums.mimeTypes.textCsv) {
-    datasets = params.datasets.value;                                                 // for text/csv req body cotnains raw csv content 
+  if (reqContentType == enums.mimeTypes.textCsv) {                                    // for text/csv req body cotnains raw csv content 
+    csvData = params.datasets.value;                                                 
   } else {                                                                            // enums.mimeTypes.applicationJson        
     datasets = params.datasets.value.datasets;                                        // for application/json the req.body is a 'datasets' object with array of datasets {"datasets": [.. ]        
   }
@@ -83,7 +83,6 @@ function executePost(params, reqContentType) {
   let response = new GenericMessage(statusCode, RESPONSE_STATUS, responseDetail.getElements());
   
   return response.getElements();
-  
 
 }
 
