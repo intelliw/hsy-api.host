@@ -22,7 +22,10 @@ class DevicesDatasetsPostResponse extends Response {
   /**
   * posts dataset data and responds with a generic 201 response
   * constructor arguments 
-    * @param {*} params           // dataset, datasets, apiKey
+    * @param {*} params                                                       // dataset, datasets, apiKey
+    * @param {*} reqAcceptParam                                               // request Accepts
+    * @param {*} reqContentTypeParam                                          //  request Content-Type - enums.mimeTypes
+    * 
     { dataset:
     Param {
       name: 'dataset',
@@ -43,26 +46,34 @@ class DevicesDatasetsPostResponse extends Response {
       isValid: true } }
     * 
   */
-  constructor(params, acceptParam) {
-
-    let content = executePost(params);                                          // perform the post operation 
+  constructor(params, reqAcceptParam, reqContentTypeParam) {
     
-    super(RESPONSE_STATUS, acceptParam, VIEW_PREFIX, content);
+    let content = executePost(params, reqContentTypeParam.value);                                          // perform the post operation 
+    
+    super(RESPONSE_STATUS, reqAcceptParam, VIEW_PREFIX, content, reqContentTypeParam);
 
   }
 }
 
 // perform the data operation 
-function executePost(params) {
+function executePost(params, reqContentType) {
+  let datasets;
+
+  // get the datasets content
+  if (reqContentType == enums.mimeTypes.textCsv) {
+    datasets = params.datasets.value;                                                 // for text/csv req body cotnains raw csv content 
+  } else {                                                                            // enums.mimeTypes.applicationJson        
+    datasets = params.datasets.value.datasets;                                        // for application/json the req.body is a 'datasets' object with array of datasets {"datasets": [.. ]        
+  }
+  console.log(`reqContentType ${reqContentType} dataset ${datasets}`)  //  @@@@@@
 
   // construct a producer
-  let datasetName = params.dataset.value;                                           //  enums.datasets              - e.g. pms  
-  let datasets = params.datasets.value;                                             //  array of datasets
-  let sender = utils.keynameFromValue(enums.apiKey, params.apiKey.value);           // the datasource is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
+  let datasetName = params.dataset.value;                                             //  enums.datasets              - e.g. pms  
+  let sender = utils.keynameFromValue(enums.apiKey, params.apiKey.value);             // the datasource is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
   let producer = Producer.factory.getProducer(datasetName, datasets, sender);
-
+  
   // processes the message transaction (sendToTopic) asynchronously. by now the dataset should have been validated and the only outcome is a 200 response
-  producer.sendToTopic();                                              // send messages to the broker 
+  producer.sendToTopic();                                                             // send messages to the broker 
   
   // prepare the response
   let responseDetail = new GenericMessageDetail();
@@ -84,4 +95,4 @@ module.exports = DevicesDatasetsPostResponse;
   * this list must match the list specified in the 'produces' property in the openapi spec
   */
 module.exports.produces = [enums.mimeTypes.applicationJson];
-module.exports.consumes = enums.mimeTypes.applicationJson;
+module.exports.consumes = [enums.mimeTypes.applicationJson, enums.mimeTypes.textCsv];

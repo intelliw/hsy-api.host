@@ -8,7 +8,7 @@
 const consts = require('../host/constants');
 
 const Param = require('./Param');
-const THIS_PARAM_NAME = consts.params.names.accepttype;
+const THIS_PARAM_NAME = consts.params.names.accepttype;     //i.e: 'accept'
 
 /** 
  * Selects an Accepts header. If an Accept header has not beem specified the default application/vnd.collection+json media type will be returned.
@@ -23,12 +23,12 @@ class Accept extends Param {
      super.isValid: ?,
     
      constructor arguments  
-    * @param {*} req                    // express request
-    * @param {*} responseProduces       // array of enum.mimeTyypes which are supported by the response/producer
+    * @param {*} req                                                        // express request
+    * @param {*} responseProduces                                           // array of enum.mimeTyypes which are supported by the response/producer
     */
     constructor(req, responseProduces) {
         
-        let requestAcceptsType = req.accepts(responseProduces);                                 // returns false if request had Accept headers which do not match any of the responseContentTypes
+        let requestAcceptsType = req.accepts(responseProduces);             // express returns false if request had Accept headers which do not match any of the responseContentTypes
 
         // call super
         requestAcceptsType = (requestAcceptsType == false) ? consts.NONE : requestAcceptsType;  // if there  is no value super wil set isValid to false./.

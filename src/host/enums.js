@@ -56,7 +56,8 @@ module.exports.mimeTypes = {
     applicationCollectionJson: 'application/vnd.collection+json',
     applicationJson: 'application/json',
     textHtml: 'text/html',
-    textPlain: 'text/plain'
+    textPlain: 'text/plain',
+    textCsv: 'text/csv'
 };
 module.exports.mimeTypes.default = this.mimeTypes.applicationCollectionJson;
 

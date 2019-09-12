@@ -31,18 +31,20 @@ class DevicesDatasetsPost extends Request {
     * @param {*} req                                                    // express req
     */
     constructor(req) {
-
+        
         // parameters                                                       
         let params = {}; 
         params.dataset = new Param('dataset', req.params.dataset, consts.NONE, enums.datasets);
-        params.datasets = new Param('datasets', req.body.datasets);
+        
+        // body content - datasets parameter                                                  // for application/json this is a datasets object with array of datasets {"datasets": [.. ]        
+        params.datasets = new Param('datasets', req.body);                                    // for text/csv this is raw csv content 
         
         // super - validate params, auth, accept header
         super(req, params, DatasetsPostResponse.produces, DatasetsPostResponse.consumes);     // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
         params.apiKey = this.apiKey;                                                          // add apiKey as a param as it is used to produce the sys.source attribute in the Producer  
-
+        
         // execute the response only if super isValid                   // if not isValid  super constuctor would have created a this.response = ErrorResponse 
-        this.response = this.validation.isValid  === true ? new Response.DevicesDatasetsPostResponse(this.params, this.accept) : this.response;
+        this.response = this.validation.isValid  === true ? new Response.DevicesDatasetsPostResponse(this.params, this.accept, this.contentType) : this.response;
 
     }
 

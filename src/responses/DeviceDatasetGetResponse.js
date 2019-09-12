@@ -20,11 +20,11 @@ class DeviceDatasetGetResponse extends Response {
   /**
   * posts dataset data and responds with a generic 201 response
   */
-  constructor(params, acceptParam) {
+  constructor(params, reqAcceptParam) {
 
     let content = executeGet(params);
 
-    super(RESPONSE_STATUS, acceptParam, VIEW_PREFIX, content);
+    super(RESPONSE_STATUS, reqAcceptParam, VIEW_PREFIX, content);
 
   }
 }
@@ -52,4 +52,4 @@ module.exports = DeviceDatasetGetResponse;
   * this list must match the list specified in the 'produces' property in the openapi spec
   */
 module.exports.produces = [enums.mimeTypes.applicationJson];
-module.exports.consumes = enums.mimeTypes.applicationJson;
+module.exports.consumes = [enums.mimeTypes.applicationJson];

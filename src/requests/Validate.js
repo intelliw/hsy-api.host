@@ -84,7 +84,7 @@ function validateParams(req, params, errors) {
 
         paramKeys.forEach(key => {                                                  // Request.isValid is true only if *all* params are valid
             param = params[key];
-
+            
             if (!param.isValid) {                                                   // check if param was declared valid during construction 
                 errors.add(
                     `${ERROR_MESSAGE} | ${param.value} | ${req.path}`,

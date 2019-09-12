@@ -15,14 +15,14 @@ const Request = require('../requests');
 */
 router.post('/dataset/:dataset',
     (req, res, next) => {
-
+        
         // request ---------------------                                
         let request = new Request.DevicesDatasetsPost(req);
 
         //  execute if valid
         let response = request.response;                                // execute the operation and return a response 
         let items = response.content;
-
+        
         // response
         res
             .status(response.statusCode)
