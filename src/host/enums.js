@@ -51,6 +51,13 @@ module.exports.timeOfDay = {
     night: 'night'
 };
 
+// request enumerations
+module.exports.request = {
+    headers: {
+       contentType: 'content-type'
+    }
+}
+
 // mime types used in headers
 module.exports.mimeTypes = {
     applicationCollectionJson: 'application/vnd.collection+json',
@@ -91,8 +98,8 @@ module.exports.responseStatus = {
 
 module.exports.apiKey = {
     S000: 'AIzaSyD3IbFpxrydZuMKgEluHWDAvFl-P7dgPC8',
-    S001: 'AIzaSyAZ4nuWP-ZXUg2aGQhrQjkvF2BFvukgv7w',
-    S002: 'AIzaSyDq97s15fdM99swOJuUIFtW8ifgQSBnymo',
+    S001: 'AIzaSyAZ4nuWP-ZXUg2aGQhrQjkvF2BFvukgv7w',    // Fahmi
+    S002: 'AIzaSyDq97s15fdM99swOJuUIFtW8ifgQSBnymo',    // Adam 
     S003: 'AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0',
     V001: 'AIzaSyASFQxf4PmOutVS1Dt99TPcZ4IQ8PDUMqY'
 }

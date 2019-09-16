@@ -200,19 +200,19 @@
             }
           ]
         },
-        { "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/period/day/20190209/1?site=999",
+        { "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/period/day/20190909/1?site=999",
           "links": [
             { "rel": "self", "name": "day", "prompt": "Sat Feb 9th", "title": "09/02/19",
-              "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/period/day/20190209/1?site=999",
+              "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/period/day/20190909/1?site=999",
               "render": "link"
             },
             { "rel": "collection", "name": "day.timeofday", "prompt": "Feb 9 Night - Feb 9 Evening",
               "title": "09/02/19 00:00 - 09/02/19 23:59", 
-              "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/period/timeofday/20190209T0000/4?site=999"
+              "href": "http://api.endpoints.sundaya.cloud.goog/energy/hse/period/timeofday/20190909T0000/4?site=999"
             }
           ],
           "data": [
-            { "name": "day", "value": "20190209/1",
+            { "name": "day", "value": "20190909/1",
               "data": [
                 { "name": "harvest", "value": "64.347" },
                 { "name": "store.in", "value": "41.775" },
@@ -222,7 +222,7 @@
                 { "name": "grid.out", "value": "70.239" }
               ]
             },
-            { "name": "day.timeofday", "value": "20190209T0000/4",
+            { "name": "day.timeofday", "value": "20190909T0000/4",
               "data": [
                 { "name": "harvest", "value": "14.000 20.016 15.037 15.294" },
                 { "name": "store.in", "value": "8.812 11.568 14.192 7.203" },

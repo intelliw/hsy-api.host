@@ -66,8 +66,9 @@ class Producer {
             })
                 .catch(e => console.error(`[${this.clientId}] ${e.message}`, e));
 
-            console.log(`${moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat)}, ${this.messages.length} messages [${topicName}, offset: ${result[0].baseOffset}-${Number(result[0].baseOffset) + (this.messages.length - 1)}]`)
-            // 2019-09-10 05:04:44.6630, 2 messages [monitoring.mppt, offset: 2-3]
+            console.log(`${moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat)}, ${this.messages.length} messages [${topicName}:${result[0].baseOffset}-${Number(result[0].baseOffset) + (this.messages.length - 1)}, sender:${this.sender}]`)
+            // console.log(this.messages);
+            // 2019-09-10 05:04:44.6630, 2 messages [monitoring.mppt:2-3, sender:S001]
             await this.producerObj.disconnect();
 
         }

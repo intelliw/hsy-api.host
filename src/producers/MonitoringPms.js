@@ -30,11 +30,9 @@ class MonitoringPms extends Producer {
     // adds calculated elements specific to this dataset, into the dataitem e.g. 'pack.volts' and 'pack.watts'
     addDatasetAttributes(key, dataItem) {
 
-        let attrArray = [];
         let watts;
         let volts;
 
-        const PRECISION = 3;
         const TO_MILLIVOLTS = 1000;
 
         let p = dataItem.pack;                                                                      // all data objects in the sent message are inside pack
@@ -43,8 +41,8 @@ class MonitoringPms extends Producer {
         let dvcl = p.cell.volts.map(element => (parseFloat(((element - vcl) * TO_MILLIVOLTS).toFixed())));
 
         // pack.volts,  pack.watts
-        volts = dataItem.pack.cell.volts.reduce((sum, x) => sum + x).toFixed(PRECISION);            // sum all the cell volts to get pack volts
-        watts = (volts * dataItem.pack.amps).toFixed(PRECISION);
+        volts = dataItem.pack.cell.volts.reduce((sum, x) => sum + x).toFixed(consts.MONITORING_PRECISION);            // sum all the cell volts to get pack volts
+        watts = (volts * dataItem.pack.amps).toFixed(consts.MONITORING_PRECISION);
 
         //  reconstruct dataitem - add new attributes and flatten cell and fet as peers of pack
         dataItem = {

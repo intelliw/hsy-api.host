@@ -26,7 +26,7 @@ class Response {
     */
     constructor(statusEnum, reqAcceptParam, viewPrefix, content) {
 
-        // contentType
+        // response contentType is request Accept
         this.contentType = reqAcceptParam.value;
         
         // view

@@ -219,3 +219,5 @@ module.exports.env = 'local';                                               // l
 
 // system constants
 module.exports.NONE = global.undefined;
+module.exports.MONITORING_PRECISION = 4;                                    // decimal places for float values in monitoring dataset
+

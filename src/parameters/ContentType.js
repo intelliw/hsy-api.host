@@ -6,6 +6,7 @@
  *  
  */
 const consts = require('../host/constants');
+const enums = require('../host/enums');
 
 const Param = require('./Param');
 const THIS_PARAM_NAME = 'contentType';
@@ -28,11 +29,10 @@ class ContentType extends Param {
     */
     constructor(req, responseConsumes) {
 
-        const CONTENT_TYPE_HEADER = 'content-type';
         const EMPTY_BODY = 0;              // zero keys if no body
 
         // isSupported  
-        let requestContentType = req.headers[CONTENT_TYPE_HEADER];                                        // get the Content-Type header   
+        let requestContentType = req.headers[enums.request.headers.contentType];                                        // get the Content-Type header   
         
         let hasBody = req.body ? Object.keys(req.body).length > EMPTY_BODY : false;                      // check if there is a body
         let isSupported = requestContentType && hasBody ? req.is(responseConsumes) : true;                // req.is returns null if no body. isSupported is true if header is in responseConsumes, or if there is no body 

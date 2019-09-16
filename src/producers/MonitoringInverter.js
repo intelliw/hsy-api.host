@@ -35,17 +35,19 @@ class MonitoringInverter extends Producer {
         let watts;
         let volts;
 
-        const PRECISION = 3;
-
         //  reconstruct dataitem - add new attributes 
         dataItem = {
             inverter_id: key,
             ...dataItem
         }
 
+        // battery.watts
+        watts = (dataItem.battery.volts * dataItem.battery.amps).toFixed(consts.MONITORING_PRECISION);
+        dataItem.battery.watts = watts;
+
         // pv.watts
         for (let i = 0; i < dataItem.pv.volts.length; i++) {
-            watts = (dataItem.pv.volts[i] * dataItem.pv.amps[i]).toFixed(PRECISION);
+            watts = (dataItem.pv.volts[i] * dataItem.pv.amps[i]).toFixed(consts.MONITORING_PRECISION);
             attrArray.push(parseFloat(watts));
         };
         dataItem.pv.watts = attrArray;
@@ -53,7 +55,7 @@ class MonitoringInverter extends Producer {
         // load.watts
         attrArray = [];
         for (let i = 0; i < dataItem.load.volts.length; i++) {
-            watts = (dataItem.load.volts[i] * dataItem.load.amps[i]).toFixed(PRECISION);
+            watts = (dataItem.load.volts[i] * dataItem.load.amps[i]).toFixed(consts.MONITORING_PRECISION);
             attrArray.push(parseFloat(watts));
         };
         dataItem.load.watts = attrArray;
@@ -63,7 +65,7 @@ class MonitoringInverter extends Producer {
         let sqRootOfThree = Math.sqrt(3);
 
         for (let i = 0; i < dataItem.grid.volts.length; i++) {
-            watts = (dataItem.grid.volts[i] * dataItem.grid.amps[i] * dataItem.grid.pf[i] * sqRootOfThree).toFixed(PRECISION);
+            watts = (dataItem.grid.volts[i] * dataItem.grid.amps[i] * dataItem.grid.pf[i] * sqRootOfThree).toFixed(consts.MONITORING_PRECISION);
             attrArray.push(parseFloat(watts));
         };
         dataItem.grid.watts = attrArray;

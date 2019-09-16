@@ -46,42 +46,34 @@ class DevicesDatasetsPostResponse extends Response {
       isValid: true } }
     * 
   */
-  constructor(params, reqAcceptParam, reqContentTypeParam) {
-    
-    let content = executePost(params, reqContentTypeParam.value);                                          // perform the post operation 
-    
-    super(RESPONSE_STATUS, reqAcceptParam, VIEW_PREFIX, content, reqContentTypeParam);
+  constructor(params, reqAcceptParam) {
+
+    let content = executePost(params);                                            // perform the post operation 
+
+    super(RESPONSE_STATUS, reqAcceptParam, VIEW_PREFIX, content);
 
   }
 }
 
 // perform the data operation 
-function executePost(params, reqContentType) {
-  let datasets, csvData;
-
-  // get the datasets content
-  if (reqContentType == enums.mimeTypes.textCsv) {                                    // for text/csv req body cotnains raw csv content 
-    csvData = params.datasets.value;                                                 
-  } else {                                                                            // enums.mimeTypes.applicationJson        
-    datasets = params.datasets.value.datasets;                                        // for application/json the req.body is a 'datasets' object with array of datasets {"datasets": [.. ]        
-  }
-  console.log(`reqContentType ${reqContentType} dataset ${datasets}`)  //  @@@@@@
+function executePost(params) {
 
   // construct a producer
-  let datasetName = params.dataset.value;                                             //  enums.datasets              - e.g. pms  
-  let sender = utils.keynameFromValue(enums.apiKey, params.apiKey.value);             // the datasource is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
+  let datasets = params.datasets.value;                                           // for application/json the req.body is a 'datasets' object with array of datasets {"datasets": [.. ]        
+  let datasetName = params.dataset.value;                                         //  enums.datasets              - e.g. pms  
+  let sender = utils.keynameFromValue(enums.apiKey, params.apiKey.value);         // the datasource is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
   let producer = Producer.factory.getProducer(datasetName, datasets, sender);
-  
+
   // processes the message transaction (sendToTopic) asynchronously. by now the dataset should have been validated and the only outcome is a 200 response
   producer.sendToTopic();                                                             // send messages to the broker 
-  
+
   // prepare the response
   let responseDetail = new GenericMessageDetail();
   responseDetail.add('Data queued for processing.', `datasets:${datasetName} | ${datasets.length}`);
 
   let statusCode = utils.keynameFromValue(enums.responseStatus, RESPONSE_STATUS);
   let response = new GenericMessage(statusCode, RESPONSE_STATUS, responseDetail.getElements());
-  
+
   return response.getElements();
 
 }

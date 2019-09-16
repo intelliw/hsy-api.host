@@ -103,13 +103,12 @@ function validateParams(req, params, errors) {
 function validateContentType(req, contentTypeParam, errors) {
 
     const ERROR_MESSAGE = 'Content-Type not supported.';
-    const CONTENT_TYPE_HEADER = 'content-type';
 
     let isContentTypeValid = contentTypeParam.isValid;                              // if content type is undefined it is not valid
 
     if (!isContentTypeValid) {
         errors.add(
-            `${ERROR_MESSAGE} | ${req.headers[CONTENT_TYPE_HEADER]}`,
+            `${ERROR_MESSAGE} | ${req.headers[enums.request.headers.contentType]}`,
             `Content-Type header`);                                                 // add the message detail to the errors
     }
 

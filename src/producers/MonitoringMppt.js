@@ -34,17 +34,19 @@ class MonitoringMppt extends Producer {
         let watts;
         let volts;
 
-        const PRECISION = 3;
-
         //  reconstruct dataitem - add new attributes 
         dataItem = {
             mppt_id: key,
             ...dataItem
         }
 
+        // battery.watts
+        watts = (dataItem.battery.volts * dataItem.battery.amps).toFixed(consts.MONITORING_PRECISION);
+        dataItem.battery.watts = watts;
+
         // pv.watts
         for (let i = 0; i < dataItem.pv.volts.length; i++) {
-            watts = (dataItem.pv.volts[i] * dataItem.pv.amps[i]).toFixed(PRECISION)
+            watts = (dataItem.pv.volts[i] * dataItem.pv.amps[i]).toFixed(consts.MONITORING_PRECISION)
             attrArray.push(parseFloat(watts));
         };
         dataItem.pv.watts = attrArray;
@@ -52,7 +54,7 @@ class MonitoringMppt extends Producer {
         // load.watts
         attrArray = [];
         for (let i = 0; i < dataItem.load.volts.length; i++) {
-            watts = (dataItem.load.volts[i] * dataItem.load.amps[i]).toFixed(PRECISION);
+            watts = (dataItem.load.volts[i] * dataItem.load.amps[i]).toFixed(consts.MONITORING_PRECISION);
             attrArray.push(parseFloat(watts));
         };
         dataItem.load.watts = attrArray;
