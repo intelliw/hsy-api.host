@@ -30,17 +30,18 @@ class ContentType extends Param {
     constructor(req, responseConsumes) {
 
         const EMPTY_BODY = 0;              // zero keys if no body
-
-        // isSupported  
-        let requestContentType = req.headers[enums.request.headers.contentType];                                        // get the Content-Type header   
         
-        let hasBody = req.body ? Object.keys(req.body).length > EMPTY_BODY : false;                      // check if there is a body
-        let isSupported = requestContentType && hasBody ? req.is(responseConsumes) : true;                // req.is returns null if no body. isSupported is true if header is in responseConsumes, or if there is no body 
+        // isSupported  
+        let requestContentType = req.headers[enums.request.headers.contentType];                            // get the Content-Type header   - undefined if there is none
+        let hasContentType = requestContentType !== consts.NONE;
 
+        let hasBody = req.body ? Object.keys(req.body).length > EMPTY_BODY : false;                         // check if there is a body
+        let isSupported = hasContentType && hasBody ? req.is(responseConsumes) : true;                      // req.is returns null if no body. isSupported is true if header is in responseConsumes, or if there is no body
+        
         // call super
-        requestContentType = isSupported ? requestContentType : consts.NONE;                                // if not supported set requestContentType to NONE
+        requestContentType = isSupported ? (hasContentType ? requestContentType : responseConsumes) : consts.NONE;   // if not supported set requestContentType to NONE
         super(THIS_PARAM_NAME, requestContentType);
-
+        
     }
 
 }

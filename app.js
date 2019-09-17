@@ -8,8 +8,9 @@ const express = require('express');
 const bodyParser = require('body-parser')
 const Buffer = require('safe-buffer').Buffer;
 
-const config = require('./src/host/config');                                           
-const consts = require('./src/host/constants');
+const host = require('./src/host');
+const consts = host.constants;                                           
+
 
 const paths = require('./src/paths');
 const sandbox = require('./sandbox');
@@ -18,7 +19,7 @@ const sandbox = require('./sandbox');
 const app = express();
 
 // initialise 
-config.initialise(app);                                                            // configuration settings
+host.config.initialise(app);                                                            // configuration settings
 
 
 /* body parser
@@ -37,7 +38,7 @@ app.use('/api', paths.diagnosticsRouter);                                       
 app.use('/devtest', sandbox.devtest);                                                   // not in openapi spec: for testing and troubleshooting only
 
 // static folders 
-app.use('/static', express.static(conts.folders.STATIC));
+app.use('/static', express.static(consts.folders.STATIC));
 
 
 // handle error

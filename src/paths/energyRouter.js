@@ -31,7 +31,6 @@ router.route([
         let response = request.response;                       // execute the operation and return a response 
         let collections = response.content;
         
-
         // /* response
         res
             .status(response.statusCode)
