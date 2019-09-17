@@ -25,14 +25,14 @@ host.config.initialise(app);                                                    
 var rawBodySaver = function (req, res, buf, encoding) {
     // if (buf && buf.length) { req.rawBody = buf.toString(encoding || 'utf8');}
 }
-app.use(bodyParser.json({ verify: rawBodySaver }));
-app.use(bodyParser.raw({ verify: rawBodySaver, type: function () { return true } }));   // for raw body parse function must return true
+app.use(bodyParser.json({ verify: rawBodySaver, limit: '5mb' }));
+app.use(bodyParser.raw({ verify: rawBodySaver, limit: '5mb', type: function () { return true } }));   // for raw body parse function must return true
 
 // routes        
-app.use('/energy', paths.energyRouter);                                             // openapi tag: Energy - this is als to the default route
-app.use(['/devices', '/device'], paths.devicesRouter);                              // openapi tag: Devices
-app.use('/api', paths.diagnosticsRouter);                                           // openapi tag: Diagnostics
-app.use('/devtest', sandbox.devtest);                                               // not in openapi spec: for testing and troubleshooting only
+app.use('/energy', paths.energyRouter);                                                 // openapi tag: Energy - this is als to the default route
+app.use(['/devices', '/device'], paths.devicesRouter);                                  // openapi tag: Devices
+app.use('/api', paths.diagnosticsRouter);                                               // openapi tag: Diagnostics
+app.use('/devtest', sandbox.devtest);                                                   // not in openapi spec: for testing and troubleshooting only
 
 // static folders 
 app.use('/static', express.static(host.constants.folders.STATIC));

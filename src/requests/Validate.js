@@ -5,6 +5,7 @@
  * validation for Request class
  *  
  */
+const enums = require('../host/enums');
 const GenericMessageDetail = require('../definitions/GenericMessageDetail');
 
 /**
@@ -32,7 +33,7 @@ class Validate {
         
         // errors
         this.errors = new GenericMessageDetail();                                                                   // each validation above added a detail elemeent to the errors object passed in by reference
-
+        
         // validations               
         this.isAuthorised = validateAuthorisation(req, requestObj.apiKey, this.errors);             // validate authorisation 
         this.isAcceptTypeValid = validateAcceptType(req, requestObj.accept, this.errors);           // validate accept Type 
@@ -105,13 +106,13 @@ function validateContentType(req, contentTypeParam, errors) {
     const ERROR_MESSAGE = 'Content-Type not supported.';
 
     let isContentTypeValid = contentTypeParam.isValid;                              // if content type is undefined it is not valid
-
+    
     if (!isContentTypeValid) {
         errors.add(
             `${ERROR_MESSAGE} | ${req.headers[enums.request.headers.contentType]}`,
             `Content-Type header`);                                                 // add the message detail to the errors
     }
-
+    
     return isContentTypeValid;
 }
 

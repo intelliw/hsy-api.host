@@ -42,7 +42,7 @@ class Request {
         this.apiKey = new Param(consts.params.names.api_key, req.headers[consts.params.names.api_key], enums.apiKey.default, enums.apiKey);
         this.accept = new Param.Accept(req, responseProduces);
         this.contentType = new Param.ContentType(req, responseConsumes);
-
+        
         //validate the raw request                                                                         // validates.. this.params, this.apikey, and this.accept
         this.validation = new Validate(req, this);
         

@@ -66,9 +66,14 @@ class Producer {
             })
                 .catch(e => console.error(`[${this.clientId}] ${e.message}`, e));
 
-            console.log(`${moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat)}, ${this.messages.length} messages [${topicName}:${result[0].baseOffset}-${Number(result[0].baseOffset) + (this.messages.length - 1)}, sender:${this.sender}]`)
-            // console.log(this.messages);
-            // 2019-09-10 05:04:44.6630, 2 messages [monitoring.mppt:2-3, sender:S001]
+            // log output
+            console.log(
+                // e.g. 2019-09-10 05:04:44.6630, 2 messages [monitoring.mppt:2-3, sender:S001]
+                `${moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat)}, ${this.messages.length} messages [${topicName}:${result[0].baseOffset}-${Number(result[0].baseOffset) + (this.messages.length - 1)}, sender:${this.sender}]`)
+                // if verbose logging on.. e.g. [ { key: '025', value: '[{"pms_id" .... 
+                if (consts.environments[consts.env].log.verbose) console.log(this.messages);
+
+            // disconnect
             await this.producerObj.disconnect();
 
         }

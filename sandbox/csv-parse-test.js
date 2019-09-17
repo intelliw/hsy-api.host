@@ -1,4 +1,7 @@
-const csvparse = require('csv-parse')
+//@ts-check
+"use strict";
+const csvAsyncParse = require('csv-parse')
+const csvSyncParse = require('csv-parse/lib/sync')
 
 const output = []
 const CSV_DATA = `
@@ -6,9 +9,9 @@ pms.id,time_local,pack.dock,pack.id,pack.dock,pack.amps,pack.temp.1,pack.temp.2,
 25,20190820T115900.000+0700,6,269,6,-1.3,33,32,31,3.793,3.796,3.78,3.788,3.797,3.795,3.792,3.796,3.788,3.779,3.795,3.795,3.788,3.793,1,,6,,,,,,,,,,,,30,29,0,0
 25,20190820T120000.000+0700,6,269,6,-1.3,41,39,34,3.793,3.796,3.78,3.788,3.793,3.795,3.792,3.796,3.788,3.779,3.791,3.795,3.785,3.793,,,,,,,,,,,,,,,43,39,1,0
 `;
-
+// async function begins on readable stream event after csvAsyncParse returns
 function test1() {
-    csvparse(CSV_DATA, {
+    csvAsyncParse(CSV_DATA, {
         trim: true,
         skip_empty_lines: true
     })
@@ -26,24 +29,12 @@ function test1() {
         })
 }
 
+
+// async - function processes all records after csvAsyncParse returns, and then runs end function
 // with headers - and error ('3.797' '3.795 has no closing quote
 function test2() {
-    csvparse(CSV_DATA.
-        trim(), {
-        columns: true, 
-        skip_lines_with_error: true
-    }, function (err, records) {
-        records.forEach(record => {
-            console.log(`pack.id: ${record['pack.id']} time_local: ${record.time_local}`);
-        });
-    })
 
-}
-
-
-// with headers - and error ('3.797' '3.795 has no closing quote
-function test3() {
-    let csvRows = csvparse(CSV_DATA.trim(), {
+    csvAsyncParse(CSV_DATA.trim(), {
         columns: true, 
         skip_lines_with_error: true
 
@@ -60,4 +51,18 @@ function test3() {
 
 }
 
+// sync function - returns all records after csvparse 
+function test3() {
+
+    const csvRows = csvSyncParse(CSV_DATA.trim(), {
+        columns: true,
+        skip_empty_lines: true
+    })
+    console.log('@@@')  // @@@@@
+    console.log(csvRows[0]['pack.id'])  // @@@@@
+    console.log(csvRows[1]['pack.id'])  // @@@@@
+    console.log(`csvRows.length ${csvRows.length}`); // @@@@@
+    //console.dir(csvRows);
+
+}
 test3();
