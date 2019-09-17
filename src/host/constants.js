@@ -203,7 +203,7 @@ module.exports.environments = {
         kafka: {
             brokers: ['kafka-1-vm:9092']                                    // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
         },
-        log: { verbose: true }
+        log: { verbose: false }
     },
     devcloud: {                                                             // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: 'api.endpoints.sundaya.cloud.goog' },
