@@ -145,7 +145,7 @@ module.exports.dateTime = {
     bigqueryZonelessTimestampFormat: 'YYYY-MM-DD HH:mm:ss.SSSS',             // "2019-02-09T16:00:17.0200"          use this format to force bigquery to store local time without converting to utc          
 }
 
-// parameter constants 
+// constants to define api parameters 
 module.exports.params = {
     names: {
         api_key: 'api_key',                                 // header param, must be lower case
@@ -168,48 +168,54 @@ module.exports.api = {
 
 // kafkajs client configuration options
 module.exports.kafkajs = {
-    retry: {                                                             // retry options  https://kafka.js.org/docs/configuration
-        maxRetryTime: 10000,                                             // max milliseconds wait for a retry (30000)
-        initialRetryTime: 100,                                           // initial value in milliseconds, randomized after first time (300)
-        factor: 0.2,                                                     // Randomization factor	   
-        multiplier: 2,                                                   // Exponential factor
-        retries: 8,                                                      // max number of retries per call (5)
-        maxInFlightRequests: 200                                         // max num requestsin progress at any time. If falsey then no limit (null)
+    retry: {                                                                // retry options  https://kafka.js.org/docs/configuration
+        maxRetryTime: 10000,                                                // max milliseconds wait for a retry (30000)
+        initialRetryTime: 100,                                              // initial value in milliseconds, randomized after first time (300)
+        factor: 0.2,                                                        // Randomization factor	   
+        multiplier: 2,                                                      // Exponential factor
+        retries: 8,                                                         // max number of retries per call (5)
+        maxInFlightRequests: 200                                            // max num requestsin progress at any time. If falsey then no limit (null)
     },
-    send: {                                                              // https://kafka.js.org/docs/producing   
+    send: {                                                                 // https://kafka.js.org/docs/producing   
         timeout: 30000
     },
-    connectionTimeout: 3000,                                             // milliseconds to wait for a successful connection   
-    requestTimeout: 25000                                                // milliseconds to wait for a successful request.    
+    connectionTimeout: 3000,                                                // milliseconds to wait for a successful connection   
+    requestTimeout: 25000                                                   // milliseconds to wait for a successful request.    
 }
 
+// system configuration constants
+module.exports.system = {
+    MONITORING_PRECISION: 4,                                                // decimal places for float values in monitoring dataset
+    BODYPARSER_LIMIT_MB: 1                                                 // max mb for post messages 
+}
+    
 // system constants for the environment
 module.exports.environments = {
     local: {
         api: { host: '192.168.1.106:8080' },
         kafka: {
-            brokers: ['192.168.1.106:9092']                               // localhost   | 192.168.1.106        
+            brokers: ['192.168.1.106:9092']                                 // localhost   | 192.168.1.106        
         },
         log: { verbose: false }
     },
-    devcloudtest: {                                                       // single node kafka, or Kafka Std - 1 master, N workers
+    devcloudtest: {                                                         // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: 'api.endpoints.sundaya.cloud.goog' },
         kafka: {
-            brokers: ['kafka-1-vm:9092']                                  // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
+            brokers: ['kafka-1-vm:9092']                                    // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
         },
         log: { verbose: true }
     },
-    devcloud: {                                                           // single node kafka, or Kafka Std - 1 master, N workers
+    devcloud: {                                                             // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: 'api.endpoints.sundaya.cloud.goog' },
         kafka: {
-            brokers: ['kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']         // array of kafka message brokers         '[kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
+            brokers: ['kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']           // array of kafka message brokers         '[kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
         },
         log: { verbose: false }
     },
-    prodcloud: {                                                          // Kafka HA - 3 masters, N workers
+    prodcloud: {                                                            // Kafka HA - 3 masters, N workers
         api: { host: 'api.endpoints.sundaya.cloud.goog' },
         kafka: {
-            brokers: ['kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']         // array of kafka message brokers         '[kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
+            brokers: ['kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']           // array of kafka message brokers         '[kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
         },
         log: { verbose: false }
     }
@@ -220,5 +226,4 @@ module.exports.env = 'devcloudtest';                                      // loc
 
 // system constants
 module.exports.NONE = global.undefined;
-module.exports.MONITORING_PRECISION = 4;                                  // decimal places for float values in monitoring dataset
 

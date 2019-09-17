@@ -33,6 +33,7 @@ class MonitoringPms extends Producer {
         let watts;
         let volts;
 
+        const precision = consts.system.MONITORING_PRECISION;
         const TO_MILLIVOLTS = 1000;
 
         let p = dataItem.pack;                                                                      // all data objects in the sent message are inside pack
@@ -41,8 +42,8 @@ class MonitoringPms extends Producer {
         let dvcl = p.cell.volts.map(element => (parseFloat(((element - vcl) * TO_MILLIVOLTS).toFixed())));
 
         // pack.volts,  pack.watts
-        volts = dataItem.pack.cell.volts.reduce((sum, x) => sum + x).toFixed(consts.MONITORING_PRECISION);            // sum all the cell volts to get pack volts
-        watts = (volts * dataItem.pack.amps).toFixed(consts.MONITORING_PRECISION);
+        volts = dataItem.pack.cell.volts.reduce((sum, x) => sum + x).toFixed(precision);            // sum all the cell volts to get pack volts
+        watts = (volts * dataItem.pack.amps).toFixed(precision);
 
         //  reconstruct dataitem - add new attributes and flatten cell and fet as peers of pack
         dataItem = {

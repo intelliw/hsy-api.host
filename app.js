@@ -8,7 +8,9 @@ const express = require('express');
 const bodyParser = require('body-parser')
 const Buffer = require('safe-buffer').Buffer;
 
-const host = require('./src/host');                 // common services
+const config = require('./src/host/config');                                           
+const consts = require('./src/host/constants');
+
 const paths = require('./src/paths');
 const sandbox = require('./sandbox');
 
@@ -16,7 +18,7 @@ const sandbox = require('./sandbox');
 const app = express();
 
 // initialise 
-host.config.initialise(app);                                                            // configuration settings
+config.initialise(app);                                                            // configuration settings
 
 
 /* body parser
@@ -25,8 +27,8 @@ host.config.initialise(app);                                                    
 var rawBodySaver = function (req, res, buf, encoding) {
     // if (buf && buf.length) { req.rawBody = buf.toString(encoding || 'utf8');}
 }
-app.use(bodyParser.json({ verify: rawBodySaver, limit: '5mb' }));
-app.use(bodyParser.raw({ verify: rawBodySaver, limit: '5mb', type: function () { return true } }));   // for raw body parse function must return true
+app.use(bodyParser.json({ verify: rawBodySaver, limit: `${consts.system.BODYPARSER_LIMIT_MB}mb` }));
+app.use(bodyParser.raw({ verify: rawBodySaver, limit: `${consts.system.BODYPARSER_LIMIT_MB}mb`, type: function () { return true } }));   // for raw body parse function must return true
 
 // routes        
 app.use('/energy', paths.energyRouter);                                                 // openapi tag: Energy - this is als to the default route
@@ -35,7 +37,7 @@ app.use('/api', paths.diagnosticsRouter);                                       
 app.use('/devtest', sandbox.devtest);                                                   // not in openapi spec: for testing and troubleshooting only
 
 // static folders 
-app.use('/static', express.static(host.constants.folders.STATIC));
+app.use('/static', express.static(conts.folders.STATIC));
 
 
 // handle error
