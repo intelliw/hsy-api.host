@@ -186,7 +186,7 @@ module.exports.kafkajs = {
 // system configuration constants
 module.exports.system = {
     MONITORING_PRECISION: 4,                                                // decimal places for float values in monitoring dataset
-    BODYPARSER_LIMIT_MB: 1                                                 // max mb for post messages 
+    BODYPARSER_LIMIT_MB: 1                                                  // max mb for post messages 
 }
     
 // system constants for the environment
@@ -222,7 +222,7 @@ module.exports.environments = {
 }
 
 // env sets the active environment - change this to one of the environments in consts.environments -0 eg. change to 'devcloud' before release
-module.exports.env = 'devcloudtest';                                      // local or devcloud or prodcloud
+module.exports.env = 'local';                                      // local or devcloud or prodcloud
 
 // system constants
 module.exports.NONE = global.undefined;

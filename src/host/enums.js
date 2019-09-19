@@ -113,7 +113,7 @@ module.exports.messageBroker = {                    // kafka message broker. top
     },
     producers: {                                    // producer client Ids
         clientId: {                                 
-            devices: 'device.datasets'              // producer client id convention = <api path>.<api path>
+            default: 'clientid.apihost'             // producer client id - preferred convention = <api path>.<api path>
         }
     },
     topics: {                                       //  topic names 

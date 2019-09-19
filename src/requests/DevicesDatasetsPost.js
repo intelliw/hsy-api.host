@@ -36,7 +36,6 @@ class DevicesDatasetsPost extends Request {
 
         let dataset, datasets, contentType, isPmsCsv;
 
-
         // body content - check if json or csv                                                      // for application/json this is a datasets object with array of datasets {"datasets": [.. ] 
         dataset = req.params.dataset;                                                               // dataset is a query string param         
         contentType = req.headers[enums.request.headers.contentType];                               // text/csv or application/json
@@ -48,7 +47,6 @@ class DevicesDatasetsPost extends Request {
         } else {
             datasets = req.body.datasets;
         }
-
 
         // parameters                                                       
         let params = {};

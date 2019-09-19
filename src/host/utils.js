@@ -255,6 +255,23 @@ module.exports.randomFloat = (min, max, decimalPlaces) => {
 }
 
 
+// returns a fixed length string from a random integer between min and max, paded with leading zeros if the number has less digits than the number of digits in max.
+// calls randomFloat() and padZer()
+module.exports.randomIntegerString = (min, max) => {
+
+    const ZERO_DECIMAL_PLACES = 0;
+    
+    // get a random number 
+    let maxLength = max.toString().length;               
+    let randomInt = this.randomFloat(min, max, ZERO_DECIMAL_PLACES);
+    let randomIntStr = randomInt.toString().substring(0,maxLength);
+
+    // pad zeros if shorter than max 
+    return this.padZero(randomIntStr, maxLength);
+
+}
+
+
 // returns true at random. This was needed to limit the periods which are outputted fior 'instant' to simulate real-life data logging
 module.exports.randomTrue = () => {
 

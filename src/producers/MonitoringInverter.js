@@ -9,8 +9,6 @@ const enums = require('../host/enums');
 
 const Producer = require('../producers');
 
-const CLIENT_ID = enums.messageBroker.producers.clientId.devices;                   // e.g. 'device.datasets'
-
 /**
  */
 class MonitoringInverter extends Producer {
@@ -23,7 +21,7 @@ class MonitoringInverter extends Producer {
     constructor(datasetName, datasets, sender) {
 
         // construct super
-        super(datasetName, datasets, sender, CLIENT_ID);                        // only waits for the leader to acknowledge 
+        super(datasetName, datasets, sender);                        // only waits for the leader to acknowledge 
 
     }
 
