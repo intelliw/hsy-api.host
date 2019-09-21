@@ -1,4 +1,5 @@
 //@ts-check
+'use strict';
 /**
  * ./path/diagnostics.js
  * handlers for /api path which contains diagnostics for the api 

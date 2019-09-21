@@ -1,4 +1,5 @@
 //@ts-check
+'use strict';
 /**
  * ./svc/enum.js
  * global enumerations
@@ -110,11 +111,6 @@ module.exports.messageBroker = {                    // kafka message broker. top
         all: -1,                                    // -1 = all replicas must acknowledge (default) 
         none: 0,                                    //  0 = no acknowledgments 
         leader: 1                                   //  1 = only waits for the leader to acknowledge 
-    },
-    producers: {                                    // producer client Ids
-        clientId: {                                 
-            default: 'clientid.apihost'             // producer client id - preferred convention = <api path>.<api path>
-        }
     },
     topics: {                                       //  topic names 
         monitoring: {                               //  topics for monitoring datasets

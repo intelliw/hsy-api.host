@@ -1,10 +1,14 @@
 //@ts-check
+'use strict';
 /**
  * ./svc/constant.js
  * global constants
  */
 const path = require('path');                   // this is a node package not the '../paths' applicaiton module
 const enums = require('./enums');
+const utils = require('./utils');
+
+const PRODUCER_CLIENTID = `producer.${utils.randomIntegerString(1,9999)}`
 
 // folder locations
 module.exports.folders = {
@@ -180,7 +184,10 @@ module.exports.kafkajs = {
         timeout: 30000
     },
     connectionTimeout: 3000,                                                // milliseconds to wait for a successful connection   
-    requestTimeout: 25000                                                   // milliseconds to wait for a successful request.    
+    requestTimeout: 25000,                                                  // milliseconds to wait for a successful request.    
+    producer: {                                                             // producer client Ids
+        clientId: PRODUCER_CLIENTID                                         // producer client id prefix - preferred convention = <api path>.<api path>
+    }
 }
 
 // system configuration constants

@@ -1,12 +1,14 @@
 //@ts-check
+'use strict';
 /**
  * ./svc/config.js
  * configuration settings 
  */
-const consts = require('../host/constants');                       
+const consts = require('../host/constants');
 
 module.exports.initialise = function (app) {
     
+    // express initialisations
     app.set('case sensitive routing', true);
     app.disable('x-powered-by');                    // disable the 'X-Powered-By →Express' header 
 

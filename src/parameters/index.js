@@ -1,4 +1,5 @@
 //@ts-check
+'use strict';
 /**
  * ./parameters/index.js
  * api parameters

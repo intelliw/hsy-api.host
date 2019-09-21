@@ -11,8 +11,6 @@ const consts = require('../host/constants');
 const utils = require('../host/utils');
 const moment = require('moment');
 
-const DEFAULT_CLIENT_ID = enums.messageBroker.producers.clientId.default;           // e.g. 'clientid.apihost'
-
 class Producer {
     /**
      * superclass - 
@@ -22,33 +20,30 @@ class Producer {
     instance attributes:  
      producerObj": kafka.producer()
      messages": []
-     clientId":  'devices.datasets'
 
      constructor arguments 
     * @param {*} datasetName                                                        // enums.datasets              - e.g. pms  
     * @param {*} datasets                                                           // an array of datasets
     * @param {*} sender                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
-    * @param {*} clientId                                                           // consts.messaging.clientid   - e.g. devices.datasets
     */
     constructor(datasetName, datasets, sender) {
 
         // create a kafka producer
         const kafka = new Kafka({
             brokers: consts.environments[consts.env].kafka.brokers,                 //  e.g. [`${this.KAFKA_HOST}:9092`, `${this.KAFKA_HOST}:9094`]
-            clientId: DEFAULT_CLIENT_ID,
+            clientId: consts.kafkajs.producer.clientId,
             retry: consts.kafkajs.retry,                                            // retry options  https://kafka.js.org/docs/configuration   
             connectionTimeout: consts.kafkajs.connectionTimeout,                    // milliseconds to wait for a successful connection   
             requestTimeout: consts.kafkajs.requestTimeout                           // milliseconds to wait for a successful request.     
         })
         this.producerObj = kafka.producer();
-
+        
         // setup instance variables
         this.messages = [];                                                         // start with an empty array and later call addMessage()  
 
         this.datasetName = datasetName;
         this.datasets = datasets;                                                   // array of datasets           
         this.sender = sender;                                                       // is based on the api key and identifies the source of the data. this value is added to sys.source attribute
-        this.clientId = DEFAULT_CLIENT_ID;                                          // enums.messageBroker.producers.clientId
     }
 
     // extracts an array of modified data items and sends these as messages to the broker 
@@ -66,7 +61,7 @@ class Producer {
                 acks: enums.messageBroker.ack.default,                                  // default is 'leader'
                 timeout: consts.kafkajs.send.timeout
             })
-                .catch(e => console.error(`[${this.clientId}] ${e.message}`, e));
+                .catch(e => console.error(`[${consts.kafkajs.producer.clientId}] ${e.message}`, e));
 
             // log output
             console.log(

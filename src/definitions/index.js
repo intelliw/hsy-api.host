@@ -1,4 +1,5 @@
 //@ts-check
+'use strict';
 /**
  * ./parameters/definitions.js
  * api defintions

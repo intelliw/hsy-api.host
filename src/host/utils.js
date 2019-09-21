@@ -1,4 +1,5 @@
 //@ts-check
+'use strict';
 /**
  * PACKAGE: ./host/index.js
  * schemas and constants

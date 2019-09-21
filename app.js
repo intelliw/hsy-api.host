@@ -1,8 +1,8 @@
+//@ts-check
+'use strict';
 /**
  * version 00.08
  */
-
-'use strict';
 
 const express = require('express');
 const bodyParser = require('body-parser')
