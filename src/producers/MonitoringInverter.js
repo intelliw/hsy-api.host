@@ -6,6 +6,7 @@
  */
 const consts = require('../host/constants');
 const enums = require('../host/enums');
+const utils = require('../host/utils');
 
 const Producer = require('../producers');
 
@@ -29,49 +30,66 @@ class MonitoringInverter extends Producer {
     // adds calculated elements specific to this dataset, into the dataitem e.g. 'pack.volts' and 'pack.watts'
     addDatasetAttributes(key, dataItem) {
 
-        let attrArray = [];
-        let watts;
-        let volts;
-        
-        const precision = consts.system.MONITORING_PRECISION;
+        let volts, amps, watts, pf;
 
-        //  reconstruct dataitem - add new attributes 
-        dataItem = {
+        const PRECISION = consts.system.MONITORING_PRECISION;
+        const ITEMNUMBER_LENGTH = 2;                                                                // how many digits int he cell number e.g 02
+        const SQ_ROOT_OF_THREE = Math.sqrt(3);   
+
+        //  reconstruct dataitem - add new attributes and flatten arrays 
+        let dataObj = {
             inverter_id: key,
-            ...dataItem
+            time_local: dataItem.time_local                                                         // this gets replaced and deleted in addGenericAttributes()
         }
 
-        // battery.watts
-        watts = (dataItem.battery.volts * dataItem.battery.amps).toFixed(precision);
-        dataItem.battery.watts = watts;
+        // pv
+        for (let i = 1; i <= dataItem.pv.volts.length; i++) {
+            volts = dataItem.pv.volts[i - 1];
+            amps = dataItem.pv.amps[i - 1];
+            watts = (volts * amps).toFixed(PRECISION);
 
-        // pv.watts
-        for (let i = 0; i < dataItem.pv.volts.length; i++) {
-            watts = (dataItem.pv.volts[i] * dataItem.pv.amps[i]).toFixed(precision);
-            attrArray.push(parseFloat(watts));
-        };
-        dataItem.pv.watts = attrArray;
+            let pvId = 'pv_' + utils.padZero(i, ITEMNUMBER_LENGTH);
+            dataObj[pvId] = {                                                                       //   "pv_01": {
+                volts: volts, amps: amps, watts: parseFloat(watts)                                  //      "volts": 48, "amps": 6, "watts": 288 },
+            }
+        }
 
-        // load.watts
-        attrArray = [];
-        for (let i = 0; i < dataItem.load.volts.length; i++) {
-            watts = (dataItem.load.volts[i] * dataItem.load.amps[i]).toFixed(precision);
-            attrArray.push(parseFloat(watts));
-        };
-        dataItem.load.watts = attrArray;
+        // battery
+        volts = dataItem.battery.volts;
+        amps = dataItem.battery.amps;
+        watts = (volts * amps).toFixed(PRECISION);
 
-        // grid.watts == V x I x pf x √3  
-        attrArray = [];
-        let sqRootOfThree = Math.sqrt(3);
+        dataObj.battery = {                                                                        //   "battery": {
+            volts: volts, amps: amps, watts: parseFloat(watts)                                     //      "volts": 55.1, "amps": 0.0, "watts": 0 },
+        }
 
-        for (let i = 0; i < dataItem.grid.volts.length; i++) {
-            watts = (dataItem.grid.volts[i] * dataItem.grid.amps[i] * dataItem.grid.pf[i] * sqRootOfThree).toFixed(precision);
-            attrArray.push(parseFloat(watts));
-        };
-        dataItem.grid.watts = attrArray;
+        // load
+        for (let i = 1; i <= dataItem.load.volts.length; i++) {
+            volts = dataItem.load.volts[i - 1];
+            amps = dataItem.load.amps[i - 1];
+            watts = (volts * amps).toFixed(PRECISION);
 
-        return dataItem;
+            let loadId = 'load_' + utils.padZero(i, ITEMNUMBER_LENGTH);
+            dataObj[loadId] = {                                                                     //   "load_01": {
+                volts: volts, amps: amps, watts: parseFloat(watts)                                  //      "volts": 48, "amps": 1.2, "watts": 57.6 },
+            }
+        }
 
+
+        // grid
+        for (let i = 1; i <= dataItem.grid.volts.length; i++) {
+            volts = dataItem.grid.volts[i - 1];
+            amps = dataItem.grid.amps[i - 1];
+            pf = dataItem.grid.pf[i - 1];
+            watts = (volts * amps * pf * SQ_ROOT_OF_THREE).toFixed(PRECISION);                      // grid.watts == V x I x pf x √3  
+            
+            let gridId = 'grid_' + utils.padZero(i, ITEMNUMBER_LENGTH);
+            dataObj[gridId] = {                                                                     //   "grid_01": {
+                volts: volts, amps: amps, pf: pf, watts: parseFloat(watts)                          //      "volts": 48, "amps": 1.2, "pf": 0.92, "watts": 91.785 },
+            }
+        }
+
+        return dataObj;
     }
 
 }

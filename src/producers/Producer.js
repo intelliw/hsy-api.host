@@ -50,7 +50,7 @@ class Producer {
     async sendToTopic() {
 
         if (this.extractData()) {
-
+            
             // send the message to the topic
             let topicName = enums.messageBroker.topics.monitoring[this.datasetName];    //  lookup topic name based on datasetname           
             await this.producerObj.connect();

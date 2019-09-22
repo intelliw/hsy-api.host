@@ -407,9 +407,9 @@ function parentChildDescription(periodObj) {
                 let duration = moment.utc(epochInstant).daysInMonth();                  // get the days for this month  
                 let start = descr ? (descr.split(SPACE_DELIMITER).length) + 1 : DEFAULT_START; // get the days in the constant - this should be 28
 
-                let hoWMany = (duration - start) + 1;
+                let howMany = (duration - start) + 1;
 
-                descr = utils.createSequence(start, hoWMany, SPACE_DELIMITER, descr);
+                descr = utils.createSequence(start, howMany, SPACE_DELIMITER, descr);
 
                 break;
 

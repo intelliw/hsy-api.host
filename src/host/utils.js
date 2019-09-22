@@ -35,7 +35,7 @@ module.exports.capitalise = (str, allWords) => {
 /**
  * returns a number sequence (e.g. days of the month '01 02 ..' etc) in a delimited string with zero pads
  * howMany is the number of numbers to output including the startNum 
- * prefix is an optional lead string
+ * prefix is an optional lead string, set it to undefined if no prefix is needed 
  * pad is a boolean for whether to pad - default is true 
  *  if provided it is prepended to the sequence to optimise performance by reducing the iterations needed 
  * e.g. startNum = 1, howMany = 10, delimiter = " ", prefix = '01 02 03 04 05 06 07'
@@ -46,18 +46,19 @@ module.exports.createSequence = (startNum, howMany, delimiter, prefix, pad) => {
     const PAD_ZERO = "0";
 
     let zerosToPad; let digits; let num;
-
+    
     pad = pad ? pad : true;
-    let seqStr = prefix ? prefix.trim() : "";                      // prepend prefix if provided
+    let seqStr = prefix !== consts.NONE? prefix.trim() : "";                      // prepend prefix if provided
     let maxNum = Number(startNum) + (howMany - 1);
     let maxDigits = maxNum.toString().length;
 
     let i;
-    seqStr += howMany > 0 ? delimiter : "";
+    seqStr += (howMany > 0) && (prefix !== consts.NONE) ? delimiter : "";
     for (i = startNum; i <= maxNum; i++) {
 
         num = i.toString();
         zerosToPad = pad ? maxDigits - num.length : 0;
+        
         seqStr += PAD_ZERO.repeat(zerosToPad) + num + (i <= maxNum - 1 ? delimiter : "");
     }
 
