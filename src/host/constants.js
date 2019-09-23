@@ -172,21 +172,19 @@ module.exports.api = {
 
 // kafkajs client configuration options
 module.exports.kafkajs = {
-    retry: {                                                                // retry options  https://kafka.js.org/docs/configuration
-        maxRetryTime: 10000,                                                // max milliseconds wait for a retry (30000)
-        initialRetryTime: 100,                                              // initial value in milliseconds, randomized after first time (300)
-        factor: 0.2,                                                        // Randomization factor	   
-        multiplier: 2,                                                      // Exponential factor
-        retries: 8,                                                         // max number of retries per call (5)
-        maxInFlightRequests: 200                                            // max num requestsin progress at any time. If falsey then no limit (null)
-    },
-    send: {                                                                 // https://kafka.js.org/docs/producing   
-        timeout: 30000
-    },
-    connectionTimeout: 3000,                                                // milliseconds to wait for a successful connection   
-    requestTimeout: 25000,                                                  // milliseconds to wait for a successful request.    
-    producer: {                                                             // producer client Ids
-        clientId: PRODUCER_CLIENTID                                         // producer client id prefix - preferred convention = <api path>.<api path>
+    producer: {                                                             // https://kafka.js.org/docs/producing   
+        clientId: PRODUCER_CLIENTID,                                        // producer client id prefix - preferred convention = <api path>.<api path>
+        connectionTimeout: 3000,                                            // milliseconds to wait for a successful connection   
+        requestTimeout: 25000,                                              // milliseconds to wait for a successful request.    
+        timeout: 30000,
+        retry: {                                                                // retry options  https://kafka.js.org/docs/configuration
+            maxRetryTime: 10000,                                                // max milliseconds wait for a retry (30000)
+            initialRetryTime: 100,                                              // initial value in milliseconds, randomized after first time (300)
+            factor: 0.2,                                                        // Randomization factor	   
+            multiplier: 2,                                                      // Exponential factor
+            retries: 8,                                                         // max number of retries per call (5)
+            maxInFlightRequests: 200                                            // max num requestsin progress at any time. If falsey then no limit (null)
+        }
     }
 }
 
@@ -196,7 +194,7 @@ module.exports.system = {
     BODYPARSER_LIMIT_MB: 1                                                  // max mb for post messages 
 }
     
-// system constants for the environment
+// constants for the environment
 module.exports.environments = {
     local: {
         api: { host: '192.168.1.106:8080' },

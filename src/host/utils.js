@@ -3,6 +3,7 @@
 /**
  * PACKAGE: ./host/index.js
  * schemas and constants
+ * utils.js is from api host - any changes should be mastered in api host utils.js -----------------------------------------
  */
 const enums = require('./enums');
 const consts = require('../host/constants');
@@ -374,3 +375,7 @@ module.exports.MOCK_periodMinMax = (period, dailyHigh, dailyLow) => {
 
     return minmax;
 }
+
+
+// test... node src/host/utils
+// console.log(this.randomIntegerString(1,999));

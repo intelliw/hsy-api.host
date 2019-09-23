@@ -8,7 +8,7 @@ const enums = require('../host/enums');
 const utils = require('../host/utils');
 
 const Response = require('./Response');
-const Producer = require('../producers');
+const producers = require('../producers');
 
 const GenericMessage = require('../definitions/GenericMessage');
 const GenericMessageDetail = require('../definitions/GenericMessageDetail');
@@ -24,7 +24,6 @@ class DevicesDatasetsPostResponse extends Response {
   * constructor arguments 
     * @param {*} params                                                       // dataset, datasets, apiKey
     * @param {*} reqAcceptParam                                               // request Accepts
-    * @param {*} reqContentTypeParam                                          //  request Content-Type - enums.mimeTypes
     * 
     { dataset:
     Param {
@@ -59,14 +58,14 @@ class DevicesDatasetsPostResponse extends Response {
 function executePost(params) {
 
   // construct a producer
-  let datasets = params.datasets.value;                                           // for application/json the req.body is a 'datasets' object with array of datasets {"datasets": [.. ]        
   let datasetName = params.dataset.value;                                         //  enums.datasets              - e.g. pms  
+  let datasets = params.datasets.value;                                           // for application/json the req.body is a 'datasets' object with array of datasets {"datasets": [.. ]        
   let sender = utils.keynameFromValue(enums.apiKey, params.apiKey.value);         // the datasource is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
   
   
   // get a producer (MonitoringPms etc) from the factory and process the messages (sendToTopic) asynchronously.
-  let producer = Producer.factory.getProducer(datasetName, datasets, sender);
-  producer.sendToTopic();                                                         // async ok as by now we have connected to kafka, and the dataset should have been validated and the only outcome is a 200 response
+  let producer = producers.factory.getProducer(datasetName);
+  producer.sendToTopic(datasets, sender);                                         // async ok as by now we have connected to kafka, and the dataset should have been validated and the only outcome is a 200 response
 
   // prepare the response
   let responseDetail = new GenericMessageDetail();

@@ -5,7 +5,7 @@
  */
 const enums = require('../host/enums');
 
-const Producer = require('./Producer');
+const Producer = require('../producers');
 
 class factory {
     /**
@@ -15,28 +15,27 @@ class factory {
     }
 
     // a factory method to return the correct producer subtype for the datasetname
-    static getProducer(datasetName, datasets, sender) {
+    static getProducer(datasetName) {
         let producer; 
         switch (datasetName) {
 
             // pms
             case enums.datasets.pms:
-                producer = new Producer.MonitoringPms (datasetName, datasets, sender);
+                producer = new Producer.MonitoringPms ();
                 break;
 
             // mppt 
             case enums.datasets.mppt:
-                producer = new Producer.MonitoringMppt(datasetName, datasets, sender);
+                producer = new Producer.MonitoringMppt();
                 break;
 
             // inverter 
             case enums.datasets.inverter:
-                producer = new Producer.MonitoringInverter(datasetName, datasets, sender);
+                producer = new Producer.MonitoringInverter();
                 break;
 
         }
         return producer;
-
     }
 
 }
