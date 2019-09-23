@@ -69,6 +69,7 @@ class Producer {
                 `${moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat)}, ${this.messages.length} messages [${topicName}:${result[0].baseOffset}-${Number(result[0].baseOffset) + (this.messages.length - 1)}, sender:${this.sender}]`)
                 // if verbose logging on.. e.g. [ { key: '025', value: '[{"pms_id" .... 
                 if (consts.environments[consts.env].log.verbose) console.log(this.messages);
+                // console.log(this.messages); // @@@@@@
 
             // disconnect
             await this.producerObj.disconnect();

@@ -30,6 +30,7 @@ class MonitoringMppt extends Producer {
     addDatasetAttributes(key, dataItem) {
 
         let volts, amps, watts;
+        let attrArray;
 
         const PRECISION = consts.system.MONITORING_PRECISION;
         const ITEMNUMBER_LENGTH = 2;                                                                // how many digits int he cell number e.g 02
@@ -41,16 +42,15 @@ class MonitoringMppt extends Producer {
         }
 
         // pv
+        attrArray = [];
         for (let i = 1; i <= dataItem.pv.volts.length; i++) {
             volts = dataItem.pv.volts[i - 1];
             amps = dataItem.pv.amps[i - 1];
             watts = (volts * amps).toFixed(PRECISION);
 
-            let pvId = 'pv_' + utils.padZero(i, ITEMNUMBER_LENGTH);
-            dataObj[pvId] = {                                                                       //   "pv_01": {
-                volts: volts, amps: amps, watts: parseFloat(watts)                                  //      "volts": 48, "amps": 6, "watts": 288 },
-            }
-        }
+            attrArray.push({ volts: volts, amps: amps, watts: parseFloat(watts) });
+        };
+        dataObj.pv = attrArray;                                                                     // "pv": [ {"volts": 48, "amps": 6, "watts": 288 },
 
         // battery
         volts = dataItem.battery.volts;
@@ -62,16 +62,15 @@ class MonitoringMppt extends Producer {
         } 
 
         // load
+        attrArray = [];
         for (let i = 1; i <= dataItem.load.volts.length; i++) {
             volts = dataItem.load.volts[i - 1];
             amps = dataItem.load.amps[i - 1];
             watts = (volts * amps).toFixed(PRECISION);
 
-            let loadId = 'load_' + utils.padZero(i, ITEMNUMBER_LENGTH);
-            dataObj[loadId] = {                                                                     //   "load_01": {
-                volts: volts, amps: amps, watts: parseFloat(watts)                                  //      "volts": 48, "amps": 1.2, "watts": 57.6 },
-            }
-        }
+            attrArray.push({ volts: volts, amps: amps, watts: parseFloat(watts) });
+        };
+        dataObj.load = attrArray;                                                                     // "load": [ {"volts": 48, "amps": 6, "watts": 288 },
 
         return dataObj;
     }
