@@ -5,14 +5,6 @@
  * global enumerations
  */
 
-module.exports.energy = {
-    hse: 'hse',
-    harvest: 'harvest',
-    store: 'store',
-    enjoy: 'enjoy',
-    grid: 'grid'
-};
-module.exports.energy.default = this.energy.hse;
 
 module.exports.energyData = {
     hse: 'hse',
@@ -24,26 +16,38 @@ module.exports.energyData = {
     gridout: 'grid.out'
 };
 
-module.exports.period = {
-    instant: 'instant',
-    second: 'second',
-    minute: 'minute',
-    hour: 'hour',
-    timeofday: 'timeofday',
-    day: 'day',
-    week: 'week',
-    month: 'month',
-    quarter: 'quarter',
-    year: 'year',
-    fiveyear: 'fiveyear'
-};
-module.exports.period.default = this.period.week;
 
-module.exports.datasets = {                     // kafka topics are based on enums.datasets. preferred convention is <message type>_<api base/db name>_<dataset /table name> 
-    pms: 'pms',                                 // corresponds to messageBroker.consumers.pms
-    mppt: 'mppt',                               // corresponds to messageBroker.consumers.mppt
-    inverter: 'inverter'                        // corresponds to messageBroker.consumers.inverter
-};
+// constants for the api 
+module.exports.params = {
+    energy: {
+        hse: 'hse',
+        harvest: 'harvest',
+        store: 'store',
+        enjoy: 'enjoy',
+        grid: 'grid'
+    },
+    period: {
+        instant: 'instant',
+        second: 'second',
+        minute: 'minute',
+        hour: 'hour',
+        timeofday: 'timeofday',
+        day: 'day',
+        week: 'week',
+        month: 'month',
+        quarter: 'quarter',
+        year: 'year',
+        fiveyear: 'fiveyear'
+    },
+   datasets: {                     // kafka topics are based on enums.params.datasets. preferred convention is <message type>_<api base/db name>_<dataset /table name> 
+        pms: 'pms',                                 // corresponds to messageBroker.consumers.pms
+        mppt: 'mppt',                               // corresponds to messageBroker.consumers.mppt
+        inverter: 'inverter'                        // corresponds to messageBroker.consumers.inverter
+    }
+}
+module.exports.params.energy.default = this.params.energy.hse;
+module.exports.params.period.default = this.params.period.week;
+
 
 module.exports.timeOfDay = {
     morning: 'morning',
@@ -55,7 +59,7 @@ module.exports.timeOfDay = {
 // request enumerations
 module.exports.request = {
     headers: {
-       contentType: 'content-type'
+        contentType: 'content-type'
     }
 }
 
@@ -104,18 +108,18 @@ module.exports.apiKey = {
     S003: 'AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0',
     V001: 'AIzaSyASFQxf4PmOutVS1Dt99TPcZ4IQ8PDUMqY'
 }
-module.exports.apiKey.default = this.apiKey.AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0; 
+module.exports.apiKey.default = this.apiKey.AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0;
 
-module.exports.messageBroker = {                    // kafka message broker. topics are based on enums.datasets. 
+module.exports.messageBroker = {                    // kafka message broker. topics are based on enums.params.datasets. 
     ack: {
         all: -1,                                    // -1 = all replicas must acknowledge (default) 
         none: 0,                                    //  0 = no acknowledgments 
         leader: 1                                   //  1 = only waits for the leader to acknowledge 
     },
-    topics: {                                       //  topic names 
+    topics: {                                       //  topic names
         monitoring: {                               //  topics for monitoring datasets
-            pms: 'monitoring.pms',     
-            mppt: 'monitoring.mppt',        
+            pms: 'monitoring.pms',
+            mppt: 'monitoring.mppt',
             inverter: 'monitoring.inverter'
         }
     }

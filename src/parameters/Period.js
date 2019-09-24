@@ -40,14 +40,14 @@ class Period extends Param {
      "description": "Mon Tue Wed Thu Fri Sat Sun"         ..if period retrieved through get Child() otherwise undefined
     
      constructor arguments  
-    * @param {*} reqPeriod      // enums.period             e.g. 'week'
+    * @param {*} reqPeriod      // enums.params.period             e.g. 'week'
     * @param {*} epoch          // date-time 
     * @param {*} duration       // positive integer
     */
     constructor(reqPeriod, epoch, duration = consts.params.defaults.duration) {
 
         // period, context
-        super(THIS_PARAM_NAME, reqPeriod, enums.period.default, enums.period);                  // e.g. reqPeriod' ='week';' 
+        super(THIS_PARAM_NAME, reqPeriod, enums.params.period.default, enums.params.period);                  // e.g. reqPeriod' ='week';' 
         this.context = this.value;
         this.parent = consts.NONE;                   // getChild sets this after construction
         this.grandparent = consts.NONE;              // getChild sets this after construction
@@ -221,7 +221,7 @@ class Period extends Param {
         if (childEnum) {                                                                    // e.g. instant has no child    
 
             // duration - if monthday get the nubmer of days for the month
-            if (parent == enums.period.month && childEnum == enums.period.day) {
+            if (parent == enums.params.period.month && childEnum == enums.params.period.day) {
                 duration = monthdayDuration(this.epochInstant)
             } else {
                 duration = childMap.d;
@@ -269,12 +269,12 @@ function periodEpoch(periodEnum, epoch, format) {
     switch (periodEnum) {
 
         // epoch format YYYYMMDDTHHmmss.SSS -----------------------------------              
-        case enums.period.instant:
+        case enums.params.period.instant:
 
             epoch = moment.utc(epoch).format(format);                                       // no adjustment - return milliseconds epoch (format YYYYMMDDTHHmmss.SSS)  
             break;
 
-        case enums.period.timeofday:                                                        // adjust to the start of the last 6hr block in the day (morning=6, afternoon=12, evening-18, night=00)   
+        case enums.params.period.timeofday:                                                        // adjust to the start of the last 6hr block in the day (morning=6, afternoon=12, evening-18, night=00)   
 
             let hr = consts.timeOfDayStart[selectTimeOfDayEnum(epoch)];                         // get the starting hour for the timeofday     
             epoch = moment.utc(epoch).set('hour', hr).format(format);                       // set hour to 0,6,12,or 18
@@ -286,12 +286,12 @@ function periodEpoch(periodEnum, epoch, format) {
             break;
 
         // epoch format YYYYMMDD -----------------------------------------
-        case enums.period.week:                                                             // adjust to start of the week
+        case enums.params.period.week:                                                             // adjust to start of the week
 
             epoch = moment.utc(epoch).startOf('isoWeek').format(format);                    // adjust to monday (iso week starts on monday)
             break;
 
-        case enums.period.fiveyear:                                                         // adjust to start of last 5 year block (2010, 2015, 2020 etc.)
+        case enums.params.period.fiveyear:                                                         // adjust to start of last 5 year block (2010, 2015, 2020 etc.)
 
             let yr = moment.utc(epoch).get('year');                                         // get the year
             yr = yr - (yr % 5);                                                             // round down to nearest 5 year epoch
@@ -299,13 +299,13 @@ function periodEpoch(periodEnum, epoch, format) {
             epoch = moment.utc(epoch).startOf('year').format(format);                       // set to January 1st of that year
             break;
 
-        case enums.period.hour:
-        case enums.period.minute:
-        case enums.period.second:
-        case enums.period.day:
-        case enums.period.month:
-        case enums.period.quarter:
-        case enums.period.year:
+        case enums.params.period.hour:
+        case enums.params.period.minute:
+        case enums.params.period.second:
+        case enums.params.period.day:
+        case enums.params.period.month:
+        case enums.params.period.quarter:
+        case enums.params.period.year:
             epoch = moment.utc(epoch).startOf(periodEnum).format(format);                   // get the start of the period 
             break;
     }
@@ -320,22 +320,22 @@ function periodEnd(periodEnum, epoch, duration, format) {
 
     switch (periodEnum) {
 
-        case enums.period.instant:
+        case enums.params.period.instant:
             periodEnd = moment.utc(epoch).add(periodsToAdd, 'milliseconds').format(format);
             break;
 
-        case enums.period.timeofday:                        // adjust to the start of the last 6hr block in the day (morning=6, afternoon=12, evening-18, night=00)   
+        case enums.params.period.timeofday:                        // adjust to the start of the last 6hr block in the day (morning=6, afternoon=12, evening-18, night=00)   
             const TIMEOFDAY_DURATION_HRS = 6;                                                           // hours
 
             periodsToAdd = (duration * TIMEOFDAY_DURATION_HRS) - 1;                                     // add at least one for tod to get to the endOf its period
             periodEnd = moment.utc(epoch).add(periodsToAdd, 'hours').endOf('hour').format(format);
             break;
 
-        case enums.period.week:
+        case enums.params.period.week:
             periodEnd = moment.utc(epoch).add(periodsToAdd, 'weeks').endOf('isoWeek').format(format);   // has to be isoWeek
             break;
 
-        case enums.period.fiveyear:                         // add 5 years to epoch
+        case enums.params.period.fiveyear:                         // add 5 years to epoch
             const FIVEYEAR_DURATION_YRS = 5;                // years
 
             periodsToAdd = (duration * FIVEYEAR_DURATION_YRS) - 1;                                          // add at least one for 5yr to get to the endOf its period
@@ -343,13 +343,13 @@ function periodEnd(periodEnum, epoch, duration, format) {
 
             break;
 
-        case enums.period.hour:
-        case enums.period.minute:
-        case enums.period.second:
-        case enums.period.day:
-        case enums.period.month:
-        case enums.period.quarter:
-        case enums.period.year:
+        case enums.params.period.hour:
+        case enums.params.period.minute:
+        case enums.params.period.second:
+        case enums.params.period.day:
+        case enums.params.period.month:
+        case enums.params.period.quarter:
+        case enums.params.period.year:
             // @ts-ignore
             periodEnd = moment.utc(epoch).add(periodsToAdd, `${periodEnum}s`).endOf(periodEnum).format(format);
             break;
@@ -549,41 +549,41 @@ function datetimePromptStr(instant, periodEnum) {
     let year = moment.utc(instant).format('YYYY');
     switch (periodEnum) {
 
-        case enums.period.instant:              // 'Instant 090623.554'
+        case enums.params.period.instant:              // 'Instant 090623.554'
             label = `Instant ${moment.utc(instant).format('HHmmss.SSS')}`;
             break;
-        case enums.period.second:               // 'Second 0906:24'
+        case enums.params.period.second:               // 'Second 0906:24'
             label = `Second ${moment.utc(instant).format('HHmm:ss')}`;
             break;
-        case enums.period.minute:               // 'Minute 09:06'
+        case enums.params.period.minute:               // 'Minute 09:06'
             label = `Minute ${moment.utc(instant).format('HH:mm')}`;
             break;
-        case enums.period.timeofday:            // 'Jan 1 Morning' 
+        case enums.params.period.timeofday:            // 'Jan 1 Morning' 
             label = `${moment.utc(instant).format('MMM')} ${moment.utc(instant).format('D')} ${utils.capitalise(selectTimeOfDayEnum(instant))}`;
             break;
-        case enums.period.day:                  // 'Mon Jan 1st'
+        case enums.params.period.day:                  // 'Mon Jan 1st'
             label = `${moment.utc(instant).format('ddd')} ${moment.utc(instant).format('MMM')} ${moment.utc(instant).format('Do')}`
             break;
-        case enums.period.month:                // 'Mar 2019'
+        case enums.params.period.month:                // 'Mar 2019'
             label = `${moment.utc(instant).format('MMM')} ${year}`;
             break;
-        case enums.period.quarter:              // 'Q1 2019'
+        case enums.params.period.quarter:              // 'Q1 2019'
             label = `${selectQuarterLabel(instant)} ${year}`;
             break;
-        case enums.period.week:                 // 'Wk 27 2019'
+        case enums.params.period.week:                 // 'Wk 27 2019'
             label = `Wk ${utils.padZero(moment.utc(instant).isoWeek(), 2)} ${moment.utc(instant).isoWeekYear()}`;
             break;
-        case enums.period.hour:                 // 'Hr 2100'
+        case enums.params.period.hour:                 // 'Hr 2100'
             label = `Hr ${moment.utc(instant).format('HH')}00`;
             break;
-        case enums.period.year:                 // '2019'
+        case enums.params.period.year:                 // '2019'
             label = `${year}`;
             break;
-        case enums.period.fiveyear:             // '5 Years 2014-2019'
+        case enums.params.period.fiveyear:             // '5 Years 2014-2019'
             const FIVE_YEARS_IN_TOTAL = 4;
 
             // get the start of the five year period - as moment.js does not have a fiveyear concept 
-            let normalisedInstant = periodEpoch(enums.period.fiveyear, instant, consts.period.datetimeISO.instant);
+            let normalisedInstant = periodEpoch(enums.params.period.fiveyear, instant, consts.period.datetimeISO.instant);
             year = moment.utc(normalisedInstant).format('YYYY');
 
             label = `5 Years ${year}-${moment.utc(normalisedInstant).add(FIVE_YEARS_IN_TOTAL, 'years').format('YYYY')}`;

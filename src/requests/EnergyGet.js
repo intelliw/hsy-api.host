@@ -36,7 +36,7 @@ class EnergyGet extends Request {
         
         // parameters                                                   // validate and default all parameters
         let params = {};
-        params.energy = new Param('energy', req.params.energy, enums.energy.default, enums.energy);
+        params.energy = new Param('energy', req.params.energy, enums.params.energy.default, enums.params.energy);
         params.period = new Param.Period(req.params.period, req.params.epoch, req.params.duration);
         params.site = new Param('site', req.query.site, consts.params.defaults.site);
         params.productCatalogItems = new Param('productCatalogItems', req.body.productCatalogItems, consts.NONE, consts.NONE, OPTIONAL);

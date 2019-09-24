@@ -323,47 +323,47 @@ module.exports.MOCK_periodMinMax = (period, dailyHigh, dailyLow) => {
 
     let multiplier = 1; let decimalPlaces = DAY_DECIMAL_PLACES;
     switch (period.value) {
-        case enums.period.instant:
+        case enums.params.period.instant:
             multiplier = 0.0000000116;
             decimalPlaces = 12;
             break;
-        case enums.period.second:
+        case enums.params.period.second:
             multiplier = 0.0000115741;
             decimalPlaces = 9;
             break;
-        case enums.period.minute:
+        case enums.params.period.minute:
             multiplier = 0.0006944444;
             decimalPlaces = 9;
             break;
-        case enums.period.hour:
+        case enums.params.period.hour:
             multiplier = 0.0416666667;
             decimalPlaces = 6;
             break;
-        case enums.period.timeofday:
+        case enums.params.period.timeofday:
             multiplier = 0.2500000000;
             decimalPlaces = 3;
             break;
-        case enums.period.week:
+        case enums.params.period.week:
             multiplier = 7.0000000000;
             decimalPlaces = 3;
             break;
-        case enums.period.month:
+        case enums.params.period.month:
             multiplier = 31.0000000000;
             decimalPlaces = 3;
             break;
-        case enums.period.quarter:
+        case enums.params.period.quarter:
             multiplier = 124.0000000000;
             decimalPlaces = 3;
             break;
-        case enums.period.year:
+        case enums.params.period.year:
             multiplier = 365.0000000000;
             decimalPlaces = 3;
             break;
-        case enums.period.fiveyear:
+        case enums.params.period.fiveyear:
             multiplier = 1825.0000000000;
             decimalPlaces = 3;
             break;
-        case enums.period.day:
+        case enums.params.period.day:
         default:
             multiplier = 1.000;
             decimalPlaces = 3;

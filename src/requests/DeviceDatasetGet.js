@@ -35,7 +35,7 @@ class DeviceDatasetGet extends Request {
         // parameters                                                   // validate and default all parameters
         let params = {};
         params.device = new Param('device', req.params.device);
-        params.dataset = new Param('dataset', req.params.dataset, consts.NONE, enums.datasets);
+        params.dataset = new Param('dataset', req.params.dataset, consts.NONE, enums.params.datasets);
         params.period = new Param.Period(req.params.period, req.params.epoch, req.params.duration);
         
         // super - validate params, auth, accept header

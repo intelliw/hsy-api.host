@@ -10,7 +10,8 @@ const utils = require('../host/utils');
 
 const Producer = require('../producers');
 
-const API_DATASET_NAME = enums.datasets.mppt;
+const API_DATASET = enums.params.datasets.mppt;
+const KAFKA_TOPIC = enums.messageBroker.topics.monitoring.mppt;
 
 /**
  */
@@ -24,7 +25,7 @@ class MonitoringMppt extends Producer {
     constructor() {
 
         // construct super
-        super(API_DATASET_NAME);                        
+        super(API_DATASET, KAFKA_TOPIC);                        
 
     }
 

@@ -10,7 +10,9 @@ const utils = require('../host/utils');
 
 const Producer = require('../producers');
 
-const API_DATASET_NAME = enums.datasets.inverter;
+const API_DATASET = enums.params.datasets.inverter;
+const KAFKA_TOPIC = enums.messageBroker.topics.monitoring.inverter;
+
 /**
  */
 class MonitoringInverter extends Producer {
@@ -23,7 +25,7 @@ class MonitoringInverter extends Producer {
     constructor() {
 
         // construct super
-        super(API_DATASET_NAME);                                               // only waits for the leader to acknowledge 
+        super(API_DATASET, KAFKA_TOPIC);                                               // only waits for the leader to acknowledge 
 
     }
 

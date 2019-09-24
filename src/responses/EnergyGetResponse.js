@@ -205,21 +205,21 @@ function getEnergyDataNames(energy) {
 
   let names = [];
   switch (energy.value) {
-    case enums.energy.harvest:
+    case enums.params.energy.harvest:
       names.push(enums.energyData.harvest);
       break;
-    case enums.energy.store:
+    case enums.params.energy.store:
       names.push(enums.energyData.storein);
       names.push(enums.energyData.storeout);
       break;
-    case enums.energy.enjoy:
+    case enums.params.energy.enjoy:
       names.push(enums.energyData.enjoy);
       break;
-    case enums.energy.grid:
+    case enums.params.energy.grid:
       names.push(enums.energyData.gridin);
       names.push(enums.energyData.gridout);
       break;
-    case enums.energy.hse:                                           // hse returns all names               
+    case enums.params.energy.hse:                                           // hse returns all names               
       names.push(enums.energyData.harvest);
       names.push(enums.energyData.storein);
       names.push(enums.energyData.storeout);

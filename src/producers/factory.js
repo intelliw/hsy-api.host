@@ -15,22 +15,22 @@ class factory {
     }
 
     // a factory method to return the correct producer subtype for the datasetname
-    static getProducer(datasetName) {
-        let producer; 
-        switch (datasetName) {
+    static getProducer(apiDatasetName) {
+        let producer;
+        switch (apiDatasetName) {
 
             // pms
-            case enums.datasets.pms:
-                producer = new Producer.MonitoringPms ();
+            case enums.params.datasets.pms:
+                producer = new Producer.MonitoringPms();
                 break;
 
             // mppt 
-            case enums.datasets.mppt:
+            case enums.params.datasets.mppt:
                 producer = new Producer.MonitoringMppt();
                 break;
 
             // inverter 
-            case enums.datasets.inverter:
+            case enums.params.datasets.inverter:
                 producer = new Producer.MonitoringInverter();
                 break;
 
