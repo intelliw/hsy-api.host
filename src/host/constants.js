@@ -127,12 +127,12 @@ module.exports.period = {
 
     // returns max allowed durations for each period. each period cap is proportional to the large number of items in its collection
     maxDurationsAllowed: {
-        instant: '1',                                           // max allowed for time periods is 1 due to large number of items in each collection 
+        instant: '1',                                                       // max allowed for time periods is 1 due to large number of items in each collection 
         second: '1',
         minute: '1',
         hour: '1',
-        timeofday: '8',                                         // max allowed for time-of-day is 8 (2 days)  
-        day: '31',                                              // only 4 items per day    
+        timeofday: '8',                                             // max allowed for time-of-day is 8 (2 days)  
+        day: '31',                                                  // only 4 items per day    
         week: '12',
         month: '3',                                             // there are 31 items in a month.. so cap to 3 (1 quarter)
         quarter: '8',
@@ -152,12 +152,12 @@ module.exports.dateTime = {
 // constants to define api parameters 
 module.exports.params = {
     names: {
-        api_key: 'api_key',                                 // header param, must be lower case
+        api_key: 'api_key',                                                 // header param, must be lower case
         accepttype: 'accept'
     },
     defaults: {
         site: '999',
-        duration: '1'                                       // energy apiu duration parameter 
+        duration: '1'                                                       // energy apiu duration parameter 
     }
 }
 
@@ -177,13 +177,13 @@ module.exports.kafkajs = {
         connectionTimeout: 3000,                                            // milliseconds to wait for a successful connection   
         requestTimeout: 25000,                                              // milliseconds to wait for a successful request.    
         timeout: 30000,
-        retry: {                                                                // retry options  https://kafka.js.org/docs/configuration
-            maxRetryTime: 10000,                                                // max milliseconds wait for a retry (30000)
-            initialRetryTime: 100,                                              // initial value in milliseconds, randomized after first time (300)
-            factor: 0.2,                                                        // Randomization factor	   
-            multiplier: 2,                                                      // Exponential factor
-            retries: 8,                                                         // max number of retries per call (5)
-            maxInFlightRequests: 200                                            // max num requestsin progress at any time. If falsey then no limit (null)
+        retry: {                                                            // retry options  https://kafka.js.org/docs/configuration
+            maxRetryTime: 10000,                                            // max milliseconds wait for a retry (30000)
+            initialRetryTime: 100,                                          // initial value in milliseconds, randomized after first time (300)
+            factor: 0.2,                                                    // Randomization factor	   
+            multiplier: 2,                                                  // Exponential factor
+            retries: 8,                                                     // max number of retries per call (5)
+            maxInFlightRequests: 200                                        // max num requestsin progress at any time. If falsey then no limit (null)
         }
     }
 }
@@ -227,7 +227,7 @@ module.exports.environments = {
 }
 
 // env sets the active environment - change this to one of the environments in consts.environments -0 eg. change to 'devcloud' before release
-module.exports.env = 'local';                                      // local or devcloud or prodcloud
+module.exports.env = 'devcloud';                                               // local or devcloud or prodcloud
 
 // system constants
 module.exports.NONE = global.undefined;
