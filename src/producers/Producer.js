@@ -47,24 +47,24 @@ class Producer {
     async sendToTopic(datasets, sender) {
 
         // get the data 
-        let messages = this.extractData(datasets, sender);
+        let results = this.extractData(datasets, sender);                           // e.g. results: { itemCount: 9, messages: [. . .] }
 
         // send the message to the topics
         await this.producerObj.connect();
 
         let result = await this.producerObj.send({
             topic: this.kafkaTopic,
-            messages: messages,
+            messages: results.messages,
             acks: enums.messageBroker.ack.default,                                  // default is 'leader'
             timeout: consts.kafkajs.producer.timeout
         })
             .catch(e => console.error(`[${consts.kafkajs.producer.clientId}] ${e.message}`, e));
 
-        // log output               e.g. 2019-09-10 05:04:44.6630, 2 messages [monitoring.mppt:2-3, sender:S001]
-        console.log(`${moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat)}, ${messages.length} messages [${this.kafkaTopic}:${result[0].baseOffset}-${Number(result[0].baseOffset) + (messages.length - 1)}, sender:${sender}]`)
+        // log output               e.g. 2019-09-10 05:04:44.6630, 2 messages, 4 items [monitoring.mppt:2-3, sender:S001]
+        console.log(`${moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat)}, ${results.messages.length} messages, ${results.itemCount} items [${this.kafkaTopic}:${result[0].baseOffset}-${Number(result[0].baseOffset) + (results.messages.length - 1)}] sender:${sender}`)
 
         // if verbose logging on..  e.g. [ { key: '025', value: '[{"pms_id" .... 
-        if (consts.environments[consts.env].log.verbose) console.log(messages);
+        if (consts.environments[consts.env].log.verbose) console.log(results);
 
 
         // disconnect
@@ -73,20 +73,26 @@ class Producer {
     }
 
     /**
-     * extractData() creates an array of modified data items and returns true if successful
-     * each dataset object has a common structure and an object property named after the dataset 
-     * e.g. "pms": { "id": "PMS-01-001" }    
+     * creates an array of kafka messages and returns them in a results object
      * datasets    object array of dataset items. 
-     * each dataset item has an id and an array of data objects each with an event timestamp
-     * e.g. { "pms": { "id": "PMS-01-001" },  "data": [ { "time": "20190209T150006.032+0700", ..]
+     *  each dataset item has an id and an array of data objects
+     *  each data object has a time_local event timestamp
+     *  dataset objects have a common structure
+     *  the id property must be in an object named after the dataset 
+     *      e.g. { "pms": { "id": "PMS-01-001" },  "data": [ { "time_local": "20190209T150006.032+0700", ..]
+     * the returned results object contains these properties
+     *  itemCount  - a count of the total number of dataitems in all datasets / message
+     *  messages[] - array of kafka messages, each message.value contains a dataset with modified data items
+     *      e.g. { itemCount: 9, messages: [. . .] }
     */
     extractData(datasets, sender) {
 
-        let key;
+        let key
         let dataItems = [];
-        let messages = [];
+        let dataItemCount = 0;
+        let results = { itemCount: 0, messages: [] };
         
-        // extract and add messages to super 
+        // extract and add messages to results 
         datasets.forEach(dataset => {                                               // e.g. "pms": { "id": "PMS-01-001" }, "data": [ { time_local: '20190809T150006.032+0700', pack: [Object] }, ... ]
         
             key = dataset[this.apiDatasetName].id;                                  // e.g. id from.. "pms": { "id": 
@@ -104,14 +110,16 @@ class Producer {
 
             // replace data array with new dataItems 
             dataset.data = dataItems;
+            dataItemCount += dataItems.length;
             dataItems = [];
 
             // add the modified dataset to the message buffer
-            messages.push(this.createMessage(key, dataset));                        // add to the message array
+            results.messages.push(this.createMessage(key, dataset));                        // add to the message array
 
         });
 
-        return messages;
+        results.itemCount = dataItemCount;
+        return results;
 
     }
 
