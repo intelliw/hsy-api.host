@@ -66,7 +66,6 @@ class Producer {
         // if verbose logging on..  e.g. [ { key: '025', value: '[{"pms_id" .... 
         if (consts.environments[consts.env].log.verbose) console.log(results);
 
-
         // disconnect
         await this.producerObj.disconnect();
 
@@ -74,7 +73,7 @@ class Producer {
 
     /**
      * creates an array of kafka messages and returns them in a results object
-     * datasets    object array of dataset items. 
+     * datasets - object array of dataset items. 
      *  each dataset item has an id and an array of data objects
      *  each data object has a time_local event timestamp
      *  dataset objects have a common structure
