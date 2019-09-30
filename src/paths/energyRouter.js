@@ -23,7 +23,7 @@ router.route([
     '/:energy?/period/:period?/:epoch?/:duration?'])
     
     .get((req, res, next) => {
-
+        
         // request ---------------------
         let request = new Request.EnergyGet(req);
 
