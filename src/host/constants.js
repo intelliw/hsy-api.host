@@ -165,7 +165,7 @@ module.exports.params = {
 module.exports.api = {
     versions: {
         supported: '0.2 0.3',
-        current: '0.3'
+        current: '0.3.12.10'
     },
     scheme: 'http'
 }

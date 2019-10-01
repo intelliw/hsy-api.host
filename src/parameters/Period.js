@@ -463,7 +463,7 @@ function isEpochValid(epoch, format) {
     const HOURS_LENGTH = 2;                                                             // hour must 2 characters (e.g 12)
     const MINUTES_LENGTH = 4;                                                           // minutes must be 4 characters (e.g 1200)
     const SECONDS_LENGTH = 6;                                                           // secondss must be 6 characters (e.g 120050)
-    const MILLISECONDS_LENGTH = 10;                                                     // millseconds must be 11 characters (e.g 120050.2333)
+    const MILLISECONDS_MIN_LENGTH = 10;                                                 // if 3 digit millseconds, the time value must be at least 10 characters (e.g 120050.233)
 
     const ISO8601_TIME_DELIMITER = 'T';
 
@@ -485,7 +485,7 @@ function isEpochValid(epoch, format) {
             isValid = isValid && (time.length == HOURS_LENGTH
                 || time.length == MINUTES_LENGTH
                 || time.length == SECONDS_LENGTH
-                || time.length >= MILLISECONDS_LENGTH);                                 // enforce minimum length of ms
+                || time.length >= MILLISECONDS_MIN_LENGTH);                             // enforce minimum length of ms
         }
     }
     return isValid
