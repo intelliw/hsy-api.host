@@ -463,7 +463,7 @@ function isEpochValid(epoch, format) {
     const HOURS_LENGTH = 2;                                                             // hour must 2 characters (e.g 12)
     const MINUTES_LENGTH = 4;                                                           // minutes must be 4 characters (e.g 1200)
     const SECONDS_LENGTH = 6;                                                           // secondss must be 6 characters (e.g 120050)
-    const MILLISECONDS_LENGTH = 11;                                                     // millseconds must be 11 characters (e.g 120050.2333)
+    const MILLISECONDS_LENGTH = 10;                                                     // millseconds must be 11 characters (e.g 120050.2333)
 
     const ISO8601_TIME_DELIMITER = 'T';
 
