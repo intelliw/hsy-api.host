@@ -485,7 +485,7 @@ function isEpochValid(epoch, format) {
             isValid = isValid && (time.length == HOURS_LENGTH
                 || time.length == MINUTES_LENGTH
                 || time.length == SECONDS_LENGTH
-                || time.length == MILLISECONDS_LENGTH);                                 // enforce minimum length
+                || time.length >= MILLISECONDS_LENGTH);                                 // enforce minimum length of ms
         }
     }
     return isValid
