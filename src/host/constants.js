@@ -203,7 +203,7 @@ module.exports.environments = {
         log: { verbose: false }
     },
     devcloudtest: {                                                         // single node kafka, or Kafka Std - 1 master, N workers
-        api: { host: 'api.endpoints.sundaya.cloud.goog', scheme: 'https' },
+        api: { host: 'test.api.endpoints.sundaya.cloud.goog', scheme: 'https' },
         kafka: {
             brokers: ['kafka-1-vm:9092']                                    // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
         },
@@ -212,11 +212,18 @@ module.exports.environments = {
     devcloud: {                                                             // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: 'api.endpoints.sundaya.cloud.goog', scheme: 'https' },
         kafka: {
+            brokers: ['kafka-1-vm:9092']                                    // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
+        },
+        log: { verbose: false }
+    },
+    devcloud_HA: {                                                           // single node kafka, or Kafka Std - 1 master, N workers
+        api: { host: 'api.endpoints.sundaya.cloud.goog', scheme: 'https' },
+        kafka: {
             brokers: ['kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']           // array of kafka message brokers         '[kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
         },
         log: { verbose: false }
     },
-    prodcloud: {                                                            // Kafka HA - 3 masters, N workers
+    prodcloud_HA: {                                                            // Kafka HA - 3 masters, N workers
         api: { host: 'api.endpoints.sundaya.cloud.goog', scheme: 'https' },
         kafka: {
             brokers: ['kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']           // array of kafka message brokers         '[kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
