@@ -166,8 +166,7 @@ module.exports.api = {
     versions: {
         supported: '0.2 0.3',
         current: '0.3.12.10'
-    },
-    scheme: 'http'
+    }
 }
 
 // kafkajs client configuration options
@@ -197,28 +196,28 @@ module.exports.system = {
 // constants for the environment
 module.exports.environments = {
     local: {
-        api: { host: '192.168.1.106:8080' },
+        api: { host: '192.168.1.106:8080', scheme: 'http' },
         kafka: {
             brokers: ['192.168.1.106:9092']                                 // localhost   | 192.168.1.106        
         },
         log: { verbose: false }
     },
     devcloudtest: {                                                         // single node kafka, or Kafka Std - 1 master, N workers
-        api: { host: 'api.endpoints.sundaya.cloud.goog' },
+        api: { host: 'api.endpoints.sundaya.cloud.goog', scheme: 'https' },
         kafka: {
             brokers: ['kafka-1-vm:9092']                                    // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
         },
         log: { verbose: false }
     },
     devcloud: {                                                             // single node kafka, or Kafka Std - 1 master, N workers
-        api: { host: 'api.endpoints.sundaya.cloud.goog' },
+        api: { host: 'api.endpoints.sundaya.cloud.goog', scheme: 'https' },
         kafka: {
             brokers: ['kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']           // array of kafka message brokers         '[kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
         },
         log: { verbose: false }
     },
     prodcloud: {                                                            // Kafka HA - 3 masters, N workers
-        api: { host: 'api.endpoints.sundaya.cloud.goog' },
+        api: { host: 'api.endpoints.sundaya.cloud.goog', scheme: 'https' },
         kafka: {
             brokers: ['kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']           // array of kafka message brokers         '[kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
         },
@@ -227,7 +226,7 @@ module.exports.environments = {
 }
 
 // env sets the active environment - change this to one of the environments in consts.environments -0 eg. change to 'devcloud' before release
-module.exports.env = 'devcloudtest';                                               // local or devcloud or prodcloud
+module.exports.env = 'local';                                               // local or devcloud or prodcloud
 
 // system constants
 module.exports.NONE = global.undefined;
