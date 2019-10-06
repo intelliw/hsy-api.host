@@ -193,7 +193,10 @@ module.exports.system = {
     BODYPARSER_LIMIT_MB: 1                                                  // max mb for post messages 
 }
     
-// constants for the environment
+/* constants for the environment 
+   module.exports.environments is mastered in hse-api-host project and shared by hse-api-consumers 
+   it should be edited in hse-api-host and copied across into hse-api-consumers project after any changes are made 
+*/
 module.exports.environments = {
     local: {
         api: { host: '192.168.1.106:8080', scheme: 'http' },
@@ -240,7 +243,7 @@ module.exports.environments = {
 }
 
 // env sets the active environment - change this to one of the environments in consts.environments -0 eg. change to 'devcloud' before release
-module.exports.env = 'devcloud';                                               // local or devcloud or prodcloud
+module.exports.env = 'local';                                               // local or devcloud or prodcloud
 
 // system constants
 module.exports.NONE = global.undefined;

@@ -35,7 +35,7 @@
     */ 
 
     // constants - soime of these are placed into client side script blocks at the bottom of this page
-    const API_BASE_URL = consts.environments[consts.env].api.scheme + '://' + consts.environments[consts.env].api.host;       // e.g.  'http://api.endpoints.sundaya.cloud.goog'
+    const API_BASE_URL = consts.environments[consts.env].api.scheme + '://' + consts.environments[consts.env].api.host;       // e.g.  'http://api.sundaya.monitored.equipment'
     const PANES = ['pane-child', 'pane-grandchild'];
     const DEBUG = false;                                                        
 
@@ -414,7 +414,7 @@
 
     <script type="text/javascript">
 
-        const API_BASE_URL = '<%= API_BASE_URL %>';     // e.g.  'http://api.endpoints.sundaya.cloud.goog'
+        const API_BASE_URL = '<%= API_BASE_URL %>';     // e.g.  'http://api.sundaya.monitored.equipment'
 
         const ENERGY_PARAM = '<%= params_energy %>';
         const CHILD_PERIOD = '<%= utils.capitalise(child_period) %>';
