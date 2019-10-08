@@ -105,10 +105,11 @@ module.exports.apiKey = {
     S000: 'AIzaSyD3IbFpxrydZuMKgEluHWDAvFl-P7dgPC8',
     S001: 'AIzaSyAZ4nuWP-ZXUg2aGQhrQjkvF2BFvukgv7w',    // Fahmi
     S002: 'AIzaSyDq97s15fdM99swOJuUIFtW8ifgQSBnymo',    // Adam 
-    S003: 'AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0',    // default - this key is injected if none provided 
-    V001: 'AIzaSyASFQxf4PmOutVS1Dt99TPcZ4IQ8PDUMqY'
+    S003: 'AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0',    // 
+    V001: 'AIzaSyASFQxf4PmOutVS1Dt99TPcZ4IQ8PDUMqY',
+    PROXY: 'AIzaSyC867McQRqoJFOsk27OYfnKjxSIp6WuaTA'   // PROXY - this default key is injected if none provided 
 }
-module.exports.apiKey.default = this.apiKey.S003;
+module.exports.apiKey.default = this.apiKey.PROXY;
 
 module.exports.messageBroker = {                    // kafka message broker. topics are based on enums.params.datasets. 
     ack: {

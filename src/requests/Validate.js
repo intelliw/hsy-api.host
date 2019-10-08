@@ -8,6 +8,7 @@
 const enums = require('../host/enums');
 const GenericMessageDetail = require('../definitions/GenericMessageDetail');
 
+
 /**
 * generic validations for a Request
 */
@@ -49,7 +50,7 @@ class Validate {
 
 }
 
-// validate if authorised. Adds error details to the errors passed in by reference.
+// validate whether this request is authorised. Adds error details to the errors passed in by reference.
 function validateAuthorisation(req, apiKeyParam, errors) {
 
     const ERROR_MESSAGE = 'The client does not have sufficient permission.';
