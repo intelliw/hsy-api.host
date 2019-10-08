@@ -50,8 +50,7 @@ class EnergyGet extends Request {
 
         // super - validate params, auth, accept header
         super(req, params, EnergyGetResponse.produces, EnergyGetResponse.consumes, APIKEY_REQUIRED);                 // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
-        console.log(utils.keynameFromValue(enums.apiKey, this.apiKey.value)) //@@@@@@
-
+        
         // execute the response only if super isValid                   // if not isValid  super constuctor would have created a this.response = ErrorResponse 
         this.response = this.validation.isValid  === true ? new Response.EnergyGetResponse(this.params, this.accept) : this.response;
 
