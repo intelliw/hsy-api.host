@@ -57,7 +57,7 @@ function validateAuthorisation(req, apiKeyParam, errors) {
     let isAuth = false;                                                             // 2DO: current logic allows no key as valid. in future need to call gcloud REST api to check if key is valid and has access to this API          
     if (apiKeyParam) {
 
-        isAuth = apiKeyParam.value ? apiKeyParam.isValid : true;                    // if apiKey is missing defaults to true for now 
+        isAuth = apiKeyParam.isValid;                                               // this may need to check jwt claims in future
 
         if (!isAuth) {                                                              // check if param was declared valid during construction 
 

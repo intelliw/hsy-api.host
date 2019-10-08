@@ -19,7 +19,7 @@ class Producer {
      * instance attributes:  
      *  producerObj": kafka.producer()
      * apiDatasetName                                                               // enums.params.datasets
-     * kafkaTopic                                                                   // enums.messageBroker.topics.monitoring
+     * kafkaTopic                                                                   // consts.environments[consts.env].topics.monitoring
      * constructor arguments 
      * @param {*} apiDatasetName                                                    // enums.params.datasets              - e.g. pms       
      */
@@ -50,24 +50,28 @@ class Producer {
         let results = this.extractData(datasets, sender);                           // e.g. results: { itemCount: 9, messages: [. . .] }
 
         // send the message to the topics
-        await this.producerObj.connect();
-
-        let result = await this.producerObj.send({
-            topic: this.kafkaTopic,
-            messages: results.messages,
-            acks: enums.messageBroker.ack.default,                                  // default is 'leader'
-            timeout: consts.kafkajs.producer.timeout
-        })
-            .catch(e => console.error(`[${consts.kafkajs.producer.clientId}] ${e.message}`, e));
-
-        // log output               e.g. 2019-09-10 05:04:44.6630 [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
-        console.log(`${moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat)} [${this.kafkaTopic}:${result[0].baseOffset}-${Number(result[0].baseOffset) + (results.messages.length - 1)}] ${results.messages.length} messages, ${results.itemCount} items, sender:${sender}`)
-
-        // if verbose logging on..  e.g. [ { key: '025', value: '[{"pms_id" .... 
-        if (consts.environments[consts.env].log.verbose) console.log(results);
-
-        // disconnect
-        await this.producerObj.disconnect();
+        try {
+            // connect 
+            await this.producerObj.connect();
+            
+            // send the message to the topics
+            let result = await this.producerObj.send({
+                topic: this.kafkaTopic,
+                messages: results.messages,
+                acks: enums.messageBroker.ack.default,                                  // default is 'leader'
+                timeout: consts.kafkajs.producer.timeout
+            });
+            
+            // log output               e.g. 2019-09-10 05:04:44.6630 [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
+            console.log(`${moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat)} [${this.kafkaTopic}:${result[0].baseOffset}-${Number(result[0].baseOffset) + (results.messages.length - 1)}] ${results.messages.length} messages, ${results.itemCount} items, sender:${sender}`)
+            if (consts.environments[consts.env].log.verbose) console.log(results);     // if verbose logging on..  e.g. [ { key: '025', value: '[{"pms_id" ....      
+            
+            // disconnect
+            await this.producerObj.disconnect();    
+            
+        } catch (e) {
+            console.error(`>>>>>> CONNECT ERROR: [${consts.kafkajs.producer.clientId}] ${e.message}`, e)
+        }
 
     }
 

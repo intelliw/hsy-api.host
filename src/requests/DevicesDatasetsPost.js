@@ -47,7 +47,7 @@ class DevicesDatasetsPost extends Request {
         } else {
             datasets = req.body.datasets;
         }
-
+        
         // parameters                                                       
         let params = {};
         params.dataset = new Param('dataset', dataset, consts.NONE, enums.params.datasets);
@@ -144,6 +144,7 @@ function csvToPmsDataObj(csvRow, cellOpenArray, cellVoltsArray, fetOpenArray) {
                     parseFloat(csvRow['fet.temp.1']), 
                     parseFloat(csvRow['fet.temp.2'])]
             },
+            status: csvRow['status']
         }
     }
 

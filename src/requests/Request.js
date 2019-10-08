@@ -34,12 +34,15 @@ class Request {
     * @param {*} req                    // express request
     * @param {*} responseProduces       // list of mimetypes which this request's responder (EnergyResponder) is able to produce 
     * @param {*} params                 // list of validated params { }
+    * @param {*} responseProduces       // array of mime types which the response is capable of producing and returning
+    * @param {*} responseConsumes       // array of mime types which the response expects to consume from the request 
+    * @param {*} apikeyRequired         // whether a apikey is required for this request (default is true)   
     */
-    constructor(req, params, responseProduces, responseConsumes) {
+    constructor(req, params, responseProduces, responseConsumes, apikeyRequired = true) {
         
         // update instance properties before validation 
         this.params = params;
-        this.apiKey = new Param(consts.params.names.api_key, req.headers[consts.params.names.api_key], enums.apiKey.default, enums.apiKey);
+        this.apiKey = new Param.ApiKey(req, apikeyRequired);
         this.accept = new Param.Accept(req, responseProduces);
         this.contentType = new Param.ContentType(req, responseConsumes);
         

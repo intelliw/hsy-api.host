@@ -39,7 +39,7 @@ class DevicesDatasetsPostResponse extends Response {
       isValid: true },
     apiKey:
     Param {
-      name: 'api_key',
+      name: 'apikey',
       value: 'AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0',
       isOptional: false,
       isValid: true } }
@@ -61,7 +61,6 @@ function executePost(params) {
   let apiDatasetName = params.dataset.value;                                      //  enums.params.datasets              - e.g. pms  
   let datasets = params.datasets.value;                                           // for application/json the req.body is a 'datasets' object with array of datasets {"datasets": [.. ]        
   let sender = utils.keynameFromValue(enums.apiKey, params.apiKey.value);         // the datasource is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
-  
   
   // get a producer (MonitoringPms etc) from the factory and process the messages (sendToTopic) asynchronously.
   let producer = producers.factory.getProducer(apiDatasetName);

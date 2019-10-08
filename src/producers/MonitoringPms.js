@@ -11,7 +11,7 @@ const utils = require('../host/utils');
 const Producer = require('../producers');
 
 const API_DATASET = enums.params.datasets.pms;
-const KAFKA_TOPIC = enums.messageBroker.topics.monitoring.pms;
+const KAFKA_TOPIC = consts.environments[consts.env].topics.monitoring.pms;
 
 /**
  */

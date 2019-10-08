@@ -152,7 +152,7 @@ module.exports.dateTime = {
 // constants to define api parameters 
 module.exports.params = {
     names: {
-        api_key: 'api_key',                                                 // header param, must be lower case
+        apikey: 'apikey',                                                   
         accepttype: 'accept'
     },
     defaults: {
@@ -172,17 +172,17 @@ module.exports.api = {
 // kafkajs client configuration options
 module.exports.kafkajs = {
     producer: {                                                             // https://kafka.js.org/docs/producing   
-        clientId: PRODUCER_CLIENTID,                                        // producer client id prefix - preferred convention = <api path>.<api path>
-        connectionTimeout: 3000,                                            // milliseconds to wait for a successful connection   
-        requestTimeout: 25000,                                              // milliseconds to wait for a successful request.    
+        clientId: PRODUCER_CLIENTID,                                        // producer client id prefix - preferred convention = <api path>.<api path> 
+        connectionTimeout: 3000,                                            // milliseconds to wait for a successful connection (3000)  
+        requestTimeout: 25000,                                              // milliseconds to wait for a successful request. (25000)   
         timeout: 30000,
         retry: {                                                            // retry options  https://kafka.js.org/docs/configuration
-            maxRetryTime: 10000,                                            // max milliseconds wait for a retry (30000)
-            initialRetryTime: 100,                                          // initial value in milliseconds, randomized after first time (300)
-            factor: 0.2,                                                    // Randomization factor	   
-            multiplier: 2,                                                  // Exponential factor
+            maxRetryTime: 10000,                                            // max milliseconds wait for a retry (30000) (10000)
+            initialRetryTime: 100,                                          // initial value in milliseconds (300), randomized after first time 
+            factor: 0.2,                                                    // Randomization factor	(0.2)   
+            multiplier: 2,                                                  // Exponential factor (2)
             retries: 8,                                                     // max number of retries per call (5)
-            maxInFlightRequests: 200                                        // max num requestsin progress at any time. If falsey then no limit (null)
+            maxInFlightRequests: 100                                        // max num requests in progress at any time (200). If falsey then no limit (null)
         }
     }
 }
@@ -199,44 +199,50 @@ module.exports.system = {
 */
 module.exports.environments = {
     local: {
-        api: { host: '192.168.1.106:8080', scheme: 'http' },
-        kafka: {
-            brokers: ['192.168.1.106:9092']                                 // localhost   | 192.168.1.106        
+        api: { host: '192.168.1.108:8080', scheme: 'http' },
+        kafka: { brokers: ['192.168.1.108:9092'] },                             // localhost   | 192.168.1.108            
+        topics: { monitoring: { pms: 'monitoring.dev_pms', mppt: 'monitoring.dev_mppt', inverter: 'monitoring.dev_inverter' },                      //  topics for monitoring data received from api host
+            dataset: { pms: 'monitoring.pms.dev_dataset', mppt: 'monitoring.mppt.dev_dataset', inverter: 'monitoring.inverter.dev_dataset' }        //  topics for monitoring datasets for bq update, created by consumer at 1st stage of monitoring
         },
         log: { verbose: false }
     },
-    testcloud: {                                                         // single node kafka, or Kafka Std - 1 master, N workers
+    testcloud: {                                                                // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: 'test.api.sundaya.monitored.equipment', scheme: 'https' },
-        kafka: {
-            brokers: ['kafka-1-vm:9092']                                    // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
+        kafka: { brokers: ['kafka-1-vm:9092'] },                                // array of kafka message brokers                       // kafka-1-vm  | 10.140.0.11
+        topics: { monitoring: { pms: 'monitoring.pms', mppt: 'monitoring.mppt', inverter: 'monitoring.inverter' },                      //  topics for monitoring data received from api host
+            dataset: { pms: 'monitoring.pms.dataset', mppt: 'monitoring.mppt.dataset', inverter: 'monitoring.inverter.dataset' }        //  topics for monitoring datasets for bq update, created by consumer at 1st stage of monitoring
         },
         log: { verbose: false }
     },
-    devcloud: {                                                             // single node kafka, or Kafka Std - 1 master, N workers
+    devcloud: {                                                                 // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: 'dev.api.sundaya.monitored.equipment', scheme: 'https' },
-        kafka: {
-            brokers: ['kafka-1-vm:9092']                                    // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
+        kafka: { brokers: ['kafka-1-vm:9092'] },                                // array of kafka message brokers                       // kafka-1-vm  | 10.140.0.11
+        topics: { monitoring: { pms: 'monitoring.pms', mppt: 'monitoring.mppt', inverter: 'monitoring.inverter' },                      //  topics for monitoring data received from api host
+            dataset: { pms: 'monitoring.pms.dataset', mppt: 'monitoring.mppt.dataset', inverter: 'monitoring.inverter.dataset' }        //  topics for monitoring datasets for bq update, created by consumer at 1st stage of monitoring
         },
         log: { verbose: false }
     },
-    devcloud_HA: {                                                           // single node kafka, or Kafka Std - 1 master, N workers
+    devcloud_HA: {                                                              // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: 'dev.api.sundaya.monitored.equipment', scheme: 'https' },
-        kafka: {
-            brokers: ['kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']           // array of kafka message brokers         '[kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
+        kafka: { brokers: ['kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092'] },       // array of kafka message brokers                       // [kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
+        topics: { monitoring: { pms: 'monitoring.pms', mppt: 'monitoring.mppt', inverter: 'monitoring.inverter' },                      //  topics for monitoring data received from api host
+            dataset: { pms: 'monitoring.pms.dataset', mppt: 'monitoring.mppt.dataset', inverter: 'monitoring.inverter.dataset' }        //  topics for monitoring datasets for bq update, created by consumer at 1st stage of monitoring
         },
         log: { verbose: false }
     },
-    prodcloud: {                                                             // single node kafka, or Kafka Std - 1 master, N workers
+    prodcloud: {                                                                // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: 'api.sundaya.monitored.equipment', scheme: 'https' },
-        kafka: {
-            brokers: ['kafka-1-vm:9092']                                    // array of kafka message brokers         // kafka-1-vm  | 10.140.0.11
+        kafka: { brokers: ['kafka-1-vm:9092'] },                                // array of kafka message brokers                       // kafka-1-vm  | 10.140.0.11   
+        topics: { monitoring: { pms: 'monitoring.pms', mppt: 'monitoring.mppt', inverter: 'monitoring.inverter' },                      //  topics for monitoring data received from api host
+            dataset: { pms: 'monitoring.pms.dataset', mppt: 'monitoring.mppt.dataset', inverter: 'monitoring.inverter.dataset' }        //  topics for monitoring datasets for bq update, created by consumer at 1st stage of monitoring
         },
         log: { verbose: false }
     },
-    prodcloud_HA: {                                                            // Kafka HA - 3 masters, N workers
+    prodcloud_HA: {                                                             // Kafka HA - 3 masters, N workers
         api: { host: 'api.sundaya.monitored.equipment', scheme: 'https' },
-        kafka: {
-            brokers: ['kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']           // array of kafka message brokers         '[kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
+        kafka: { brokers: ['kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092'] },       // array of kafka message brokers                       // [kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
+        topics: { monitoring: { pms: 'monitoring.pms', mppt: 'monitoring.mppt', inverter: 'monitoring.inverter' },                      //  topics for monitoring data received from api host
+            dataset: { pms: 'monitoring.pms.dataset', mppt: 'monitoring.mppt.dataset', inverter: 'monitoring.inverter.dataset' }        //  topics for monitoring datasets for bq update, created by consumer at 1st stage of monitoring
         },
         log: { verbose: false }
     }
