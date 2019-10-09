@@ -54,17 +54,19 @@ class Producer {
             // connect 
             await this.producerObj.connect();
             
+            console.log(`results.messages ${results.messages}`); // @@@@@@
+
             // send the message to the topics
             let result = await this.producerObj.send({
                 topic: this.kafkaTopic,
                 messages: results.messages,
-                acks: enums.messageBroker.ack.default,                                  // default is 'leader'
+                acks: enums.messageBroker.ack.default,                              // default is 'leader'
                 timeout: consts.kafkajs.producer.timeout
             });
             
             // log output               e.g. 2019-09-10 05:04:44.6630 [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
             console.log(`${moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat)} [${this.kafkaTopic}:${result[0].baseOffset}-${Number(result[0].baseOffset) + (results.messages.length - 1)}] ${results.messages.length} messages, ${results.itemCount} items, sender:${sender}`)
-            if (consts.environments[consts.env].log.verbose) console.log(results);     // if verbose logging on..  e.g. [ { key: '025', value: '[{"pms_id" ....      
+            if (consts.environments[consts.env].log.verbose) console.log(results);  // if verbose logging on..  e.g. [ { key: '025', value: '[{"pms_id" ....      
             
             // disconnect
             await this.producerObj.disconnect();    
@@ -104,7 +106,7 @@ class Producer {
             dataset.data.forEach(dataItem => {                                      // e.g. "data": [ { "time_local": "2
 
                 // add elements into the dataset
-                dataItem = this.addGenericAttributes(key, dataItem, sender);        // add common attributes
+                dataItem = this.addGenericAttributes(dataItem, sender);        // add common attributes
 
                 // add the message to the items buffer
                 dataItems.push(dataItem);
@@ -127,30 +129,27 @@ class Producer {
     }
 
     /* this function adds attributes common to all datasets:
-    *  key - is a string
     *  dataItem - contains the data object e.g. "data": [ { "time_local": "2
     *  sender is the keyname of the apikey enum, sent in the POST request  and identifies the source of the data. this value is added to sys.source attribute
     */
-    addGenericAttributes(key, dataItem, sender) {
+    addGenericAttributes(dataItem, sender) {
 
-        // extract eventTime and delete the attribute - timestamps are added in the Producer supertype's addMessage() method 
+        // delete time_local - this will be replaced
         let eventTime = dataItem.time_local;                                        // "data": [ { "time_local": "20190209T150017.020+0700",
         delete dataItem.time_local;                                                 // addMessage will prepend 3 standard time attributes to the dataitem
 
-        /* prepend sys.source, event utc time, event local time, processing time, to the dataitem to the data item
-        note that we use a timeformat without trailing offset hours (bigqueryZonelessTimestampFormat)
-        to force bigquery to store local time without converting to utc
+        /* append event time, zone, processing time to the data item
+        note that we convert time_local to bigqueryZonelessTimestampFormat which does not have trailing offset hours 
+        - this is done as part of date validation in this stage 
+        - but it not required by bigquery as it will convert local time to utc if submitted with a zone offset
         */
-        let processingTime = moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat);
-        let eventTimeUtc = utils.datetimeToUTC(eventTime, consts.dateTime.bigqueryZonelessTimestampFormat);
-        let eventTimeLocal = utils.datetimeToLocal(eventTime, consts.dateTime.bigqueryZonelessTimestampFormat);
-
+        
         dataItem = {
             ...dataItem,
-            sys: { source: sender },             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute
-            time_utc: eventTimeUtc,
-            time_local: eventTimeLocal,
-            time_processing: processingTime
+            sys: { source: sender },             // is based on the apikey from the sender and identifies the source of the data. this value is added to sys.source attribute
+            time_event: moment.utc(eventTime).format(consts.dateTime.bigqueryZonelessTimestampFormat),
+            time_zone: utils.datetimeZoneOffset(eventTime),
+            time_processing: moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat)
         };
 
         return dataItem;

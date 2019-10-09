@@ -129,40 +129,34 @@ module.exports.datetimeToLocal = (instant, returnUtcFormat, offsetHours) => {
 
 }
 
-/*  converts an instant to UTC time and returns a datetime in the format specified by returnUtcFormat.
-    the input instant can be 
-    - a local time with a trailing +/- offset (e.g. 20190209T150017.020+0700) 
-    - or UTC time  with a trailing z
-    an empty value is returned if: 
-    - the instant does not contain a trailing +/- offset or a trailing 'Z'  
+/* converts and formats a localtime or UTC instant, to a zone offset expressed in +/-HH:MM format. Returns a string in the specified return format
+   the function may be called with one of the following options:
+   1) instant is local time with +/- UTC offset (e.g. 20190209T1630+0700). 
+   - the local timezone offset is the trailing +/- offset 
+   2) instant is in UTC time with the required Z suffix - (e.g. 20190209T1630Z)
+   - the local timezone offset is zero 
+   the returned timezone offset is a string formatted and returned as '+/-HH:mm'
+   assume zero offset hours (i.e the instant *is* 'local' UTC time) if the instant 
+   - is missing a trailing +/- offset ..or 
+   - is not in UTC format (no trailing 'Z') 
 */
-module.exports.datetimeToUTC = (instant, returnUtcFormat) => {
+module.exports.datetimeZoneOffset = (instant) => {
+    
+    let tzOffset;
 
-    let offsetSubstringStart = -1;
-    let zuluStart = -1;
-    let utcTime = '';
+    // get offset in minutes
+    let offsetMinutes = moment.parseZone(instant).utcOffset();      // 20190209T150006.032+0700 -> 420, 20190209T150006Z -> 0     
+    
+    // get the sign, hours, and minutes from the offset
+    let sign = (Math.sign(offsetMinutes) < 0) ? '-' : '+';                                          // +/- from +1 or -1
+    let hours = Math.abs(moment.duration(offsetMinutes, 'minutes').hours());                        // 7 
+    let minutes = Math.abs(moment.duration(offsetMinutes, 'minutes').minutes());                    // 0
 
-    const INVALID_INSTANT = '';
+    // construct offset string
+    tzOffset =  sign + this.padZero(hours,2) + ':' +  this.padZero(minutes,2)
 
-    // get start of trailing +/- offset substring or 'Z' in the input instant                                               
-    offsetSubstringStart = instant.indexOf('-');                                                    // the instant must have a +/- offset
-    if (offsetSubstringStart <= 0) offsetSubstringStart = instant.indexOf('+');
-    if (offsetSubstringStart <= 0) zuluStart = instant.toUpperCase().indexOf('Z');                      // check if Z has been specified 
+    return tzOffset;                                                                               // return formatted 
 
-
-    // if it is a local time with a trailing +/- offset (e.g. 20190209T150017.020+0700) or UTC time  with a trailing z
-    if (offsetSubstringStart > 0 || zuluStart > 0) {
-
-        utcTime = moment.utc(instant).format(returnUtcFormat);                                          // convert instant to a 'local' UTC time with +00:00 offset
-
-        // if not a local time or UTC time -  return an 'invalid' empty string response 
-    } else {
-
-        utcTime = INVALID_INSTANT;                                                                // return empty string to signify an invalid instant
-
-    }
-
-    return utcTime;
 }
 
 // pads leading zeros if the number is less than the width
