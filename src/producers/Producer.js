@@ -53,8 +53,6 @@ class Producer {
         try {
             // connect 
             await this.producerObj.connect();
-            
-            console.log(`results.messages ${results.messages}`); // @@@@@@
 
             // send the message to the topics
             let result = await this.producerObj.send({
@@ -65,7 +63,7 @@ class Producer {
             });
             
             // log output               e.g. 2019-09-10 05:04:44.6630 [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
-            console.log(`${moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat)} [${this.kafkaTopic}:${result[0].baseOffset}-${Number(result[0].baseOffset) + (results.messages.length - 1)}] ${results.messages.length} messages, ${results.itemCount} items, sender:${sender}`)
+            console.log(`[${this.kafkaTopic}:${result[0].baseOffset}-${Number(result[0].baseOffset) + (results.messages.length - 1)}] ${results.messages.length} messages, ${results.itemCount} items, sender:${sender}`)
             if (consts.environments[consts.env].log.verbose) console.log(results);  // if verbose logging on..  e.g. [ { key: '025', value: '[{"pms_id" ....      
             
             // disconnect

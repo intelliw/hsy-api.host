@@ -8,5 +8,4 @@ const host = require('../src/host');
 // console.log(host.utils.createSequence(1,5,',', undefined ,true))
 
 //let num = host.utils.createNumberSequence(1,14)[0]
-//console.log(host.utils.padZero(num,2))
 

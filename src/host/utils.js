@@ -152,18 +152,11 @@ module.exports.datetimeZoneOffset = (instant) => {
     let hours = Math.abs(moment.duration(offsetMinutes, 'minutes').hours());                        // 7 
     let minutes = Math.abs(moment.duration(offsetMinutes, 'minutes').minutes());                    // 0
 
-    // construct offset string
-    tzOffset =  sign + this.padZero(hours,2) + ':' +  this.padZero(minutes,2)
+    // construct offset string, pad hrs and mins with zeros to 2 places
+    tzOffset =  sign + hours.toString().padStart(2, '0') + ':' +  minutes.toString().padStart(2, '0');
 
     return tzOffset;                                                                               // return formatted 
 
-}
-
-// pads leading zeros if the number is less than the width
-module.exports.padZero = (n, width) => {
-    let z = '0';
-    n = n + '';
-    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }
 
 /**
@@ -195,6 +188,21 @@ module.exports.findByPropertyValue = (findInObjectArray, findProperty, findValue
 
     return foundItems;
 }
+
+
+// converts a hex value to an array of reversed bits, the least-significant-bit (rightmost bit) is in element zero       
+function hex2bitArray(hexValue, minLength){
+    const hexBase = 16;
+    const binaryBase = 2;
+    
+    // convert hex to binary - e.g. 1A79 --> 0001 1010 0111 1001
+    let binaryValue = parseInt(hexValue, hexBase).toString(binaryBase).padStart(minLength, '0');
+    
+    // make a reversed array - e.g  bitArray[0] = 1, bitArray[1] = 0
+    let bitArray = binaryValue.split('').reverse();  
+    return bitArray;
+}
+
 // returns the index of the first property with a matching value. Returns -1 if missing. 
 module.exports.indexFromValue = (obj, value) => {
 
@@ -253,18 +261,18 @@ module.exports.randomFloat = (min, max, decimalPlaces) => {
 
 
 // returns a fixed length string from a random integer between min and max, paded with leading zeros if the number has less digits than the number of digits in max.
-// calls randomFloat() and padZer()
+// calls randomFloat() 
 module.exports.randomIntegerString = (min, max) => {
 
     const ZERO_DECIMAL_PLACES = 0;
     
     // get a random number 
-    let maxLength = max.toString().length;               
+    let minLength = max.toString().length;               
     let randomInt = this.randomFloat(min, max, ZERO_DECIMAL_PLACES);
-    let randomIntStr = randomInt.toString().substring(0,maxLength);
+    let randomIntStr = randomInt.toString().substring(0,minLength);
 
     // pad zeros if shorter than max 
-    return this.padZero(randomIntStr, maxLength);
+    return randomIntStr.padStart(minLength, '0');
 
 }
 
