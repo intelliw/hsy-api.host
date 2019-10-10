@@ -6,8 +6,13 @@
  */
 const express = require('express');
 const router = express.Router();
+
 const utils = require('../host/utils');
 const consts = require('../host/constants');
+
+const utilsc = require('../host/utilsCommon');
+const configc = require('../host/configCommon');
+
 
 const Request = require('../requests');
 /*
@@ -36,7 +41,7 @@ router.route([
             .status(response.statusCode)
             .type(response.contentType)
             .render(response.view, {
-                collections: collections, utils: utils, consts: consts
+                collections: collections, utils: utils, consts: consts, utilsc: utilsc, configc: configc
             });
         // */ // 
 

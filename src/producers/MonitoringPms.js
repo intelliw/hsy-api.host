@@ -8,10 +8,12 @@ const consts = require('../host/constants');
 const enums = require('../host/enums');
 const utils = require('../host/utils');
 
+const configc = require('../host/configCommon');
+
 const Producer = require('../producers');
 
 const API_DATASET = enums.params.datasets.pms;
-const KAFKA_TOPIC = consts.environments[consts.env].topics.monitoring.pms;
+const KAFKA_TOPIC = configc.env[configc.env.active].topics.monitoring.pms;
 
 /**
  */

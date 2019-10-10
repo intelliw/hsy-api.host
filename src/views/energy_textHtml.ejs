@@ -34,8 +34,8 @@
             hse-filter-reset btn
     */ 
 
-    // constants - soime of these are placed into client side script blocks at the bottom of this page
-    const API_BASE_URL = consts.environments[consts.env].api.scheme + '://' + consts.environments[consts.env].api.host;       // e.g.  'http://api.sundaya.monitored.equipment'
+    // constants - some of these are placed into client side script blocks at the bottom of this page
+    const API_BASE_URL = configc.env[configc.env.active].api.scheme + '://' + configc.env[configc.env.active].api.host;       // e.g.  'http://api.sundaya.monitored.equipment'
     const PANES = ['pane-child', 'pane-grandchild'];
     const DEBUG = false;                                                        
 
@@ -142,8 +142,8 @@
             child_period = link_col_children.name.split('.')[1];
             grandchild_period = link_col_grandchildren.name.split('.')[1];                                                  // e.g day.timeofday
 
-            child_href_disabled = utils.valueExistsInArray(['minute', 'second', 'instant'], child_period);                  // disable links down to fine grained periods for performance reasons
-            grandchild_href_disabled = utils.valueExistsInArray(['minute', 'second', 'instant'], grandchild_period);
+            child_href_disabled = utilsc.valueExistsInArray(['minute', 'second', 'instant'], child_period);                  // disable links down to fine grained periods for performance reasons
+            grandchild_href_disabled = utilsc.valueExistsInArray(['minute', 'second', 'instant'], grandchild_period);
 
             panel_map += '{child: { dataTable: undefined, chart: undefined, table: undefined }, grandchild: { dataTable: undefined, chart: undefined, table: undefined } }' + (n_cols < collections.length - 1 ? ', ' : '');
             

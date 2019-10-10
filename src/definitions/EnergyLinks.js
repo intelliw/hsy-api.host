@@ -8,6 +8,7 @@
 // stores data rows for a json collection  
 const enums = require('../host/enums');
 const consts = require('../host/constants');
+const configc = require('../host/configCommon');
 
 const Links = require('./Links');
 class EnergyLinks extends Links {
@@ -40,7 +41,7 @@ class EnergyLinks extends Links {
 // creates href for the energy resource path (
 function periodHref(energy, period, site) {
 
-    let href = `${consts.environments[consts.env].api.scheme}://${consts.environments[consts.env].api.host}/energy/${energy.value}/period/${period.value}/${period.epoch}/${period.duration}?site=${site.value}`;
+    let href = `${configc.env[configc.env.active].api.scheme}://${configc.env[configc.env.active].api.host}/energy/${energy.value}/period/${period.value}/${period.epoch}/${period.duration}?site=${site.value}`;
 
     return href;
 
