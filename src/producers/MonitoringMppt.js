@@ -7,16 +7,17 @@
 const consts = require('../host/constants');
 const enums = require('../host/enums');
 const utils = require('../host/utils');
+
 const configc = require('../host/configCommon');
 
-const Producer = require('../producers');
+const KafkaProducer = require('../producers/KafkaProducer');
 
 const API_DATASET = enums.params.datasets.mppt;
 const KAFKA_TOPIC = configc.env[configc.env.active].topics.monitoring.mppt;
 
 /**
  */
-class MonitoringMppt extends Producer {
+class MonitoringMppt extends KafkaProducer {
     /**
     instance attributes:  
 

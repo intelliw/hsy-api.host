@@ -13,7 +13,7 @@ const configc = require('../host/configCommon');
 
 const moment = require('moment');
 
-class Producer {
+class KafkaProducer {
     /**
      * superclass - 
      * clients must call sendToTopic() 
@@ -179,4 +179,4 @@ class Producer {
 
 }
 
-module.exports = Producer;
+module.exports = KafkaProducer;

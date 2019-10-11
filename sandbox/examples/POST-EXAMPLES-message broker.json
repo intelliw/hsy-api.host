@@ -3,6 +3,7 @@
 
 {   "pms_id": "PMS-01-002",
     "pack_id": "0248",
+    "pms": { "temp": 48.3 },
     "pack": { "volts": 51.262, "amps": -0.625, "watts": -32.039,    
         "vcl": 3.654, "vch": 3.676, "dock": 4, 
         "temp_top": 35, "temp_mid": 33, "temp_bottom": 34 }, 

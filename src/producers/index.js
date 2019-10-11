@@ -5,7 +5,7 @@
  * 
  * producers 
  */
-module.exports = require('./Producer');
+module.exports.KafkaProducer = require('./KafkaProducer');
 
 module.exports.factory = require('./factory');
 

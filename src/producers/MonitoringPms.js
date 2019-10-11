@@ -10,14 +10,14 @@ const utils = require('../host/utils');
 
 const configc = require('../host/configCommon');
 
-const Producer = require('../producers');
+const KafkaProducer = require('../producers/KafkaProducer');
 
 const API_DATASET = enums.params.datasets.pms;
 const KAFKA_TOPIC = configc.env[configc.env.active].topics.monitoring.pms;
 
 /**
  */
-class MonitoringPms extends Producer {
+class MonitoringPms extends KafkaProducer {
     /**
     instance attributes:  
 
@@ -32,7 +32,6 @@ class MonitoringPms extends Producer {
     }
 
 }
-
 
 
 module.exports = MonitoringPms;

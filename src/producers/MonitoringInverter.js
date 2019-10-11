@@ -9,14 +9,14 @@ const enums = require('../host/enums');
 const utils = require('../host/utils');
 const configc = require('../host/configCommon');
 
-const Producer = require('../producers');
+const KafkaProducer = require('../producers/KafkaProducer');
 
 const API_DATASET = enums.params.datasets.inverter;
 const KAFKA_TOPIC = configc.env[configc.env.active].topics.monitoring.inverter;
 
 /**
  */
-class MonitoringInverter extends Producer {
+class MonitoringInverter extends KafkaProducer {
     /**
     instance attributes:  
 
