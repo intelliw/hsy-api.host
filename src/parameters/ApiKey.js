@@ -12,7 +12,7 @@ const Param = require('./Param');
 
 const THIS_PARAM_NAME = consts.params.names.apikey;
 
-const QUERY_APIKEY_NAME = 'api_key'         // GET | `api_key` | query | `api_key` query parameter is accepted only in GET requests. 
+const QUERY_APIKEY_NAME = 'api_key'         // `api_key` query parameter is no loger supported. 
 const HEADER_APIKEY_NAME = 'x-api-key'      // POST, GET | `x-api-key` | header | POST requests must provide a `x-api-key` header. This option is also preferred for GET requests.
 
 /** 
@@ -33,15 +33,13 @@ class ApiKey extends Param {
     constructor(req, apikeyRequired) {
         
         // get apikey - header is preferred
-        let queryKey = req.query[QUERY_APIKEY_NAME];
         let headerKey = req.headers[HEADER_APIKEY_NAME];
-        let requestApikey = headerKey !== consts.NONE ? headerKey : queryKey;
         
         // decide whether to default - if apikeyRequired there should be no default 
         let defaultApikey = apikeyRequired ? consts.NONE : enums.apiKey.default;
 
         // call super 
-        super(THIS_PARAM_NAME, requestApikey, defaultApikey, enums.apiKey, false);
+        super(THIS_PARAM_NAME, headerKey, defaultApikey, enums.apiKey, false);
     }
 
 }

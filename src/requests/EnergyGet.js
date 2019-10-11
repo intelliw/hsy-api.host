@@ -43,7 +43,7 @@ class EnergyGet extends Request {
         params.productCatalogItems = new Param('productCatalogItems', req.body.productCatalogItems, consts.NONE, consts.NONE, OPTIONAL);
         
         // The 'GET' operations in the `/energy` path does not require an API key for the default site (`site=999`)    
-        let apikeyRequired = !(params.site.value == consts.params.defaults.site);               // requried unless site == 999
+        let apikeyRequired = !(params.site.value == consts.params.defaults.site);               // required unless site == 999
 
         // cap the number of durations for this period
         let maxDurationsAllowed = Number(consts.period.maxDurationsAllowed[params.period.value]);  
