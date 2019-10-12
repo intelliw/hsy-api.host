@@ -6,7 +6,17 @@ const consts = require('../src/host/constants');
 
 const moment = require('moment');
 
+function test1(value) { 
+    
+    return '';
+}
+function test2(value) {
+    
+    return '';
+    
+}
 
 
 // test... node sandbox/tester
-// console.log(this.randomIntegerString(1,999));
+console.log(test1(''));
+console.log(test2(''));

@@ -102,5 +102,3 @@ module.exports.tristateBoolean = (bitValue) => {
     return tristate;
 }
 
-// test... node src/host/utils
-// console.log(this.randomIntegerString(1,999));

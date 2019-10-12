@@ -5,7 +5,6 @@
  * global enumerations
  */
 
-
 module.exports.energyData = {
     hse: 'hse',
     harvest: 'harvest',
@@ -107,7 +106,7 @@ module.exports.apiKey = {
     S002: 'AIzaSyDq97s15fdM99swOJuUIFtW8ifgQSBnymo',    // Adam 
     S003: 'AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0',    // 
     V001: 'AIzaSyASFQxf4PmOutVS1Dt99TPcZ4IQ8PDUMqY',
-    PROXY: 'AIzaSyC867McQRqoJFOsk27OYfnKjxSIp6WuaTA'   // PROXY - this default key is injected if none provided 
+    PROXY: 'AIzaSyC867McQRqoJFOsk27OYfnKjxSIp6WuaTA'    // PROXY - this default key is injected if none provided 
 }
 module.exports.apiKey.default = this.apiKey.PROXY;
 
