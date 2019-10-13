@@ -118,3 +118,11 @@ module.exports.messageBroker = {                    // kafka message broker. top
     }
 }
 module.exports.messageBroker.ack.default = this.messageBroker.ack.leader
+
+module.exports.verbosity = {
+    info: "info",
+    debug: "debug",
+    warn: "warn",
+    critical: "critical",
+    error: "error"
+}

@@ -10,8 +10,8 @@ const router = express.Router();
 const utils = require('../host/utils');
 const consts = require('../host/constants');
 
-const utilsc = require('../host/utilsCommon');
-const configc = require('../host/configCommon');
+const utilsc = require('../common/utilsc');
+const configc = require('../common/configc');
 
 
 const Request = require('../requests');

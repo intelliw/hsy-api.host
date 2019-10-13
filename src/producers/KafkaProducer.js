@@ -9,7 +9,9 @@ const { Kafka } = require('kafkajs');
 const enums = require('../host/enums');
 const consts = require('../host/constants');
 const utils = require('../host/utils');
-const configc = require('../host/configCommon');
+
+const logger = require('../common/logger');
+const configc = require('../common/configc');
 
 const moment = require('moment');
 
@@ -64,10 +66,10 @@ class KafkaProducer {
                 timeout: configc.kafkajs.producer.timeout
             });
             
-            // log output               e.g. 2019-09-10 05:04:44.6630 [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
-            console.log(`[${this.kafkaTopic}:${result[0].baseOffset}-${Number(result[0].baseOffset) + (results.messages.length - 1)}] ${results.messages.length} messages, ${results.itemCount} items, sender:${sender}`)
-            if (configc.env[configc.env.active].log.verbose) console.log(results);  // if verbose logging on..  e.g. [ { key: '025', value: '[{"pms_id" ....      
+            // log output                                                           // e.g. [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
+            logger.infodebug(this.kafkaTopic, result[0].baseOffset, results.messages, results.itemCount, sender);         // info = (topic, offset, msgqty, itemqty, sender) {
             
+
             // disconnect
             await this.producerObj.disconnect();    
             

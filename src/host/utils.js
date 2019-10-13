@@ -7,7 +7,7 @@
  */
 const enums = require('./enums');
 const consts = require('../host/constants');
-const utilsc = require('../host/utilsCommon');
+const utilsc = require('../common/utilsc');
 
 const moment = require('moment');
 

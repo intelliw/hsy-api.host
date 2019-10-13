@@ -7,7 +7,7 @@
 const path = require('path');                   // this is a node package not the '../paths' applicaiton module
 const enums = require('./enums');
 
-const utilsc = require('./utilsCommon');
+const utilsc = require('../common/utilsc');
 
 // folder locations
 module.exports.folders = {

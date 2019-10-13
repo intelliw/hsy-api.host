@@ -34,7 +34,8 @@ app.use(bodyParser.raw({ verify: rawBodySaver, limit: `${consts.system.BODYPARSE
 // routes        
 app.use('/energy', paths.energyRouter);                                                 // openapi tag: Energy - this is als to the default route
 app.use(['/devices', '/device'], paths.devicesRouter);                                  // openapi tag: Devices
-app.use('/api', paths.diagnosticsRouter);                                               // openapi tag: Diagnostics
+app.use('/api', paths.apiRouter);                                                       // openapi tag: Diagnostics
+
 app.use('/devtest', sandbox.devtest);                                                   // not in openapi spec: for testing and troubleshooting only
 
 // static folders 
