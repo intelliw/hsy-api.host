@@ -17,3 +17,28 @@ module.exports.initialise = function (app) {
 
 }
 
+// constants for the api and host
+module.exports.api = {
+    versions: {
+        supported: '0.2 0.3',
+        current: '0.3.12.10'
+    }
+}
+
+// system configuration constants
+module.exports.system = {
+    MONITORING_PRECISION: 4,                                                // decimal places for float values in monitoring dataset
+    BODYPARSER_LIMIT_MB: 1                                                  // max mb for post messages 
+}
+
+// stackdriver client configuration options
+module.exports.stackdriver = {
+    logging: {
+        logName: 'monitored.equipment',
+        resource: 'gce_instance'
+    },
+    errors: {
+        reportMode: 'always',                                                 // 'production' (default), 'always', or 'never' - 'production' (default), 'always', 'never' - production will not log unless NODE-ENV=production. Specifies when errors are reported to the Error Reporting Console.      
+        logLevel: 5                                                           // 2 (warnings). 0 (no logs) 5 (all logs) 
+    }
+}

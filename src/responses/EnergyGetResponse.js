@@ -9,6 +9,7 @@ const utils = require('../host/utils');
 const utilsc = require('../common/utilsc');
 
 const consts = require('../host/constants');
+let config = require('../host/config');
 
 const Response = require('./Response');
 const Collections = require('../definitions/Collections');
@@ -71,7 +72,7 @@ function executeGet(params) {
     items = createItems(params.energy, period, params.site);
 
     // add each collection to the collections array
-    collections.add(consts.api.versions.current, links.href, links, items);
+    collections.add(config.api.versions.current, links.href, links, items);
   });
 
   return collections.getElements();

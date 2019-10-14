@@ -156,22 +156,8 @@ module.exports.params = {
     },
     defaults: {
         site: '999',
-        duration: '1'                                                       // energy apiu duration parameter 
+        duration: '1'                                                       // energy api duration parameter 
     }
-}
-
-// constants for the api and host
-module.exports.api = {
-    versions: {
-        supported: '0.2 0.3',
-        current: '0.3.12.10'
-    }
-}
-
-// system configuration constants
-module.exports.system = {
-    MONITORING_PRECISION: 4,                                                // decimal places for float values in monitoring dataset
-    BODYPARSER_LIMIT_MB: 1                                                  // max mb for post messages 
 }
 
 // system constants

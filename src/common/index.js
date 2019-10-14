@@ -9,3 +9,4 @@
 module.exports.configc = require('./configc');
 module.exports.utilsc = require('./utilsc');
 module.exports.logger = require('./logger');
+module.exports.errors = require('./errors');

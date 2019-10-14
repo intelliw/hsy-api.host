@@ -15,7 +15,6 @@ module.exports.energyData = {
     gridout: 'grid.out'
 };
 
-
 // constants for the api 
 module.exports.params = {
     energy: {
@@ -38,7 +37,7 @@ module.exports.params = {
         year: 'year',
         fiveyear: 'fiveyear'
     },
-   datasets: {                     // kafka topics are based on enums.params.datasets. preferred convention is <message type>_<api base/db name>_<dataset /table name> 
+    datasets: {                     // kafka topics are based on enums.params.datasets. preferred convention is <message type>_<api base/db name>_<dataset /table name> 
         pms: 'pms',                                 // corresponds to messageBroker.consumers.pms
         mppt: 'mppt',                               // corresponds to messageBroker.consumers.mppt
         inverter: 'inverter'                        // corresponds to messageBroker.consumers.inverter
@@ -46,7 +45,6 @@ module.exports.params = {
 }
 module.exports.params.energy.default = this.params.energy.hse;
 module.exports.params.period.default = this.params.period.week;
-
 
 module.exports.timeOfDay = {
     morning: 'morning',
@@ -119,10 +117,16 @@ module.exports.messageBroker = {                    // kafka message broker. top
 }
 module.exports.messageBroker.ack.default = this.messageBroker.ack.leader
 
-module.exports.verbosity = {
-    info: "info",
-    debug: "debug",
-    warn: "warn",
-    critical: "critical",
-    error: "error"
+module.exports.logger = {                           
+    verbosity: {
+        info: "info",
+        debug: "debug",
+        warn: "warn",
+        critical: "critical",
+        error: "error"
+    },
+    outputs: {                                     // output options for the logger      
+        console: "console",
+        stackdriver: "stackdriver"
+    }   
 }

@@ -9,6 +9,7 @@ const express = require('express');
 const router = express.Router();
 
 let consts = require('../host/constants');
+let configs = require('../host/config');
 let enums = require('../host/enums');
 let logger = require('../common/logger');
 
@@ -17,17 +18,17 @@ router.get('/versions', (req, res, next) => {
     
     res
     .status(200)
-    .json({ versions: consts.api.versions.supported })
+    .json({ versions: config.api.versions.supported })
     .end();
-
-    logger.verbosity = [enums.verbosity.info, enums.verbosity.debug];
+    
+    logger.verbosity = [enums.logger.verbosity.info, enums.logger.verbosity.debug];
 
 });
 
 // [diagnostics.api.logger.get] /api/logger?verbosity=debug,info
 router.get('/logger', (req, res, next) => {
     
-    // set verbosity
+    // set verbosity first
     let verbosity = req.query.verbosity;                                    // e.g. ?verbosity=debug,info
     if (verbosity != consts.NONE) {
         logger.verbosity = verbosity.split(',');                            // split into an array and set logger.verbosity

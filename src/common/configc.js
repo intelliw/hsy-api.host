@@ -12,7 +12,6 @@ const utilsc = require('../common/utilsc');
 const CONSUMER_CLIENTID = `consumer.${utilsc.randomIntegerString(1, 9999)}`
 const PRODUCER_CLIENTID = `producer.${utilsc.randomIntegerString(1, 9999)}`
 
-
 // kafkajs client configuration options
 module.exports.kafkajs = {
     consumer: {
@@ -49,6 +48,7 @@ module.exports.kafkajs = {
  /* constants for the environment 
    module.exports.env is mastered in hse-api-host project and shared by hse-api-consumers 
    it should be edited in hse-api-host and copied across into hse-api-consumers project after any changes are made 
+   logger sets whether 
 */
 module.exports.env = {
     local: {
@@ -57,7 +57,8 @@ module.exports.env = {
         topics: { monitoring: { pms: 'monitoring.dev_pms', mppt: 'monitoring.dev_mppt', inverter: 'monitoring.dev_inverter' },                      //  topics for monitoring data received from api host
             dataset: { pms: 'monitoring.dev_pms.dataset', mppt: 'monitoring.dev_mppt.dataset', inverter: 'monitoring.dev_inverter.dataset' } },     //  topics for monitoring datasets for bq update, created by consumer at 1st stage of monitoring
         datawarehouse: { datasets: { monitoring: 'monitoring' }, 
-            tables: { pms: 'dev_pms', mppt: 'dev_mppt', inverter: 'dev_inverter', TEST: 'TEST' } }
+            tables: { pms: 'dev_pms', mppt: 'dev_mppt', inverter: 'dev_inverter', TEST: 'TEST' } },
+        logger: { output: ['console', 'stackdriver'] }
     },
     testcloud: {                                                                // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: 'test.api.sundaya.monitored.equipment', scheme: 'https' },
@@ -65,7 +66,8 @@ module.exports.env = {
         topics: { monitoring: { pms: 'monitoring.pms', mppt: 'monitoring.mppt', inverter: 'monitoring.inverter' },                      //  topics for monitoring data received from api host
             dataset: { pms: 'monitoring.pms.dataset', mppt: 'monitoring.mppt.dataset', inverter: 'monitoring.inverter.dataset' } },     //  topics for monitoring datasets for bq update, created by consumer at 1st stage of monitoring
         datawarehouse: { datasets: { monitoring: 'monitoring' },
-            tables: { pms: 'pms', mppt: 'mppt', inverter: 'inverter', TEST: 'TEST' } }
+            tables: { pms: 'pms', mppt: 'mppt', inverter: 'inverter', TEST: 'TEST' } },
+        logger: { output: ['stackdriver'] }
     },
     devcloud: {                                                                 // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: 'dev.api.sundaya.monitored.equipment', scheme: 'https' },
@@ -73,7 +75,8 @@ module.exports.env = {
         topics: { monitoring: { pms: 'monitoring.pms', mppt: 'monitoring.mppt', inverter: 'monitoring.inverter' },                      //  topics for monitoring data received from api host
             dataset: { pms: 'monitoring.pms.dataset', mppt: 'monitoring.mppt.dataset', inverter: 'monitoring.inverter.dataset' } },     //  topics for monitoring datasets for bq update, created by consumer at 1st stage of monitoring
         datawarehouse: { datasets: { monitoring: 'monitoring' },
-            tables: { pms: 'pms', mppt: 'mppt', inverter: 'inverter', TEST: 'TEST' } }
+            tables: { pms: 'pms', mppt: 'mppt', inverter: 'inverter', TEST: 'TEST' } },
+        logger: { output: ['stackdriver'] }
     },
     devcloud_HA: {                                                              // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: 'dev.api.sundaya.monitored.equipment', scheme: 'https' },
@@ -81,7 +84,8 @@ module.exports.env = {
         topics: { monitoring: { pms: 'monitoring.pms', mppt: 'monitoring.mppt', inverter: 'monitoring.inverter' },                      //  topics for monitoring data received from api host
             dataset: { pms: 'monitoring.pms.dataset', mppt: 'monitoring.mppt.dataset', inverter: 'monitoring.inverter.dataset' } },     //  topics for monitoring datasets for bq update, created by consumer at 1st stage of monitoring
         datawarehouse: { datasets: { monitoring: 'monitoring' },
-            tables: { pms: 'pms', mppt: 'mppt', inverter: 'inverter', TEST: 'TEST' } }
+            tables: { pms: 'pms', mppt: 'mppt', inverter: 'inverter', TEST: 'TEST' } },
+        logger: { output: ['stackdriver'] }
     },
     prodcloud: {                                                                // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: 'api.sundaya.monitored.equipment', scheme: 'https' },
@@ -89,7 +93,8 @@ module.exports.env = {
         topics: { monitoring: { pms: 'monitoring.pms', mppt: 'monitoring.mppt', inverter: 'monitoring.inverter' },                      //  topics for monitoring data received from api host
             dataset: { pms: 'monitoring.pms.dataset', mppt: 'monitoring.mppt.dataset', inverter: 'monitoring.inverter.dataset' } },     //  topics for monitoring datasets for bq update, created by consumer at 1st stage of monitoring
         datawarehouse: { datasets: { monitoring: 'monitoring' },
-            tables: { pms: 'pms', mppt: 'mppt', inverter: 'inverter', TEST: 'TEST' } }
+            tables: { pms: 'pms', mppt: 'mppt', inverter: 'inverter', TEST: 'TEST' } },
+        logger: { output: ['stackdriver'] }
     },
     prodcloud_HA: {                                                             // Kafka HA - 3 masters, N workers
         api: { host: 'api.sundaya.monitored.equipment', scheme: 'https' },
@@ -97,7 +102,8 @@ module.exports.env = {
         topics: { monitoring: { pms: 'monitoring.pms', mppt: 'monitoring.mppt', inverter: 'monitoring.inverter' },                      //  topics for monitoring data received from api host
             dataset: { pms: 'monitoring.pms.dataset', mppt: 'monitoring.mppt.dataset', inverter: 'monitoring.inverter.dataset' } },     //  topics for monitoring datasets for bq update, created by consumer at 1st stage of monitoring
         datawarehouse: { datasets: { monitoring: 'monitoring' },
-            tables: { pms: 'pms', mppt: 'mppt', inverter: 'inverter', TEST: 'TEST' } }
+            tables: { pms: 'pms', mppt: 'mppt', inverter: 'inverter', TEST: 'TEST' } },
+        logger: { output: ['stackdriver'] }
     }
 }
 
