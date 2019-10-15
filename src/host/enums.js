@@ -117,15 +117,17 @@ module.exports.messageBroker = {                    // kafka message broker. top
 }
 module.exports.messageBroker.ack.default = this.messageBroker.ack.leader
 
-module.exports.logger = {                           
-    verbosity: {
+module.exports.logging = {                           
+    verbosity: {                                    // log levels for error reporting and logged events
+        none: "none",
         info: "info",
         debug: "debug",
         warn: "warn",
         critical: "critical",
         error: "error"
     },
-    outputs: {                                     // output options for the logger      
+    appenders: {                                      // output options for the logger      
+        none: "none",                              
         console: "console",
         stackdriver: "stackdriver"
     }   

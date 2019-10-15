@@ -50,7 +50,7 @@ app.get('/exception', () => {
 });
 
 // express error handling middleware should be attached after all the other routes and use() calls. See the Express.js docs.  https://cloud.google.com/error-reporting/docs/setup/nodejs
-app.use(errors.errorObj.express);
+app.use(errors.LOGGER.express);
 
 
 // [END setup]-------------------------------

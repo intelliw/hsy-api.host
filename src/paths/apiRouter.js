@@ -9,35 +9,34 @@ const express = require('express');
 const router = express.Router();
 
 let consts = require('../host/constants');
-let configs = require('../host/config');
+let configc = require('../common/configc');
+
 let enums = require('../host/enums');
-let logger = require('../common/logger');
+let logging = require('../common/logging');
 
 // [diagnostics.api.versions.get] /api/versions
 router.get('/versions', (req, res, next) => {
     
     res
     .status(200)
-    .json({ versions: config.api.versions.supported })
+    .json({ versions: configc.env[configc.env.active].api.versions.supported })
     .end();
     
-    logger.verbosity = [enums.logger.verbosity.info, enums.logger.verbosity.debug];
-
 });
 
-// [diagnostics.api.logger.get] /api/logger?verbosity=debug,info
-router.get('/logger', (req, res, next) => {
+// [diagnostics.api.logging.get] /api/logging?verbosity=debug,info
+router.get('/logging', (req, res, next) => {
     
     // set verbosity first
-    let verbosity = req.query.verbosity;                                    // e.g. ?verbosity=debug,info
+    let verbosity = req.query.verbosity;                                                // e.g. ?verbosity=debug,info
     if (verbosity != consts.NONE) {
-        logger.verbosity = verbosity.split(',');                            // split into an array and set logger.verbosity
+        configc.env[configc.env.active].logging.verbosity = verbosity.split(',');       // split into an array and set logging.verbosity
     }
 
-    // return logger  
+    // return logging configuration 
     res
     .status(200)
-    .json({ logger })                                                       // e.g. {"logger":{"verbosity":["info"]}}
+    .json({ logging: configc.env[configc.env.active].logging })                         // e.g. {"logging":{"verbosity":["info"]}}
     .end();
 
 });
