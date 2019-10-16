@@ -126,8 +126,7 @@ module.exports.logging = {
         critical: "critical",
         error: "error"
     },
-    appenders: {                                      // output options for the logger      
-        none: "none",                              
+    appenders: {                                      // output options for logging and error reporting      
         console: "console",
         stackdriver: "stackdriver"
     }   

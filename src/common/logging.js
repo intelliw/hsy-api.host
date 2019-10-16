@@ -22,34 +22,40 @@ module.exports.messagingEvent = (topic, offset, msgsArray, itemsQty, sender) => 
 
     const loggingConf = configc.env[configc.env.active].logging;                        // get the current logging configurations
 
-    // create the payload 
-    let jsonPayload = {
-        topic: topic,                                                                   // e.g. monitoring.mppt 
-        offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,                 // e.g. 225-229
-        msgsqty: msgsArray.length,
-        itemqty: itemsQty,
-        sender: sender
-    }
-    
     // append info 
     if (loggingConf.verbosity.includes(enums.logging.verbosity.info)) {                 // if info logging on..
-        appendInfo(jsonPayload);
+
+        appendInfo({
+            topic: topic,                                                                   // e.g. monitoring.mppt 
+            offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,                 // e.g. 225-229
+            msgsqty: msgsArray.length,
+            itemqty: itemsQty,
+            sender: sender
+        });
+
     }
-    
+
     // append debug
     if (loggingConf.verbosity.includes(enums.logging.verbosity.debug)) {                // if debug logging on..  e.g. [ { key: '025', value: '[{"pms_id" ....      
-        jsonPayload.messages = msgsArray;                                               // add messages for debug   
-        appendDebug(jsonPayload);
+
+        appendDebug({
+            messages: msgsArray,                                                        // add messages for debug   
+            topic: topic,                                                                   // e.g. monitoring.mppt 
+            offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,                 // e.g. 225-229
+            msgsqty: msgsArray.length,
+            itemqty: itemsQty,
+            sender: sender
+        });
     }
-    
+
 }
 
 // INFO
 async function appendInfo(jsonPayload) {
-    
+
 
     try {
-        
+
         const loggingConf = configc.env[configc.env.active].logging;                    // get the current logging configurations
 
         // append stackdriver                                                         
@@ -87,7 +93,7 @@ async function appendInfo(jsonPayload) {
 async function appendDebug(jsonPayload) {
 
     try {
-        
+
         const loggingConf = configc.env[configc.env.active].logging;                    // get the current logging configurations
 
         // append stackdriver                                                         
