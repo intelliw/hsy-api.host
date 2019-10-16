@@ -155,4 +155,4 @@ const ENV_LIST = {                                                              
     prodcloud: "prodcloud",
     prodcloud_HA: "prodcloud_HA"
 }
-module.exports.env.active = ENV_LIST.prodcloud;                                
+module.exports.env.active = ENV_LIST.local;                                
