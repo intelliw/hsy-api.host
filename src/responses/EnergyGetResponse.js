@@ -9,8 +9,7 @@ const utils = require('../host/utils');
 const utilsc = require('../common/utilsc');
 
 const consts = require('../host/constants');
-let config = require('../host/config');
-let configc = require('../common/configc');
+const configc = require('../common/configc');
 
 const Response = require('./Response');
 const Collections = require('../definitions/Collections');

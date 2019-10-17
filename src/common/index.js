@@ -8,5 +8,4 @@
 
 module.exports.configc = require('./configc');
 module.exports.utilsc = require('./utilsc');
-module.exports.logging = require('./logging');
 module.exports.errors = require('./errors');

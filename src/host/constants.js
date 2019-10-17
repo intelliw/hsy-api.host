@@ -151,8 +151,10 @@ module.exports.dateTime = {
 // constants to define api parameters 
 module.exports.params = {
     names: {
-        apikey: 'apikey',                                                   
-        accepttype: 'accept'
+        apiKey: 'apikey',                                                   
+        acceptType: 'accept',
+        contentType: 'contentType'
+        
     },
     defaults: {
         site: '999',
@@ -163,3 +165,8 @@ module.exports.params = {
 // system constants
 module.exports.NONE = global.undefined;
 
+// system configuration constants
+module.exports.system = {
+    MONITORING_PRECISION: 4,                                                // decimal places for float values in monitoring dataset
+    BODYPARSER_LIMIT_MB: 1                                                  // max mb for post messages 
+}

@@ -56,7 +56,8 @@ module.exports.timeOfDay = {
 // request enumerations
 module.exports.request = {
     headers: {
-        contentType: 'content-type'
+        contentType: 'content-type',
+        apiKey: 'x-api-key'
     }
 }
 
@@ -87,6 +88,7 @@ module.exports.linkRender = {
 };
 module.exports.linkRender.default = this.linkRender.none;
 
+// http responses  
 module.exports.responseStatus = {
     '200': 'OK',
     '201': 'Created',
@@ -98,6 +100,7 @@ module.exports.responseStatus = {
     '500': 'Internal Server Error',
 }
 
+// api keys
 module.exports.apiKey = {
     S000: 'AIzaSyD3IbFpxrydZuMKgEluHWDAvFl-P7dgPC8',
     S001: 'AIzaSyAZ4nuWP-ZXUg2aGQhrQjkvF2BFvukgv7w',    // Fahmi
@@ -108,6 +111,7 @@ module.exports.apiKey = {
 }
 module.exports.apiKey.default = this.apiKey.PROXY;
 
+// kafka
 module.exports.messageBroker = {                    // kafka message broker. topics are based on enums.params.datasets. 
     ack: {
         all: -1,                                    // -1 = all replicas must acknowledge (default) 
@@ -117,17 +121,21 @@ module.exports.messageBroker = {                    // kafka message broker. top
 }
 module.exports.messageBroker.ack.default = this.messageBroker.ack.leader
 
+// logging and error reporting framework 
 module.exports.logging = {                           
     verbosity: {                                    // log levels for error reporting and logged events
         none: "none",
         info: "info",
         debug: "debug",
-        warn: "warn",
-        critical: "critical",
-        error: "error"
     },
     appenders: {                                      // output options for logging and error reporting      
         console: "console",
         stackdriver: "stackdriver"
+    },
+    scope: {
+        messaging: "messaging",
+        data: "data",
+        error: "error",
+        trace: "messaging"
     }   
 }

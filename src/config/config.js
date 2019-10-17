@@ -1,7 +1,7 @@
 //@ts-check
 'use strict';
 /**
- * ./host/config.js
+ * ./config/config.js
  * configuration settings 
  */
 const consts = require('../host/constants');
@@ -17,8 +17,3 @@ module.exports.initialise = function (app) {
 
 }
 
-// system configuration constants
-module.exports.system = {
-    MONITORING_PRECISION: 4,                                                // decimal places for float values in monitoring dataset
-    BODYPARSER_LIMIT_MB: 1                                                  // max mb for post messages 
-}

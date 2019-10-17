@@ -10,10 +10,10 @@ const enums = require('../host/enums');
 
 const Param = require('./Param');
 
-const THIS_PARAM_NAME = consts.params.names.apikey;
+const THIS_PARAM_NAME = consts.params.names.apiKey;
 
-const QUERY_APIKEY_NAME = 'api_key'         // `api_key` query parameter is no loger supported. 
-const HEADER_APIKEY_NAME = 'x-api-key'      // POST, GET | `x-api-key` | header | POST requests must provide a `x-api-key` header. This option is also preferred for GET requests.
+// const QUERY_APIKEY_NAME = 'api_key'                          // `api_key` query parameter is no loger supported. 
+const HEADER_APIKEY_NAME = enums.request.headers.apiKey         // POST, GET | `x-api-key` | header | POST requests must provide a `x-api-key` header. This option is also preferred for GET requests.
 
 /** 
  * gets the api key from the request header (preferred) or query parameter 

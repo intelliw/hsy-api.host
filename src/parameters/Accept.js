@@ -8,7 +8,7 @@
 const consts = require('../host/constants');
 
 const Param = require('./Param');
-const THIS_PARAM_NAME = consts.params.names.accepttype;     //i.e: 'accept'
+const THIS_PARAM_NAME = consts.params.names.acceptType;     //i.e: 'accept'
 
 /** 
  * Selects an Accepts header. If an Accept header has not beem specified the default application/vnd.collection+json media type will be returned.

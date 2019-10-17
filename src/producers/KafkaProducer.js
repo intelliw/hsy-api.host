@@ -10,7 +10,7 @@ const enums = require('../host/enums');
 const consts = require('../host/constants');
 const utils = require('../host/utils');
 
-const logging = require('../common/logging');
+const log = require('../host/log');
 const errors = require('../common/errors');
 
 const configc = require('../common/configc');
@@ -69,7 +69,7 @@ class KafkaProducer {
             });
             
             // log output                                                           // e.g. [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
-            logging.messagingEvent(this.kafkaTopic, result[0].baseOffset, results.messages, results.itemCount, sender);         // info = (topic, offset, msgqty, itemqty, sender) {
+            log.messaging(this.kafkaTopic, result[0].baseOffset, results.messages, results.itemCount, sender);         // info = (topic, offset, msgqty, itemqty, sender) {
 
             // disconnect
             await this.producerObj.disconnect();    

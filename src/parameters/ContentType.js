@@ -9,7 +9,7 @@ const consts = require('../host/constants');
 const enums = require('../host/enums');
 
 const Param = require('./Param');
-const THIS_PARAM_NAME = 'contentType';
+const THIS_PARAM_NAME = consts.params.names.contentType;     //i.e: 'contentType';
 
 /** 
  * Confirms the request Content-Type header for parsing the request body. 

@@ -12,7 +12,7 @@ let consts = require('../host/constants');
 let configc = require('../common/configc');
 
 let enums = require('../host/enums');
-let logging = require('../common/logging');
+let log = require('../host/log');
 
 // [diagnostics.api.versions.get] /api/versions
 router.get('/versions', (req, res, next) => {

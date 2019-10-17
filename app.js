@@ -10,7 +10,7 @@ const Buffer = require('safe-buffer').Buffer;
 
 const host = require('./src/host');
 const consts = host.constants;
-const config = host.config;
+const config = require('./src/config');
 
 const paths = require('./src/paths');
 const errors = require('./src/common/errors');
@@ -19,7 +19,7 @@ const errors = require('./src/common/errors');
 const app = express();
 
 // initialise 
-host.config.initialise(app);                                                            // configuration settings
+config.initialise(app);                                                            // configuration settings
 
 /* body parser
  * use  verify function to get raw body - bodyParser.raw applies only if bodyParser.json fails due to incorrect content-type header
@@ -27,8 +27,8 @@ host.config.initialise(app);                                                    
 var rawBodySaver = function (req, res, buf, encoding) {
     // if (buf && buf.length) { req.rawBody = buf.toString(encoding || 'utf8');}
 }
-app.use(bodyParser.json({ verify: rawBodySaver, limit: `${config.system.BODYPARSER_LIMIT_MB}mb` }));
-app.use(bodyParser.raw({ verify: rawBodySaver, limit: `${config.system.BODYPARSER_LIMIT_MB}mb`, type: function () { return true } }));   // for raw body parse function must return true
+app.use(bodyParser.json({ verify: rawBodySaver, limit: `${consts.system.BODYPARSER_LIMIT_MB}mb` }));
+app.use(bodyParser.raw({ verify: rawBodySaver, limit: `${consts.system.BODYPARSER_LIMIT_MB}mb`, type: function () { return true } }));   // for raw body parse function must return true
 
 // routes        
 app.use('/energy', paths.energyRouter);                                                 // openapi tag: Energy - this is als to the default route
