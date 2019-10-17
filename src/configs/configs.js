@@ -1,7 +1,7 @@
 //@ts-check
 'use strict';
 /**
- * ./config/config.js
+ * ./config/configs.js
  * configuration settings 
  */
 const consts = require('../host/constants');
