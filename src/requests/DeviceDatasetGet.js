@@ -5,13 +5,14 @@
  * prepares data and response for the devices datasets post path 
  */
 const enums = require('../host/enums');
-const consts = require('../host/constants');
 
 const Response = require('../responses');
 const DatasetGetResponse = require('../responses/DeviceDatasetGetResponse');
 
 const Request = require('./Request');
 const Param = require('../parameters');
+
+const NONE = global.undefined;
 
 /**
  * 
@@ -35,7 +36,7 @@ class DeviceDatasetGet extends Request {
         // parameters                                                   // validate and default all parameters
         let params = {};
         params.device = new Param('device', req.params.device);
-        params.dataset = new Param('dataset', req.params.dataset, consts.NONE, enums.params.datasets);
+        params.dataset = new Param('dataset', req.params.dataset, NONE, enums.params.datasets);
         params.period = new Param.Period(req.params.period, req.params.epoch, req.params.duration);
         
         // super - validate params, auth, accept header

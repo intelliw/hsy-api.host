@@ -5,9 +5,11 @@
  * the validated request Accept type
  *  
  */
-const consts = require('../host/constants');
+const consts = require('../configs/constants');
 
 const Param = require('./Param');
+
+const NONE = global.undefined;
 const THIS_PARAM_NAME = consts.params.names.acceptType;     //i.e: 'accept'
 
 /** 
@@ -31,7 +33,7 @@ class Accept extends Param {
         let requestAcceptsType = req.accepts(responseProduces);             // express returns false if request had Accept headers which do not match any of the responseContentTypes
 
         // call super
-        requestAcceptsType = (requestAcceptsType == false) ? consts.NONE : requestAcceptsType;  // if there  is no value super wil set isValid to false./.
+        requestAcceptsType = (requestAcceptsType == false) ? NONE : requestAcceptsType;  // if there  is no value super wil set isValid to false./.
         super(THIS_PARAM_NAME, requestAcceptsType);
         
     }

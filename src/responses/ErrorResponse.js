@@ -6,7 +6,7 @@
  */
 const enums = require('../host/enums');
 const utils = require('../host/utils');
-const consts = require('../host/constants');
+const consts = require('../configs/constants');
 
 const Response = require('./Response');
 const GenericMessage = require('../definitions/GenericMessage');

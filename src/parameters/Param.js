@@ -5,8 +5,10 @@
  *  supertype for all get parameters, headers, and datasets posted through a request path
  *  parameter class validates the value in the constructor and stores the parameter name and value
  */
-const consts = require('../host/constants');
+
 const utils = require('../host/utils');
+
+const NONE = global.undefined;
 
 class Param {
     /**
@@ -38,7 +40,7 @@ class Param {
         
         // check if Param isValid 
         this.isValid = enumTest 
-            && (this.isOptional === true ? true : this.value != consts.NONE);       // there must be a value unless isOptional    
+            && (this.isOptional === true ? true : this.value != NONE);       // there must be a value unless isOptional    
 
     }
 }

@@ -7,12 +7,12 @@
  */
 const { ErrorReporting } = require('@google-cloud/error-reporting');
 const enums = require('../host/enums');
-const configc = require('../common/configc');
+const env = require('../host/environments');
 
 // create a Error Reporting instance  
 module.exports.LOGGER = new ErrorReporting({                              // all configuration options are optional.
-    reportMode: configc.stackdriver.errors.reportMode,                       // 'production' (default), 'always', 'never' - production will not log unless NODE-ENV=production. Specifies when errors are reported to the Error Reporting Console. 
-    logLevel: configc.stackdriver.errors.logLevel,                           // 2 (warnings). 0 (no logs) 5 (all logs) 
+    reportMode: env.stackdriver.errors.reportMode,                       // 'production' (default), 'always', 'never' - production will not log unless NODE-ENV=production. Specifies when errors are reported to the Error Reporting Console. 
+    logLevel: env.stackdriver.errors.logLevel,                           // 2 (warnings). 0 (no logs) 5 (all logs) 
     // projectId: 'my-project-id',
     // keyFilename: '/path/to/keyfile.json',
     // credentials: require('./path/to/keyfile.json'),
@@ -29,7 +29,7 @@ module.exports.LOGGER = new ErrorReporting({                              // all
 */
 module.exports.reportingEvent = (errorMessage) => {
 
-    const activeConf = configc.env[configc.env.active];                                 // get the active environment configs
+    const activeConf = env.env[env.env.active];                                 // get the active environment configs
 
     // append stackdriver                                                         
     if (activeConf.logging.appenders.includes(enums.logging.appenders.stackdriver)) {
@@ -40,7 +40,7 @@ module.exports.reportingEvent = (errorMessage) => {
             .serviceContext = {
                 service: activeConf.api.host,
                 version: activeConf.api.versions.current,
-                resourceType: configc.stackdriver.logging.resource                      // e.g. gce_instance
+                resourceType: env.stackdriver.logging.resource                      // e.g. gce_instance
             };
 
         this.LOGGER.report(errorEvent);
@@ -64,7 +64,7 @@ module.exports.reportingEvent = (errorMessage) => {
 module.exports.reportingMessage = (errorMessage) => {
 
 
-    const activeConf = configc.env[configc.env.active];                             // get the active environment configs
+    const activeConf = env.env[env.env.active];                             // get the active environment configs
 
     // append stackdriver                                                         
     if (activeConf.logging.appenders.includes(enums.logging.appenders.stackdriver)) {

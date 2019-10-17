@@ -4,16 +4,16 @@
  * ./producers/MonitoringMppt.js
  *  Kafka mppt message producers for api devices.datasets.post 
  */
-const consts = require('../host/constants');
+const consts = require('../configs/constants');
 const enums = require('../host/enums');
 const utils = require('../host/utils');
 
-const configc = require('../common/configc');
+const env = require('../host/environments');
 
 const KafkaProducer = require('../producers/KafkaProducer');
 
 const API_DATASET = enums.params.datasets.mppt;
-const KAFKA_TOPIC = configc.env[configc.env.active].topics.monitoring.mppt;
+const KAFKA_TOPIC = env.env[env.env.active].topics.monitoring.mppt;
 
 /**
  */

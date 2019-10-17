@@ -5,7 +5,7 @@
  * prepares data and response for the energy path 
  */
 const enums = require('../host/enums');
-const consts = require('../host/constants');
+const consts = require('../configs/constants');
 
 const Response = require('../responses');
 const EnergyGetResponse = require('../responses/EnergyGetResponse');
@@ -13,7 +13,7 @@ const EnergyGetResponse = require('../responses/EnergyGetResponse');
 const Request = require('./Request');
 const Param = require('../parameters');
 
-
+const NONE = global.undefined;
 /**
  * class EnergyGetRequest validatess parameters and accept headers
  */
@@ -40,7 +40,7 @@ class EnergyGet extends Request {
         params.energy = new Param('energy', req.params.energy, enums.params.energy.default, enums.params.energy);
         params.period = new Param.Period(req.params.period, req.params.epoch, req.params.duration);
         params.site = new Param('site', req.query.site, consts.params.defaults.site);
-        params.productCatalogItems = new Param('productCatalogItems', req.body.productCatalogItems, consts.NONE, consts.NONE, OPTIONAL);
+        params.productCatalogItems = new Param('productCatalogItems', req.body.productCatalogItems, NONE, NONE, OPTIONAL);
         
         // The 'GET' operations in the `/energy` path does not require an API key for the default site (`site=999`)    
         let apikeyRequired = !(params.site.value == consts.params.defaults.site);               // required unless site == 999

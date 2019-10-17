@@ -5,7 +5,6 @@
  * prepares data and response for the devices datasets post path 
  */
 const enums = require('../host/enums');
-const consts = require('../host/constants');
 
 const Response = require('../responses');
 const DatasetsPostResponse = require('../responses/DevicesDatasetsPostResponse');
@@ -15,6 +14,7 @@ const Param = require('../parameters');
 
 const csvSyncParse = require('csv-parse/lib/sync')
 
+const NONE = global.undefined;
 /**
  * 
  */
@@ -50,7 +50,7 @@ class DevicesDatasetsPost extends Request {
         
         // parameters                                                       
         let params = {};
-        params.dataset = new Param('dataset', dataset, consts.NONE, enums.params.datasets);
+        params.dataset = new Param('dataset', dataset, NONE, enums.params.datasets);
         params.datasets = new Param('datasets', datasets);                                          // for text/csv this is raw csv content 
 
         // super - validate params, auth, accept header
@@ -71,7 +71,7 @@ function pmsCsvToJson(csvData) {
     const CELL_OPEN_COLUMNS = 14;
     const FET_OPEN_COLUMNS = 2;
 
-    let dataset = consts.NONE;
+    let dataset = NONE;
     let json = [];
     let pmsId = '';
 
@@ -88,7 +88,7 @@ function pmsCsvToJson(csvData) {
         if (pmsId !== csvRow['pms.id'].trim()) {
 
             // add dataset to json array (except when dataset is empty at the start)
-            if (dataset !== consts.NONE) json.push(dataset);
+            if (dataset !== NONE) json.push(dataset);
 
             // reinitialise dataset as a new one
             pmsId = csvRow['pms.id'].trim();

@@ -1,15 +1,15 @@
 //@ts-check
 'use strict';
 /**
- * PACKAGE: ./host/index.js
- * schemas and constants
+ * PACKAGE: ./host/utils.js
+ * shared utilities
  * utils.js is from api host - any changes should be mastered in api host utils.js -----------------------------------------
  */
 const enums = require('./enums');
-const consts = require('../host/constants');
-const utilsc = require('../common/utilsc');
 
 const moment = require('moment');
+
+const NONE = global.undefined;
 
 // capitalise first letter of first word or all words
 module.exports.capitalise = (str, allWords) => {
@@ -50,12 +50,12 @@ module.exports.createSequence = (startNum, howMany, delimiter, prefix, pad) => {
     let zerosToPad; let digits; let num;
     
     pad = pad ? pad : true;
-    let seqStr = prefix !== consts.NONE? prefix.trim() : "";                      // prepend prefix if provided
+    let seqStr = prefix !== NONE? prefix.trim() : "";                      // prepend prefix if provided
     let maxNum = Number(startNum) + (howMany - 1);
     let maxDigits = maxNum.toString().length;
 
     let i;
-    seqStr += (howMany > 0) && (prefix !== consts.NONE) ? delimiter : "";
+    seqStr += (howMany > 0) && (prefix !== NONE) ? delimiter : "";
     for (i = startNum; i <= maxNum; i++) {
 
         num = i.toString();
@@ -114,7 +114,7 @@ module.exports.datetimeToLocal = (instant, returnUtcFormat, offsetHours) => {
     } else if (zuluStart > 0) {
 
         // get float value of offsetHours - if offsetHours is missing or not valid assume 0
-        offsetHours = (offsetHours === "" || offsetHours == consts.NONE || isNaN(offsetHours)) ? 0 : parseFloat(offsetHours)
+        offsetHours = (offsetHours === "" || offsetHours == NONE || isNaN(offsetHours)) ? 0 : parseFloat(offsetHours)
 
         // add-subtract the offset
         localTime = moment.utc(instant).add(offsetHours, 'hours').format(returnUtcFormat);
@@ -224,7 +224,7 @@ module.exports.randomTrue = () => {
     const max = 30;                                                     // the larger this number the more skips there will be  
     const random_match = 5;                                             // this can be any number less than MOCK_max
 
-    randomnum = Number(utilsc.randomFloat(1, max, 0));                    // get a random integer between 1 and MOCK_max
+    randomnum = Number(randomFloat(1, max, 0));                    // get a random integer between 1 and MOCK_max
     randomTrue = (randomnum == random_match) ? false : true;            // skip unless there is a match
 
     return randomTrue;                                                  // return whether to skip  
@@ -318,6 +318,82 @@ module.exports.MOCK_periodMinMax = (period, dailyHigh, dailyLow) => {
     return minmax;
 }
 
+// SHARED UTILS =====================================================================================
+
+// returns a random number between min and max with decimal places based on precision 
+module.exports.randomFloat = (min, max, decimalPlaces) => {
+
+    const precision = 1 * Math.pow(10, decimalPlaces);                      // e.g. 3 decimals = 1000000
+    min = min * precision;                                                  // adjust before dividing for decimal place
+    max = max * precision;
+
+    let random = (Math.floor(Math.random() * max) + min) / precision;       //generate a random number with the required precision
+    let randomFixed = random.toFixed(decimalPlaces);                        // fix the decimal places including trailing zeros which may be missing in 'random'
+
+    return randomFixed;
+
+}
+
+// returns a fixed length string from a random integer between min and max, paded with leading zeros if the number has less digits than the number of digits in max.
+// calls randomFloat() 
+module.exports.randomIntegerString = (min, max) => {
+
+    const ZERO_DECIMAL_PLACES = 0;
+    
+    // get a random number 
+    let minLength = max.toString().length;               
+    let randomInt = this.randomFloat(min, max, ZERO_DECIMAL_PLACES);
+    let randomIntStr = randomInt.toString().substring(0,minLength);
+
+    // pad zeros if shorter than max 
+    return randomIntStr.padStart(minLength, '0');
+
+}
+
+
+/* converts a hex value to an array of reversed bits, the least-significant-bit (rightmost bit) is in element zero       
+    if hexValue is undefined an array of null values is returned
+*/
+module.exports.hex2bitArray = (hexValue, minLength) => {
+    const hexBase = 16;
+    const binaryBase = 2;
+    
+    let bitArray = [];
+
+    // process  if hexValue is valid
+    if (hexValue != NONE) {
+
+        // convert hex to binary - e.g. 1A79 --> 0001 1010 0111 1001
+        let binaryValue = parseInt(hexValue, hexBase).toString(binaryBase).padStart(minLength, '0');
+        
+        // reverse the array - e.g  bitArray[0] = 1, bitArray[1] = 0          
+        bitArray = binaryValue.split('').reverse();             
+
+    // if hexValue is invalid return null array
+    } else {    
+        bitArray = new Array(minLength).fill(null);
+    }
+
+    return bitArray;
+}
+
+
+/* returns true, false, or null 
+   depending on whether bitValue is 1, 0, or null/invalid
+*/
+module.exports.tristateBoolean = (bitValue) => {
+
+    let tristate = null;
+
+    // return true/false if bitValue is 1,0
+    if (bitValue == 1) {
+        tristate = true;
+    } else if (bitValue == 0) {
+        tristate = false;
+    }
+
+    return tristate;
+}
 
 // test... node src/host/utils
 // console.log(...);

@@ -8,12 +8,15 @@
 const moment = require('moment');
 
 const enums = require('../host/enums');
-const consts = require('../host/constants');
+const consts = require('../configs/constants');
 const utils = require('../host/utils');
 
 const Param = require('./Param');
 const MILLISECOND_FORMAT = consts.period.datetimeISO.instant;                                    // the default format, YYYYMMDDTHHmmss.SSS
 const THIS_PARAM_NAME = 'period';
+
+const NONE = global.undefined;
+
 
 /**
  * expects a date-time value in utc format. period.value is required (as a string) and must contain a complete date (isEpochValid() === true)
@@ -49,8 +52,8 @@ class Period extends Param {
         // period, context
         super(THIS_PARAM_NAME, reqPeriod, enums.params.period.default, enums.params.period);                  // e.g. reqPeriod' ='week';' 
         this.context = this.value;
-        this.parent = consts.NONE;                   // getChild sets this after construction
-        this.grandparent = consts.NONE;              // getChild sets this after construction
+        this.parent = NONE;                   // getChild sets this after construction
+        this.grandparent = NONE;              // getChild sets this after construction
 
         // duration     
         this.duration = duration;
@@ -72,10 +75,10 @@ class Period extends Param {
         this.prompt = periodPrompt(this.epochInstant, this.endInstant, this.value);
 
         this.title = periodTitle(this.epochInstant, this.endInstant, this.value);               // "04/02/2019 - 10/02/2019";
-        this.description = consts.NONE;                                                         // by default label is undefined except in a collection and overwritten by get Child() after construction
+        this.description = NONE;                                                         // by default label is undefined except in a collection and overwritten by get Child() after construction
 
         // data arrays
-        this._links = consts.NONE;                                                              // undefined until requested through links()
+        this._links = NONE;                                                              // undefined until requested through links()
     }
 
     // the child period's description wil be added (if one has been configured for it in consts.period.childDescription)
@@ -238,7 +241,7 @@ class Period extends Param {
             child.grandparent = grandparent;
             child.context = `${parent}.${childEnum}`                                        // context is parent to this (i.e child)  e.g. 'week.day' 
             child.rel = enums.linkRelations.collection;                                     // collection is the rel for a child or grandchild
-            child.description = consts.NONE;                                                // default is no description use add Description() to add one later 
+            child.description = NONE;                                                // default is no description use add Description() to add one later 
 
         }
 

@@ -4,7 +4,7 @@
  * ./config/configs.js
  * configuration settings 
  */
-const consts = require('../host/constants');
+const consts = require('../configs/constants');
 
 module.exports.initialise = function (app) {
     

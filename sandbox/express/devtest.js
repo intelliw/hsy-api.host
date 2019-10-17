@@ -11,16 +11,16 @@ const router = express.Router();
 const Buffer = require('safe-buffer').Buffer;
 
 const enums = require('../../src/host/enums');
-const consts = require('../../src/host/constants');
+const consts = require('../../src/configs/constants');
 const Param = require('../../src/parameters');
 
 // @ts-ignore
 const vehicle = require('./vehicle');
-
+const NONE = global.undefined;
 
 // [energy.type.period.epoch.get] /energy/{energy}/{period}/{epoch}/{number}
 router.get('/energy/:energy?/:period?/:epoch?/:duration?', (req, res, next) => {
-    let noEnum = consts.NONE;
+    let noEnum = NONE;
 
     // validate and default all parameters 
     let site = new Param('site', req.query.site, consts.params.defaults.site);

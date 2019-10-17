@@ -6,15 +6,15 @@
  */
 const enums = require('../host/enums');
 const utils = require('../host/utils');
-const utilsc = require('../common/utilsc');
 
-const consts = require('../host/constants');
-const configc = require('../common/configc');
+const env = require('../host/environments');
 
 const Response = require('./Response');
 const Collections = require('../definitions/Collections');
 const Links = require('../definitions/Links');
 const Definitions = require('../definitions');
+
+const NONE = global.undefined;
 
 // REQUEST constants 
 const VIEW_PREFIX = 'energy_';
@@ -72,7 +72,7 @@ function executeGet(params) {
     items = createItems(params.energy, period, params.site);
 
     // add each collection to the collections array
-    collections.add(configc.env[configc.env.active].api.versions.current, links.href, links, items);
+    collections.add(env.env[env.env.active].api.versions.current, links.href, links, items);
   });
 
   return collections.getElements();
@@ -101,7 +101,7 @@ function createItems(energy, period, site) {
       if (itemData) {
 
         // make the item links 
-        let itemLinks = new Links.EnergyLinks(energy, childPeriod, site, consts.NONE);                // constructor creates a self link (for the child) without a description (consts.NONE)
+        let itemLinks = new Links.EnergyLinks(energy, childPeriod, site, NONE);                // constructor creates a self link (for the child) without a description (NONE)
 
         if (grandchildPeriod) {                                                                       // 'second' for example does not have a grandchild
           itemLinks.addLink(grandchildPeriod, enums.linkRender.none, grandchildPeriod.description);   // child collection link - not rendered, description if requested by caller
@@ -111,7 +111,7 @@ function createItems(energy, period, site) {
         items.add(itemLinks.href, itemLinks, itemData);
       }
 
-      itemData = consts.NONE;
+      itemData = NONE;
 
     }
   });
@@ -165,7 +165,7 @@ function createItemData(energy, childPeriod, grandChildPeriod, site) {
       for (p = 1; p <= grandChildPeriod.duration; p++) {
 
         // get the number (zero if future) ..add it to the total, and  ..add it to the space-delimited list  
-        randomNum = isFuture ? FUTURE_UNKNOWN : utilsc.randomFloat(grandChildMinMax.min, grandChildMinMax.max, grandChildMinMax.precision);      // get a random number
+        randomNum = isFuture ? FUTURE_UNKNOWN : utils.randomFloat(grandChildMinMax.min, grandChildMinMax.max, grandChildMinMax.precision);      // get a random number
         energyNameTotal = energyNameTotal + parseFloat(randomNum);                              // keep a total for the child period to use with this energy type
         energyNameValues = p == 1 ? '' : energyNameValues + SPACE_DELIMITER;                    // pad a space after the 1st iteration
         energyNameValues = energyNameValues + randomNum.toString();
@@ -182,7 +182,7 @@ function createItemData(energy, childPeriod, grandChildPeriod, site) {
     } else {
 
       // ..create data just for child only  
-      randomNum = utilsc.randomFloat(childMinMax.min, childMinMax.max, childMinMax.precision);    // get a random number
+      randomNum = utils.randomFloat(childMinMax.min, childMinMax.max, childMinMax.precision);    // get a random number
       childData.add(energyName, randomNum.toString());
 
     }

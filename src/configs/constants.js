@@ -5,9 +5,11 @@
  * global constants
  */
 const path = require('path');                   // this is a node package not the '../paths' applicaiton module
-const enums = require('./enums');
+const enums = require('../host/enums');
 
-const utilsc = require('../common/utilsc');
+const utils = require('../host/utils');
+
+const NONE = global.undefined;
 
 // folder locations
 module.exports.folders = {
@@ -37,7 +39,7 @@ module.exports.period = {
         day: { 'c': enums.params.period.hour, 'd': '24' },
         week: { 'c': enums.params.period.day, 'd': '7' },
         // monthday is derived dynamically
-        month: { 'c': enums.params.period.day, 'd': this.NONE },
+        month: { 'c': enums.params.period.day, 'd': NONE },
         quarter: { 'c': enums.params.period.month, 'd': '3' },
         year: { 'c': enums.params.period.quarter, 'd': '4' },
         fiveyear: { 'c': enums.params.period.year, 'd': '5' },
@@ -48,7 +50,7 @@ module.exports.period = {
         weekday: { 'c': enums.params.period.timeofday, 'd': '4' },
         monthday: { 'c': enums.params.period.hour, 'd': '24' },
         // monthday is derived dynamically
-        quartermonth: { 'c': enums.params.period.day, 'd': this.NONE },
+        quartermonth: { 'c': enums.params.period.day, 'd': NONE },
         yearquarter: { 'c': enums.params.period.month, 'd': '3' },
         fiveyearyear: { 'c': enums.params.period.quarter, 'd': '4' }
     },
@@ -80,7 +82,7 @@ module.exports.period = {
 
     // the lookup is parent-child e.g. weekday. returns space delimited labels to diisplay as headers for child or grandchild periods when presented in a parent context. 
     childDescription: {
-        secondinstant: this.NONE,
+        secondinstant: NONE,
         minutesecond: '01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60',
         hourminute: '01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60',
         timeofdayhour: { 'night': '00 01 02 03 04 05', 'morning': '06 07 08 09 10 11', 'afternoon': '12 13 14 15 16 17', 'evening': '18 19 20 21 22 23' },
@@ -91,7 +93,7 @@ module.exports.period = {
         monthday: '01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28',
         quartermonth: { 'Q1': 'Jan Feb Mar', 'Q2': 'Apr May Jun', 'Q3': 'Jul Aug Sep', 'Q4': 'Oct Nov Dec' },
         yearquarter: 'Q1 Q2 Q3 Q4',
-        fiveyearyear: this.NONE,
+        fiveyearyear: NONE,
     },
 
     // returns a format string for UTC compresed datetime for use in links and identifiers
@@ -161,9 +163,6 @@ module.exports.params = {
         duration: '1'                                                       // energy api duration parameter 
     }
 }
-
-// system constants
-module.exports.NONE = global.undefined;
 
 // system configuration constants
 module.exports.system = {

@@ -8,12 +8,11 @@ const express = require('express');
 const bodyParser = require('body-parser')
 const Buffer = require('safe-buffer').Buffer;
 
-const host = require('./src/host');
-const consts = host.constants;
 const configs = require('./src/configs');
+const consts = configs.constants;
 
 const paths = require('./src/paths');
-const errors = require('./src/common/errors');
+const errors = require('./src/host/errors');
 
 // [START setup]------------------------------
 const app = express();

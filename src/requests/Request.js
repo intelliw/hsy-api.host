@@ -6,7 +6,7 @@
  *  
  */
 const enums = require('../host/enums');
-const consts = require('../host/constants');
+const NONE = global.undefined;
 
 const ErrorResponse = require('../responses/ErrorResponse');
 const Param = require('../parameters');
@@ -50,7 +50,7 @@ class Request {
         this.validation = new Validate(req, this);
         
         // response
-        this.response = this.validation.isValid === true ? consts.NONE : new ErrorResponse(this.validation);    // ErrorResponse contains a generic error message as specified by the swagger genericMessage definition
+        this.response = this.validation.isValid === true ? NONE : new ErrorResponse(this.validation);    // ErrorResponse contains a generic error message as specified by the swagger genericMessage definition
     }
 
 }

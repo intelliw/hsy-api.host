@@ -8,18 +8,19 @@
 const express = require('express');
 const router = express.Router();
 
-let consts = require('../host/constants');
-let configc = require('../common/configc');
+const env = require('../host/environments');
 
 let enums = require('../host/enums');
 let log = require('../host/log');
+
+const NONE = global.undefined;
 
 // [diagnostics.api.versions.get] /api/versions
 router.get('/versions', (req, res, next) => {
     
     res
     .status(200)
-    .json({ versions: configc.env[configc.env.active].api.versions.supported })
+    .json({ versions: env.env[env.env.active].api.versions.supported })
     .end();
     
 });
@@ -29,14 +30,14 @@ router.get('/logging', (req, res, next) => {
     
     // set verbosity first
     let verbosity = req.query.verbosity;                                                // e.g. ?verbosity=debug,info
-    if (verbosity != consts.NONE) {
-        configc.env[configc.env.active].logging.verbosity = verbosity.split(',');       // split into an array and set logging.verbosity
+    if (verbosity != NONE) {
+        env.env[env.env.active].logging.verbosity = verbosity.split(',');       // split into an array and set logging.verbosity
     }
 
     // return logging configuration 
     res
     .status(200)
-    .json({ logging: configc.env[configc.env.active].logging })                         // e.g. {"logging":{"verbosity":["info"]}}
+    .json({ logging: env.env[env.env.active].logging })                         // e.g. {"logging":{"verbosity":["info"]}}
     .end();
 
 });

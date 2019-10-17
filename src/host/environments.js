@@ -1,17 +1,17 @@
 //@ts-check
 'use strict';
 /**
- * ./common/configc.js
+ * ./common/environments.js
  * shared constants for environment configuration 
  * these configs are shared between host anmd consumer 
  */
 
-const utilsc = require('../common/utilsc');
+const utils = require('../host/utils');
 const enums = require('../host/enums');
 
 // generate a unique client id for this container instance - if this consumer is clustered each instance will have a unique id
-const CONSUMER_CLIENTID = `consumer.${utilsc.randomIntegerString(1, 9999)}`
-const PRODUCER_CLIENTID = `producer.${utilsc.randomIntegerString(1, 9999)}`
+const CONSUMER_CLIENTID = `consumer.${utils.randomIntegerString(1, 9999)}`
+const PRODUCER_CLIENTID = `producer.${utils.randomIntegerString(1, 9999)}`
 
 // stackdriver client configuration options
 module.exports.stackdriver = {
@@ -147,12 +147,4 @@ module.exports.env = {
 }
 
 // env.active sets the active environment - change env.active for the build or to develop locally ('local') - eg. change to 'devcloud' before release
-const ENV_LIST = {                                                              // list of environments              
-    local: "local",
-    testcloud: "testcloud",
-    devcloud: "devcloud",
-    devcloud_HA: "devcloud_HA",
-    prodcloud: "prodcloud",
-    prodcloud_HA: "prodcloud_HA"
-}
-module.exports.env.active = ENV_LIST.local;                                
+module.exports.env.active = enums.environments.local;                                

@@ -5,11 +5,15 @@
  * the validated request Content-Type
  *  
  */
-const consts = require('../host/constants');
+const consts = require('../configs/constants');
 const enums = require('../host/enums');
 
 const Param = require('./Param');
+
+const NONE = global.undefined;
+
 const THIS_PARAM_NAME = consts.params.names.contentType;     //i.e: 'contentType';
+
 
 /** 
  * Confirms the request Content-Type header for parsing the request body. 
@@ -33,13 +37,13 @@ class ContentType extends Param {
         
         // isSupported  
         let requestContentType = req.headers[enums.request.headers.contentType];                            // get the Content-Type header   - undefined if there is none
-        let hasContentType = requestContentType !== consts.NONE;
+        let hasContentType = requestContentType !== NONE;
 
         let hasBody = req.body ? Object.keys(req.body).length > EMPTY_BODY : false;                         // check if there is a body
         let isSupported = hasContentType && hasBody ? req.is(responseConsumes) : true;                      // req.is returns null if no body. isSupported is true if header is in responseConsumes, or if there is no body
         
         // call super
-        requestContentType = isSupported ? (hasContentType ? requestContentType : responseConsumes) : consts.NONE;   // if not supported set requestContentType to NONE
+        requestContentType = isSupported ? (hasContentType ? requestContentType : responseConsumes) : NONE;   // if not supported set requestContentType to NONE
         super(THIS_PARAM_NAME, requestContentType);
         
     }
