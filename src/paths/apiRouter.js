@@ -20,7 +20,7 @@ router.get('/versions', (req, res, next) => {
     
     res
     .status(200)
-    .json({ versions: env.env[env.env.active].api.versions.supported })
+    .json({ versions: env.active.api.versions.supported })
     .end();
     
 });
@@ -31,13 +31,13 @@ router.get('/logging', (req, res, next) => {
     // set verbosity first
     let verbosity = req.query.verbosity;                                                // e.g. ?verbosity=debug,info
     if (verbosity != NONE) {
-        env.env[env.env.active].logging.verbosity = verbosity.split(',');       // split into an array and set logging.verbosity
+        env.active.logging.verbosity = verbosity.split(',');       // split into an array and set logging.verbosity
     }
 
     // return logging configuration 
     res
     .status(200)
-    .json({ logging: env.env[env.env.active].logging })                         // e.g. {"logging":{"verbosity":["info"]}}
+    .json({ logging: env.active.logging })                         // e.g. {"logging":{"verbosity":["info"]}}
     .end();
 
 });

@@ -25,19 +25,19 @@ class KafkaProducer {
      * instance attributes:  
      *  producerObj": kafka.producer()
      * apiDatasetName                                                               // enums.params.datasets
-     * kafkaTopic                                                                   // env.env[env.env.active].topics.monitoring
+     * kafkaTopic                                                                   // env.active.topics.monitoring
      * constructor arguments 
      * @param {*} apiDatasetName                                                    // enums.params.datasets              - e.g. pms       
      */
     constructor(apiDatasetName, kafkaTopic) {
-
+        
         // create a kafka producer
         const kafka = new Kafka({
-            brokers: env.env[env.env.active].kafka.brokers,                 //  e.g. [`${this.KAFKA_HOST}:9092`, `${this.KAFKA_HOST}:9094`]
-            clientId: env.kafkajs.producer.clientId,
-            retry: env.kafkajs.producer.retry,                                   // retry options  https://kafka.js.org/docs/configuration   
-            connectionTimeout: env.kafkajs.producer.connectionTimeout,           // milliseconds to wait for a successful connection   
-            requestTimeout: env.kafkajs.producer.requestTimeout                  // milliseconds to wait for a successful request.     
+            brokers: env.active.kafka.brokers,                 //  e.g. [`${this.KAFKA_HOST}:9092`, `${this.KAFKA_HOST}:9094`]
+            clientId: env.active.kafkajs.producer.clientId,
+            retry: env.active.kafkajs.producer.retry,                                   // retry options  https://kafka.js.org/docs/configuration   
+            connectionTimeout: env.active.kafkajs.producer.connectionTimeout,           // milliseconds to wait for a successful connection   
+            requestTimeout: env.active.kafkajs.producer.requestTimeout                  // milliseconds to wait for a successful request.     
         });
 
         // instance variables
@@ -51,7 +51,7 @@ class KafkaProducer {
     * @param {*} sender                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
     */
     async sendToTopic(datasets, sender) {
-
+        
         // get the data 
         let results = this.extractData(datasets, sender);                           // e.g. results: { itemCount: 9, messages: [. . .] }
 
@@ -65,7 +65,7 @@ class KafkaProducer {
                 topic: this.kafkaTopic,
                 messages: results.messages,
                 acks: enums.messageBroker.ack.default,                              // default is 'leader'
-                timeout: env.kafkajs.producer.timeout
+                timeout: env.active.kafkajs.producer.timeout
             });
             
             // log output                                                           // e.g. [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
@@ -75,7 +75,7 @@ class KafkaProducer {
             await this.producerObj.disconnect();    
             
         } catch (e) {
-            console.error(`>>>>>> CONNECT ERROR: [${env.kafkajs.producer.clientId}] ${e.message}`, e)
+            console.error(`>>>>>> CONNECT ERROR: [${env.active.kafkajs.producer.clientId}] ${e.message}`, e)
         }
 
     }

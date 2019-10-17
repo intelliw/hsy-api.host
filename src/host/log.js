@@ -12,14 +12,14 @@ const env = require('../host/environments');
 // create a Logging instance and a log writer
 const LOGGER = new Logging({
     // projectId: 'my-project-id',
-}).log(env.stackdriver.logging.logName);                                            // select the log to write to        
+}).log(env.active.stackdriver.logging.logName);                                            // select the log to write to        
 
 
 
 // logs a message broker event - both info and debug will be logged if active
 module.exports.messaging = (topic, offset, msgsArray, itemQty, sender) => {
 
-    const loggingConf = env.env[env.env.active].logging;                        // get the current logging configurations
+    const loggingConf = env.active.logging;                        // get the current logging configurations
 
     // append info 
     if (loggingConf.verbosity.includes(enums.logging.verbosity.info)) {                 // if info logging on..
@@ -63,7 +63,7 @@ module.exports.messaging = (topic, offset, msgsArray, itemQty, sender) => {
 module.exports.data = (dataset, table, id, rowArray) => {
     //[${this.dataset}.${this.table}] id: ${sharedId}, ${rowArray.length} rows`);
 
-    const loggingConf = env.env[env.env.active].logging;                        // get the current logging configurations
+    const loggingConf = env.active.logging;                        // get the current logging configurations
 
     // append info 
     if (loggingConf.verbosity.includes(enums.logging.verbosity.info)) {                 // if info logging on..
@@ -101,14 +101,14 @@ async function logInfo(jsonPayload) {
     // append stackdriver
     try {
 
-        const loggingConf = env.env[env.env.active].logging;                    // get the current logging configurations
+        const loggingConf = env.active.logging;                    // get the current logging configurations
 
         if (loggingConf.appenders.includes(enums.logging.appenders.stackdriver)) {
 
             // create metadata to describe logs from this resource (compute instance, INFO)
             const metadata = {                                                          // the metadata associated with a log entry
                 resource: {
-                    type: env.stackdriver.logging.resource
+                    type: env.active.stackdriver.logging.resource
                 },
                 severity: "INFO"                                                        // LogSeverity      https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#LogSeverity    
             };
@@ -133,14 +133,14 @@ async function logDebug(jsonPayload) {
     // append stackdriver   
     try {
 
-        const loggingConf = env.env[env.env.active].logging;                    // get the current logging configurations
+        const loggingConf = env.active.logging;                    // get the current logging configurations
 
         if (loggingConf.appenders.includes(enums.logging.appenders.stackdriver)) {
 
             // create metadata to describe logs from this resource (compute instance, INFO)
             const metadata = {                                                          // the metadata associated with a log entry
                 resource: {
-                    type: env.stackdriver.logging.resource
+                    type: env.active.stackdriver.logging.resource
                 },
                 severity: "DEBUG"                                                       // LogSeverity      https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#LogSeverity    
             };

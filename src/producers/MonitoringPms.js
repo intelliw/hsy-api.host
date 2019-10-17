@@ -13,7 +13,7 @@ const env = require('../host/environments');
 const KafkaProducer = require('../producers/KafkaProducer');
 
 const API_DATASET = enums.params.datasets.pms;
-const KAFKA_TOPIC = env.env[env.env.active].topics.monitoring.pms;
+const KAFKA_TOPIC = env.active.topics.monitoring.pms;
 
 /**
  */

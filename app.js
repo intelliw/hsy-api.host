@@ -37,12 +37,12 @@ app.use('/static', express.static(consts.folders.STATIC));                      
 
 // error handlers
 app.use((err, req, res, next) => {
-    errors.reportMessage('Unexpected ' + err);
+    errors.reportingMessage('Unexpected ' + err);
     res.status(500).json(err);
 });
 app.get('/error', (req, res, next) => {
     res.send('Something broke!');
-    next(errors.reportMessage('Unexpected Error'));
+    next(errors.reportingMessage('Unexpected Error'));
 });
 app.get('/exception', () => {
     JSON.parse('{"malformedJson": true');
