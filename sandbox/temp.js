@@ -94,3 +94,30 @@ module.exports.data = (dataset, table, id, rowArray) => {
 }
 
 
+
+
+    // INFO
+    async function writeSd(resourceType, jsonPayload, severity) {
+
+        // append to active environment's stackdriver log
+        try {
+
+            // create metadata to describe logs from this resource (compute instance, INFO)
+            const metadata = {                                                          // the metadata associated with a log entry
+                resource: {
+                    type: resourceType
+                },
+                severity: severity                                  // LogSeverity      https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#LogSeverity    
+            };
+
+            // write  log entry
+            this.logWriter.write([
+                this.logWriter.entry(                                                           // construct the log message
+                    metadata, jsonPayload)
+            ]);
+
+        } catch (e) {
+            console.error(`>>>>>> LOGGING ERROR: ${e.message}`, e)
+        }
+
+    }

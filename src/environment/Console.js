@@ -1,19 +1,52 @@
 //@ts-check
 "use strict";
 /**
- * ./environment/Logger.js
- *  Console logging and error reporting appender  
+ * ./environment/Console.js
+ * Console logging and error reporting appender  
+ * subtype for all loggers 
  */
 const enums = require('./enums');
 const env = require('./env');
 
-class Logger {
+class Console {
     /**
      * constructor arguments 
      * @param {*} 
      */
     constructor() {
-        
+
+    }
+
+    // logs a message broker event - both info and debug will be logged if active
+    messaging(topic, offset, msgsArray, itemQty, sender) {
+
+        if (this.isMessaging()) {
+
+            // Console
+            if (this.isConsole()) {
+
+                // INFO                         // e.g. [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
+                if (this.isInfo()) {
+                    console.log(`[${topic}:${offset}-${Number(offset) + (msgsArray.length - 1)}] ${msgsArray.length} msgs, ${itemQty} items, sender:${sender}`);
+                }
+
+                // DEBUG                       // e.g. [ { key: '025', value: '[{"pms_id" ....                   
+                if (this.isDebug()) {
+                    let debugPayload = {
+                        messages: msgsArray, topic: topic,
+                        offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
+                        msgsqty: msgsArray.length, itemqty: itemQty, sender: sender
+                    };
+                    console.log(debugPayload);
+                }
+            }
+        }
+
+    }
+
+    // logs a data transaction - both info and debug will be logged if active
+    data(dataset, table, id, rowArray) {
+        //[${this.dataset}.${this.table}] id: ${sharedId}, ${rowArray.length} rows`);
     }
 
     /* returns true or false depending on whether the scope specified in the name matches 
@@ -73,4 +106,4 @@ class Logger {
 
 }
 
-module.exports = Logger;
+module.exports = Console;

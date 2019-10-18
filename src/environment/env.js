@@ -174,7 +174,7 @@ const BQ_DATASETS = {
     these environment definitions can share fixed configs defined in constants above, 
     or they can each be defined differently as needed 
 */
-module.exports.ENV = {
+module.exports.CONFIGS = {
     local: {
         api: { host: '192.168.1.108:8080', scheme: 'http', versions: API_VERSIONS },
         kafka: { brokers: ['192.168.1.108:9092'] },                             // localhost   | 192.168.1.108            
@@ -238,4 +238,4 @@ module.exports.ENV = {
 }
 
 // env.active returns the active environment 
-module.exports.active = ENV[enums.environments.local];      // change enums.environments to 'local' to develop locally or to 'devcloud' to develop online                               
+module.exports.active = this.CONFIGS[enums.environments.local];      // change enums.environments to 'local' to develop locally or to 'devcloud' to develop online                               

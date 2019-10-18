@@ -10,10 +10,9 @@ const enums = require('../environment/enums');
 const consts = require('../host/constants');
 const utils = require('../environment/utils');
 
-const log = require('../environment/log');
-const errors = require('../environment/errors');
-
 const env = require('../environment');
+const log = env.log;
+const errors = env.errors;
 
 const moment = require('moment');
 
