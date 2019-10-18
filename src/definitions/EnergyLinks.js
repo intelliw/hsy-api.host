@@ -7,7 +7,7 @@
 
 // stores data rows for a json collection  
 const enums = require('../environment/enums');
-const consts = require('../configs/constants');
+const consts = require('../host/constants');
 const env = require('../environment');
 
 const Links = require('./Links');

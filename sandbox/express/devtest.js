@@ -11,7 +11,7 @@ const router = express.Router();
 const Buffer = require('safe-buffer').Buffer;
 
 const enums = require('../../src/environment/enums');
-const consts = require('../../src/configs/constants');
+const consts = require('../../src/host/constants');
 const Param = require('../../src/parameters');
 
 // @ts-ignore

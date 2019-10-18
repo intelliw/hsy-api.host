@@ -5,7 +5,7 @@
  * an api key taken from a request header (preferred) or query parameter 
  *  
  */
-const consts = require('../configs/constants');
+const consts = require('../host/constants');
 
 const enums = require('../environment/enums');
 

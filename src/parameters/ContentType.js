@@ -5,7 +5,7 @@
  * the validated request Content-Type
  *  
  */
-const consts = require('../configs/constants');
+const consts = require('../host/constants');
 const enums = require('../environment/enums');
 
 const Param = require('./Param');

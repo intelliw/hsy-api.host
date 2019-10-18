@@ -2,7 +2,7 @@
 'use strict';
 
 const utils = require('../src/environment/utils');
-const consts = require('../src/configs/constants');
+const consts = require('../src/host/constants');
 
 const moment = require('moment');
 

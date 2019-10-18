@@ -1,9 +1,9 @@
 //@ts-check
 'use strict';
 /**
- * PACKAGE: ./configs/index.js
+ * PACKAGE: ./host/index.js
  * *per project* configurations, constants, enums, and utiltiies
  */
 
-module.exports = require('./configs');
+module.exports.configs = require('./configs');
 module.exports.constants = require('./constants');

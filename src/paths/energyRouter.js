@@ -8,7 +8,7 @@ const express = require('express');
 const router = express.Router();
 
 const utils = require('../environment/utils');
-const consts = require('../configs/constants');
+const consts = require('../host/constants');
 const env = require('../environment');
 
 const Request = require('../requests');

@@ -8,8 +8,8 @@ const express = require('express');
 const bodyParser = require('body-parser')
 const Buffer = require('safe-buffer').Buffer;
 
-const configs = require('./src/configs');
-const consts = configs.constants;
+const host = require('./src/host');
+const consts = host.constants;
 
 const paths = require('./src/paths');
 const errors = require('./src/environment/errors');
@@ -18,7 +18,7 @@ const errors = require('./src/environment/errors');
 const app = express();
 
 // initialise 
-configs.initialise(app);                                                            // configuration settings
+host.configs.initialise(app);                                                            // configuration settings
 
 /* body parser
  * use  verify function to get raw body - bodyParser.raw applies only if bodyParser.json fails due to incorrect content-type header

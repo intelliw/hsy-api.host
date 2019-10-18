@@ -7,7 +7,7 @@
 const { Kafka } = require('kafkajs');
 
 const enums = require('../environment/enums');
-const consts = require('../configs/constants');
+const consts = require('../host/constants');
 const utils = require('../environment/utils');
 
 const log = require('../environment/log');

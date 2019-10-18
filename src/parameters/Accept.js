@@ -5,7 +5,7 @@
  * the validated request Accept type
  *  
  */
-const consts = require('../configs/constants');
+const consts = require('../host/constants');
 
 const Param = require('./Param');
 

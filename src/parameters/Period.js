@@ -8,7 +8,7 @@
 const moment = require('moment');
 
 const enums = require('../environment/enums');
-const consts = require('../configs/constants');
+const consts = require('../host/constants');
 const utils = require('../environment/utils');
 
 const Param = require('./Param');
