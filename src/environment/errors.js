@@ -6,7 +6,8 @@
  * performs all error reporting operations 
  */
 const { ErrorReporting } = require('@google-cloud/error-reporting');
-const enums = require('../environment/enums');
+
+const enums = require('./enums');
 const env = require('./env');
 
 // create a Error Reporting instance  

@@ -1,7 +1,7 @@
 //@ts-check
 "use strict";
 /**
- * ./producers/Producer.js
+ * ./producers/KafkaProducer.js
  *  base type for Kafka message producers  
  */
 const { Kafka } = require('kafkajs');

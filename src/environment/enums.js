@@ -140,7 +140,12 @@ module.exports.logging = {
         debug: "debug",
     }
 }
-
+// gcp project enumerations
+module.exports.gcp = {           
+    projects: {
+        sundaya: "sundaya"
+    }
+}
 
 // list of environments in environments.js
 module.exports.environments = {                                                              // list of environments              

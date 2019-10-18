@@ -27,15 +27,22 @@ const PRODUCER_CLIENTID = `producer.${utils.randomIntegerString(1, 9999)}`
 
 // API host for dev, prod, and test
 const API_HOST = {
-    PROD: 'api.sundaya.monitored.equipment',
     DEV: 'dev.api.sundaya.monitored.equipment',
-    TEST: 'test.api.sundaya.monitored.equipment'
+    TEST: 'test.api.sundaya.monitored.equipment',
+    PROD: 'api.sundaya.monitored.equipment'
 }
 
 // API versions 
 const API_VERSIONS = {
     supported: '0.2 0.3',
     current: '0.3.12.10'
+}
+
+// GCP project configs per environment 
+const GCP = {
+    DEV: { project: "sundaya" },
+    TEST: { project: "sundaya" },
+    PROD: { project: "sundaya" }
 }
 
 // kafkajs client configuration options
@@ -73,10 +80,6 @@ const KAFKAJS = {
 
 // standard kafka topics for each environment type 
 const KAFKA_TOPICS = {
-    PROD: {                                                                 // kafka topics for PROD environments 
-        monitoring: { pms: 'monitoring.pms', mppt: 'monitoring.mppt', inverter: 'monitoring.inverter' },                            //  topics for monitoring data received from api host
-        dataset: { pms: 'monitoring.pms.dataset', mppt: 'monitoring.mppt.dataset', inverter: 'monitoring.inverter.dataset' }        //  topics for monitoring datasets for bq update, created by consumer at 1st stage of monitoring
-    },
     DEV: {                                                                  // kafka topics for DEV environments 
         monitoring: { pms: 'monitoring.dev_pms', mppt: 'monitoring.dev_mppt', inverter: 'monitoring.dev_inverter' },
         dataset: { pms: 'monitoring.dev_pms.dataset', mppt: 'monitoring.dev_mppt.dataset', inverter: 'monitoring.dev_inverter.dataset' }
@@ -84,6 +87,10 @@ const KAFKA_TOPICS = {
     TEST: {                                                                  // kafka topics for TEST environments 
         monitoring: { pms: 'monitoring.test_pms', mppt: 'monitoring.test_mppt', inverter: 'monitoring.test_inverter' },
         dataset: { pms: 'monitoring.test_pms.dataset', mppt: 'monitoring.test_mppt.dataset', inverter: 'monitoring.test_inverter.dataset' }
+    },
+    PROD: {                                                                 // kafka topics for PROD environments 
+        monitoring: { pms: 'monitoring.pms', mppt: 'monitoring.mppt', inverter: 'monitoring.inverter' },                            //  topics for monitoring data received from api host
+        dataset: { pms: 'monitoring.pms.dataset', mppt: 'monitoring.mppt.dataset', inverter: 'monitoring.inverter.dataset' }        //  topics for monitoring datasets for bq update, created by consumer at 1st stage of monitoring
     }
 }
 
@@ -109,17 +116,46 @@ const STACKDRIVER = {
 
 // standard configurations for logging 
 const LOGGING = {
-    verbosity: [enums.logging.verbosity.info],
-    appenders: [enums.logging.appenders.stackdriver]
+    DEV: {
+        statements: [
+            enums.logging.statements.messaging, 
+            enums.logging.statements.data,
+            enums.logging.statements.exception, 
+            enums.logging.statements.error],
+        verbosity: [
+            enums.logging.verbosity.info, 
+            enums.logging.verbosity.debug],
+        appenders: [
+            enums.logging.appenders.stackdriver, 
+            enums.logging.appenders.console]
+    },
+    TEST: {
+        statements: [
+            enums.logging.statements.messaging, 
+            enums.logging.statements.data,
+            enums.logging.statements.exception, 
+            enums.logging.statements.error],
+        verbosity: [
+            enums.logging.verbosity.info],
+        appenders: [
+            enums.logging.appenders.stackdriver]
+    },    
+    PROD: {
+        statements: [
+            enums.logging.statements.messaging, 
+            enums.logging.statements.data,
+            enums.logging.statements.exception, 
+            enums.logging.statements.error],
+        verbosity: [
+            enums.logging.verbosity.info],
+        appenders: [
+            enums.logging.appenders.stackdriver]
+    }
 }
 
 
 // bq datasets for each environment type 
 const BQ_DATASETS = {
-    PROD: {                                                                 // bq datasets for PROD environments 
-        datasets: { monitoring: 'monitoring' },
-        tables: { pms: 'pms', mppt: 'mppt', inverter: 'inverter', TEST: 'TEST' }
-    },
     DEV: {                                                                  // bq datasets for DEV environments 
         datasets: { monitoring: 'monitoring' },
         tables: { pms: 'dev_pms', mppt: 'dev_mppt', inverter: 'dev_inverter', TEST: 'TEST' }
@@ -127,6 +163,10 @@ const BQ_DATASETS = {
     TEST: {                                                                  // bq datasets for TEST environments 
         datasets: { monitoring: 'monitoring' },
         tables: { pms: 'test_pms', mppt: 'test_mppt', inverter: 'test_inverter', TEST: 'TEST' }
+    },
+    PROD: {                                                                 // bq datasets for PROD environments 
+        datasets: { monitoring: 'monitoring' },
+        tables: { pms: 'pms', mppt: 'mppt', inverter: 'inverter', TEST: 'TEST' }
     }
 }
 
@@ -134,60 +174,66 @@ const BQ_DATASETS = {
     these environment definitions can share fixed configs defined in constants above, 
     or they can each be defined differently as needed 
 */
-const ENV = {
+module.exports.ENV = {
     local: {
         api: { host: '192.168.1.108:8080', scheme: 'http', versions: API_VERSIONS },
         kafka: { brokers: ['192.168.1.108:9092'] },                             // localhost   | 192.168.1.108            
         topics: KAFKA_TOPICS.DEV,
         datawarehouse: BQ_DATASETS.DEV,
-        logging: { verbosity: [enums.logging.verbosity.info, enums.logging.verbosity.debug], appenders: [enums.logging.appenders.stackdriver, enums.logging.appenders.console] },
+        logging: LOGGING.DEV,
         kafkajs: KAFKAJS,
-        stackdriver: STACKDRIVER
+        stackdriver: STACKDRIVER,
+        gcp: GCP.DEV
     },
     testcloud: {                                                                // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: API_HOST.TEST, scheme: 'https', versions: API_VERSIONS },
         kafka: { brokers: KAFKA_BROKERS.SINGLE },
         topics: KAFKA_TOPICS.TEST,
         datawarehouse: BQ_DATASETS.TEST,
-        logging: LOGGING,
+        logging: LOGGING.TEST,
         kafkajs: KAFKAJS,
-        stackdriver: STACKDRIVER
+        stackdriver: STACKDRIVER,
+        gcp: GCP.TEST
     },
     devcloud: {                                                                 // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: API_HOST.DEV, scheme: 'https', versions: API_VERSIONS },
         kafka: { brokers: KAFKA_BROKERS.SINGLE },                                     // array of kafka message brokers                       // kafka-1-vm  | 10.140.0.11
         topics: KAFKA_TOPICS.DEV,
         datawarehouse: BQ_DATASETS.DEV,
-        logging: LOGGING,
+        logging: LOGGING.DEV,
         kafkajs: KAFKAJS,
-        stackdriver: STACKDRIVER
+        stackdriver: STACKDRIVER,
+        gcp: GCP.DEV
     },
     devcloud_HA: {                                                              // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: API_HOST.DEV, scheme: 'https', versions: API_VERSIONS },
         kafka: { brokers: KAFKA_BROKERS.HA },                                         // array of kafka message brokers                       // [kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
         topics: KAFKA_TOPICS.DEV,
         datawarehouse: BQ_DATASETS.DEV,
-        logging: LOGGING,
+        logging: LOGGING.DEV,
         kafkajs: KAFKAJS,
-        stackdriver: STACKDRIVER
+        stackdriver: STACKDRIVER,
+        gcp: GCP.DEV
     },
     prodcloud: {                                                                // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: API_HOST.PROD, scheme: 'https', versions: API_VERSIONS },
         kafka: { brokers: KAFKA_BROKERS.SINGLE },                                     // array of kafka message brokers                       // kafka-1-vm  | 10.140.0.11   
         topics: KAFKA_TOPICS.PROD,
         datawarehouse: BQ_DATASETS.PROD,
-        logging: LOGGING,
+        logging: LOGGING.PROD,
         kafkajs: KAFKAJS,
-        stackdriver: STACKDRIVER
+        stackdriver: STACKDRIVER,
+        gcp: GCP.PROD
     },
     prodcloud_HA: {                                                             // Kafka HA - 3 masters, N workers
         api: { host: API_HOST.PROD, scheme: 'https', versions: API_VERSIONS },
         kafka: { brokers: KAFKA_BROKERS.HA },                                         // array of kafka message brokers                       // [kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
         topics: KAFKA_TOPICS.PROD,
         datawarehouse: BQ_DATASETS.PROD,
-        logging: LOGGING,
+        logging: LOGGING.PROD,
         kafkajs: KAFKAJS,
-        stackdriver: STACKDRIVER
+        stackdriver: STACKDRIVER,
+        gcp: GCP.PROD
     }
 }
 
