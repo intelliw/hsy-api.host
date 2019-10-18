@@ -102,7 +102,7 @@ class Stackdriver extends Console {
             ]);
     
         } catch (e) {
-            console.error(`>>>>>> LOGGING ERROR: ${e.message}`, e)
+            console.error(`>>>>>> STACKDRIVER LOGGING ERROR: ${e.message}`, e)
         }
     
     }
