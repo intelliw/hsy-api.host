@@ -12,7 +12,7 @@ const configs = require('./src/configs');
 const consts = configs.constants;
 
 const paths = require('./src/paths');
-const errors = require('./src/host/errors');
+const errors = require('./src/environment/errors');
 
 // [START setup]------------------------------
 const app = express();
@@ -32,7 +32,7 @@ app.use(bodyParser.raw({ verify: rawBodySaver, limit: `${consts.system.BODYPARSE
 // routes        
 app.use('/energy', paths.energyRouter);                                                 // openapi tag: Energy - this is als to the default route
 app.use(['/devices', '/device'], paths.devicesRouter);                                  // openapi tag: Devices
-app.use('/api', paths.apiRouter);                                                       // openapi tag: Diagnostics
+app.use('/api', paths.apiRouter);                                                       // openapi tag: DevOps
 app.use('/static', express.static(consts.folders.STATIC));                              // static folders 
 
 // error handlers

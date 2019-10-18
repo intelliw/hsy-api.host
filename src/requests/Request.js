@@ -5,7 +5,7 @@
  * base class for operation classes
  *  
  */
-const enums = require('../host/enums');
+const enums = require('../environment/enums');
 const NONE = global.undefined;
 
 const ErrorResponse = require('../responses/ErrorResponse');

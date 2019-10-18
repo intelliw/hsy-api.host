@@ -6,7 +6,7 @@
  */
 
 // stores data rows for a json collection  
-const enums = require('../host/enums');
+const enums = require('../environment/enums');
 
 const Definitions = require('./Definitions');
 class Links extends Definitions {

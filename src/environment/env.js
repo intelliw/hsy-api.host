@@ -6,8 +6,8 @@
  * these configs are shared between host anmd consumer 
  */
 
-const utils = require('../host/utils');
-const enums = require('../host/enums');
+const utils = require('./utils');
+const enums = require('./enums');
 
 // generate a unique client id for this container instance - if this consumer is clustered each instance will have a unique id
 const CONSUMER_CLIENTID = `consumer.${utils.randomIntegerString(1, 9999)}`

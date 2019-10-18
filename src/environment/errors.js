@@ -6,8 +6,8 @@
  * performs all error reporting operations 
  */
 const { ErrorReporting } = require('@google-cloud/error-reporting');
-const enums = require('../host/enums');
-const env = require('../host/environments');
+const enums = require('../environment/enums');
+const env = require('./env');
 
 // create a Error Reporting instance  
 module.exports.LOGGER = new ErrorReporting({                              // all configuration options are optional.

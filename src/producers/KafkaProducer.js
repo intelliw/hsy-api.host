@@ -6,14 +6,14 @@
  */
 const { Kafka } = require('kafkajs');
 
-const enums = require('../host/enums');
+const enums = require('../environment/enums');
 const consts = require('../configs/constants');
-const utils = require('../host/utils');
+const utils = require('../environment/utils');
 
-const log = require('../host/log');
-const errors = require('../host/errors');
+const log = require('../environment/log');
+const errors = require('../environment/errors');
 
-const env = require('../host/environments');
+const env = require('../environment');
 
 const moment = require('moment');
 

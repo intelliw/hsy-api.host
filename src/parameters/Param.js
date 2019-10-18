@@ -6,7 +6,7 @@
  *  parameter class validates the value in the constructor and stores the parameter name and value
  */
 
-const utils = require('../host/utils');
+const utils = require('../environment/utils');
 
 const NONE = global.undefined;
 

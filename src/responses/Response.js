@@ -5,8 +5,8 @@
  *  base type for view responses  
  *  creates a response object for rendering and sending. 
  */
-const enums = require('../host/enums');
-const utils = require('../host/utils');
+const enums = require('../environment/enums');
+const utils = require('../environment/utils');
 
 class Response {
 

@@ -4,8 +4,8 @@
  * ./responses/DatasetsPostResponse.js
  * creates a response for the /energy path. 
  */
-const enums = require('../host/enums');
-const utils = require('../host/utils');
+const enums = require('../environment/enums');
+const utils = require('../environment/utils');
 
 const Response = require('./Response');
 const producers = require('../producers');

@@ -4,8 +4,8 @@
  * ./responses/ErrorResponse.js
  * creates a generic response with a JSON message as defined in the openapi genericMessage definition
  */
-const enums = require('../host/enums');
-const utils = require('../host/utils');
+const enums = require('../environment/enums');
+const utils = require('../environment/utils');
 const consts = require('../configs/constants');
 
 const Response = require('./Response');

@@ -6,7 +6,7 @@
  *  
  */
 const consts = require('../configs/constants');
-const enums = require('../host/enums');
+const enums = require('../environment/enums');
 
 const Param = require('./Param');
 

@@ -5,10 +5,10 @@
  *  Kafka mppt message producers for api devices.datasets.post 
  */
 const consts = require('../configs/constants');
-const enums = require('../host/enums');
-const utils = require('../host/utils');
+const enums = require('../environment/enums');
+const utils = require('../environment/utils');
 
-const env = require('../host/environments');
+const env = require('../environment');
 
 const KafkaProducer = require('../producers/KafkaProducer');
 

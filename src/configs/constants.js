@@ -5,9 +5,9 @@
  * global constants
  */
 const path = require('path');                   // this is a node package not the '../paths' applicaiton module
-const enums = require('../host/enums');
+const enums = require('../environment/enums');
 
-const utils = require('../host/utils');
+const utils = require('../environment/utils');
 
 const NONE = global.undefined;
 

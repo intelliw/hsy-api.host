@@ -1,7 +1,7 @@
 //@ts-check
 'use strict';
 
-const utils = require('../src/host/utils');
+const utils = require('../src/environment/utils');
 const consts = require('../src/configs/constants');
 
 const moment = require('moment');

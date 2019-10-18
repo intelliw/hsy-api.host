@@ -6,9 +6,9 @@
  */
 
 // stores data rows for a json collection  
-const enums = require('../host/enums');
+const enums = require('../environment/enums');
 const consts = require('../configs/constants');
-const env = require('../host/environments');
+const env = require('../environment');
 
 const Links = require('./Links');
 class EnergyLinks extends Links {

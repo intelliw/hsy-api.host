@@ -1,7 +1,7 @@
 //@ts-check
 'use strict';
 /**
- * PACKAGE: ./host/utils.js
+ * PACKAGE: ./environment/utils.js
  * shared utilities
  * utils.js is from api host - any changes should be mastered in api host utils.js -----------------------------------------
  */
@@ -395,5 +395,5 @@ module.exports.tristateBoolean = (bitValue) => {
     return tristate;
 }
 
-// test... node src/host/utils
+// test... node src/environment/utils
 // console.log(...);

@@ -4,10 +4,10 @@
  * ./responses/EnergyGetResponse.js
  * creates a response for the /energy path. 
  */
-const enums = require('../host/enums');
-const utils = require('../host/utils');
+const enums = require('../environment/enums');
+const utils = require('../environment/utils');
 
-const env = require('../host/environments');
+const env = require('../environment');
 
 const Response = require('./Response');
 const Collections = require('../definitions/Collections');

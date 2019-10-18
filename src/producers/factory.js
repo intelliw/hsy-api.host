@@ -3,7 +3,7 @@
 /**
  * ./producers/factory.js
  */
-const enums = require('../host/enums');
+const enums = require('../environment/enums');
 
 const Producer = require('../producers');
 

@@ -5,9 +5,9 @@
  *  Kafka inverter message producers for api devices.datasets.post 
  */
 const consts = require('../configs/constants');
-const enums = require('../host/enums');
-const utils = require('../host/utils');
-const env = require('../host/environments');
+const enums = require('../environment/enums');
+const utils = require('../environment/utils');
+const env = require('../environment');
 
 const KafkaProducer = require('../producers/KafkaProducer');
 

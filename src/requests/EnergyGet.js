@@ -4,7 +4,7 @@
  * ./requests/EnergyGetRequest.js
  * prepares data and response for the energy path 
  */
-const enums = require('../host/enums');
+const enums = require('../environment/enums');
 const consts = require('../configs/constants');
 
 const Response = require('../responses');

@@ -2,12 +2,12 @@
 'use strict';
 
 /**
- * ./host/log.js
+ * ./environment/log.js
  * performs all logging operations including changes to log levels at runtime 
  */
 const { Logging } = require('@google-cloud/logging');                                   // google cloud logging client library
-const enums = require('../host/enums');
-const env = require('../host/environments');
+const enums = require('../environment/enums');
+const env = require('./env');
 
 // create a Logging instance and a log writer
 const LOGGER = new Logging({

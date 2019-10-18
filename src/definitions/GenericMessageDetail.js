@@ -4,7 +4,7 @@
  * ./definitions/GenericMessage.js
  *  object for storing a generic message as defined in the openapi genericMessage definition
  */
-const enums = require('../host/enums');
+const enums = require('../environment/enums');
 
 const Definitions = require('../definitions/Definitions');
 

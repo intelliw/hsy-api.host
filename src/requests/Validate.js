@@ -5,7 +5,7 @@
  * validation for Request class
  *  
  */
-const enums = require('../host/enums');
+const enums = require('../environment/enums');
 const GenericMessageDetail = require('../definitions/GenericMessageDetail');
 
 

@@ -123,21 +123,22 @@ module.exports.messageBroker.ack.default = this.messageBroker.ack.leader
 
 // logging and error reporting framework 
 module.exports.logging = {                           
+    appenders: {                                    // output options for logging and error reporting      
+        console: "console",
+        stackdriver: "stackdriver"
+    },
+    statements: {                                   // determines which log statements will be included in log output 
+        data: "data",
+        error: "error",
+        exception: "exception",
+        messaging: "messaging",
+        trace: "trace"
+    },
     verbosity: {                                    // log levels for error reporting and logged events
         none: "none",
         info: "info",
         debug: "debug",
-    },
-    appenders: {                                      // output options for logging and error reporting      
-        console: "console",
-        stackdriver: "stackdriver"
-    },
-    scope: {
-        messaging: "messaging",
-        data: "data",
-        error: "error",
-        trace: "messaging"
-    }   
+    }
 }
 
 
