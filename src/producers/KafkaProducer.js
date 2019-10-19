@@ -29,7 +29,7 @@ class KafkaProducer {
      * @param {*} apiDatasetName                                                    // enums.params.datasets              - e.g. pms       
      */
     constructor(apiDatasetName, kafkaTopic) {
-        
+
         // create a kafka producer
         const kafka = new Kafka({
             brokers: env.active.kafka.brokers,                 //  e.g. [`${this.KAFKA_HOST}:9092`, `${this.KAFKA_HOST}:9094`]
@@ -50,7 +50,7 @@ class KafkaProducer {
     * @param {*} sender                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
     */
     async sendToTopic(datasets, sender) {
-        
+
         // get the data 
         let results = this.extractData(datasets, sender);                           // e.g. results: { itemCount: 9, messages: [. . .] }
 
@@ -66,13 +66,13 @@ class KafkaProducer {
                 acks: enums.messageBroker.ack.default,                              // default is 'leader'
                 timeout: env.active.kafkajs.producer.timeout
             });
-            
+
             // log output                                                           // e.g. [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
             log.messaging(this.kafkaTopic, result[0].baseOffset, results.messages, results.itemCount, sender);         // info = (topic, offset, msgqty, itemqty, sender) {
 
             // disconnect
-            await this.producerObj.disconnect();    
-            
+            await this.producerObj.disconnect();
+
         } catch (e) {
             console.error(`>>>>>> CONNECT ERROR: [${env.active.kafkajs.producer.clientId}] ${e.message}`, e)
         }
@@ -98,10 +98,10 @@ class KafkaProducer {
         let dataItems = [];
         let dataItemCount = 0;
         let results = { itemCount: 0, messages: [] };
-        
+
         // extract and add messages to results 
         datasets.forEach(dataset => {                                               // e.g. "pms": { "id": "PMS-01-001" }, "data": [ { time_local: '20190809T150006.032+0700', pack: [Object] }, ... ]
-        
+
             key = dataset[this.apiDatasetName].id;                                  // e.g. id from.. "pms": { "id": 
 
             // add each data item in the dataset as an individual message
@@ -145,7 +145,7 @@ class KafkaProducer {
         - this is done as part of date validation in this stage 
         - but it not required by bigquery as it will convert local time to utc if submitted with a zone offset
         */
-        
+
         dataItem = {
             ...dataItem,
             sys: { source: sender },             // is based on the apikey from the sender and identifies the source of the data. this value is added to sys.source attribute
@@ -179,6 +179,31 @@ class KafkaProducer {
         return message;
     }
 
+    // static factory method to construct a monitoring producer    
+    static getProducer(apiDatasetName) {
+        let producer;
+        switch (apiDatasetName) {
+
+            // pms
+            case enums.params.datasets.pms:
+                producer = new KafkaProducer(enums.params.datasets.pms, env.active.topics.monitoring.pms);
+                break;
+
+            // mppt 
+            case enums.params.datasets.mppt:
+                producer = new KafkaProducer(enums.params.datasets.mppt, env.active.topics.monitoring.mppt);
+                break;
+
+            // inverter 
+            case enums.params.datasets.inverter:
+                producer = new KafkaProducer(enums.params.datasets.inverter, env.active.topics.monitoring.inverter);
+                break;
+
+        }
+        return producer;
+        
+    }
 }
+
 
 module.exports = KafkaProducer;

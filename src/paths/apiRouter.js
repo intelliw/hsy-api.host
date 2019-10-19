@@ -31,7 +31,15 @@ router.get('/logging/help', (req, res, next) => {
     // return logging configurables 
     res
         .status(200)
-        .json({ logging: { configurables: enums.logging } })                         // e.g. {"logging":{"verbosity":["info"]}}
+        .json({
+            logging: {
+                configurables: {
+                    statements: utils.objectKeysToArray(enums.logging.statements),
+                    verbosity: utils.objectKeysToArray(enums.logging.verbosity),
+                    appenders: utils.objectKeysToArray(enums.logging.appenders)
+                }
+            }
+        })                         // e.g. {"logging":{"verbosity":["info"]}}
         .end();
 
 });
@@ -40,43 +48,17 @@ router.get('/logging/help', (req, res, next) => {
 // [devops.api.logging.get] /api/logging?verbosity=debug,info
 router.get('/logging', (req, res, next) => {
 
-    let configs;
+    let configs = [];
 
-    // set appenders - set only if requested values are valid enums
-    let appenders = req.query.appenders;                            // e.g. ?appenders=stackdriver,console
-    if (appenders != NONE) {
-        configs = [];
-        appenders.split(',').forEach(element => {                   // split into an array and set logging.verbosity     
-            if (utils.valueExistsInObject(enums.logging.appenders, element)) {
-                configs.push(element);
-            }
-        });
-        env.active.logging.appenders = configs.length == 0 ? env.active.logging.appenders : configs;
-    }
+    // validate and set configs  set only if requested values are valid enums
+    configs = setLoggingConfigs(req.query.appenders, enums.logging.appenders);
+    env.active.logging.appenders = configs.length == 0 ? env.active.logging.appenders : configs;
 
-    // set statements - set only if requested values are valid enums
-    let statements = req.query.statements;                          // e.g. ?statements=data,error,exception,messaging,trace
-    if (statements != NONE) {
-        configs = [];
-        statements.split(',').forEach(element => {                   // split into an array and set logging.verbosity     
-            if (utils.valueExistsInObject(enums.logging.statements, element)) {
-                configs.push(element);
-            }
-        });
-        env.active.logging.statements = configs.length == 0 ? env.active.logging.statements : configs;
-    }
+    configs = setLoggingConfigs(req.query.verbosity, enums.logging.verbosity);
+    env.active.logging.verbosity = configs.length == 0 ? env.active.logging.verbosity : configs;
 
-    // set verbosity - set only if requested values are valid enums
-    let verbosity = req.query.verbosity;                            // e.g. ?verbosity=debug,info
-    if (verbosity != NONE) {
-        configs = [];
-        verbosity.split(',').forEach(element => {                   // split into an array and set logging.verbosity     
-            if (utils.valueExistsInObject(enums.logging.verbosity, element)) {
-                configs.push(element);
-            }
-        });
-        env.active.logging.verbosity = configs.length == 0 ? env.active.logging.verbosity : configs;
-    }
+    configs = setLoggingConfigs(req.query.statements, enums.logging.statements);
+    env.active.logging.statements = configs.length == 0 ? env.active.logging.statements : configs;
 
     // return logging configuration 
     res
@@ -86,5 +68,26 @@ router.get('/logging', (req, res, next) => {
 
 });
 
+/* validates and returns an array of logging configs according to the query paramers (queryParams) 
+   queryParams must contain comma serparated configuration options for appenders, verbosity, or statements 
+   only values which exist in the corresponding enums.logging (logginEnum) will be allowed
+   if there are no valid values the existing configs will not be changed
+*/
+function setLoggingConfigs(queryParams, loggingEnum) {
+
+    let configs = [];
+
+    if (queryParams != NONE) {
+        configs = [];
+        queryParams.split(',').forEach(element => {                     // split into an array and set logging.verbosity     
+            if (utils.valueExistsInObject(loggingEnum, element)) {
+                configs.push(element);
+            }
+        });
+    }
+    return configs
+
+
+}
 
 module.exports = router;

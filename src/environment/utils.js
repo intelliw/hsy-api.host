@@ -395,5 +395,18 @@ module.exports.tristateBoolean = (bitValue) => {
     return tristate;
 }
 
+// converts keys in a json object into an array
+module.exports.objectKeysToArray = (jsonObj) => {
+
+    var result = [];
+
+    for(var i in jsonObj)
+        result.push(i);
+
+    return result;        
+}
+
+
+
 // test... node src/environment/utils
 // console.log(...);

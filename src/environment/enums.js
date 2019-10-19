@@ -137,7 +137,7 @@ module.exports.logging = {
     verbosity: {                                    // log levels for error reporting and logged events
         none: "none",
         info: "info",
-        debug: "debug",
+        debug: "debug"
     }
 }
 // gcp project enumerations

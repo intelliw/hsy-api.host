@@ -14,13 +14,11 @@ const CONSUMER_CLIENTID = `consumer.${utils.randomIntegerString(1, 9999)}`
 const PRODUCER_CLIENTID = `producer.${utils.randomIntegerString(1, 9999)}`
 
 /* environment configurables  
-    ENVIRONMENT.js is mastered in hse-api-host project and shared by hse-api-consumers etc.
+    env.js is mastered in hse-api-host project and shared by hse-api-consumers etc.
         it should be edited in hse-api-host and copied across to hse-api-consumers project if any changes are made 
-
     logging verbosity and appenders provide startup configuration for host.logs  - at runtime it canb e changed through GET: api/logging?verbosity=info,debug&appenders=console,stackdriver;
     - verbosity determines the loglevel (none, info, or debug)
     - appenders determines the output destination (console, or stackdriver)
-
 */
 
 // referenced configs - these configs are reused in the ENVIRONMENT section -----------------------------------------------------------------------------------------------------------------
