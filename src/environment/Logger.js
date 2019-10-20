@@ -51,6 +51,7 @@ class Logger {
 
     }        
 
+    
     // data transaction events 
     data(dataset, table, id, rowArray) { } ;
     _dataConsole(dataset, table, id, rowArray) { };
