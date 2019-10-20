@@ -7,14 +7,14 @@
 const enums = require('./enums');
 const env = require('./env');
 
-const Console = require('./Console');
+const Logger = require('./Logger');
 
 const { Logging } = require('@google-cloud/logging');               // google cloud logging client library
 
 const SEVERITY_INFO = "INFO";
 const SEVERITY_DEBUG = "DEBUG";
 
-class Stackdriver extends Console {
+class Stackdriver extends Logger {
     /**
      * constructor arguments 
      * @param {*} 
@@ -22,6 +22,8 @@ class Stackdriver extends Console {
     constructor() {
 
         super();
+
+        this._toggleFeatures();
 
         // create a Logging instance and a log writer
         const project = env.active.gcp.project;
@@ -37,56 +39,29 @@ class Stackdriver extends Console {
 
 
     // logs a message broker event - both info and debug will be logged if active
-    messaging (topic, offset, msgsArray, itemQty, sender) {
-        
-        if (super.isMessaging()) {
-            
-            // Stackdriver
-            if (super.isStackdriver()) {
+    messaging(topic, offset, msgsArray, itemQty, sender) { };
 
-                // INFO
-                if (super.isInfo()) {
-                    let infoPayload = {
-                        topic: topic,
-                        offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
-                        msgsqty: msgsArray.length, itemqty: itemQty, sender: sender
-                    };
-                    this._writeLog(SEVERITY_INFO, infoPayload);
-                } 
+    _messagingStackdriver(topic, offset, msgsArray, itemQty, sender) { };
+    _messagingStackdriverInfo(topic, offset, msgsArray, itemQty, sender) { };
+    _messagingStackdriverDebug(topic, offset, msgsArray, itemQty, sender) { };
 
-                // DEBUG
-                if (super.isDebug()) {
-                    let debugPayload = {
-                        messages: msgsArray, topic: topic,
-                        offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
-                        msgsqty: msgsArray.length, itemqty: itemQty, sender: sender
-                    };
-                    this._writeLog(SEVERITY_DEBUG, debugPayload);
-                }
-
-
-            }
-            
-            // Console
-            super.messaging (topic, offset, msgsArray, itemQty, sender);
-
-        }
-
-    }
+    _messagingConsole(topic, offset, msgsArray, itemQty, sender) { };
+    _messagingConsoleInfo(topic, offset, msgsArray, itemQty, sender) { };
+    _messagingConsoleDebug(topic, offset, msgsArray, itemQty, sender) { };
 
     // logs a data transaction - both info and debug will be logged if active
-    data (dataset, table, id, rowArray) {                           //[${this.dataset}.${this.table}] id: ${sharedId}, ${rowArray.length} rows`);
-    
+    data(dataset, table, id, rowArray) {                           //[${this.dataset}.${this.table}] id: ${sharedId}, ${rowArray.length} rows`);
+
         if (super.isData()) {
 
         }
-    } 
+    }
 
     async _writeLog(severity, jsonPayload) {
 
         // append to active environment's stackdriver log
         try {
-    
+
             // create metadata to describe logs from this resource (compute instance, INFO)
             const metadata = {                                                          // the metadata associated with a log entry
                 resource: {
@@ -94,19 +69,75 @@ class Stackdriver extends Console {
                 },
                 severity: severity                                  // LogSeverity      https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#LogSeverity    
             };
-    
+
             // write  log entry
             this.logWriter.write([
                 this.logWriter.entry(                                                           // construct the log message
                     metadata, jsonPayload)
             ]);
-    
+
         } catch (e) {
             console.error(`>>>>>> STACKDRIVER LOGGING ERROR: ${e.message}`, e)
         }
-    
+
     }
 
+    _toggleFeatures() {
+
+        // messsaging
+        this.messaging = super.isMessaging() ? function (topic, offset, msgsArray, itemQty, sender) {
+            this._messagingStackdriver(topic, offset, msgsArray, itemQty, sender);
+            this._messagingConsole(topic, offset, msgsArray, itemQty, sender);
+        } : function (topic, offset, msgsArray, itemQty, sender) { };
+
+        // messaging stackdriver
+        this._messagingStackdriver = super.isStackdriver() ? function (topic, offset, msgsArray, itemQty, sender) {
+            this._messagingStackdriverInfo(topic, offset, msgsArray, itemQty, sender);
+            this._messagingStackdriverDebug(topic, offset, msgsArray, itemQty, sender);
+        } : function (topic, offset, msgsArray, itemQty, sender) { };
+
+        // messaging stackdriver info
+        this._messagingStackdriverInfo = super.isInfo() ? function (topic, offset, msgsArray, itemQty, sender) {
+            let infoPayload = {
+                topic: topic,
+                offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
+                msgsqty: msgsArray.length, itemqty: itemQty, sender: sender
+            };
+            this._writeLog(SEVERITY_INFO, infoPayload);
+        } : function (topic, offset, msgsArray, itemQty, sender) { };
+
+        // messaging stackdriver debug
+        this._messagingStackdriverDebug = super.isDebug() ? function (topic, offset, msgsArray, itemQty, sender) {
+            let debugPayload = {
+                messages: msgsArray, topic: topic,
+                offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
+                msgsqty: msgsArray.length, itemqty: itemQty, sender: sender
+            };
+            this._writeLog(SEVERITY_DEBUG, debugPayload);
+        } : function (topic, offset, msgsArray, itemQty, sender) { };
+
+        // messaging console
+        this._messagingConsole = super.isConsole() ? function (topic, offset, msgsArray, itemQty, sender) {
+            this._messagingConsoleInfo(topic, offset, msgsArray, itemQty, sender);
+            this._messagingConsoleDebug(topic, offset, msgsArray, itemQty, sender);
+        } : function (topic, offset, msgsArray, itemQty, sender) { };
+
+        // messaging stackdriver info
+        this._messagingConsoleInfo = super.isInfo() ? function (topic, offset, msgsArray, itemQty, sender) {
+            console.log(`[${topic}:${offset}-${Number(offset) + (msgsArray.length - 1)}] ${msgsArray.length} msgs, ${itemQty} items, sender:${sender}`);
+        } : function (topic, offset, msgsArray, itemQty, sender) { };
+
+        // messaging stackdriver debug
+        this._messagingConsoleDebug = super.isDebug() ? function (topic, offset, msgsArray, itemQty, sender) {
+            let debugPayload = {
+                messages: msgsArray, topic: topic,
+                offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
+                msgsqty: msgsArray.length, itemqty: itemQty, sender: sender
+            };
+            console.log(debugPayload);
+        } : function (topic, offset, msgsArray, itemQty, sender) { };
+
+    }    
 }
 
 // INFO
