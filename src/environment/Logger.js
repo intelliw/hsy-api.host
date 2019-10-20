@@ -7,35 +7,79 @@
 const enums = require('./enums');
 const env = require('./env');
 
-const Console = require('./Console');
-const Stackdriver = require('./Console');
-
 class Logger {
     /**
      * constructor arguments 
      * @param {*} 
      */
     constructor() {
-
-        this.stackdriver = new Stackdriver();
-        // this.console = new Console();
+        
+        // toggle console logging based on current configs
+        this._toggle_messagingConsole();
+        this._toggle_dataConsole();
+        
     }
 
-    // logs a message broker event - both info and debug will be logged if active
-    messaging(topic, offset, msgsArray, itemQty, sender) { 
-        
-        stackdriver.messaging(topic, offset, msgsArray, itemQty, sender);
-        
-    };
+    // message broker log events
+    messaging(topic, offset, msgsArray, itemQty, sender) { };
+    _messagingConsole(topic, offset, msgsArray, itemQty, sender) { };
+    _messagingConsoleInfo(topic, offset, msgsArray, itemQty, sender) { };
+    _messagingConsoleDebug(topic, offset, msgsArray, itemQty, sender) { };
 
-    // logs a data transaction - both info and debug will be logged if active
-    data(dataset, table, id, rowArray) {                           //[${this.dataset}.${this.table}] id: ${sharedId}, ${rowArray.length} rows`);
+    _toggle_messagingConsole() {
 
-        if (this.isData()) {
+        // messaging console
+        this._messagingConsole = this.isConsole() ? function (topic, offset, msgsArray, itemQty, sender) {
+            this._messagingConsoleInfo(topic, offset, msgsArray, itemQty, sender);
+            this._messagingConsoleDebug(topic, offset, msgsArray, itemQty, sender);
+        } : function (topic, offset, msgsArray, itemQty, sender) { };
 
-        }
-    }
+        // messaging console info
+        this._messagingConsoleInfo = this.isInfo() ? function (topic, offset, msgsArray, itemQty, sender) {
+            console.log(`[${topic}:${offset}-${Number(offset) + (msgsArray.length - 1)}] ${msgsArray.length} msgs, ${itemQty} items, sender:${sender}`);
+        } : function (topic, offset, msgsArray, itemQty, sender) { };
 
+        // messaging console debug
+        this._messagingConsoleDebug = this.isDebug() ? function (topic, offset, msgsArray, itemQty, sender) {
+            let debugPayload = {
+                messages: msgsArray, topic: topic,
+                offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
+                msgsqty: msgsArray.length, itemqty: itemQty, sender: sender
+            };
+            console.log(debugPayload);
+        } : function (topic, offset, msgsArray, itemQty, sender) { };
+
+    }        
+
+    // data transaction events 
+    data(dataset, table, id, rowArray) { } ;
+    _dataConsole(dataset, table, id, rowArray) { };
+    _dataConsoleInfo(dataset, table, id, rowArray) { };
+    _dataConsoleDebug(dataset, table, id, rowArray) { };
+
+    _toggle_dataConsole() {
+
+        // data console
+        this._dataConsole = this.isConsole() ? function (dataset, table, id, rowArray) {
+            this._dataConsoleInfo(dataset, table, id, rowArray);
+            this._dataConsoleDebug(dataset, table, id, rowArray);
+        } : function (dataset, table, id, rowArray) { };
+
+        // data console info
+        this._dataConsoleInfo = this.isInfo() ? function (dataset, table, id, rowArray) {
+            console.log(`[${dataset}.${table}}] id: ${id}, ${rowArray.length} rows`);
+        } : function (dataset, table, id, rowArray) { };
+
+        // data console debug
+        this._dataConsoleDebug = this.isDebug() ? function (dataset, table, id, rowArray) {
+            let debugPayload = {
+                dataset: dataset, table: table, id: id,
+                rows: rowArray, rowqty: rowArray.length
+            };
+            console.log(debugPayload);
+        } : function (dataset, table, id, rowArray) { };
+
+    }        
 
     // check VERBOSITY configs  ----------------------------------------------------------------------------------
     isInfo() {  return env.active.logging.verbosity.includes(enums.logging.verbosity.info); }

@@ -1,103 +1,63 @@
 //@ts-check
-'use strict';
-
+"use strict";
 /**
- * ./environment/log.js
- * performs all logging operations including changes to log levels at runtime 
+ * ./environment/Stackdriver.js
+ *  Stackdriver logging and error reporting appender  
  */
 const enums = require('./enums');
 const env = require('./env');
-const Stackdriver = require('./Stackdriver');
 
-// create a stackdriver appender instance
-const sd = new Stackdriver(
-    env.active.gcp.project, 
-    env.active.stackdriver.logging.logName);
+const Logger = require('./Logger');
 
-// logs a message broker event - both info and debug will be logged if active
-module.exports.messaging = (topic, offset, msgsArray, itemQty, sender) => {
+const { Logging } = require('@google-cloud/logging');               // google cloud logging client library
 
-    const loggingConf = env.active.logging;                        // get the current logging configurations
+const SEVERITY_INFO = "INFO";
+const SEVERITY_DEBUG = "DEBUG";
 
-    // append info 
-    if (loggingConf.verbosity.includes(enums.logging.verbosity.info)) {                 // if info logging on..
+class Stackdriver extends Logger {
+    /**
+     * constructor arguments 
+     * @param {*} 
+     */
+    constructor() {
 
-        // append stackdriver     
-        let infoPayload = {
-            topic: topic,
-            offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
-            msgsqty: msgsArray.length, itemqty: itemQty, sender: sender
-        };
-        logInfo(infoPayload);
+        super();
 
-        // append console                                                               // e.g. [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
-        if (loggingConf.appenders.includes(enums.logging.appenders.console)) {
-            console.log(`[${infoPayload.topic}:${infoPayload.offset}] ${infoPayload.msgsqty} msgs, ${infoPayload.itemqty} items, sender:${infoPayload.sender}`);
-        };
+        this._toggleFeatures();
 
-    }
+        // create a Logging instance and a log writer
+        const project = env.active.gcp.project;
+        const logname = env.active.stackdriver.logging.logName;
+        this.logWriter = new Logging({
+            projectId: project,
+        }).log(logname);                                            // select the log to write to        
 
-    // append debug
-    if (loggingConf.verbosity.includes(enums.logging.verbosity.debug)) {                // if debug logging on..  e.g. [ { key: '025', value: '[{"pms_id" ....      
-
-        // append stackdriver     
-        let debugPayload = {
-            messages: msgsArray, topic: topic,
-            offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
-            msgsqty: msgsArray.length, itemqty: itemQty, sender: sender
-        };
-        logDebug(debugPayload);
-
-        // append console            
-        if (loggingConf.appenders.includes(enums.logging.appenders.console)) {
-            console.log(debugPayload);
-        };
+        // get resource type
+        this.resourceType = env.active.stackdriver.logging.resource;
 
     }
 
-}
 
-// logs a data transaction - both info and debug will be logged if active
-module.exports.data = (dataset, table, id, rowArray) => {
-    //[${this.dataset}.${this.table}] id: ${sharedId}, ${rowArray.length} rows`);
+    // logs a message broker event - both info and debug will be logged if active
+    messaging(topic, offset, msgsArray, itemQty, sender) { };
 
-    const loggingConf = env.active.logging;                        // get the current logging configurations
+    _messagingStackdriver(topic, offset, msgsArray, itemQty, sender) { };
+    _messagingStackdriverInfo(topic, offset, msgsArray, itemQty, sender) { };
+    _messagingStackdriverDebug(topic, offset, msgsArray, itemQty, sender) { };
 
-    // append info 
-    if (loggingConf.verbosity.includes(enums.logging.verbosity.info)) {                 // if info logging on..
+    _messagingConsole(topic, offset, msgsArray, itemQty, sender) { };
+    _messagingConsoleInfo(topic, offset, msgsArray, itemQty, sender) { };
+    _messagingConsoleDebug(topic, offset, msgsArray, itemQty, sender) { };
 
-        // append stackdriver     
-        let infoPayload = { dataset: dataset, table: table, id: id, rowqty: rowArray.length };
-        logInfo(infoPayload);
+    // logs a data transaction - both info and debug will be logged if active
+    data(dataset, table, id, rowArray) {                           //[${this.dataset}.${this.table}] id: ${sharedId}, ${rowArray.length} rows`);
 
-        // append console                                                               // e.g. [monitoring.dev_pms] id: TEST-09, 1 rows     
-        if (loggingConf.appenders.includes(enums.logging.appenders.console)) {
-            console.log(`[${infoPayload.dataset}.${infoPayload.table}] id: ${infoPayload.id}, ${infoPayload.rowqty} rows`);          
-        };
+        if (super.isData()) {
 
+        }
     }
 
-    // append debug
-    if (loggingConf.verbosity.includes(enums.logging.verbosity.debug)) {                // if debug logging on..  e.g. [ { key: '025', value: '[{"pms_id" ....      
-
-        // append stackdriver     
-        let debugPayload = { rows: rowArray, dataset: dataset, table: table, id: id, rowqty: rowArray.length };
-        logDebug(debugPayload);
-
-        // append console            
-        if (loggingConf.appenders.includes(enums.logging.appenders.console)) {
-            console.log(debugPayload);
-        };
-
-    }
-
-}
-
-
-
-
-    // INFO
-    async function writeSd(resourceType, jsonPayload, severity) {
+    async _writeLog(severity, jsonPayload) {
 
         // append to active environment's stackdriver log
         try {
@@ -105,7 +65,7 @@ module.exports.data = (dataset, table, id, rowArray) => {
             // create metadata to describe logs from this resource (compute instance, INFO)
             const metadata = {                                                          // the metadata associated with a log entry
                 resource: {
-                    type: resourceType
+                    type: this.resourceType
                 },
                 severity: severity                                  // LogSeverity      https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#LogSeverity    
             };
@@ -117,7 +77,73 @@ module.exports.data = (dataset, table, id, rowArray) => {
             ]);
 
         } catch (e) {
-            console.error(`>>>>>> LOGGING ERROR: ${e.message}`, e)
+            console.error(`>>>>>> STACKDRIVER LOGGING ERROR: ${e.message}`, e)
         }
 
     }
+
+    _toggleFeatures() {
+        console.log("TOGGLING.......................");
+        // messsaging
+        this.messaging = super.isMessaging() ? function (topic, offset, msgsArray, itemQty, sender) {
+            this._messagingStackdriver(topic, offset, msgsArray, itemQty, sender);
+            this._messagingConsole(topic, offset, msgsArray, itemQty, sender);
+        } : function (topic, offset, msgsArray, itemQty, sender) { };
+
+        // messaging stackdriver
+        this._messagingStackdriver = super.isStackdriver() ? function (topic, offset, msgsArray, itemQty, sender) {
+            this._messagingStackdriverInfo(topic, offset, msgsArray, itemQty, sender);
+            this._messagingStackdriverDebug(topic, offset, msgsArray, itemQty, sender);
+        } : function (topic, offset, msgsArray, itemQty, sender) { };
+
+        // messaging stackdriver info
+        console.log(super.isInfo());
+        this._messagingStackdriverInfo = super.isInfo() ? function (topic, offset, msgsArray, itemQty, sender) {
+            console.log("INFO");
+            let infoPayload = {
+                topic: topic,
+                offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
+                msgsqty: msgsArray.length, itemqty: itemQty, sender: sender
+            };
+            this._writeLog(SEVERITY_INFO, infoPayload);
+        } : function (topic, offset, msgsArray, itemQty, sender) { };
+
+        // messaging stackdriver debug
+        console.log(super.isDebug());
+        this._messagingStackdriverDebug = super.isDebug() ? function (topic, offset, msgsArray, itemQty, sender) {
+            console.log("DEBUG");
+            let debugPayload = {
+                messages: msgsArray, topic: topic,
+                offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
+                msgsqty: msgsArray.length, itemqty: itemQty, sender: sender
+            };
+            this._writeLog(SEVERITY_DEBUG, debugPayload);
+        } : function (topic, offset, msgsArray, itemQty, sender) { };
+
+        // messaging console
+        this._messagingConsole = super.isConsole() ? function (topic, offset, msgsArray, itemQty, sender) {
+            this._messagingConsoleInfo(topic, offset, msgsArray, itemQty, sender);
+            this._messagingConsoleDebug(topic, offset, msgsArray, itemQty, sender);
+        } : function (topic, offset, msgsArray, itemQty, sender) { };
+
+        // messaging stackdriver info
+        this._messagingConsoleInfo = super.isInfo() ? function (topic, offset, msgsArray, itemQty, sender) {
+            console.log(`[${topic}:${offset}-${Number(offset) + (msgsArray.length - 1)}] ${msgsArray.length} msgs, ${itemQty} items, sender:${sender}`);
+        } : function (topic, offset, msgsArray, itemQty, sender) { };
+
+        // messaging stackdriver debug
+        this._messagingConsoleDebug = super.isDebug() ? function (topic, offset, msgsArray, itemQty, sender) {
+            let debugPayload = {
+                messages: msgsArray, topic: topic,
+                offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
+                msgsqty: msgsArray.length, itemqty: itemQty, sender: sender
+            };
+            console.log(debugPayload);
+        } : function (topic, offset, msgsArray, itemQty, sender) { };
+
+    }    
+}
+
+// INFO
+
+module.exports = Stackdriver;

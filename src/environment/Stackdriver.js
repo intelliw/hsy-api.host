@@ -22,8 +22,10 @@ class Stackdriver extends Logger {
     constructor() {
 
         super();
-
-        this._toggleFeatures();
+        
+        // toggle stackdriver logging based on current configs
+        this._toggle_messagingStackdriver();
+        this._toggle_dataStackdriver();
 
         // create a Logging instance and a log writer
         const project = env.active.gcp.project;
@@ -37,26 +39,7 @@ class Stackdriver extends Logger {
 
     }
 
-
-    // logs a message broker event - both info and debug will be logged if active
-    messaging(topic, offset, msgsArray, itemQty, sender) { };
-
-    _messagingStackdriver(topic, offset, msgsArray, itemQty, sender) { };
-    _messagingStackdriverInfo(topic, offset, msgsArray, itemQty, sender) { };
-    _messagingStackdriverDebug(topic, offset, msgsArray, itemQty, sender) { };
-
-    _messagingConsole(topic, offset, msgsArray, itemQty, sender) { };
-    _messagingConsoleInfo(topic, offset, msgsArray, itemQty, sender) { };
-    _messagingConsoleDebug(topic, offset, msgsArray, itemQty, sender) { };
-
-    // logs a data transaction - both info and debug will be logged if active
-    data(dataset, table, id, rowArray) {                           //[${this.dataset}.${this.table}] id: ${sharedId}, ${rowArray.length} rows`);
-
-        if (super.isData()) {
-
-        }
-    }
-
+    // stackdriver write operatation
     async _writeLog(severity, jsonPayload) {
 
         // append to active environment's stackdriver log
@@ -82,12 +65,18 @@ class Stackdriver extends Logger {
 
     }
 
-    _toggleFeatures() {
+    // message broker log events 
+    messaging(topic, offset, msgsArray, itemQty, sender) { };
+    _messagingStackdriver(topic, offset, msgsArray, itemQty, sender) { };
+    _messagingStackdriverInfo(topic, offset, msgsArray, itemQty, sender) { };
+    _messagingStackdriverDebug(topic, offset, msgsArray, itemQty, sender) { };
+    
+    _toggle_messagingStackdriver() {
 
         // messsaging
         this.messaging = super.isMessaging() ? function (topic, offset, msgsArray, itemQty, sender) {
             this._messagingStackdriver(topic, offset, msgsArray, itemQty, sender);
-            this._messagingConsole(topic, offset, msgsArray, itemQty, sender);
+            this._messagingConsole(topic, offset, msgsArray, itemQty, sender);          // note - this is implemented in super
         } : function (topic, offset, msgsArray, itemQty, sender) { };
 
         // messaging stackdriver
@@ -116,28 +105,47 @@ class Stackdriver extends Logger {
             this._writeLog(SEVERITY_DEBUG, debugPayload);
         } : function (topic, offset, msgsArray, itemQty, sender) { };
 
-        // messaging console
-        this._messagingConsole = super.isConsole() ? function (topic, offset, msgsArray, itemQty, sender) {
-            this._messagingConsoleInfo(topic, offset, msgsArray, itemQty, sender);
-            this._messagingConsoleDebug(topic, offset, msgsArray, itemQty, sender);
-        } : function (topic, offset, msgsArray, itemQty, sender) { };
+    }    
 
-        // messaging stackdriver info
-        this._messagingConsoleInfo = super.isInfo() ? function (topic, offset, msgsArray, itemQty, sender) {
-            console.log(`[${topic}:${offset}-${Number(offset) + (msgsArray.length - 1)}] ${msgsArray.length} msgs, ${itemQty} items, sender:${sender}`);
-        } : function (topic, offset, msgsArray, itemQty, sender) { };
 
-        // messaging stackdriver debug
-        this._messagingConsoleDebug = super.isDebug() ? function (topic, offset, msgsArray, itemQty, sender) {
-            let debugPayload = {
-                messages: msgsArray, topic: topic,
-                offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
-                msgsqty: msgsArray.length, itemqty: itemQty, sender: sender
+    // data transaction events
+    data(dataset, table, id, rowArray) { } ;
+    _dataStackdriver(dataset, table, id, rowArray) { };
+    _dataStackdriverInfo(dataset, table, id, rowArray) { };
+    _dataStackdriverDebug(dataset, table, id, rowArray) { };
+
+    _toggle_dataStackdriver() {
+
+        // data
+        this.data = super.isData() ? function (dataset, table, id, rowArray) {
+            this._dataStackdriver(dataset, table, id, rowArray);
+            this._dataConsole(dataset, table, id, rowArray);          // note - this is implemented in super
+        } : function (dataset, table, id, rowArray) { };
+
+        // messaging stackdriver
+        this._dataStackdriver = super.isStackdriver() ? function (dataset, table, id, rowArray) {
+            this._dataStackdriverInfo(dataset, table, id, rowArray);
+            this._dataStackdriverDebug(dataset, table, id, rowArray);
+        } : function (dataset, table, id, rowArray) { };
+
+        // data stackdriver info
+        this._dataStackdriverInfo = super.isInfo() ? function (dataset, table, id, rowArray) {
+            let infoPayload = {
+                dataset: dataset, table: table, id: id, rowqty: rowArray.length
             };
-            console.log(debugPayload);
-        } : function (topic, offset, msgsArray, itemQty, sender) { };
+            this._writeLog(SEVERITY_INFO, infoPayload);
+        } : function (dataset, table, id, rowArray) { };
+
+        // data stackdriver debug
+        this._dataStackdriverDebug = super.isDebug() ? function (dataset, table, id, rowArray) {
+            let debugPayload = {
+                dataset: dataset, table: table, id: id, rowqty: rowArray.length, rows: rowArray
+            };
+            this._writeLog(SEVERITY_DEBUG, debugPayload);
+        } : function (dataset, table, id, rowArray) { };
 
     }    
+
 }
 
 // INFO
