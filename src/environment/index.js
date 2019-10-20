@@ -12,5 +12,7 @@ module.exports.enums = require('./enums');
 module.exports.errors = require('./errors');
 
 module.exports.Logger = require('./Logger');
-module.exports.log = new (require('./Stackdriver'))
+module.exports.Stackdriver = require('./Stackdriver');
+
+module.exports.log = new (require('./Stackdriver'));
 

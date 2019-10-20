@@ -20,13 +20,10 @@ class Stackdriver extends Logger {
      * @param {*} 
      */
     constructor() {
-
-        super();
         
-        // toggle stackdriver logging based on current configs
-        this._toggle_messagingStackdriver();
-        this._toggle_dataStackdriver();
-
+        super();
+        this._setConfig();
+        
         // create a Logging instance and a log writer
         const project = env.active.gcp.project;
         const logname = env.active.stackdriver.logging.logName;
@@ -88,9 +85,9 @@ class Stackdriver extends Logger {
         // messaging stackdriver info
         this._messagingStackdriverInfo = super.isInfo() ? function (topic, offset, msgsArray, itemQty, sender) {
             let infoPayload = {
-                topic: topic,
-                offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
-                msgsqty: msgsArray.length, itemqty: itemQty, sender: sender
+                msgsqty: msgsArray.length, itemqty: itemQty, 
+                topic: topic, offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
+                sender: sender
             };
             this._writeLog(SEVERITY_INFO, infoPayload);
         } : function (topic, offset, msgsArray, itemQty, sender) { };
@@ -98,9 +95,9 @@ class Stackdriver extends Logger {
         // messaging stackdriver debug
         this._messagingStackdriverDebug = super.isDebug() ? function (topic, offset, msgsArray, itemQty, sender) {
             let debugPayload = {
-                messages: msgsArray, topic: topic,
-                offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
-                msgsqty: msgsArray.length, itemqty: itemQty, sender: sender
+                messages: msgsArray, msgsqty: msgsArray.length, itemqty: itemQty, 
+                topic: topic, offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
+                sender: sender
             };
             this._writeLog(SEVERITY_DEBUG, debugPayload);
         } : function (topic, offset, msgsArray, itemQty, sender) { };
@@ -131,7 +128,7 @@ class Stackdriver extends Logger {
         // data stackdriver info
         this._dataStackdriverInfo = super.isInfo() ? function (dataset, table, id, rowArray) {
             let infoPayload = {
-                dataset: dataset, table: table, id: id, rowqty: rowArray.length
+                rowqty: rowArray.length, dataset: dataset, table: table, id: id 
             };
             this._writeLog(SEVERITY_INFO, infoPayload);
         } : function (dataset, table, id, rowArray) { };
@@ -139,12 +136,24 @@ class Stackdriver extends Logger {
         // data stackdriver debug
         this._dataStackdriverDebug = super.isDebug() ? function (dataset, table, id, rowArray) {
             let debugPayload = {
-                dataset: dataset, table: table, id: id, rowqty: rowArray.length, rows: rowArray
+                data: rowArray,
+                rowqty: rowArray.length, dataset: dataset, table: table, id: id
             };
             this._writeLog(SEVERITY_DEBUG, debugPayload);
         } : function (dataset, table, id, rowArray) { };
 
     }    
+
+    // updates logging functions for current configs
+    _setConfig() {
+
+        // toggle stackdriver logging based on current configs
+        this._toggle_messagingStackdriver();
+        this._toggle_dataStackdriver();
+
+        // call super
+        super._setConfig();
+    }
 
 }
 

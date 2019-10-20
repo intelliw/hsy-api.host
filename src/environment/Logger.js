@@ -14,10 +14,6 @@ class Logger {
      */
     constructor() {
         
-        // toggle console logging based on current configs
-        this._toggle_messagingConsole();
-        this._toggle_dataConsole();
-        
     }
 
     // message broker log events
@@ -42,16 +38,16 @@ class Logger {
         // messaging console debug
         this._messagingConsoleDebug = this.isDebug() ? function (topic, offset, msgsArray, itemQty, sender) {
             let debugPayload = {
-                messages: msgsArray, topic: topic,
-                offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
-                msgsqty: msgsArray.length, itemqty: itemQty, sender: sender
+                messages: msgsArray, msgsqty: msgsArray.length, itemqty: itemQty, 
+                topic: topic, offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
+                sender: sender
             };
             console.log(debugPayload);
         } : function (topic, offset, msgsArray, itemQty, sender) { };
 
     }        
 
-    
+
     // data transaction events 
     data(dataset, table, id, rowArray) { } ;
     _dataConsole(dataset, table, id, rowArray) { };
@@ -74,13 +70,20 @@ class Logger {
         // data console debug
         this._dataConsoleDebug = this.isDebug() ? function (dataset, table, id, rowArray) {
             let debugPayload = {
+                data: rowArray, rowqty: rowArray.length,
                 dataset: dataset, table: table, id: id,
-                rows: rowArray, rowqty: rowArray.length
             };
             console.log(debugPayload);
         } : function (dataset, table, id, rowArray) { };
 
     }        
+
+     // toggle console logging based on current configs
+    _setConfig() {                                          // must be called by subtype
+        this._toggle_messagingConsole();
+        this._toggle_dataConsole();
+    }
+
 
     // check VERBOSITY configs  ----------------------------------------------------------------------------------
     isInfo() {  return env.active.logging.verbosity.includes(enums.logging.verbosity.info); }
@@ -98,7 +101,5 @@ class Logger {
     isConsole() { return env.active.logging.appenders.includes(enums.logging.appenders.console); }
 
 }
-
-// INFO
 
 module.exports = Logger;

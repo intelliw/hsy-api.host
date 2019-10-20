@@ -49,16 +49,23 @@ router.get('/logging/help', (req, res, next) => {
 router.get('/logging', (req, res, next) => {
 
     let configs = [];
+    let hasChanged = false
 
     // validate and set configs  set only if requested values are valid enums
     configs = setLoggingConfigs(req.query.appenders, enums.logging.appenders);
     env.active.logging.appenders = configs.length == 0 ? env.active.logging.appenders : configs;
+    hasChanged = hasChanged || configs.length > 0;
 
     configs = setLoggingConfigs(req.query.verbosity, enums.logging.verbosity);
     env.active.logging.verbosity = configs.length == 0 ? env.active.logging.verbosity : configs;
+    hasChanged = hasChanged || configs.length > 0;
 
     configs = setLoggingConfigs(req.query.statements, enums.logging.statements);
     env.active.logging.statements = configs.length == 0 ? env.active.logging.statements : configs;
+    hasChanged = hasChanged || configs.length > 0;
+
+    // if there were changes reconfigure the logger
+    if (hasChanged) { env.log._setConfig(); }
 
     // return logging configuration 
     res
