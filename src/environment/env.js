@@ -168,9 +168,9 @@ const BQ_DATASETS = {
     }
 }
 
-/* environemnt configs -----------------------------------------------------------------------------------------------------------------
-    these environment definitions can share fixed configs defined in constants above, 
-    or they can each be defined differently as needed 
+/* // list of environments  and their configs -----------------------------------------------------------------------------------------------------------------
+    environment definitions - these share fixed configs per environemtn type (PROD, DEV, CLOUD) as defined in above constants, 
+    or the constants can be overridden and defined individually for each environment if needed 
 */
 module.exports.CONFIGS = {
     local: {
@@ -236,4 +236,4 @@ module.exports.CONFIGS = {
 }
 
 // env.active returns the active environment 
-module.exports.active = this.CONFIGS[enums.environments.local];      // change enums.environments to 'local' to develop locally or to 'devcloud' to develop online                               
+module.exports.active = this.CONFIGS.local;      // change enums.environments to 'local' to develop locally or to 'devcloud' to develop online                               

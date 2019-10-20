@@ -1,13 +1,12 @@
 //@ts-check
 "use strict";
 /**
- * ./requests/Validate.js
+ * ./paths/Validate.js
  * validation for Request class
  *  
  */
 const enums = require('../environment/enums');
 const GenericMessageDetail = require('../definitions/GenericMessageDetail');
-
 
 /**
 * generic validations for a Request
@@ -15,7 +14,7 @@ const GenericMessageDetail = require('../definitions/GenericMessageDetail');
 class Validate {
 
     /**
-     * constructor validates generic attributes of all Requests and sets isValid
+     * constructor validates generic attributes of all Request paths and sets isValid
     
      instance attributes:  
     "isValid": true if isAcceptTypeValid, isAuthorised,isParamsValid, and isContentTypeValid are all true

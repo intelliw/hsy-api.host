@@ -146,13 +146,3 @@ module.exports.gcp = {
         sundaya: "sundaya"
     }
 }
-
-// list of environments in environments.js
-module.exports.environments = {                                                              // list of environments              
-    local: "local",
-    testcloud: "testcloud",
-    devcloud: "devcloud",
-    devcloud_HA: "devcloud_HA",
-    prodcloud: "prodcloud",
-    prodcloud_HA: "prodcloud_HA"
-}

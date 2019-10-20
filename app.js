@@ -33,7 +33,11 @@ app.use(bodyParser.raw({ verify: rawBodySaver, limit: `${consts.system.BODYPARSE
 
 // routes        
 app.use('/energy', paths.energyRouter);                                                 // openapi tag: Energy - this is als to the default route
-app.use(['/devices', '/device'], paths.devicesRouter);                                  // openapi tag: Devices
+
+// app.use(['/devices', '/device'], paths.devicesRouter);                               // openapi tag: Devices
+app.use('/devices', paths.devicesRouter);                                               // openapi tag: Devices
+app.use('/device', paths.deviceRouter);                                                 // openapi tag: Devices
+
 app.use('/api', paths.apiRouter);                                                       // openapi tag: DevOps
 app.use('/static', express.static(consts.folders.STATIC));                              // static folders 
 

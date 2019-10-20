@@ -1,7 +1,7 @@
 //@ts-check
 "use strict";
 /**
- * ./requests/Request.js
+ * ./paths/Request.js
  * base class for operation classes
  *  
  */
