@@ -22,7 +22,7 @@ class Stackdriver extends Logger {
     constructor() {
         
         super();
-        this._setConfig();
+        this.initialise();
         
         // create a Logging instance and a log writer
         const project = env.active.gcp.project;
@@ -48,18 +48,29 @@ class Stackdriver extends Logger {
                     type: this.resourceType
                 },
                 severity: severity                                  // LogSeverity      https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#LogSeverity    
-            };
+            }
 
             // write  log entry
             this.logWriter.write([
                 this.logWriter.entry(                                                           // construct the log message
                     metadata, jsonPayload)
-            ]);
+            ])
 
         } catch (e) {
             console.error(`>>>>>> STACKDRIVER LOGGING ERROR: ${e.message}`, e)
         }
 
+    }
+
+    // updates logging functions for current configs. This method is called by the api path
+    initialise() {
+
+        // toggle stackdriver logging based on current configs
+        this._toggle_messagingStackdriver();
+        this._toggle_dataStackdriver();
+
+        // call super
+        super.initialise();
     }
 
     // message broker log events 
@@ -143,17 +154,6 @@ class Stackdriver extends Logger {
         } : function (dataset, table, id, rowArray) { };
 
     }    
-
-    // updates logging functions for current configs
-    _setConfig() {
-
-        // toggle stackdriver logging based on current configs
-        this._toggle_messagingStackdriver();
-        this._toggle_dataStackdriver();
-
-        // call super
-        super._setConfig();
-    }
 
 }
 

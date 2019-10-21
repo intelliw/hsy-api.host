@@ -11,7 +11,8 @@ const router = express.Router();
 const env = require('../environment');
 let enums = env.enums;
 let utils = env.utils;
-let log = env.log;
+
+const log = require('../logger').log;
 
 const NONE = global.undefined;
 
@@ -65,7 +66,7 @@ router.get('/logging', (req, res, next) => {
     hasChanged = hasChanged || configs.length > 0;
 
     // if there were changes reconfigure the logger
-    if (hasChanged) { env.log._setConfig(); }
+    if (hasChanged) { log.initialise(); }
 
     // return logging configuration 
     res

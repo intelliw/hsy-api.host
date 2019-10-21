@@ -32,7 +32,7 @@ class GenericMessage extends Definitions {
         this.message = messageText;
         this.details = details;
 
-        let message = { "status": this.status, "message": this.message, "details": this.details };
+        let message = { "status": this.status, "message": this.message, "details": this.details }
 
         super.add(message);
 

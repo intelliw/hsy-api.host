@@ -42,10 +42,10 @@ module.exports.reportingEvent = (errorMessage) => {
                 service: activeConf.api.host,
                 version: activeConf.api.versions.current,
                 resourceType: env.active.stackdriver.logging.resource                      // e.g. gce_instance
-            };
+            }
 
         this.LOGGER.report(errorEvent);
-    };
+    }
 
 
     // append console            
@@ -53,7 +53,7 @@ module.exports.reportingEvent = (errorMessage) => {
 
         console.error(`${errorMessage}`);
 
-    };
+    }
 
 }
 
@@ -71,13 +71,13 @@ module.exports.reportingMessage = (errorMessage) => {
     if (activeConf.logging.appenders.includes(enums.logging.appenders.stackdriver)) {
 
         this.LOGGER.report(new Error(errorMessage));
-    };
+    }
 
     // append console            
     if (activeConf.logging.appenders.includes(enums.logging.appenders.console)) {
 
         console.error(`${errorMessage}`);
 
-    };
+    }
 
 }

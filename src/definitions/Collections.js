@@ -57,7 +57,7 @@ class Collections extends Definitions  {
         let links = colLinks.getElements();             // use getElements to get the array 
         let items = colItems.getElements();
         
-        let collection = { "collection" : { "href": href, "version": version, links, items } };
+        let collection = { "collection" : { "href": href, "version": version, links, items } }
 
         
         super.add(collection);

@@ -101,13 +101,17 @@ const KAFKA_BROKERS = {
 
 // stackdriver client configuration options
 const STACKDRIVER = {
-    logging: {
-        logName: 'monitoring',                                              // appears in logs as jsonPayload.logName: "projects/sundaya/logs/monitoring"  the format is "projects/[PROJECT_ID]/logs/[LOG_ID]"
-        resource: 'gce_instance'
+    DEV: {
+        logging: { logName: 'monitoring_dev', resource: 'gce_instance' },       // appears in logs as jsonPayload.logName: "projects/sundaya/logs/monitoring"  the format is "projects/[PROJECT_ID]/logs/[LOG_ID]"
+        errors: { reportMode: 'always', logLevel: 5 }                           // 'production' (default), 'always', or 'never' - 'production' (default), 'always', 'never' - production will not log unless NODE-ENV=production. Specifies when errors are reported to the Error Reporting Console. // 2 (warnings). 0 (no logs) 5 (all logs)      
+    },    
+    TEST: {
+        logging: { logName: 'monitoring_test', resource: 'gce_instance' },
+        errors: { reportMode: 'always', logLevel: 5 }
     },
-    errors: {
-        reportMode: 'always',                                               // 'production' (default), 'always', or 'never' - 'production' (default), 'always', 'never' - production will not log unless NODE-ENV=production. Specifies when errors are reported to the Error Reporting Console.      
-        logLevel: 5                                                         // 2 (warnings). 0 (no logs) 5 (all logs) 
+    PROD: {
+        logging: { logName: 'monitoring_prod', resource: 'gce_instance' },
+        errors: { reportMode: 'always', logLevel: 5 }
     }
 }
 
@@ -180,7 +184,7 @@ module.exports.CONFIGS = {
         datawarehouse: BQ_DATASETS.DEV,
         logging: LOGGING.DEV,
         kafkajs: KAFKAJS,
-        stackdriver: STACKDRIVER,
+        stackdriver: STACKDRIVER.DEV,
         gcp: GCP.DEV
     },
     testcloud: {                                                                // single node kafka, or Kafka Std - 1 master, N workers
@@ -190,7 +194,7 @@ module.exports.CONFIGS = {
         datawarehouse: BQ_DATASETS.TEST,
         logging: LOGGING.TEST,
         kafkajs: KAFKAJS,
-        stackdriver: STACKDRIVER,
+        stackdriver: STACKDRIVER.TEST,
         gcp: GCP.TEST
     },
     devcloud: {                                                                 // single node kafka, or Kafka Std - 1 master, N workers
@@ -200,7 +204,7 @@ module.exports.CONFIGS = {
         datawarehouse: BQ_DATASETS.DEV,
         logging: LOGGING.DEV,
         kafkajs: KAFKAJS,
-        stackdriver: STACKDRIVER,
+        stackdriver: STACKDRIVER.DEV,
         gcp: GCP.DEV
     },
     devcloud_HA: {                                                              // single node kafka, or Kafka Std - 1 master, N workers
@@ -210,7 +214,7 @@ module.exports.CONFIGS = {
         datawarehouse: BQ_DATASETS.DEV,
         logging: LOGGING.DEV,
         kafkajs: KAFKAJS,
-        stackdriver: STACKDRIVER,
+        stackdriver: STACKDRIVER.DEV,
         gcp: GCP.DEV
     },
     prodcloud: {                                                                // single node kafka, or Kafka Std - 1 master, N workers
@@ -220,7 +224,7 @@ module.exports.CONFIGS = {
         datawarehouse: BQ_DATASETS.PROD,
         logging: LOGGING.PROD,
         kafkajs: KAFKAJS,
-        stackdriver: STACKDRIVER,
+        stackdriver: STACKDRIVER.PROD,
         gcp: GCP.PROD
     },
     prodcloud_HA: {                                                             // Kafka HA - 3 masters, N workers
@@ -230,7 +234,7 @@ module.exports.CONFIGS = {
         datawarehouse: BQ_DATASETS.PROD,
         logging: LOGGING.PROD,
         kafkajs: KAFKAJS,
-        stackdriver: STACKDRIVER,
+        stackdriver: STACKDRIVER.PROD,
         gcp: GCP.PROD
     }
 }

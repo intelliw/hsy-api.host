@@ -13,7 +13,7 @@ module.exports.energyData = {
     enjoy: 'enjoy',
     gridin: 'grid.in',
     gridout: 'grid.out'
-};
+}
 
 // constants for the api 
 module.exports.params = {
@@ -51,7 +51,7 @@ module.exports.timeOfDay = {
     afternoon: 'afternoon',
     evening: 'evening',
     night: 'night'
-};
+}
 
 // request enumerations
 module.exports.request = {
@@ -68,7 +68,7 @@ module.exports.mimeTypes = {
     textHtml: 'text/html',
     textPlain: 'text/plain',
     textCsv: 'text/csv'
-};
+}
 module.exports.mimeTypes.default = this.mimeTypes.applicationCollectionJson;
 
 // supported RFC8288 Link-relations for 'rel' property in Response objects
@@ -78,14 +78,14 @@ module.exports.linkRelations = {
     up: 'up',
     next: 'next',
     prev: 'prev'
-};
+}
 
 // hypermedia link rendering values
 module.exports.linkRender = {
     link: 'link',
     image: 'image',
     none: global.undefined
-};
+}
 module.exports.linkRender.default = this.linkRender.none;
 
 // http responses  

@@ -47,7 +47,7 @@ function getDetail(statusEnum) {
     switch (statusEnum) {
         case enums.responseStatus[401]:                             // Unauthorized
   
-    };
+    }
 
     // return a detail object
     return { "message": message, "target": target };

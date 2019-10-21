@@ -45,6 +45,6 @@ function periodHref(energy, period, site) {
 
     return href;
 
-};
+}
 
 module.exports = EnergyLinks;
