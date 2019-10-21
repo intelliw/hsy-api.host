@@ -10,13 +10,13 @@ const env = require('../environment/env');
 const Statement = require('./Statement');
 
 class DataStatement extends Statement {
-    
+
     // constructor
     constructor(logWriter, resourceType) {
-        
+
         super(logWriter, resourceType);
         this.initialise();
-        
+
     }
 
     // entrypoint for clients to call
@@ -66,7 +66,7 @@ class DataStatement extends Statement {
         // Stackdriver
         if (!super._isStackdriver) {
             this._writeStackdriverInfo = function (dataset, table, id, rowArray) { };
-            this._writeStackdriverDebug = function (dataset, table, id, rowArray) { }; 
+            this._writeStackdriverDebug = function (dataset, table, id, rowArray) { };
         } else {
             if (!super._isInfo) {
                 this._writeStackdriverInfo = function (dataset, table, id, rowArray) { };
