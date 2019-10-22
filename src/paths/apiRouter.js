@@ -12,7 +12,7 @@ const env = require('../environment');
 let enums = env.enums;
 let utils = env.utils;
 
-const log = require('../logger').log;
+const log = require('../host').log;
 
 const NONE = global.undefined;
 

@@ -11,7 +11,7 @@ const consts = require('../host/constants');
 const utils = require('../environment/utils');
 
 const env = require('../environment');
-const log = require('../logger').log;
+const log = require('../host').log;
 
 const errors = env.errors;
 
@@ -70,7 +70,7 @@ class KafkaProducer {
 
             // log output                                                           // e.g. [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
             log.messaging.write(this.kafkaTopic, result[0].baseOffset, results.messages, results.itemCount, sender);         // info = (topic, offset, msgqty, itemqty, sender) {
-            //log.data.write("monitoring", "pms", "TEST-09", []); 
+            log.data.write("monitoring", "pms", "TEST-09", []); 
 
             // disconnect
             await this.producerObj.disconnect();

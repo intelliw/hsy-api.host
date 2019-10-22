@@ -12,9 +12,8 @@ const Statement = require('./Statement');
 class DataStatement extends Statement {
 
     // constructor
-    constructor(logWriter, resourceType) {
-
-        super(logWriter, resourceType);
+    constructor(logWriter) {
+        super(logWriter);
         this.initialise();
 
     }
@@ -59,32 +58,32 @@ class DataStatement extends Statement {
     initialise() {                                          // called by conmstructor
 
         // messaging
-        if (!super._isData) {
+        if (!super._isData()) {
             this.write = function (dataset, table, id, rowArray) { };
         }
 
         // Stackdriver
-        if (!super._isStackdriver) {
+        if (!super._isStackdriver()) {
             this._writeStackdriverInfo = function (dataset, table, id, rowArray) { };
             this._writeStackdriverDebug = function (dataset, table, id, rowArray) { };
         } else {
-            if (!super._isInfo) {
+            if (!super._isInfo()) {
                 this._writeStackdriverInfo = function (dataset, table, id, rowArray) { };
             }
-            if (!super._isDebug) {
+            if (!super._isDebug()) {
                 this._writeStackdriverDebug = function (dataset, table, id, rowArray) { }; this._writeStackdriverDebug = function (dataset, table, id, rowArray) { };
             }
         }
 
         // Console
-        if (!super._isConsole) {
+        if (!super._isConsole()) {
             this._writeConsoleInfo = function (dataset, table, id, rowArray) { };
             this._writeConsoleDebug = function (dataset, table, id, rowArray) { };
         } else {
-            if (!super._isInfo) {
+            if (!super._isInfo()) {
                 this._writeConsoleInfo = function (dataset, table, id, rowArray) { };
             }
-            if (!super._isDebug) {
+            if (!super._isDebug()) {
                 this._writeConsoleDebug = function (dataset, table, id, rowArray) { };
             }
         }

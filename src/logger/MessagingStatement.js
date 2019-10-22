@@ -12,9 +12,8 @@ const Statement = require('./Statement');
 class MessagingStatement extends Statement {
     
     // constructor
-    constructor(logWriter, resourceType) {
-
-        super(logWriter, resourceType);
+    constructor(logWriter) {
+        super(logWriter);
         this.initialise();
     }
 
@@ -62,32 +61,32 @@ class MessagingStatement extends Statement {
     initialise() {                                          // called by conmstructor
 
         // messaging
-        if (!super._isMessaging) {
+        if (!super._isMessaging()) {
             this.write = function (topic, offset, msgsArray, itemQty, sender) { };
         }
 
         // Stackdriver
-        if (!super._isStackdriver) {
+        if (!super._isStackdriver()) {
             this._writeStackdriverInfo = function (topic, offset, msgsArray, itemQty, sender) { };
             this._writeStackdriverDebug = function (topic, offset, msgsArray, itemQty, sender) { }; 
         } else {
-            if (!super._isInfo) {
+            if (!super._isInfo()) {
                 this._writeStackdriverInfo = function (topic, offset, msgsArray, itemQty, sender) { };
             }
-            if (!super._isDebug) {
+            if (!super._isDebug()) {
                 this._writeStackdriverDebug = function (topic, offset, msgsArray, itemQty, sender) { }; this._writeStackdriverDebug = function (topic, offset, msgsArray, itemQty, sender) { };
             }
         }
 
         // Console
-        if (!super._isConsole) {
+        if (!super._isConsole()) {
             this._writeConsoleInfo = function (topic, offset, msgsArray, itemQty, sender) { };
             this._writeConsoleDebug = function (topic, offset, msgsArray, itemQty, sender) { };
         } else {
-            if (!super._isInfo) {
+            if (!super._isInfo()) {
                 this._writeConsoleInfo = function (topic, offset, msgsArray, itemQty, sender) { };
             }
-            if (!super._isDebug) {
+            if (!super._isDebug()) {
                 this._writeConsoleDebug = function (topic, offset, msgsArray, itemQty, sender) { };
             }
         }

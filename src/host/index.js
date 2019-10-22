@@ -6,4 +6,8 @@
  */
 
 module.exports.configs = require('./configs');
-module.exports.constants = require('./constants');
+module.exports.consts = require('./constants');
+
+// Logger instance - construct with this host's id 
+module.exports.log = new (require('../logger/Logger'));
+

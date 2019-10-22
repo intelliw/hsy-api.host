@@ -6,6 +6,7 @@
  */
 const enums = require('../environment/enums');
 const env = require('../environment/env');
+const consts = require('../host/constants');
 
 const SEVERITY_INFO = "INFO";
 const SEVERITY_DEBUG = "DEBUG";
@@ -13,24 +14,25 @@ const SEVERITY_DEBUG = "DEBUG";
 class Statement {
 
     // constructor
-    constructor(logWriter, resourceType) {
-        
-        // store stackdriver instance and variables  
+    constructor(logWriter) {
+
         this.logWriter = logWriter;
-        this.resourceType = resourceType;
+        this.resourceType = env.active.stackdriver.logging.resource;
+        this.instanceId = consts.system.INSTANCE_ID;
     
     }
     
     // Stackdriver write operatation
     async _writeStackdriver(severity, payload) {
-        
+
         // append to active environment's stackdriver log
         try {
-            //console.log(this.logWriter)
+
             // create metadata to describe logs from this resource (compute instance, INFO)
             const metadata = {                                                          // the metadata associated with a log entry
                 resource: {
-                    type: this.resourceType
+                    type: this.resourceType,
+                    labels: { instance_id: this.instanceId }
                 },
                 severity: severity                                  // LogSeverity      https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#LogSeverity    
             };
@@ -46,13 +48,13 @@ class Statement {
         }
 
     }
-
+    
     // Console write operatation
     async _writeConsole(severity, payload) {
         console.log(`${severity}`, payload)
     }
 
-    
+
     // check VERBOSITY configs  ----------------------------------------------------------------------------------
     _isInfo() {  return env.active.logging.verbosity.includes(enums.logging.verbosity.info); }
     _isDebug() { return env.active.logging.verbosity.includes(enums.logging.verbosity.debug); }

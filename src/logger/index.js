@@ -13,5 +13,3 @@ module.exports.DataStatement = require('./DataStatement');
 // module.exports.ErrorStatement = require('./ErrorStatement');
 // module.exports.ExceptionStatement = require('./ExceptionStatement');
 
-// logging instance 
-module.exports.log = new (require('./Logger'));

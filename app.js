@@ -11,7 +11,7 @@ const Buffer = require('safe-buffer').Buffer;
 const paths = require('./src/paths');
 
 const host = require('./src/host');
-const consts = host.constants;
+const consts = host.consts;
 
 const env = require('./src/environment');
 const errors = env.errors;
