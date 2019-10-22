@@ -70,7 +70,7 @@ class KafkaProducer {
 
             // log output                                                           // e.g. [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
             log.messaging.write(this.kafkaTopic, result[0].baseOffset, results.messages, results.itemCount, sender);         // info = (topic, offset, msgqty, itemqty, sender) {
-            log.data.write("monitoring", "pms", "TEST-09", []); 
+            // log.data.write("monitoring", "pms", "TEST-09", []); 
 
             // disconnect
             await this.producerObj.disconnect();

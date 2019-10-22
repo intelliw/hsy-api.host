@@ -168,5 +168,5 @@ module.exports.params = {
 module.exports.system = {
     MONITORING_PRECISION: 4,                                                // decimal places for float values in monitoring dataset
     BODYPARSER_LIMIT_MB: 1,                                                 // max mb for post messages 
-    INSTANCE_ID: 'apihost'                                                  // for logging - resource: {  labels: { instance_id:    
+    INSTANCE_ID: 'api_host'                                                  // for logging - resource: {  labels: { instance_id:    
 }
