@@ -10,6 +10,7 @@ const consts = require('../host/constants');
 
 const SEVERITY_INFO = "INFO";
 const SEVERITY_DEBUG = "DEBUG";
+const SEVERITY_ERROR = "ERROR";
 
 class Statement {
 
