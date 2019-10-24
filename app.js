@@ -14,7 +14,7 @@ const host = require('./src/host');
 const consts = host.consts;
 
 const env = require('./src/environment');
-const errors = env.errors;
+const log = require('./src/host').log;
 
 // [START setup]------------------------------
 const app = express();
@@ -43,19 +43,19 @@ app.use('/static', express.static(consts.folders.STATIC));                      
 
 // error handlers
 app.use((err, req, res, next) => {
-    errors.reportingMessage('Unexpected ' + err);
+    log.error('Unexpected', new Error(err));
     res.status(500).json(err);
 });
 app.get('/error', (req, res, next) => {
     res.send('Something broke!');
-    next(errors.reportingMessage('Unexpected Error'));
+    next(log.error('Unexpected', new Error(err)));
 });
 app.get('/exception', () => {
     JSON.parse('{"malformedJson": true');
 });
 
 // express error handling middleware should be attached after all the other routes and use() calls. See the Express.js docs.  https://cloud.google.com/error-reporting/docs/setup/nodejs
-app.use(errors.LOGGER.express);
+app.use(log.ERR.express);
 
 // [END setup]-----------------------------------
 

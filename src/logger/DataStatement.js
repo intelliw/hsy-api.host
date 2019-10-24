@@ -14,6 +14,7 @@ class DataStatement extends Statement {
     // constructor
     constructor(logWriter) {
         super(logWriter);
+        this.statementName = enums.logging.statements.data;
         this.initialise();
 
     }
@@ -31,27 +32,28 @@ class DataStatement extends Statement {
     // calls to super - these are annulled by initialise function based on configs  
     _writeConsoleInfo(dataset, table, id, rowArray) {
         let payload = `[${dataset}.${table}}] id: ${id}, ${rowArray.length} rows`;
-        super._writeConsole(Statement.INFO, payload);
+        super._writeConsole(this.statementName, Statement.Severity.INFO, payload);
     }
     _writeConsoleDebug(dataset, table, id, rowArray) {
         let payload = {
             data: rowArray, rowqty: rowArray.length,
-            dataset: dataset, table: table, id: id,
+            dataset: dataset, table: table, id: id
         }
-        super._writeConsole(Statement.DEBUG, payload);
+        super._writeConsole(this.statementName, Statement.Severity.DEBUG, payload);
     }
     _writeStackdriverInfo(dataset, table, id, rowArray) {
         let payload = {
-            rowqty: rowArray.length, dataset: dataset, table: table, id: id
+            rowqty: rowArray.length, dataset: dataset, table: table, 
+            id: id, statement: this.statementName
         }
-        super._writeStackdriver(Statement.INFO, payload);
+        super._writeStackdriver(this.statementName, Statement.Severity.INFO, payload);
     };
     _writeStackdriverDebug(dataset, table, id, rowArray) {
         let payload = {
-            data: rowArray,
-            rowqty: rowArray.length, dataset: dataset, table: table, id: id
+            data: rowArray, rowqty: rowArray.length, 
+            dataset: dataset, table: table, id: id, statement: this.statementName
         }
-        super._writeStackdriver(Statement.DEBUG, payload);
+        super._writeStackdriver(this.statementName, Statement.Severity.DEBUG, payload);
     };
 
     // annul write methods based on current configs

@@ -128,7 +128,7 @@ const LOGGING = {
             enums.logging.verbosity.info, 
             enums.logging.verbosity.debug],
         appenders: [
-            enums.logging.appenders.stackdriver, 
+            enums.logging.appenders.stackdriver,
             enums.logging.appenders.console]
     },
     TEST: {

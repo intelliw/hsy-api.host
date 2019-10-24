@@ -14,6 +14,7 @@ class MessagingStatement extends Statement {
     // constructor
     constructor(logWriter) {
         super(logWriter);
+        this.statementName = enums.logging.statements.messaging;
         this.initialise();
     }
 
@@ -30,7 +31,7 @@ class MessagingStatement extends Statement {
     // calls to super - these are annulled by initialise function based on configs  
     _writeConsoleInfo(topic, offset, msgsArray, itemQty, sender) {
         let payload = `[${topic}:${offset}-${Number(offset) + (msgsArray.length - 1)}] ${msgsArray.length} msgs, ${itemQty} items, sender:${sender}`;
-        super._writeConsole(Statement.INFO, payload);
+        super._writeConsole(this.statementName, Statement.Severity.INFO, payload);
     }
     _writeConsoleDebug(topic, offset, msgsArray, itemQty, sender) {
         let payload = {
@@ -38,23 +39,23 @@ class MessagingStatement extends Statement {
             topic: topic, offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
             sender: sender
         }
-        super._writeConsole(Statement.DEBUG, payload);
+        super._writeConsole(this.statementName, Statement.Severity.DEBUG, payload);
     }
     _writeStackdriverInfo(topic, offset, msgsArray, itemQty, sender) {
         let payload = {
             msgsqty: msgsArray.length, itemqty: itemQty,
             topic: topic, offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
-            sender: sender
+            sender: sender, statement: this.statementName
         }
-        super._writeStackdriver(Statement.INFO, payload);
+        super._writeStackdriver(this.statementName, Statement.Severity.INFO, payload);
     };
     _writeStackdriverDebug(topic, offset, msgsArray, itemQty, sender) {
         let payload = {
             messages: msgsArray, msgsqty: msgsArray.length, itemqty: itemQty,
             topic: topic, offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
-            sender: sender
+            sender: sender, statement: this.statementName
         }
-        super._writeStackdriver(Statement.DEBUG, payload);
+        super._writeStackdriver(this.statementName, Statement.Severity.DEBUG, payload);
     };
 
     // annul write methods based on current configs

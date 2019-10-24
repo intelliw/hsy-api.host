@@ -8,6 +8,5 @@
 module.exports = require('./env');
 module.exports.utils = require('./utils');
 module.exports.enums = require('./enums');
-module.exports.errors = require('./errors');
 
 

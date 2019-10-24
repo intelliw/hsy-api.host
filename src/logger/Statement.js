@@ -8,23 +8,29 @@ const enums = require('../environment/enums');
 const env = require('../environment/env');
 const consts = require('../host/constants');
 
-const SEVERITY_INFO = "INFO";
-const SEVERITY_DEBUG = "DEBUG";
-const SEVERITY_ERROR = "ERROR";
+const SEVERITY = {
+    INFO: "INFO",
+    DEBUG: "DEBUG",
+    WARNING: "WARNING",
+    ERROR: "ERROR"
+}
+
+const NONE = global.undefined;
 
 class Statement {
 
     // constructor
     constructor(logWriter) {
 
+        // store logwriter instance variables 
         this.logWriter = logWriter;
         this.resourceType = env.active.stackdriver.logging.resource;
         this.instanceId = consts.system.INSTANCE_ID;
-    
+        
     }
-    
+
     // Stackdriver write operatation
-    async _writeStackdriver(severity, payload) {
+    async _writeStackdriver(statement, severity, payload) {
 
         // append to active environment's stackdriver log
         try {
@@ -35,12 +41,12 @@ class Statement {
                     type: this.resourceType,
                     labels: { instance_id: this.instanceId }
                 },
-                severity: severity                                  // LogSeverity      https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#LogSeverity    
+                severity: severity                                                      // LogSeverity      https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#LogSeverity    
             };
 
             // write  log entry
             this.logWriter.write([
-                this.logWriter.entry(                                                           // construct the log message
+                this.logWriter.entry(                                                   // construct the log message
                     metadata, payload)
             ]);
 
@@ -49,19 +55,20 @@ class Statement {
         }
 
     }
-    
+
     // Console write operatation
-    async _writeConsole(severity, payload) {
-        console.log(`${severity}`, payload)
+    async _writeConsole(statement, severity, payload) {
+
+        console.log(`${statement}.${severity}`, payload)
     }
 
 
     // check VERBOSITY configs  ----------------------------------------------------------------------------------
-    _isInfo() {  return env.active.logging.verbosity.includes(enums.logging.verbosity.info); }
+    _isInfo() { return env.active.logging.verbosity.includes(enums.logging.verbosity.info); }
     _isDebug() { return env.active.logging.verbosity.includes(enums.logging.verbosity.debug); }
 
     // check STATEMENTS configs ----------------------------------------------------------------------------------
-    _isData() {  return env.active.logging.statements.includes(enums.logging.statements.data); }
+    _isData() { return env.active.logging.statements.includes(enums.logging.statements.data); }
     _isMessaging() { return env.active.logging.statements.includes(enums.logging.statements.messaging); }
     _isError() { return env.active.logging.statements.includes(enums.logging.statements.error); }
     _isException() { return env.active.logging.statements.includes(enums.logging.statements.exception); }
@@ -76,5 +83,4 @@ class Statement {
 module.exports = Statement;
 
 // static constants for subtypes to use
-module.exports.INFO = SEVERITY_INFO;
-module.exports.DEBUG = SEVERITY_DEBUG;
+module.exports.Severity = SEVERITY;
