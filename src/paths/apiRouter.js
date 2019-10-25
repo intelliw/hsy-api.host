@@ -8,7 +8,7 @@
 const express = require('express');
 const router = express.Router();
 
-const KafkaProducer = require('../producers/KafkaProducer');
+const producers = require('../producers');
 
 const env = require('../environment');
 let enums = require('../environment/enums');
@@ -72,7 +72,7 @@ router.get('/logging', (req, res, next) => {
         log.initialise(); 
         
         // communicate logging config changes from host to consumer instances  
-        let producer = KafkaProducer.getProducer(enums.params.datasets.logging);         // apiDatasetName = enums.params.datasets..
+        let producer = producers.getProducer(enums.params.datasets.logging);         // apiDatasetName = enums.params.datasets..
         producer.sendToTopic(env.active.logging, enums.apiKey.PROXY);                    // topic is env.active.topics.features.logging   
 
     }

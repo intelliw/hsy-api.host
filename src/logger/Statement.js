@@ -19,7 +19,6 @@ const SEVERITY = {
     NONE: NONE
 }
 
-
 class Statement {
 
     // constructor

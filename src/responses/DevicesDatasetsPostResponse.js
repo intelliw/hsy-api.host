@@ -8,7 +8,7 @@ const enums = require('../environment/enums');
 const utils = require('../environment/utils');
 
 const Response = require('./Response');
-const KafkaProducer = require('../producers/KafkaProducer');
+const producers = require('../producers');
 
 const GenericMessage = require('../definitions/GenericMessage');
 const GenericMessageDetail = require('../definitions/GenericMessageDetail');
@@ -64,7 +64,7 @@ function executePost(params) {
   let sender = utils.keynameFromValue(enums.apiKey, params.apiKey.value);         // the 'source' is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
   
   // get a producer (MonitoringPms etc) from the factory and process the messages (sendToTopic) asynchronously.
-  let producer = KafkaProducer.getProducer(apiDatasetName);                       // apiDatasetName = enums.params.datasets..
+  let producer = producers.getProducer(apiDatasetName);                       // apiDatasetName = enums.params.datasets..
   producer.sendToTopic(datasets, sender);                                         // async ok as by now we have connected to kafka, and the dataset should have been validated and the only outcome is a 200 response
 
   // prepare the response
