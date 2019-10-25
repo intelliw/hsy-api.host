@@ -37,10 +37,11 @@ module.exports.params = {
         year: 'year',
         fiveyear: 'fiveyear'
     },
-    datasets: {                     // kafka topics are based on enums.params.datasets. preferred convention is <message type>_<api base/db name>_<dataset /table name> 
+    datasets: {                                     // kafka topics are based on enums.params.datasets. preferred convention is <message type>_<api base/db name>_<dataset /table name> 
         pms: 'pms',                                 // corresponds to messageBroker.consumers.pms
         mppt: 'mppt',                               // corresponds to messageBroker.consumers.mppt
-        inverter: 'inverter'                        // corresponds to messageBroker.consumers.inverter
+        inverter: 'inverter',                       // corresponds to messageBroker.consumers.inverter
+        logging: 'logging'                          // loggign feature
     }
 }
 module.exports.params.energy.default = this.params.energy.hse;

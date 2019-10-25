@@ -80,14 +80,17 @@ const KAFKAJS = {
 const KAFKA_TOPICS = {
     DEV: {                                                                  // kafka topics for DEV environments 
         monitoring: { pms: 'monitoring.dev_pms', mppt: 'monitoring.dev_mppt', inverter: 'monitoring.dev_inverter' },
+        features: {logging: 'features.dev_logging' },
         dataset: { pms: 'monitoring.dev_pms.dataset', mppt: 'monitoring.dev_mppt.dataset', inverter: 'monitoring.dev_inverter.dataset' }
     },
     TEST: {                                                                  // kafka topics for TEST environments 
         monitoring: { pms: 'monitoring.test_pms', mppt: 'monitoring.test_mppt', inverter: 'monitoring.test_inverter' },
+        features: {logging: 'features.test_logging' },
         dataset: { pms: 'monitoring.test_pms.dataset', mppt: 'monitoring.test_mppt.dataset', inverter: 'monitoring.test_inverter.dataset' }
     },
     PROD: {                                                                 // kafka topics for PROD environments 
         monitoring: { pms: 'monitoring.pms', mppt: 'monitoring.mppt', inverter: 'monitoring.inverter' },                            //  topics for monitoring data received from api host
+        features: {logging: 'features.logging' },
         dataset: { pms: 'monitoring.pms.dataset', mppt: 'monitoring.mppt.dataset', inverter: 'monitoring.inverter.dataset' }        //  topics for monitoring datasets for bq update, created by consumer at 1st stage of monitoring
     }
 }
@@ -123,7 +126,8 @@ const LOGGING = {
             enums.logging.statements.messaging, 
             enums.logging.statements.data,
             enums.logging.statements.exception, 
-            enums.logging.statements.error],
+            enums.logging.statements.error,
+            enums.logging.statements.trace],
         verbosity: [
             enums.logging.verbosity.info, 
             enums.logging.verbosity.debug],

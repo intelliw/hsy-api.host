@@ -51,6 +51,7 @@ app.get('/error', (req, res, next) => {
     next(log.error('Unexpected', new Error(err)));
 });
 app.get('/exception', () => {
+    log.exception('app.js', 'malformedJson', log.ERR.event()); 
     JSON.parse('{"malformedJson": true');
 });
 

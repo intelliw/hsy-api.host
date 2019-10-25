@@ -69,10 +69,11 @@ class KafkaProducer {
             });
 
             // log output                                                           // e.g. [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
-            //log.messaging(this.kafkaTopic, result[0].baseOffset, results.messages, results.itemCount, sender);         // info = (topic, offset, msgqty, itemqty, sender) {
+            log.messaging(this.kafkaTopic, result[0].baseOffset, results.messages, results.itemCount, sender);         // info = (topic, offset, msgqty, itemqty, sender) {
             // log.data("monitoring", "pms", "TEST-09", []); 
-            log.exception('sendToTopic', 'there was an error in ' + env.active.kafkajs.producer.clientId, log.ERR.event()); 
-            log.error('Unexpected', new Error('sendToTopic connection')); 
+            // log.exception('sendToTopic', 'there was an error in ' + env.active.kafkajs.producer.clientId, log.ERR.event()); 
+            // log.error('Unexpected', new Error('sendToTopic connection')); 
+             log.trace('@1',log.ERR.event()); 
 
             // disconnect
             await this.producerObj.disconnect();
@@ -201,6 +202,11 @@ class KafkaProducer {
             // inverter 
             case enums.params.datasets.inverter:
                 producer = new KafkaProducer(enums.params.datasets.inverter, env.active.topics.monitoring.inverter);
+                break;
+
+            // logging feature - communicates logging configuration changes from host to consumer instances  
+            case enums.params.datasets.logging:
+                producer = new KafkaProducer(enums.params.datasets.logging, env.active.topics.features.logging);
                 break;
 
         }

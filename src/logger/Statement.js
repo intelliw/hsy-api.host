@@ -8,15 +8,17 @@ const enums = require('../environment/enums');
 const env = require('../environment/env');
 const consts = require('../host/constants');
 
+const NONE = global.undefined;
+
 // stackdriver severities
 const SEVERITY = {
     INFO: "INFO",
     DEBUG: "DEBUG",
     WARNING: "WARNING",
-    ERROR: "ERROR"
+    ERROR: "ERROR",
+    NONE: NONE
 }
 
-const NONE = global.undefined;
 
 class Statement {
 

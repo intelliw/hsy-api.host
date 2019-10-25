@@ -13,9 +13,10 @@ const MessagingStatement = require('./MessagingStatement');
 const DataStatement = require('./DataStatement');
 const ExceptionStatement = require('./ExceptionStatement');
 const ErrorStatement = require('./ErrorStatement');
+const TraceStatement = require('./TraceStatement');
 
 let logWriter, errorReporter;
-let messagingStatement, dataStatement, exceptionStatement, errorStatement;
+let messagingStatement, dataStatement, exceptionStatement, errorStatement, traceStatement;
 
 class Logger {
     /**
@@ -51,6 +52,7 @@ class Logger {
         dataStatement = new DataStatement(logWriter);
         exceptionStatement = new ExceptionStatement(logWriter, errorReporter);
         errorStatement = new ErrorStatement(logWriter, errorReporter);
+        traceStatement = new TraceStatement(logWriter);
 
         // create the public interface for this Logger, for clients to use 
         this.messaging = function (topic, offset, msgsArray, itemQty, sender) { 
@@ -65,7 +67,9 @@ class Logger {
         this.error = function(label, errObject) {            // errObject is a Error object created with 'new Error(message)'
             errorStatement.write(label, errObject);
         }
-
+        this.trace = function(label, event) {
+            traceStatement.write(label, event);
+        }
 
     }
 

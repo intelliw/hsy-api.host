@@ -8,8 +8,10 @@
 const express = require('express');
 const router = express.Router();
 
+const KafkaProducer = require('../producers/KafkaProducer');
+
 const env = require('../environment');
-let enums = env.enums;
+let enums = require('../environment/enums');
 let utils = env.utils;
 
 const log = require('../host').log;
@@ -66,7 +68,14 @@ router.get('/logging', (req, res, next) => {
     hasChanged = hasChanged || configs.length > 0;
 
     // if there were changes reconfigure the logger
-    if (hasChanged) { log.initialise(); }
+    if (hasChanged) { 
+        log.initialise(); 
+        
+        // communicate logging config changes from host to consumer instances  
+        let producer = KafkaProducer.getProducer(enums.params.datasets.logging);         // apiDatasetName = enums.params.datasets..
+        producer.sendToTopic(env.active.logging, enums.apiKey.PROXY);                    // topic is env.active.topics.features.logging   
+
+    }
 
     // return logging configuration 
     res

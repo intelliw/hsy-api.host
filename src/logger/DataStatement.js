@@ -15,6 +15,7 @@ class DataStatement extends Statement {
     constructor(logWriter) {
         super(logWriter);
         this.statementName = enums.logging.statements.data;
+        
         this.initialise();
 
     }
