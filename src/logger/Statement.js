@@ -8,6 +8,7 @@ const enums = require('../environment/enums');
 const env = require('../environment/env');
 const consts = require('../host/constants');
 
+// stackdriver severities
 const SEVERITY = {
     INFO: "INFO",
     DEBUG: "DEBUG",
@@ -51,15 +52,15 @@ class Statement {
             ]);
 
         } catch (e) {
-            console.error(`>>>>>> STACKDRIVER LOGGING ERROR: ${e.message}`, e)
+            console.error(`_writeStackdriver: ${e.message}`, e)
         }
 
     }
 
     // Console write operatation
-    async _writeConsole(statement, severity, payload) {
+    async _writeConsole(statement, severity, verbosity, payload) {
 
-        console.log(`${statement}.${severity}`, payload)
+        console.log(`${statement}.${verbosity.toUpperCase()}`, payload)
     }
 
 

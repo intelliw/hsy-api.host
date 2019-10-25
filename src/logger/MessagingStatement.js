@@ -31,7 +31,7 @@ class MessagingStatement extends Statement {
     // calls to super - these are annulled by initialise function based on configs  
     _writeConsoleInfo(topic, offset, msgsArray, itemQty, sender) {
         let payload = `[${topic}:${offset}-${Number(offset) + (msgsArray.length - 1)}] ${msgsArray.length} msgs, ${itemQty} items, sender:${sender}`;
-        super._writeConsole(this.statementName, Statement.Severity.INFO, payload);
+        super._writeConsole(this.statementName, Statement.Severity.INFO, enums.logging.verbosity.info, payload);
     }
     _writeConsoleDebug(topic, offset, msgsArray, itemQty, sender) {
         let payload = {
@@ -39,7 +39,7 @@ class MessagingStatement extends Statement {
             topic: topic, offset: `${offset}-${Number(offset) + (msgsArray.length - 1)}`,             // e.g. 225-229
             sender: sender
         }
-        super._writeConsole(this.statementName, Statement.Severity.DEBUG, payload);
+        super._writeConsole(this.statementName, Statement.Severity.DEBUG, enums.logging.verbosity.debug, payload);
     }
     _writeStackdriverInfo(topic, offset, msgsArray, itemQty, sender) {
         let payload = {
@@ -71,11 +71,12 @@ class MessagingStatement extends Statement {
             this._writeStackdriverInfo = function (topic, offset, msgsArray, itemQty, sender) { };
             this._writeStackdriverDebug = function (topic, offset, msgsArray, itemQty, sender) { }; 
         } else {
-            if (!super._isInfo()) {
-                this._writeStackdriverInfo = function (topic, offset, msgsArray, itemQty, sender) { };
-            }
+            // only 1 applies. if both info and debug are configured debug will take precedence
             if (!super._isDebug()) {
-                this._writeStackdriverDebug = function (topic, offset, msgsArray, itemQty, sender) { }; this._writeStackdriverDebug = function (topic, offset, msgsArray, itemQty, sender) { };
+                this._writeStackdriverDebug = function (topic, offset, msgsArray, itemQty, sender) { }; 
+            }                
+            if (super._isDebug() || (!super._isInfo())) {
+                this._writeStackdriverInfo = function (topic, offset, msgsArray, itemQty, sender) { };
             }
         }
 
@@ -84,12 +85,13 @@ class MessagingStatement extends Statement {
             this._writeConsoleInfo = function (topic, offset, msgsArray, itemQty, sender) { };
             this._writeConsoleDebug = function (topic, offset, msgsArray, itemQty, sender) { };
         } else {
-            if (!super._isInfo()) {
-                this._writeConsoleInfo = function (topic, offset, msgsArray, itemQty, sender) { };
-            }
+            // only 1 applies. if both info and debug are configured debug will take precedence
             if (!super._isDebug()) {
                 this._writeConsoleDebug = function (topic, offset, msgsArray, itemQty, sender) { };
-            }
+            }                
+            if (super._isDebug() || (!super._isInfo())) {
+                this._writeConsoleInfo = function (topic, offset, msgsArray, itemQty, sender) { };
+            } 
         }
     }
 

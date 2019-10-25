@@ -14,10 +14,10 @@ class ExceptionStatement extends Statement {
     // constructor
     constructor(logWriter, errorReporter) {
 
-
         super(logWriter, errorReporter);
         this.statementName = enums.logging.statements.exception;
         this.errorReporter = errorReporter;
+
         this.initialise();
     }
 
@@ -43,13 +43,13 @@ class ExceptionStatement extends Statement {
     // calls to super - these are annulled by initialise function based on configs  
     _writeConsoleInfo(functionName, errMessage, errEvent) {
         let payload = `[${functionName}] message: ${errMessage}`;
-        super._writeConsole(this.statementName, Statement.Severity.WARNING, payload);
+        super._writeConsole(this.statementName, Statement.Severity.WARNING, enums.logging.verbosity.info, payload);
     }
     _writeConsoleDebug(functionName, errMessage, errEvent) {
         let payload = {
             event: errEvent, function: functionName, message: errMessage
         }
-        super._writeConsole(this.statementName, Statement.Severity.WARNING, payload);
+        super._writeConsole(this.statementName, Statement.Severity.WARNING, enums.logging.verbosity.debug, payload);
     }
 
     // exceptions write the same content once only for info or debug, not both.
@@ -62,13 +62,11 @@ class ExceptionStatement extends Statement {
 
     };
     _writeStackdriverDebug(functionName, errMessage, errEvent) {
-        if (!super._isInfo()) {                                                                         // write only if info has not written 
-            let payload = {
-                event: errEvent, function: functionName, message: errMessage, statement: this.statementName
-            }
-            super._writeStackdriver(this.statementName, Statement.Severity.WARNING, payload);
-            this.errorReporter.report(errEvent);
+        let payload = {
+            event: errEvent, function: functionName, message: errMessage, statement: this.statementName
         }
+        super._writeStackdriver(this.statementName, Statement.Severity.WARNING, payload);
+        this.errorReporter.report(errEvent);
     }
 
 
@@ -85,11 +83,12 @@ class ExceptionStatement extends Statement {
             this._writeStackdriverInfo = function (functionName, errMessage, errEvent) { };
             this._writeStackdriverDebug = function (functionName, errMessage, errEvent) { };
         } else {
-            if (!super._isInfo()) {
-                this._writeStackdriverInfo = function (functionName, errMessage, errEvent) { };
-            }
+            // only 1 applies. if both info and debug are configured debug will take precedence
             if (!super._isDebug()) {
-                this._writeStackdriverDebug = function (functionName, errMessage, errEvent) { }; this._writeStackdriverDebug = function (functionName, errMessage, errEvent) { };
+                this._writeStackdriverDebug = function (functionName, errMessage, errEvent) { };
+            }
+            if (super._isDebug() || (!super._isInfo())) {
+                this._writeStackdriverInfo = function (functionName, errMessage, errEvent) { };
             }
         }
 
@@ -98,11 +97,12 @@ class ExceptionStatement extends Statement {
             this._writeConsoleInfo = function (functionName, errMessage, errEvent) { };
             this._writeConsoleDebug = function (functionName, errMessage, errEvent) { };
         } else {
-            if (!super._isInfo()) {
-                this._writeConsoleInfo = function (functionName, errMessage, errEvent) { };
-            }
+            // only 1 applies. if both info and debug are configured debug will take precedence
             if (!super._isDebug()) {
                 this._writeConsoleDebug = function (functionName, errMessage, errEvent) { };
+            }
+            if (super._isDebug() || (!super._isInfo())) {
+                this._writeConsoleInfo = function (functionName, errMessage, errEvent) { };
             }
         }
     }

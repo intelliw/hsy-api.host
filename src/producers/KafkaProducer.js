@@ -69,16 +69,16 @@ class KafkaProducer {
             });
 
             // log output                                                           // e.g. [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
-            log.messaging(this.kafkaTopic, result[0].baseOffset, results.messages, results.itemCount, sender);         // info = (topic, offset, msgqty, itemqty, sender) {
+            //log.messaging(this.kafkaTopic, result[0].baseOffset, results.messages, results.itemCount, sender);         // info = (topic, offset, msgqty, itemqty, sender) {
             // log.data("monitoring", "pms", "TEST-09", []); 
-            // log.exception('sendToTopic', env.active.kafkajs.producer.clientId, log.ERR.event()); 
+            log.exception('sendToTopic', 'there was an error in ' + env.active.kafkajs.producer.clientId, log.ERR.event()); 
             log.error('Unexpected', new Error('sendToTopic connection')); 
 
             // disconnect
             await this.producerObj.disconnect();
 
         } catch (e) {
-            console.error(`>>>>>> CONNECT ERROR: [${env.active.kafkajs.producer.clientId}] ${e.message}`, e)
+            log.exception('sendToTopic', e.message, log.ERR.event()); 
         }
 
     }
