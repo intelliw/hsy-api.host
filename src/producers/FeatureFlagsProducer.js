@@ -42,10 +42,17 @@ class FeatureFlagsProducer extends KafkaProducer {
     */
     async sendToTopic(datasets, sender) {
 
+
         // send the message to the topics
         try {
+
+            let results = { itemCount: 1, messages: [] };
+            results.messages.push(super.createMessage(this.apiDatasetName, datasets));   // add to the message array
+
             // connect 
             await this.producerObj.connect();
+            
+            console.log(results.messages)
 
             // send the message to the topics
             let result = await this.producerObj.send({
@@ -55,12 +62,8 @@ class FeatureFlagsProducer extends KafkaProducer {
                 timeout: env.active.kafkajs.producer.timeout
             });
 
-            // log output                                                           // e.g. [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
-            log.messaging(this.kafkaTopic, result[0].baseOffset, results.messages, results.itemCount, sender);         // info = (topic, offset, msgqty, itemqty, sender) {
-            // log.data("monitoring", "pms", "TEST-09", []); 
-            // log.exception('sendToTopic', 'there was an error in ' + env.active.kafkajs.producer.clientId, log.ERR.event()); 
-            // log.error('Unexpected', new Error('sendToTopic connection')); 
-            log.trace('@1', log.ERR.event());
+            // log output 
+            log.messaging(this.kafkaTopic, result[0].baseOffset, results.messages, results.itemCount, sender);
 
             // disconnect
             await this.producerObj.disconnect();

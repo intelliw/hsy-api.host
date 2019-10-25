@@ -42,14 +42,15 @@ app.use('/api', paths.apiRouter);                                               
 app.use('/static', express.static(consts.folders.STATIC));                              // static folders 
 
 // error handlers
-app.use((err, req, res, next) => {
-    log.error('Unexpected', new Error(err));
-    res.status(500).json(err);
-});
-app.get('/error', (req, res, next) => {
-    res.send('Something broke!');
-    next(log.error('Unexpected', new Error(err)));
-});
+//app.use((err, req, res, next) => {
+//    //log.exception('Unexpected', new Error(err));
+//    log.exception('Unexpected', '', log.ERR.event()); 
+//    res.status(500).json(err);
+//});
+//app.get('/error', (req, res, next) => {
+//    res.send('Something broke!');
+//    next(log.error('Unexpected', new Error(err)));
+//});
 app.get('/exception', () => {
     log.exception('app.js', 'malformedJson', log.ERR.event()); 
     JSON.parse('{"malformedJson": true');

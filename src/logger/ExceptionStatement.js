@@ -23,7 +23,7 @@ class ExceptionStatement extends Statement {
 
     // entrypoint for clients to call. errEvent is a ErrorEvent object created with log.ERR.event()
     write(functionName, errMessage, errEvent) {
-
+        
         // setup the error function, message, and service context 
         errEvent.setFunctionName(functionName)
             .setMessage(errMessage)

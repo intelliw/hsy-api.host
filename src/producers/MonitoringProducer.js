@@ -42,11 +42,12 @@ class MonitoringProducer extends KafkaProducer {
     */
     async sendToTopic(datasets, sender) {
 
-        // get the data 
-        let results = this.extractData(datasets, sender);                           // e.g. results: { itemCount: 9, messages: [. . .] }
-
         // send the message to the topics
         try {
+
+            // get the data 
+            let results = this.extractData(datasets, sender);                           // e.g. results: { itemCount: 9, messages: [. . .] }
+
             // connect 
             await this.producerObj.connect();
 
@@ -63,13 +64,13 @@ class MonitoringProducer extends KafkaProducer {
             // log.data("monitoring", "pms", "TEST-09", []); 
             // log.exception('sendToTopic', 'there was an error in ' + env.active.kafkajs.producer.clientId, log.ERR.event()); 
             // log.error('Unexpected', new Error('sendToTopic connection')); 
-            log.trace('@1',log.ERR.event()); 
+            log.trace('@1', log.ERR.event());
 
             // disconnect
             await this.producerObj.disconnect();
 
         } catch (e) {
-            log.exception('MonitoringProducer.sendToTopic', e.message, log.ERR.event()); 
+            log.exception('MonitoringProducer.sendToTopic', e.message, log.ERR.event());
         }
 
     }
@@ -116,7 +117,7 @@ class MonitoringProducer extends KafkaProducer {
             dataItems = [];
 
             // add the modified dataset to the message buffer
-            results.messages.push(this.createMessage(key, dataset));                        // add to the message array
+            results.messages.push(super.createMessage(key, dataset));                        // add to the message array
 
         });
 
@@ -153,26 +154,7 @@ class MonitoringProducer extends KafkaProducer {
 
     }
 
-    /* creates and returns a message
-    * key - is a string
-    * data - contains the message value 
-    * headers - a json object e.g. { 'corsrelation-id': '2bfb68bb-893a-423b-a7fa-7b568cad5b67', system-id': 'my-system' }  
-    *        (note: kafkajs produces a byte array for headers unlike messages which are a string buffer
-    */
-    createMessage(key, data, headers) {
 
-        // create the message
-        let message = {
-            key: key,
-            value: JSON.stringify(data)
-        };
-
-        if (headers) {
-            message.headers = JSON.stringify(headers);
-        }
-
-        return message;
-    }
 }
 
 
