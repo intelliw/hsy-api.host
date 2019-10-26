@@ -1,24 +1,19 @@
 //@ts-check
 "use strict";
 /**
- * ./producers/MonitoringProducer.js
+ * ./producers/Monitoring.js
  *  base type for Kafka message producers  
  */
-const { Kafka } = require('kafkajs');
 const KafkaProducer = require('./KafkaProducer');
 
-const enums = require('../environment/enums');
 const consts = require('../host/constants');
 const utils = require('../environment/utils');
 
-const env = require('../environment');
 const log = require('../host').log;
-
-const errors = env.errors;
 
 const moment = require('moment');
 
-class MonitoringProducer extends KafkaProducer {
+class Monitoring extends KafkaProducer {
     /**
      * superclass - 
      * clients must call sendToTopic() 
@@ -40,44 +35,24 @@ class MonitoringProducer extends KafkaProducer {
     * @param {*} datasets                                                           // an array of datasets
     * @param {*} sender                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
     */
-    async sendToTopic(datasets, sender) {
+    async sendToTopic(data, sender) {
 
         // send the message to the topics
         try {
 
-            // get the data 
-            let results = this.extractData(datasets, sender);                           // e.g. results: { itemCount: 9, messages: [. . .] }
-
-            // connect 
-            await this.producerObj.connect();
-
-            // send the message to the topics
-            let result = await this.producerObj.send({
-                topic: this.kafkaTopic,
-                messages: results.messages,
-                acks: enums.messageBroker.ack.default,                              // default is 'leader'
-                timeout: env.active.kafkajs.producer.timeout
-            });
-
-            // log output                                                           // e.g. [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
-            log.messaging(this.kafkaTopic, result[0].baseOffset, results.messages, results.itemCount, sender);         // info = (topic, offset, msgqty, itemqty, sender) {
-            // log.data("monitoring", "pms", "TEST-09", []); 
-            // log.exception('sendToTopic', 'there was an error in ' + env.active.kafkajs.producer.clientId, log.ERR.event()); 
-            // log.error('Unexpected', new Error('sendToTopic connection')); 
-            log.trace('@1', log.ERR.event());
-
-            // disconnect
-            await this.producerObj.disconnect();
+            // get the data     - e.g. msgObj = { itemCount: 0, messages: [] };
+            let msgObj = this.extractData(data, sender);                           // e.g. results: { itemCount: 9, messages: [. . .] }
+            super.sendToTopic(msgObj, sender);
 
         } catch (e) {
-            log.exception('MonitoringProducer.sendToTopic', e.message, log.ERR.event());
+            log.exception(`${this.apiDatasetName} sendToTopic`, e.message, log.ERR.event());
         }
 
     }
 
     /**
      * creates an array of kafka messages and returns them in a results object
-     * datasets - object array of dataset items. 
+     *  data - object array of dataset items. 
      *  each dataset item has an id and an array of data objects
      *  each data object has a time_local event timestamp
      *  dataset objects have a common structure
@@ -158,4 +133,4 @@ class MonitoringProducer extends KafkaProducer {
 }
 
 
-module.exports = MonitoringProducer;
+module.exports = Monitoring;

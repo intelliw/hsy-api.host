@@ -42,7 +42,7 @@ class ExceptionStatement extends Statement {
 
     // calls to super - these are annulled by initialise function based on configs  
     _writeConsoleInfo(functionName, errMessage, errEvent) {
-        let payload = `[${functionName}] message: ${errMessage}`;
+        let payload = `[${functionName}] ${errMessage}`;
         super._writeConsole(this.statementName, Statement.Severity.WARNING, enums.logging.verbosity.info, payload);
     }
     _writeConsoleDebug(functionName, errMessage, errEvent) {

@@ -33,7 +33,7 @@ class ErrorStatement extends Statement {
 
     // calls to super - these are annulled by initialise function based on configs  
     _writeConsoleInfo(label, errObject) {
-        let payload = `[${label}] message: ${errObject.message}`;
+        let payload = `[${label}] ${errObject.message}`;
         super._writeConsole(this.statementName, Statement.Severity.ERROR, enums.logging.verbosity.info, payload);
     }
     _writeConsoleDebug(label, errObject) {

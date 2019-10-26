@@ -7,6 +7,8 @@
 const { Kafka } = require('kafkajs');
 
 const env = require('../environment');
+const log = require('../host').log;
+const enums = require('../environment/enums');
 
 class KafkaProducer {
     /**
@@ -39,10 +41,40 @@ class KafkaProducer {
 
 
     /** implemented by subtype
-    * @param {*} datasets                                                           // an array of datasets
+    * @param {*} msgObj                                                             // e.g. msgObj = { itemCount: 0, messages: [] };
     * @param {*} sender                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
     */
-    async sendToTopic(datasets, sender) {
+    async sendToTopic(msgObj, sender) {
+
+
+        // send the message to the topics
+        try {
+
+            // connect 
+            await this.producerObj.connect();
+
+            // send the message to the topics
+            let result = await this.producerObj.send({
+                topic: this.kafkaTopic,
+                messages: msgObj.messages,
+                acks: enums.messageBroker.ack.default,                              // default is 'leader'
+                timeout: env.active.kafkajs.producer.timeout
+            });
+
+            // log output                                                           // e.g. [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
+            log.messaging(this.kafkaTopic, result[0].baseOffset, msgObj.messages, msgObj.itemCount, sender);         // info = (topic, offset, msgqty, itemqty, sender) {
+            // log.data("monitoring", "pms", "TEST-09", []); 
+            // log.exception('sendToTopic', 'there was an error in ' + env.active.kafkajs.producer.clientId, log.ERR.event()); 
+            // log.error('Unexpected', new Error('sendToTopic connection')); 
+            // log.trace('@1', log.ERR.event());
+            log.trace('@1');
+
+            // disconnect
+            await this.producerObj.disconnect();
+
+        } catch (e) {
+            log.exception(`${this.apiDatasetName} sendToTopic`, e.message, log.ERR.event());
+        }
 
     }
 
@@ -66,7 +98,7 @@ class KafkaProducer {
 
         return message;
     }
-    
+
 }
 
 
