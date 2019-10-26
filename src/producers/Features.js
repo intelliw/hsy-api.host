@@ -15,14 +15,14 @@ class Features extends KafkaProducer {
      * 
      * instance attributes:  
      *  producerObj": kafka.producer()
-     * apiDatasetName                                                               // enums.params.datasets
+     * apiPathDataset                                                               // enums.params.datasets
      * kafkaTopic                                                                   // env.active.topics.monitoring
      * constructor arguments 
-     * @param {*} apiDatasetName                                                    // enums.params.datasets              - e.g. pms       
+     * @param {*} apiPathDataset                                                    // enums.params.datasets              - e.g. pms       
      */
-    constructor(apiDatasetName, kafkaTopic) {
+    constructor(apiPathDataset, kafkaTopic) {
 
-        super(apiDatasetName, kafkaTopic);
+        super(apiPathDataset, kafkaTopic);
 
     }
 
@@ -37,11 +37,11 @@ class Features extends KafkaProducer {
         try {
 
             let msgObj = { itemCount: 1, messages: [] };
-            msgObj.messages.push(super.createMessage(this.apiDatasetName, datasets));   // add to the message array
+            msgObj.messages.push(super.createMessage(this.apiPathDataset, datasets));   // add to the message array
             super.sendToTopic(msgObj, sender);
 
         } catch (e) {
-            log.exception(`${this.apiDatasetName} sendToTopic`, e.message, log.ERR.event());
+            log.exception(`${this.apiPathDataset} sendToTopic`, e.message, log.ERR.event());
         }
 
     }

@@ -58,18 +58,18 @@ class DevicesDatasetsPostResponse extends Response {
 function executePost(params) {
 
   // construct a producer
-  let apiDatasetName = params.dataset.value;                                      //  enums.params.datasets              - e.g. pms  
+  let apiPathDataset = params.dataset.value;                                      //  enums.params.datasets              - e.g. pms  
   
   let datasets = params.datasets.value;                                           // for application/json the req.body is a 'datasets' object with array of datasets {"datasets": [.. ] 
   let sender = utils.keynameFromValue(enums.apiKey, params.apiKey.value);         // the 'source' is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
   
   // get a producer (MonitoringPms etc) from the factory and process the messages (sendToTopic) asynchronously.
-  let producer = producers.getProducer(apiDatasetName);                           // apiDatasetName = enums.params.datasets..
+  let producer = producers.getProducer(apiPathDataset);                           // apiPathDataset = enums.params.datasets..
   producer.sendToTopic(datasets, sender);                                         // async ok as by now we have connected to kafka, and the dataset should have been validated and the only outcome is a 200 response
 
   // prepare the response
   let responseDetail = new GenericMessageDetail();
-  responseDetail.add('Data queued for processing.', `datasets:${apiDatasetName} | ${datasets.length}`);
+  responseDetail.add('Data queued for processing.', `datasets:${apiPathDataset} | ${datasets.length}`);
 
   let statusCode = utils.keynameFromValue(enums.responseStatus, RESPONSE_STATUS);
   let response = new GenericMessage(statusCode, RESPONSE_STATUS, responseDetail.getElements());

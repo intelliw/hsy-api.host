@@ -20,14 +20,14 @@ class Monitoring extends KafkaProducer {
      * 
      * instance attributes:  
      *  producerObj": kafka.producer()
-     * apiDatasetName                                                               // enums.params.datasets
+     * apiPathDataset                                                               // enums.params.datasets
      * kafkaTopic                                                                   // env.active.topics.monitoring
      * constructor arguments 
-     * @param {*} apiDatasetName                                                    // enums.params.datasets              - e.g. pms       
+     * @param {*} apiPathDataset                                                    // enums.params.datasets              - e.g. pms       
      */
-    constructor(apiDatasetName, kafkaTopic) {
+    constructor(apiPathDataset, kafkaTopic) {
 
-        super(apiDatasetName, kafkaTopic);
+        super(apiPathDataset, kafkaTopic);
 
     }
 
@@ -45,7 +45,7 @@ class Monitoring extends KafkaProducer {
             super.sendToTopic(msgObj, sender);
 
         } catch (e) {
-            log.exception(`${this.apiDatasetName} sendToTopic`, e.message, log.ERR.event());
+            log.exception(`${this.apiPathDataset} sendToTopic`, e.message, log.ERR.event());
         }
 
     }
@@ -73,7 +73,7 @@ class Monitoring extends KafkaProducer {
         // extract and add messages to results 
         datasets.forEach(dataset => {                                               // e.g. "pms": { "id": "PMS-01-001" }, "data": [ { time_local: '20190809T150006.032+0700', pack: [Object] }, ... ]
 
-            key = dataset[this.apiDatasetName].id;                                  // e.g. id from.. "pms": { "id": 
+            key = dataset[this.apiPathDataset].id;                                  // e.g. id from.. "pms": { "id": 
 
             // add each data item in the dataset as an individual message
             dataset.data.forEach(dataItem => {                                      // e.g. "data": [ { "time_local": "2

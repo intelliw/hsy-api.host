@@ -12,10 +12,10 @@ module.exports.KafkaProducer = require('./KafkaProducer');
 module.exports.Monitoring = require('./Monitoring');
 module.exports.Features = require('./Features');
 
-// static factory method to construct a producer    
-module.exports.getProducer = (apiDatasetName) => {
+// static factory method to construct producers    
+module.exports.getProducer = (apiPathDataset) => {
     let producer;
-    switch (apiDatasetName) {
+    switch (apiPathDataset) {
 
         // pms
         case enums.params.datasets.pms:

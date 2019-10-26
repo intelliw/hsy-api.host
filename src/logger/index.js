@@ -5,9 +5,9 @@
  */
 
 module.exports = require('./Logger');
-
 module.exports.Statement = require('./Statement');
 
+// Statement subtypes - none of these are directly instanced outside of the logger module
 // module.exports.MessagingStatement = require('./MessagingStatement');
 // module.exports.DataStatement = require('./DataStatement');
 // module.exports.ErrorStatement = require('./ErrorStatement');

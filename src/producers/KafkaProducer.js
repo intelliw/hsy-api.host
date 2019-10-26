@@ -17,12 +17,12 @@ class KafkaProducer {
      * 
      * instance attributes:  
      *  producerObj": kafka.producer()
-     * apiDatasetName                                                               // enums.params.datasets
+     * apiPathDataset                                                               // enums.params.datasets
      * kafkaTopic                                                                   // env.active.topics.monitoring
      * constructor arguments 
-     * @param {*} apiDatasetName                                                    // enums.params.datasets              - e.g. pms       
+     * @param {*} apiPathDataset                                                    // enums.params.datasets              - e.g. pms       
      */
-    constructor(apiDatasetName, kafkaTopic) {
+    constructor(apiPathDataset, kafkaTopic) {
 
         // create a kafka producer
         const kafka = new Kafka({
@@ -35,7 +35,7 @@ class KafkaProducer {
 
         // instance variables
         this.producerObj = kafka.producer();
-        this.apiDatasetName = apiDatasetName;
+        this.apiPathDataset = apiPathDataset;
         this.kafkaTopic = kafkaTopic;
     }
 
@@ -73,7 +73,7 @@ class KafkaProducer {
             await this.producerObj.disconnect();
 
         } catch (e) {
-            log.exception(`${this.apiDatasetName} sendToTopic`, e.message, log.ERR.event());
+            log.exception(`${this.apiPathDataset} sendToTopic`, e.message, log.ERR.event());
         }
 
     }
