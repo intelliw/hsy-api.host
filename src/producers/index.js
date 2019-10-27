@@ -10,12 +10,12 @@ const enums = require('../environment/enums');
 
 module.exports.KafkaProducer = require('./KafkaProducer');
 module.exports.Monitoring = require('./Monitoring');
-module.exports.Features = require('./Features');
+module.exports.Feature = require('./Feature');
 
 // static factory method to construct producers    
-module.exports.getProducer = (apiPathDataset) => {
+module.exports.getProducer = (apiPathIdentifier) => {
     let producer;
-    switch (apiPathDataset) {
+    switch (apiPathIdentifier) {
 
         // pms
         case enums.params.datasets.pms:
@@ -33,8 +33,8 @@ module.exports.getProducer = (apiPathDataset) => {
             break;
 
         // logging feature - communicates logging configuration changes from host to consumer instances  
-        case enums.params.datasets.logging:
-            producer = new this.Features(enums.params.datasets.logging, env.active.topics.features.logging);
+        case enums.feature.logging:
+            producer = new this.Feature(enums.feature.logging, env.active.topics.system.feature);
             break;
 
     }

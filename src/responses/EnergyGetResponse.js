@@ -242,5 +242,5 @@ module.exports = EnergyGetResponse;
   * the default mimetype must be the first item
   * this list must match the list specified in the 'produces' property in the openapi spec
   */
-module.exports.produces = [enums.mimeTypes.applicationCollectionJson, enums.mimeTypes.applicationJson, enums.mimeTypes.textHtml, enums.mimeTypes.textPlain];
-module.exports.consumes = [enums.mimeTypes.applicationJson];
+module.exports.produces = [enums.mimeType.applicationCollectionJson, enums.mimeType.applicationJson, enums.mimeType.textHtml, enums.mimeType.textPlain];
+module.exports.consumes = [enums.mimeType.applicationJson];

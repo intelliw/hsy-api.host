@@ -110,7 +110,7 @@ router.get('/car', (req, res, next) => {
     //let car = {engine: '2.0L', start: 'proximity'};
 
     // choose the ejs template here and also the response content type, based on the request Accepts header 
-    let contentType = (req.accepts(enums.mimeTypes.textHtml)) ? enums.mimeTypes.textHtml : enums.mimeTypes.applicationCollectionJson;
+    let contentType = (req.accepts(enums.mimeType.textHtml)) ? enums.mimeType.textHtml : enums.mimeType.applicationCollectionJson;
 
     let paramE = new Param.Period('week', '20190321', 1);
     console.log('paramE Name = ' + paramE.name + ', paramE Value = ' + paramE.value);

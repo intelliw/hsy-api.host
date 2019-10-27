@@ -51,5 +51,5 @@ module.exports = DeviceDatasetGetResponse;
   * the default mimetype must be the first item
   * this list must match the list specified in the 'produces' property in the openapi spec
   */
-module.exports.produces = [enums.mimeTypes.applicationJson];
-module.exports.consumes = [enums.mimeTypes.applicationJson];
+module.exports.produces = [enums.mimeType.applicationJson];
+module.exports.consumes = [enums.mimeType.applicationJson];

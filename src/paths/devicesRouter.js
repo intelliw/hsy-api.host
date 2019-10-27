@@ -67,7 +67,7 @@ class DevicesDatasetsPost extends Request {
         // body content - check if json or csv                                                      // for application/json this is a datasets object with array of datasets {"datasets": [.. ] 
         dataset = req.params.dataset;                                                               // dataset is a query string param         
         contentType = req.headers[enums.request.headers.contentType];                               // text/csv or application/json
-        isPmsCsv = (contentType == enums.mimeTypes.textCsv) && (dataset == enums.params.datasets.pms);     // text/csv supported for pms only
+        isPmsCsv = (contentType == enums.mimeType.textCsv) && (dataset == enums.params.datasets.pms);     // text/csv supported for pms only
         
         // convert if pms csv                                                                       // for text/csv req body contains raw csv content, for application/json the req.body is a 'datasets' object with array of datasets {"datasets": [.. ]                        
         if (isPmsCsv) {

@@ -15,7 +15,7 @@ module.exports.energyData = {
     gridout: 'grid.out'
 }
 
-// constants for the api 
+// api parameter enumerations 
 module.exports.params = {
     energy: {
         hse: 'hse',
@@ -41,11 +41,15 @@ module.exports.params = {
         pms: 'pms',                                 // corresponds to messageBroker.consumers.pms
         mppt: 'mppt',                               // corresponds to messageBroker.consumers.mppt
         inverter: 'inverter',                       // corresponds to messageBroker.consumers.inverter
-        logging: 'logging'                          // loggign feature
     }
 }
 module.exports.params.energy.default = this.params.energy.hse;
 module.exports.params.period.default = this.params.period.week;
+
+// flags for feature toogles
+module.exports.feature = {
+    logging: 'logging'                              // logging reconfiguration feature
+}
 
 module.exports.timeOfDay = {
     morning: 'morning',
@@ -63,14 +67,14 @@ module.exports.request = {
 }
 
 // mime types used in headers
-module.exports.mimeTypes = {
+module.exports.mimeType = {
     applicationCollectionJson: 'application/vnd.collection+json',
     applicationJson: 'application/json',
     textHtml: 'text/html',
     textPlain: 'text/plain',
     textCsv: 'text/csv'
 }
-module.exports.mimeTypes.default = this.mimeTypes.applicationCollectionJson;
+module.exports.mimeType.default = this.mimeType.applicationCollectionJson;
 
 // supported RFC8288 Link-relations for 'rel' property in Response objects
 module.exports.linkRelations = {

@@ -13,14 +13,14 @@ class Response {
     /**
     instance attributes:  
      statusCode: 400  (number)
-     contentType: request Accept mime type - enums.mimeTypes
-     consumes: request body Content-Type mime type - enums.mimeTypes 
+     contentType: request Accept mime type - enums.mimeType
+     consumes: request body Content-Type mime type - enums.mimeType 
      view: "message_applicationJson"
      content: "{}",
     
      constructor arguments 
     * @param {*} statusEnum                 // "Bad Request"
-    * @param {*} reqAcceptParam             //  request Accepts - enums.mimeTypes
+    * @param {*} reqAcceptParam             //  request Accepts - enums.mimeType
     * @param {*} viewPrefix                 // "message_"
     * @param {*} content                    //  { .. }
     */
@@ -30,7 +30,7 @@ class Response {
         this.contentType = reqAcceptParam.value;
         
         // view
-        let contentTypeKeyname = utils.keynameFromValue(enums.mimeTypes,reqAcceptParam.value);
+        let contentTypeKeyname = utils.keynameFromValue(enums.mimeType,reqAcceptParam.value);
         this.view = `${viewPrefix}${contentTypeKeyname}`;       // e.g. energy.applicationCollectionJson todo: this should be selected dynamically
 
         // statusCode    

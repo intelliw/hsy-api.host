@@ -1,28 +1,28 @@
 //@ts-check
 "use strict";
 /**
- * ./producers/Features.js
+ * ./producers/Feature.js
  *  topic producer for feature toggles - to propogate configuration changes from host to consumer through message broker 
  */
 const KafkaProducer = require('./KafkaProducer');
 
 const log = require('../host').log;
 
-class Features extends KafkaProducer {
+class Feature extends KafkaProducer {
     /**
      * superclass - 
      * clients must call sendToTopic() 
      * 
      * instance attributes:  
      *  producerObj": kafka.producer()
-     * apiPathDataset                                                               // enums.params.datasets
-     * kafkaTopic                                                                   // env.active.topics.monitoring
+     * apiPathIdentifier                                                             // enums.features
+     * kafkaTopic                                                                    // env.active.topics.monitoring
      * constructor arguments 
-     * @param {*} apiPathDataset                                                    // enums.params.datasets              - e.g. pms       
+     * @param {*} apiPathIdentifier                                                  // identifer based on the api path: this is typically from enums.params.datasets - e.g. pms; or 
      */
-    constructor(apiPathDataset, kafkaTopic) {
-
-        super(apiPathDataset, kafkaTopic);
+    constructor(apiPathIdentifier, kafkaTopic) {
+        
+        super(apiPathIdentifier, kafkaTopic);
 
     }
 
@@ -37,11 +37,11 @@ class Features extends KafkaProducer {
         try {
 
             let msgObj = { itemCount: 1, messages: [] };
-            msgObj.messages.push(super.createMessage(this.apiPathDataset, datasets));   // add to the message array
+            msgObj.messages.push(super.createMessage(this.apiPathIdentifier, datasets));   // add to the message array. the key is the feature name e.g. 'logging'
             super.sendToTopic(msgObj, sender);
 
         } catch (e) {
-            log.exception(`${this.apiPathDataset} sendToTopic`, e.message, log.ERR.event());
+            log.exception(`${this.apiPathIdentifier} sendToTopic`, e.message, log.ERR.event());
         }
 
     }
@@ -49,4 +49,4 @@ class Features extends KafkaProducer {
 }
 
 
-module.exports = Features;
+module.exports = Feature;

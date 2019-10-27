@@ -72,15 +72,15 @@ router.get('/logging', (req, res, next) => {
         log.initialise(); 
         
         // communicate logging config changes from host to consumer instances  
-        let producer = producers.getProducer(enums.params.datasets.logging);         // apiPathDataset = enums.params.datasets..
-        producer.sendToTopic(env.active.logging, enums.apiKey.PROXY);                    // topic is env.active.topics.features.logging   
+        let producer = producers.getProducer(enums.feature.logging);                // returns a Features producer, apiPathIdentifier = enums.feature.. 
+        producer.sendToTopic(env.active.logging, enums.apiKey.PROXY);               // send the complete logging configs to the topic: which is env.active.topics.system.feature, sender is the system PROXY as it is an internal message
 
     }
 
     // return logging configuration 
     res
         .status(200)
-        .json({ logging: env.active.logging })                      // e.g. {"logging":{"verbosity":["info"]}}
+        .json({ logging: env.active.logging })                                      // e.g. {"logging":{"verbosity":["info"]}}
         .end();
 
 });
@@ -96,7 +96,7 @@ function setLoggingConfigs(queryParams, loggingEnum) {
 
     if (queryParams != NONE) {
         configs = [];
-        queryParams.split(',').forEach(element => {                     // split into an array and set logging.verbosity     
+        queryParams.split(',').forEach(element => {                                 // split into an array and set logging.verbosity     
             if (utils.valueExistsInObject(loggingEnum, element)) {
                 configs.push(element);
             }

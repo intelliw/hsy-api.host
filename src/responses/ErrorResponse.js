@@ -29,7 +29,7 @@ class ErrorResponse extends Response {
       let genericMessage = new GenericMessage(statusCode, statusEnum, validation.errors.getElements());
 
       // create the Response including the message content
-      let RESPONSE_CONTENT_TYPE = new Param(consts.params.names.acceptType, enums.mimeTypes.applicationJson);     // standard content type for generic message
+      let RESPONSE_CONTENT_TYPE = new Param(consts.params.names.acceptType, enums.mimeType.applicationJson);     // standard content type for generic message
       super(statusEnum, RESPONSE_CONTENT_TYPE, RESPONSE_VIEW_PREFIX, genericMessage.getElements())
 
     }
