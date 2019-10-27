@@ -205,57 +205,6 @@ module.exports.keynameFromValue = (obj, value) => {
 
 }
 
-// returns true if a property with a matching value exists in the object. Can be used to check if a value exists in an enum
-module.exports.valueExistsInObject = (obj, value) => {
-
-    const MISSING = -1;
-
-    const exists = this.indexFromValue(obj, value) != MISSING;
-    return exists;
-
-}
-
-
-
-// returns true at random. This was needed to limit the periods which are outputted fior 'instant' to simulate real-life data logging
-module.exports.randomTrue = () => {
-
-    let randomTrue; let randomnum;
-    const max = 30;                                                     // the larger this number the more skips there will be  
-    const random_match = 5;                                             // this can be any number less than MOCK_max
-
-    randomnum = Number(randomFloat(1, max, 0));                    // get a random integer between 1 and MOCK_max
-    randomTrue = (randomnum == random_match) ? false : true;            // skip unless there is a match
-
-    return randomTrue;                                                  // return whether to skip  
-
-}
-
-/**
- * searches the findIn array for the first occurrence of an item in the find array. 
- * The items in the find array need to be in order of preference. The first match wil be returned.
- * if there are no matches and defaultIfNotFound is true, the first item in the findIn array will be returned as the default. 
- */
-module.exports.selectFirstMatch = (findInCVL, find, defaultIfNotFound) => {
-
-    let selectedItem;
-
-    if (findInCVL && find) {
-
-        const EXITFOR = findInCVL.length;
-
-        let n;
-        for (n = 0; n < findInCVL.length; n++) {
-            if (find.includes(findInCVL[n])) {                              // if the value matches    
-                selectedItem = findInCVL[n];                                // set the found item 
-                n = EXITFOR;                                                // exit the loop
-            }
-        }
-
-        selectedItem = !selectedItem && defaultIfNotFound ? findInCVL[0] : selectedItem;        // if the item was not found set default to first item in findIn
-    }
-    return selectedItem;
-}
 
 // returns a min and max value for the average energy consumed in this period
 module.exports.MOCK_periodMinMax = (period, dailyHigh, dailyLow) => {
@@ -318,7 +267,102 @@ module.exports.MOCK_periodMinMax = (period, dailyHigh, dailyLow) => {
     return minmax;
 }
 
+
+// converts keys in a json object into an array
+module.exports.objectKeysToArray = (jsonObj) => {
+
+    var result = [];
+
+    for(var i in jsonObj)
+        result.push(i);
+
+    return result;        
+}
+
+// returns true at random. This was needed to limit the periods which are outputted fior 'instant' to simulate real-life data logging
+module.exports.randomTrue = () => {
+
+    let randomTrue; let randomnum;
+    const max = 30;                                                     // the larger this number the more skips there will be  
+    const random_match = 5;                                             // this can be any number less than MOCK_max
+
+    randomnum = Number(randomFloat(1, max, 0));                    // get a random integer between 1 and MOCK_max
+    randomTrue = (randomnum == random_match) ? false : true;            // skip unless there is a match
+
+    return randomTrue;                                                  // return whether to skip  
+
+}
+
+
+/**
+ * searches the findIn array for the first occurrence of an item in the find array. 
+ * The items in the find array need to be in order of preference. The first match wil be returned.
+ * if there are no matches and defaultIfNotFound is true, the first item in the findIn array will be returned as the default. 
+ */
+module.exports.selectFirstMatch = (findInCVL, find, defaultIfNotFound) => {
+
+    let selectedItem;
+
+    if (findInCVL && find) {
+
+        const EXITFOR = findInCVL.length;
+
+        let n;
+        for (n = 0; n < findInCVL.length; n++) {
+            if (find.includes(findInCVL[n])) {                              // if the value matches    
+                selectedItem = findInCVL[n];                                // set the found item 
+                n = EXITFOR;                                                // exit the loop
+            }
+        }
+
+        selectedItem = !selectedItem && defaultIfNotFound ? findInCVL[0] : selectedItem;        // if the item was not found set default to first item in findIn
+    }
+    return selectedItem;
+}
+
+
+// returns true if a property with a matching value exists in the object. Can be used to check if a value exists in an enum
+module.exports.valueExistsInObject = (obj, value) => {
+
+    const MISSING = -1;
+
+    const exists = this.indexFromValue(obj, value) != MISSING;
+    return exists;
+
+}
+
+
+
 // SHARED UTILS =====================================================================================
+
+
+/* converts a hex value to an array of reversed bits, the least-significant-bit (rightmost bit) is in element zero       
+    if hexValue is undefined an array of null values is returned
+*/
+module.exports.hex2bitArray = (hexValue, minLength) => {
+    const hexBase = 16;
+    const binaryBase = 2;
+    
+    let bitArray = [];
+
+    // process  if hexValue is valid
+    if (hexValue != NONE) {
+
+        // convert hex to binary - e.g. 1A79 --> 0001 1010 0111 1001
+        let binaryValue = parseInt(hexValue, hexBase).toString(binaryBase).padStart(minLength, '0');
+        
+        // reverse the array - e.g  bitArray[0] = 1, bitArray[1] = 0          
+        bitArray = binaryValue.split('').reverse();             
+
+    // if hexValue is invalid return null array
+    } else {    
+        bitArray = new Array(minLength).fill(null);
+    }
+
+    return bitArray;
+}
+
+
 
 // returns a random number between min and max with decimal places based on precision 
 module.exports.randomFloat = (min, max, decimalPlaces) => {
@@ -351,33 +395,6 @@ module.exports.randomIntegerString = (min, max) => {
 }
 
 
-/* converts a hex value to an array of reversed bits, the least-significant-bit (rightmost bit) is in element zero       
-    if hexValue is undefined an array of null values is returned
-*/
-module.exports.hex2bitArray = (hexValue, minLength) => {
-    const hexBase = 16;
-    const binaryBase = 2;
-    
-    let bitArray = [];
-
-    // process  if hexValue is valid
-    if (hexValue != NONE) {
-
-        // convert hex to binary - e.g. 1A79 --> 0001 1010 0111 1001
-        let binaryValue = parseInt(hexValue, hexBase).toString(binaryBase).padStart(minLength, '0');
-        
-        // reverse the array - e.g  bitArray[0] = 1, bitArray[1] = 0          
-        bitArray = binaryValue.split('').reverse();             
-
-    // if hexValue is invalid return null array
-    } else {    
-        bitArray = new Array(minLength).fill(null);
-    }
-
-    return bitArray;
-}
-
-
 /* returns true, false, or null 
    depending on whether bitValue is 1, 0, or null/invalid
 */
@@ -394,18 +411,6 @@ module.exports.tristateBoolean = (bitValue) => {
 
     return tristate;
 }
-
-// converts keys in a json object into an array
-module.exports.objectKeysToArray = (jsonObj) => {
-
-    var result = [];
-
-    for(var i in jsonObj)
-        result.push(i);
-
-    return result;        
-}
-
 
 
 // test... node src/environment/utils
