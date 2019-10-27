@@ -77,8 +77,8 @@ class DevicesDatasetsPost extends Request {
         
         // parameters                                                       
         let params = {};
-        params.dataset = new Param('dataset', dataset, consts.NONE, enums.params.datasets);
-        params.datasets = new Param('datasets', datasets);                                          // for text/csv this is raw csv content 
+        params.dataset = new Param('dataset', dataset, consts.NONE, enums.params.datasets);         // this is the path param
+        params.datasets = new Param('datasets', datasets);                                          // this is the body payload. for text/csv this is raw csv content 
 
         // super - validate params, auth, accept header
         super(req, params, DevicesDatasetsPostResponse.produces, DevicesDatasetsPostResponse.consumes);           // super validates and sets this.accepts this.isValid, this.isAuthorised params valid

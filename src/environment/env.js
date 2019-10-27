@@ -129,7 +129,7 @@ const LOGGING = {
             enums.logging.statements.error,
             enums.logging.statements.trace],
         verbosity: [
-            enums.logging.verbosity.info],
+            enums.logging.verbosity.debug],
         appenders: [
             enums.logging.appenders.stackdriver,
             enums.logging.appenders.console]
@@ -243,4 +243,4 @@ module.exports.CONFIGS = {
 }
 
 // env.active returns the active environment 
-module.exports.active = this.CONFIGS.prodcloud;      // change enums.environments to 'local' to develop locally or to 'devcloud' to develop online                               
+module.exports.active = this.CONFIGS.local;      // change enums.environments to 'local' to develop locally or to 'devcloud' to develop online                               
