@@ -14,9 +14,9 @@ const enums = require('../environment/enums');
 const consts = require('../host/constants');
 
 const env = require('../environment');
-let utils = env.utils;
-
 const log = require('../host').log;
+
+let utils = env.utils;
 
 // [devops.api.versions.get] /api/versions
 router.get('/versions', (req, res, next) => {
@@ -77,6 +77,9 @@ router.get('/logging', (req, res, next) => {
         let producer = producers.getProducer(enums.feature.logging);                // returns a Features producer, apiPathIdentifier = enums.feature.. 
         producer.sendToTopic(env.active.logging, sender);                           // send the complete logging configs to the topic: which is env.active.topics.system.feature
 
+        // log it
+        log.trace(`${producer.kafkaTopic} ${enums.feature.logging}`, env.active.logging);
+        
     }
 
     // return logging configuration 
