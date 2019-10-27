@@ -7,13 +7,12 @@ const express = require('express');
 const router = express.Router();
 
 const enums = require('../environment/enums');
+const consts = require('../host/constants');
 
 const Request = require('./Request');
 const Param = require('../parameters');
 
 const DeviceDatasetGetResponse = require('../responses/DeviceDatasetGetResponse');
-
-const NONE = global.undefined;
 
 /* [device.dataset.period.epoch.duration.get]
     Returns device data for a period. 
@@ -80,7 +79,7 @@ class DeviceDatasetGet extends Request {
         // parameters                                                   // validate and default all parameters
         let params = {};
         params.device = new Param('device', req.params.device);
-        params.dataset = new Param('dataset', req.params.dataset, NONE, enums.params.datasets);
+        params.dataset = new Param('dataset', req.params.dataset, consts.NONE, enums.params.datasets);
         params.period = new Param.Period(req.params.period, req.params.epoch, req.params.duration);
         
         // super - validate params, auth, accept header

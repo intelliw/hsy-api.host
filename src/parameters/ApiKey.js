@@ -15,8 +15,6 @@ const Param = require('./Param');
 // const QUERY_APIKEY_NAME = 'api_key'                          // `api_key` query parameter is no loger supported. 
 const THIS_PARAM_NAME = consts.params.names.apiKey;
 const HEADER_APIKEY_NAME = enums.request.headers.apiKey         // POST, GET | `x-api-key` | header | POST requests must provide a `x-api-key` header. This option is also preferred for GET requests.
-const NONE = global.undefined;
-
 
 /** 
  * gets the api key from the request header (preferred) or query parameter 
@@ -39,7 +37,7 @@ class ApiKey extends Param {
         let headerKey = req.headers[HEADER_APIKEY_NAME];
         
         // decide whether to default - if apikeyRequired there should be no default 
-        let defaultApikey = apikeyRequired ? NONE : enums.apiKey.default;
+        let defaultApikey = apikeyRequired ? consts.NONE : enums.apiKey.default;
 
         // call super 
         super(THIS_PARAM_NAME, headerKey, defaultApikey, enums.apiKey, false);

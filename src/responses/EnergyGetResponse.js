@@ -6,6 +6,7 @@
  */
 const enums = require('../environment/enums');
 const utils = require('../environment/utils');
+const consts = require('../host/constants');
 
 const env = require('../environment');
 
@@ -13,8 +14,6 @@ const Response = require('./Response');
 const Collections = require('../definitions/Collections');
 const Links = require('../definitions/Links');
 const Definitions = require('../definitions');
-
-const NONE = global.undefined;
 
 // REQUEST constants 
 const VIEW_PREFIX = 'energy_';
@@ -101,7 +100,7 @@ function createItems(energy, period, site) {
       if (itemData) {
 
         // make the item links 
-        let itemLinks = new Links.EnergyLinks(energy, childPeriod, site, NONE);                // constructor creates a self link (for the child) without a description (NONE)
+        let itemLinks = new Links.EnergyLinks(energy, childPeriod, site, consts.NONE);                // constructor creates a self link (for the child) without a description (NONE)
 
         if (grandchildPeriod) {                                                                       // 'second' for example does not have a grandchild
           itemLinks.addLink(grandchildPeriod, enums.linkRender.none, grandchildPeriod.description);   // child collection link - not rendered, description if requested by caller
@@ -111,7 +110,7 @@ function createItems(energy, period, site) {
         items.add(itemLinks.href, itemLinks, itemData);
       }
 
-      itemData = NONE;
+      itemData = consts.NONE;
 
     }
   });

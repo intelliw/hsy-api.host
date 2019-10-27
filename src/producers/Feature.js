@@ -37,11 +37,11 @@ class Feature extends KafkaProducer {
         try {
 
             let msgObj = { itemCount: 1, messages: [] };
-            msgObj.messages.push(super.createMessage(this.apiPathIdentifier, datasets));   // add to the message array. the key is the feature name e.g. 'logging'
+            msgObj.messages.push(super.createMessage(this.apiPathIdentifier, data));   // add to the message array. the key is the feature name e.g. 'logging'
             super.sendToTopic(msgObj, sender);
 
         } catch (e) {
-            log.exception(`${this.apiPathIdentifier} sendToTopic`, e.message, log.ERR.event());
+            log.error(`${this.apiPathIdentifier} sendToTopic`, e);
         }
 
     }

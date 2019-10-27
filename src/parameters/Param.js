@@ -7,8 +7,7 @@
  */
 
 const utils = require('../environment/utils');
-
-const NONE = global.undefined;
+const consts = require('../host/constants');
 
 class Param {
     /**
@@ -40,7 +39,7 @@ class Param {
         
         // check if Param isValid 
         this.isValid = enumTest 
-            && (this.isOptional === true ? true : this.value != NONE);       // there must be a value unless isOptional    
+            && (this.isOptional === true ? true : this.value != consts.NONE);       // there must be a value unless isOptional    
 
     }
 }

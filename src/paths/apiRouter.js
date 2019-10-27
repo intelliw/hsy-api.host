@@ -10,13 +10,13 @@ const router = express.Router();
 
 const producers = require('../producers');
 
+const enums = require('../environment/enums');
+const consts = require('../host/constants');
+
 const env = require('../environment');
-let enums = require('../environment/enums');
 let utils = env.utils;
 
 const log = require('../host').log;
-
-const NONE = global.undefined;
 
 // [devops.api.versions.get] /api/versions
 router.get('/versions', (req, res, next) => {
@@ -71,9 +71,11 @@ router.get('/logging', (req, res, next) => {
     if (hasChanged) { 
         log.initialise(); 
         
+        let sender = utils.keynameFromValue(enums.apiKey, enums.apiKey.PROXY);      // sender is the system PROXY as it is an internal message
+
         // communicate logging config changes from host to consumer instances  
         let producer = producers.getProducer(enums.feature.logging);                // returns a Features producer, apiPathIdentifier = enums.feature.. 
-        producer.sendToTopic(env.active.logging, enums.apiKey.PROXY);               // send the complete logging configs to the topic: which is env.active.topics.system.feature, sender is the system PROXY as it is an internal message
+        producer.sendToTopic(env.active.logging, sender);                           // send the complete logging configs to the topic: which is env.active.topics.system.feature
 
     }
 
@@ -94,7 +96,7 @@ function setLoggingConfigs(queryParams, loggingEnum) {
 
     let configs = [];
 
-    if (queryParams != NONE) {
+    if (queryParams != consts.NONE) {
         configs = [];
         queryParams.split(',').forEach(element => {                                 // split into an array and set logging.verbosity     
             if (utils.valueExistsInObject(loggingEnum, element)) {
