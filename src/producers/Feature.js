@@ -6,7 +6,7 @@
  */
 const KafkaProducer = require('./KafkaProducer');
 
-const log = require('../host').log;
+const log = require('../logger').log;
 
 class Feature extends KafkaProducer {
     /**

@@ -7,8 +7,8 @@
 const { Kafka } = require('kafkajs');
 
 const env = require('../environment');
-const log = require('../host').log;
 const enums = require('../environment/enums');
+const log = require('../logger').log;
 
 class KafkaProducer {
     /**

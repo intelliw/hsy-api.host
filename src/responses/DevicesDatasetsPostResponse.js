@@ -6,7 +6,6 @@
  */
 const enums = require('../environment/enums');
 const utils = require('../environment/utils');
-const log = require('../host').log;
 
 const Response = require('./Response');
 const producers = require('../producers');
@@ -63,8 +62,6 @@ function executePost(params) {
   
   let sender = utils.keynameFromValue(enums.apiKey, params.apiKey.value);         // the 'source' is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
   let datasets = params.datasets.value;                                           // for application/json the req.body is a 'datasets' object with array of datasets {"datasets": [.. ] 
-  
-  log.trace(`${apiPathIdentifier}`, { datasets: JSON.stringify(datasets) });      // log a clone of the request payload (needed to prevent async logging after payload is modified below!)
   
   // get a producer (MonitoringPms etc) from the factory and process the messages (sendToTopic) asynchronously.
   let producer = producers.getProducer(apiPathIdentifier);                           // apiPathIdentifier = enums.params.datasets..

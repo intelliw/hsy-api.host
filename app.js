@@ -9,12 +9,12 @@ const bodyParser = require('body-parser')
 const Buffer = require('safe-buffer').Buffer;
 
 const paths = require('./src/paths');
+const env = require('./src/environment');
 
 const host = require('./src/host');
 const consts = host.consts;
 
-const env = require('./src/environment');
-const log = require('./src/host').log;
+const log = require('./src/logger').log;
 
 // [START setup]------------------------------
 const app = express();

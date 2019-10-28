@@ -14,7 +14,7 @@ const enums = require('../environment/enums');
 const consts = require('../host/constants');
 
 const env = require('../environment');
-const log = require('../host').log;
+const log = require('../logger').log;
 
 let utils = env.utils;
 

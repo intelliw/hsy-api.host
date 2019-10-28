@@ -8,8 +8,7 @@ const KafkaProducer = require('./KafkaProducer');
 
 const consts = require('../host/constants');
 const utils = require('../environment/utils');
-
-const log = require('../host').log;
+const log = require('../logger').log;
 
 const moment = require('moment');
 
@@ -73,13 +72,13 @@ class Monitoring extends KafkaProducer {
         // extract and add messages to results 
         datasets.forEach(dataset => {                                               // e.g. "pms": { "id": "PMS-01-001" }, "data": [ { time_local: '20190809T150006.032+0700', pack: [Object] }, ... ]
 
-            key = dataset[this.apiPathIdentifier].id;                                  // e.g. id from.. "pms": { "id": 
+            key = dataset[this.apiPathIdentifier].id;                               // e.g. id from.. "pms": { "id": 
 
             // add each data item in the dataset as an individual message
             dataset.data.forEach(dataItem => {                                      // e.g. "data": [ { "time_local": "2
 
                 // add elements into the dataset
-                dataItem = this.addGenericAttributes(dataItem, sender);        // add common attributes
+                dataItem = this.addGenericAttributes(dataItem, sender);             // add common attributes
 
                 // add the message to the items buffer
                 dataItems.push(dataItem);
@@ -92,7 +91,7 @@ class Monitoring extends KafkaProducer {
             dataItems = [];
 
             // add the modified dataset to the message buffer
-            results.messages.push(super.createMessage(key, dataset));                        // add to the message array
+            results.messages.push(super.createMessage(key, dataset));               // add to the message array
 
         });
 
