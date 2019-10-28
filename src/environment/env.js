@@ -40,26 +40,26 @@ const _API = {
 // feature toggles - a feature is 'on' if it is present in the list    
 const _FEATURES = {
     DEV: {
-        release: [],
+        release: [enums.features.release.none],
         operational: [
             enums.features.operational.logging,
             enums.features.operational.validation],
-        experiment: [],
-        permission: []
+        experiment: [enums.features.experiment.none],
+        permission: [enums.features.permission.none]
     },
     TEST: {
-        release: [],
+        release: [enums.features.release.none],
         operational: [
             enums.features.operational.logging],
-        experiment: [],
-        permission: []
+        experiment: [enums.features.experiment.none],
+        permission: [enums.features.permission.none]
     },
     PROD: {
-        release: [],
+        release: [enums.features.release.none],
         operational: [
             enums.features.operational.logging],
-        experiment: [],
-        permission: []
+        experiment: [enums.features.experiment.none],
+        permission: [enums.features.permission.none]
     }
 }
 

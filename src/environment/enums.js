@@ -58,14 +58,14 @@ module.exports.params.period.default = this.params.period.week;
 
 // flags for feature toogles
 module.exports.features = {
-    release: { },
+    release: { none: "none" },
     operational: {
         none: "none",
         logging: 'logging',                         // logging reconfiguration feature
         validation: 'validation'                    // whether or not to to perform in-depth input validation for post requests
     },
-    experiment: { },
-    permission: { }
+    experiment: { none: "none" },
+    permission: { none: "none" }
 }
 
 module.exports.timeOfDay = {

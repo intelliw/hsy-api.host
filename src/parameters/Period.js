@@ -483,7 +483,7 @@ function isEpochValid(epoch, format) {
         //check if time is valid 
         if (epoch.indexOf(ISO8601_TIME_DELIMITER) >= 0) {                               // if there is a time component
             let time = epoch.substring(epoch.indexOf(ISO8601_TIME_DELIMITER) + 1);      // get the time part 
-            isValid = isValid && (time.length == HOURS_LENGTH
+            isValid = isValid && (time.length == HOURS_LENGTH                           // the time can be 2,4,6, or 10+ characters long            
                 || time.length == MINUTES_LENGTH
                 || time.length == SECONDS_LENGTH
                 || time.length >= MILLISECONDS_MIN_LENGTH);                             // enforce minimum length of ms
