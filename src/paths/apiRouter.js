@@ -74,11 +74,11 @@ router.get('/logging', (req, res, next) => {
         let sender = utils.keynameFromValue(enums.apiKey, enums.apiKey.PROXY);      // sender is the system PROXY as it is an internal message
 
         // communicate logging config changes from host to consumer instances  
-        let producer = producers.getProducer(enums.feature.logging);                // returns a Features producer, apiPathIdentifier = enums.feature.. 
+        let producer = producers.getProducer(enums.feature.operational.logging);                // returns a Features producer, apiPathIdentifier = enums.feature.. 
         producer.sendToTopic(env.active.logging, sender);                           // send the complete logging configs to the topic: which is env.active.topics.system.feature
 
         // log it
-        log.trace(`${enums.feature.logging}`, producer.kafkaTopic, env.active.logging);
+        log.trace(`${enums.feature.operational.logging}`, producer.kafkaTopic, env.active.logging);
         
     }
 

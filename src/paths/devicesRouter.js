@@ -81,14 +81,14 @@ class DevicesDatasetsPost extends Request {
         // parameters                                                       
         let params = {};
         params.dataset = new Param('dataset', dataset, consts.NONE, enums.params.datasets);         // this is the path parameter
-        params.datasets = new Param('datasets', datasets);                                          // this is the body payload. for text/csv this is raw csv content 
+        params.datasets = new Param.Datasets(datasets);                                             // this is the body payload. for text/csv this is raw csv content 
 
         // super - validate params, auth, accept header
         super(req, params, DevicesDatasetsPostResponse.produces, DevicesDatasetsPostResponse.consumes);           // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
         params.apiKey = this.apiKey;                                                                // add apiKey as a param as it is used to produce the sys.source attribute in the Producer  
 
         // trace log the request
-        log.trace(`ContentType:${contentType} Accept:${this.accept.value} sender:${utils.keynameFromValue(enums.apiKey, this.apiKey.value)} valid:${this.validation.isValid}`, dataset, JSON.stringify({datasets: datasets}));
+        log.trace(`${contentType} sender:${utils.keynameFromValue(enums.apiKey, this.apiKey.value)} valid:${this.validation.isValid}`, dataset, JSON.stringify({datasets: datasets}));
 
         // execute the response only if super isValid                                               // if not isValid  super constuctor would have created a this.response = ErrorResponse 
         this.response = this.validation.isValid === true ? new DevicesDatasetsPostResponse(this.params, this.accept) : this.response;

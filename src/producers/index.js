@@ -33,8 +33,8 @@ module.exports.getProducer = (apiPathIdentifier) => {
             break;
 
         // logging feature - communicates logging configuration changes from host to consumer instances  
-        case enums.feature.logging:
-            producer = new this.Feature(enums.feature.logging, env.active.topics.system.feature);
+        case enums.feature.operational.logging:
+            producer = new this.Feature(enums.feature.operational.logging, env.active.topics.system.feature);
             break;
 
     }

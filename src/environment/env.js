@@ -37,6 +37,32 @@ const _API = {
     }
 }
 
+// feature toggles - a feature is 'on' if it is present in the list    
+const _FEATURES = {
+    DEV: {
+        release: [],
+        operational: [
+            enums.feature.operational.logging,
+            enums.feature.validation],
+        experiment: [],
+        permission: []
+    },
+    TEST: {
+        release: [],
+        operational: [
+            enums.feature.operational.logging],
+        experiment: [],
+        permission: []
+    },
+    PROD: {
+        release: [],
+        operational: [
+            enums.feature.operational.logging],
+        experiment: [],
+        permission: []
+    }
+}
+
 
 // standard configurations for logging 
 const _LOGGING = {
@@ -193,6 +219,7 @@ const _DATAWAREHOUSE = {
 module.exports.CONFIGS = {
     local: {
         api: { host: '192.168.1.108:8080', scheme: 'http', versions: _API.VERSIONS },
+        features: _FEATURES.DEV,
         logging: _LOGGING.DEV,
         kafka: { brokers: ['192.168.1.108:9092'] },                             // localhost   | 192.168.1.108            
         kafkajs: _KAFKAJS,
@@ -203,6 +230,7 @@ module.exports.CONFIGS = {
     },
     testcloud: {                                                                // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: _API.HOST.TEST, scheme: 'https', versions: _API.VERSIONS },
+        features: _FEATURES.TEST,
         logging: _LOGGING.TEST,
         kafka: { brokers: _KAFKA.BROKERS.SINGLE },
         kafkajs: _KAFKAJS,
@@ -213,6 +241,7 @@ module.exports.CONFIGS = {
     },
     devcloud: {                                                                 // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: _API.HOST.DEV, scheme: 'https', versions: _API.VERSIONS },
+        features: _FEATURES.DEV,
         logging: _LOGGING.DEV,
         kafka: { brokers: _KAFKA.BROKERS.SINGLE },                                     // array of kafka message brokers                       // kafka-1-vm  | 10.140.0.11
         kafkajs: _KAFKAJS,
@@ -223,6 +252,7 @@ module.exports.CONFIGS = {
     },
     devcloud_HA: {                                                              // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: _API.HOST.DEV, scheme: 'https', versions: _API.VERSIONS },
+        features: _FEATURES.DEV,
         logging: _LOGGING.DEV,
         kafka: { brokers: _KAFKA.BROKERS.HA },                                         // array of kafka message brokers                       // [kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
         kafkajs: _KAFKAJS,
@@ -233,6 +263,7 @@ module.exports.CONFIGS = {
     },
     prodcloud: {                                                                // single node kafka, or Kafka Std - 1 master, N workers
         api: { host: _API.HOST.PROD, scheme: 'https', versions: _API.VERSIONS },
+        features: _FEATURES.PROD,
         logging: _LOGGING.PROD,
         kafka: { brokers: _KAFKA.BROKERS.SINGLE },                                     // array of kafka message brokers                       // kafka-1-vm  | 10.140.0.11   
         kafkajs: _KAFKAJS,
@@ -243,6 +274,7 @@ module.exports.CONFIGS = {
     },
     prodcloud_HA: {                                                             // Kafka HA - 3 masters, N workers
         api: { host: _API.HOST.PROD, scheme: 'https', versions: _API.VERSIONS },
+        features: _FEATURES.PROD,
         logging: _LOGGING.PROD,
         kafka: { brokers: _KAFKA.BROKERS.HA },                                         // array of kafka message brokers                       // [kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
         kafkajs: _KAFKAJS,
