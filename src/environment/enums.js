@@ -15,6 +15,16 @@ module.exports.energyData = {
     gridout: 'grid.out'
 }
 
+// api paths enumerations 
+module.exports.paths = {
+    energy: 'energy',
+    device: 'device',
+    devices: 'devices',
+    logging: 'logging',         //  api/logging
+    features: 'features',       //  api/features
+    versions: 'versions'        //  api/versions
+}
+
 // api parameter enumerations 
 module.exports.params = {
     energy: {
@@ -47,12 +57,12 @@ module.exports.params.energy.default = this.params.energy.hse;
 module.exports.params.period.default = this.params.period.week;
 
 // flags for feature toogles
-module.exports.feature = {
+module.exports.features = {
     release: { },
     operational: {
         none: "none",
-        logging: 'logging',                             // logging reconfiguration feature
-        validation: 'validation'                        // whether or not to to perform in-depth input validation for post requests
+        logging: 'logging',                         // logging reconfiguration feature
+        validation: 'validation'                    // whether or not to to perform in-depth input validation for post requests
     },
     experiment: { },
     permission: { }

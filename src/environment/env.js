@@ -42,22 +42,22 @@ const _FEATURES = {
     DEV: {
         release: [],
         operational: [
-            enums.feature.operational.logging,
-            enums.feature.validation],
+            enums.features.operational.logging,
+            enums.features.operational.validation],
         experiment: [],
         permission: []
     },
     TEST: {
         release: [],
         operational: [
-            enums.feature.operational.logging],
+            enums.features.operational.logging],
         experiment: [],
         permission: []
     },
     PROD: {
         release: [],
         operational: [
-            enums.feature.operational.logging],
+            enums.features.operational.logging],
         experiment: [],
         permission: []
     }

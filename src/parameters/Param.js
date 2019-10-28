@@ -26,20 +26,26 @@ class Param {
      * parameters are mandatory unless optional is true
      */
     constructor(name, value, defaultValue, enumsList, optional = false) {
-        
+
         // name & value                                   // use default if value not provided                                      
         this.name = name;
         this.value = value ? value : defaultValue;
-        
+
         // validate enum                                  // if an enum was provided the value must exist in it  
         let enumTest = enumsList ? utils.valueExistsInObject(enumsList, this.value) : true;
 
         // isOptional & isValid                          // isValid if 1) enumTest passes and 2) there must be a value unless isOptional
         this.isOptional = optional;
-        
+
         // check if Param isValid 
-        this.isValid = enumTest 
+        this.isValid = enumTest
             && (this.isOptional === true ? true : this.value != consts.NONE);       // there must be a value unless isOptional    
+
+        // optional exception message set by validatin functions, this is appended to the message below   
+        this.validationRule = '';
+
+        // add error message detail only if there are errors
+        this.message = () => { return this.isValid ? "" : `${(!this.isOptional && !this.value ? 'mandatory ' : 'invalid')} parameter: '${this.name}'. ${this.validationRule}` };
 
     }
 }

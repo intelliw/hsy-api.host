@@ -89,7 +89,7 @@ function validateParams(req, params, errors) {
             if (!param.isValid) {                                                   // check if param was declared valid during construction 
                 errors.add(
                     `${ERROR_MESSAGE} | ${param.value} | ${req.path}`,
-                    `${(param.isMandatory && !param.value ? 'mandatory ' : 'invalid')} parameter: ${param.name}`);                                    // add the message detail to the errors
+                    param.message());                                                 // add the message detail to the errors
             }
             allParamsValid = allParamsValid && param.isValid;
         });
