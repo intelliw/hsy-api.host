@@ -10,7 +10,9 @@ const router = express.Router();
 const csvSyncParse = require('csv-parse/lib/sync')
 
 const enums = require('../environment/enums');
+const utils = require('../environment/utils');
 const consts = require('../host/constants');
+const log = require('../logger').log;
 
 const Request = require('./Request');
 const Param = require('../parameters');
@@ -68,6 +70,7 @@ class DevicesDatasetsPost extends Request {
         contentType = req.headers[enums.request.headers.contentType];                               // text/csv or application/json
         isPmsCsv = (contentType == enums.mimeType.textCsv) && (dataset == enums.params.datasets.pms);     // text/csv supported for pms only
         
+
         // convert if pms csv                                                                       // for text/csv req body contains raw csv content, for application/json the req.body is a 'datasets' object with array of datasets {"datasets": [.. ]                        
         if (isPmsCsv) {
             datasets = pmsCsvToJson(`${req.body}`);                                                 // use template literal to handle embedded quotes in the data
@@ -77,12 +80,15 @@ class DevicesDatasetsPost extends Request {
         
         // parameters                                                       
         let params = {};
-        params.dataset = new Param('dataset', dataset, consts.NONE, enums.params.datasets);         // this is the path param
+        params.dataset = new Param('dataset', dataset, consts.NONE, enums.params.datasets);         // this is the path parameter
         params.datasets = new Param('datasets', datasets);                                          // this is the body payload. for text/csv this is raw csv content 
 
         // super - validate params, auth, accept header
         super(req, params, DevicesDatasetsPostResponse.produces, DevicesDatasetsPostResponse.consumes);           // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
         params.apiKey = this.apiKey;                                                                // add apiKey as a param as it is used to produce the sys.source attribute in the Producer  
+
+        // trace log the request
+        log.trace(`${dataset} ContentType:${contentType} Accept:${this.accept.value} sender:${utils.keynameFromValue(enums.apiKey, this.apiKey.value)} valid:${this.validation.isValid}`, JSON.stringify({datasets: datasets}));
 
         // execute the response only if super isValid                                               // if not isValid  super constuctor would have created a this.response = ErrorResponse 
         this.response = this.validation.isValid === true ? new DevicesDatasetsPostResponse(this.params, this.accept) : this.response;
