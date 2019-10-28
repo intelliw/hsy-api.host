@@ -39,7 +39,6 @@ class KafkaProducer {
         this.kafkaTopic = kafkaTopic;
     }
 
-
     /** implemented by subtype
     * @param {*} msgObj                                                             // e.g. msgObj = { itemCount: 0, messages: [] };
     * @param {*} sender                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
