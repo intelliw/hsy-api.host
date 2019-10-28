@@ -78,7 +78,7 @@ router.get('/logging', (req, res, next) => {
         producer.sendToTopic(env.active.logging, sender);                           // send the complete logging configs to the topic: which is env.active.topics.system.feature
 
         // log it
-        log.trace(`${producer.kafkaTopic} ${enums.feature.logging}`, env.active.logging);
+        log.trace(`${enums.feature.logging}`, producer.kafkaTopic, env.active.logging);
         
     }
 

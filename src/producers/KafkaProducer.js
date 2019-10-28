@@ -65,8 +65,8 @@ class KafkaProducer {
             // log.data("monitoring", "pms", "TEST-09", []); 
             // log.exception('sendToTopic', 'there was an error in ' + env.active.kafkajs.producer.clientId, log.ERR.event()); 
             // log.error('Unexpected', new Error('sendToTopic connection')); 
-            // log.trace('@1', log.ERR.event());
-            // log.trace('@1');
+            // log.trace('@1', 'id', log.ERR.event());
+            // log.trace('@1', 'id');
 
             // disconnect
             await this.producerObj.disconnect();
