@@ -59,7 +59,7 @@ class Statement {
     // Console write operatation
     async _writeConsole(statement, severity, verbosity, payload) {
 
-        console.log(`${statement}.${verbosity.toUpperCase()}`, payload)
+        console.log(`${statement.toUpperCase()}.${verbosity}`, payload)
     }
 
 

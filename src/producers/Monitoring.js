@@ -78,10 +78,10 @@ class Monitoring extends KafkaProducer {
             dataset.data.forEach(dataItem => {                                      // e.g. "data": [ { "time_local": "2
 
                 // add elements into the dataset
-                dataItem = this.addGenericAttributes(dataItem, sender);             // add common attributes
+                let newDataItem = this.addGenericAttributes(dataItem, sender);             // add common attributes
 
                 // add the message to the items buffer
-                dataItems.push(dataItem);
+                dataItems.push(newDataItem);
 
             });
 
@@ -101,30 +101,28 @@ class Monitoring extends KafkaProducer {
     }
 
     /* this function adds attributes common to all datasets:
-    *  dataItem - contains the data object e.g. "data": [ { "time_local": "2
+    *   append event time, zone, and processing time to the data item
+    *   dataItem - contains the data object e.g. "data": [ { "time_local": "2
+    *  note that we convert time_local to bigqueryZonelessTimestampFormat which does not have trailing offset hours 
+    *   - this is done as part of date validation in this stage 
+    *   - but it not required by bigquery as it will convert local time to utc if submitted with a zone offset
     *  sender is the keyname of the apikey enum, sent in the POST request  and identifies the source of the data. this value is added to sys.source attribute
     */
     addGenericAttributes(dataItem, sender) {
 
-        // delete time_local - this will be replaced
-        let eventTime = dataItem.time_local;                                        // "data": [ { "time_local": "20190209T150017.020+0700",
-        delete dataItem.time_local;                                                 // addMessage will prepend 3 standard time attributes to the dataitem
+        let eventTime = dataItem.time_local;     // "data": [ { "time_local": "20190209T150017.020+0700",
 
-        /* append event time, zone, processing time to the data item
-        note that we convert time_local to bigqueryZonelessTimestampFormat which does not have trailing offset hours 
-        - this is done as part of date validation in this stage 
-        - but it not required by bigquery as it will convert local time to utc if submitted with a zone offset
-        */
-
-        dataItem = {
-            ...dataItem,
+        // create a new dataitem and add standard attributes
+        let newDataItem = {
+            ...dataItem,                         // use spread operator to clone datasItem. ..so that original dataItem is not referenced by reentrant threads
             sys: { source: sender },             // is based on the apikey from the sender and identifies the source of the data. this value is added to sys.source attribute
             time_event: moment.utc(eventTime).format(consts.dateTime.bigqueryZonelessTimestampFormat),
             time_zone: utils.datetimeZoneOffset(eventTime),
             time_processing: moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat)
         };
+        delete newDataItem.time_local;           //  delete time_local as it has been replaced with the 3 standard time attributes above
 
-        return dataItem;
+        return newDataItem;
 
     }
 

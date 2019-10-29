@@ -54,7 +54,7 @@ class DevicesDatasetsPostResponse extends Response {
   }
 }
 
-// perform the data operation 
+// perform the POST operation - all devices will create a kafka producer and send the dataset to a topic
 function executePost(params) {
 
   // construct a producer

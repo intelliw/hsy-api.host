@@ -47,26 +47,6 @@ router.get('/logging/help', (req, res, next) => {
 
 });
 
-// [devops.api.features.help.get] /api/logging/help
-router.get('/features/help', (req, res, next) => {
-
-    // return features configurables 
-    res
-        .status(200)
-        .json({
-            features: {
-                configurables: {
-                    release: utils.objectKeysToArray(enums.features.release),
-                    operational: utils.objectKeysToArray(enums.features.operational),
-                    experiment: utils.objectKeysToArray(enums.features.experiment),
-                    permission: utils.objectKeysToArray(enums.features.permission)
-                }
-            }
-        })                         // e.g. {"logging":{"verbosity":["info"]}}
-        .end();
-
-});
-
 
 // [devops.api.logging.get] /api/logging?verbosity=debug,info
 router.get('/logging', (req, res, next) => {
@@ -109,6 +89,27 @@ router.get('/logging', (req, res, next) => {
         .end();
 
 });
+
+// [devops.api.features.help.get] /api/logging/help
+router.get('/features/help', (req, res, next) => {
+
+    // return features configurables 
+    res
+        .status(200)
+        .json({
+            features: {
+                configurables: {
+                    release: utils.objectKeysToArray(enums.features.release),
+                    operational: utils.objectKeysToArray(enums.features.operational),
+                    experiment: utils.objectKeysToArray(enums.features.experiment),
+                    permission: utils.objectKeysToArray(enums.features.permission)
+                }
+            }
+        })                         // e.g. {"logging":{"verbosity":["info"]}}
+        .end();
+
+});
+
 
 // [devops.api.feature.get] /api/features?operational=logging,validation
 router.get('/features', (req, res, next) => {

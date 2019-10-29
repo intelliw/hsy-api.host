@@ -16,6 +16,7 @@ const log = require('../logger').log;
 
 const Request = require('./Request');
 const Param = require('../parameters');
+const Datasets = require('../parameters/Datasets');
 
 const DevicesDatasetsPostResponse = require('../responses/DevicesDatasetsPostResponse');
 
@@ -66,32 +67,32 @@ class DevicesDatasetsPost extends Request {
     */
     constructor(req) {
 
-        let dataset, datasets, contentType, isPmsCsv;
+        let datasetName, datasets, contentType, isPmsCsv;
 
         // body content - check if json or csv                                                      // for application/json this is a datasets object with array of datasets {"datasets": [.. ] 
-        dataset = req.params.dataset;                                                               // dataset is a query string param         
+        datasetName = req.params.dataset;                                                               // dataset is a query string param         
         contentType = req.headers[enums.request.headers.contentType];                               // text/csv or application/json
-        isPmsCsv = (contentType == enums.mimeType.textCsv) && (dataset == enums.params.datasets.pms);     // text/csv supported for pms only
+        isPmsCsv = (contentType == enums.mimeType.textCsv) && (datasetName == enums.params.datasets.pms);     // text/csv supported for pms only
         
 
         // convert if pms csv                                                                       // for text/csv req body contains raw csv content, for application/json the req.body is a 'datasets' object with array of datasets {"datasets": [.. ]                        
         if (isPmsCsv) {
-            datasets = pmsCsvToJson(`${req.body}`);                                                 // use template literal to handle embedded quotes in the data
+            datasets = pmsCsvToJson(`${req.body}`);                                                 // for text/csv this is raw csv content. use template literal to handle embedded quotes in the data !
         } else {
             datasets = req.body.datasets;
         }
         
         // parameters                                                       
         let params = {};
-        params.dataset = new Param('dataset', dataset, consts.NONE, enums.params.datasets);         // this is the path parameter e.g. pms
-        params.datasets = new Param.Datasets(dataset, datasets);                                    // this is the body payload. for text/csv this is raw csv content 
+        params.dataset = new Param('dataset', datasetName, consts.NONE, enums.params.datasets);         // this is the path parameter e.g. pms
+        params.datasets = new Datasets(datasetName, datasets);                                          // Datasets is a param validator for the devices body payload. 
 
-        // super - validate params, auth, accept header
+        // super Request- creates a Validate object to validate all params, auth, and accept header
         super(req, params, DevicesDatasetsPostResponse.produces, DevicesDatasetsPostResponse.consumes);           // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
         params.apiKey = this.apiKey;                                                                // add apiKey as a param as it is used to produce the sys.source attribute in the Producer  
 
         // trace log the request
-        log.trace(`${contentType} sender:${utils.keynameFromValue(enums.apiKey, this.apiKey.value)} valid:${this.validation.isValid}`,  `${dataset} POST`, JSON.stringify({datasets: datasets}));
+        log.trace(`${contentType} sender:${utils.keynameFromValue(enums.apiKey, this.apiKey.value)} valid:${this.validation.isValid}`,  `${datasetName} POST`, JSON.stringify({datasets: datasets}));
 
         // execute the response only if super isValid                                               // if not isValid  super constuctor would have created a this.response = ErrorResponse 
         this.response = this.validation.isValid === true ? new DevicesDatasetsPostResponse(this.params, this.accept) : this.response;

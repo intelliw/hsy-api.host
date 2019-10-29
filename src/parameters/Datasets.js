@@ -12,8 +12,6 @@ const consts = require('../host/constants');
 
 const Param = require('./Param');
 
-const PARAM_NAME = "datasets";
-
 class Datasets extends Param {
     /**
      * instance attributes:  
@@ -24,10 +22,10 @@ class Datasets extends Param {
     constructor(datasetName, datasets) {
 
         // constuct the param
-        super(PARAM_NAME, datasets);                                    // use default name and value to construct, these get replaced during validations    
+        super(datasetName, datasets);                                       // name and value will get replaced with the faulty element name and value if validation fails    
         
         // start validations    
-        if (this._isValidation()) {                                       // check if this feature is on (should be off in production, but can be switched on when troubleshooting)
+        if (this._isValidation()) {                                         // check if this feature is on (should be off in production, but can be switched on when troubleshooting)
             switch (datasetName) {
 
                 // pms
@@ -56,7 +54,7 @@ class Datasets extends Param {
      *  this.optional       - with the optionality of that dataset element
      *  this.isValid        - false
      *  this.validationRule - a textual description of the rule which failed validation
-     * note: this.message must not be set - as it produces a message based ont he above properties through a function
+     * note: this.message must not be set - as it produces a message based on the above set of properties
      * 
      * this allows the Validate.validateParams() method to produce a Request status and error message for this dataset param  
     */
@@ -65,6 +63,8 @@ class Datasets extends Param {
         let key;
         let datasets = this.value;
 
+        console.log('ok..............')
+        console.log(datasets)
         // extract and add messages to results 
         datasets.forEach(dataset => {                                               // e.g. "pms": { "id": "PMS-01-001" }, "data": [ { time_local: '20190809T150006.032+0700', pack: [Object] }, ... ]
 
@@ -87,13 +87,14 @@ class Datasets extends Param {
     }
 
     _validateMppt(param, dataItem) {
-        
+        console.log(`is array ? ${Array.isArray(dataItem.pv.volts)}`);
+        /* 
         param.name = 'pv.volts';
         param.value = '48.000';
         param.optional = false;
         param.isValid = false;
         param.validationRule = 'This element must contain an array';
-
+        */
     }
 
 

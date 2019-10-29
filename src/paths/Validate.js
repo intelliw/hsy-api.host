@@ -46,7 +46,7 @@ class Validate {
             && this.isParamsValid
             && this.isAuthorised;
     }
-
+    
 }
 
 // validate whether this request is authorised. Adds error details to the errors passed in by reference.
