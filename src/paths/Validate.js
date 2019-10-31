@@ -49,6 +49,7 @@ class Validate {
     
 }
 
+
 // validate whether this request is authorised. Adds error details to the errors passed in by reference.
 function validateAuthorisation(req, apiKeyParam, errors) {
 
@@ -70,6 +71,7 @@ function validateAuthorisation(req, apiKeyParam, errors) {
 
     return isAuth;
 }
+
 
 // validate params. Adds error details to the errors passed in by reference.    
 function validateParams(req, params, errors) {
@@ -100,6 +102,7 @@ function validateParams(req, params, errors) {
 
 }
 
+
 // validate content type. Adds error details to the errors passed in by reference.
 function validateContentType(req, contentTypeParam, errors) {
 
@@ -115,6 +118,7 @@ function validateContentType(req, contentTypeParam, errors) {
     
     return isContentTypeValid;
 }
+
 
 // validate accept type. Adds error details to the errors passed in by reference.
 function validateAcceptType(req, acceptParam, errors) {

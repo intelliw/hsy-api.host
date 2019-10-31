@@ -34,6 +34,14 @@ module.exports.capitalise = (str, allWords) => {                   // str = e.g.
     return outStr;
 };
 
+// clones a json object - including arrays to any nesting depth
+module.exports.clone = (jsonObj) => {                                   // e.g. { .. }    
+
+    let clone = JSON.parse(JSON.stringify(jsonObj));
+
+    return clone;
+};
+
 /**
  * returns a number sequence (e.g. days of the month '01 02 ..' etc) in a delimited string with zero pads
  * howMany is the number of numbers to output including the startNum 

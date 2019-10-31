@@ -72,10 +72,9 @@ class DevicesDatasetsPost extends Request {
         // body content - check if json or csv                                                      // for application/json this is a datasets object with array of datasets {"datasets": [.. ] 
         datasetName = req.params.dataset;                                                               // dataset is a query string param         
         contentType = req.headers[enums.request.headers.contentType];                               // text/csv or application/json
-        isPmsCsv = (contentType == enums.mimeType.textCsv) && (datasetName == enums.params.datasets.pms);     // text/csv supported for pms only
-        
 
         // convert if pms csv                                                                       // for text/csv req body contains raw csv content, for application/json the req.body is a 'datasets' object with array of datasets {"datasets": [.. ]                        
+        isPmsCsv = (contentType == enums.mimeType.textCsv) && (datasetName == enums.params.datasets.pms);     // text/csv supported for pms only
         if (isPmsCsv) {
             datasets = pmsCsvToJson(`${req.body}`);                                                 // for text/csv this is raw csv content. use template literal to handle embedded quotes in the data !
         } else {
@@ -85,7 +84,7 @@ class DevicesDatasetsPost extends Request {
         // parameters                                                       
         let params = {};
         params.dataset = new Param('dataset', datasetName, consts.NONE, enums.params.datasets);         // this is the path parameter e.g. pms
-        params.datasets = new Datasets(datasetName, datasets);                                          // Datasets is a param validator for the devices body payload. 
+        params.datasets = new Datasets(datasetName, datasets).validate();                                     // Datasets is a param validator for the devices body payload. 
 
         // super Request- creates a Validate object to validate all params, auth, and accept header
         super(req, params, DevicesDatasetsPostResponse.produces, DevicesDatasetsPostResponse.consumes);           // super validates and sets this.accepts this.isValid, this.isAuthorised params valid

@@ -4,6 +4,7 @@
  * ./parameters/Datasets.js
  *  supertype to validate datasets in POST body
  */
+const Joi = require('@hapi/joi');
 
 const utils = require('../environment/utils');
 const env = require('../environment/env');
@@ -23,78 +24,109 @@ class Datasets extends Param {
 
         // constuct the param
         super(datasetName, datasets);                                       // name and value will get replaced with the faulty element name and value if validation fails    
-        
-        // start validations    
-        if (this._isValidation()) {                                         // check if this feature is on (should be off in production, but can be switched on when troubleshooting)
-            switch (datasetName) {
-
-                // pms
-                case enums.params.datasets.pms:
-                    break;
-
-                // mppt 
-                case enums.params.datasets.mppt:
-                    this._validate(datasetName, this._validateMppt);
-                    break;
-
-                // inverter 
-                case enums.params.datasets.inverter:
-                    break;
-
-            }
-
-        }
 
     }
 
-    /* validates the datasets in this.value (created during construction)  
+    /* validates datasets in this.value (created during construction)  
      * if there is a validation error, this function replaces:
-     *  this.name           - with the JSON path of the invalid element (e.g. 'pv.volts'
-     *  this.value          - with the invalid value in that dataset element
-     *  this.optional       - with the optionality of that dataset element
-     *  this.isValid        - false
-     *  this.validationRule - a textual description of the rule which failed validation
+     *  this.isValid            - false
+     *  this.value              - replaces the datasets with the invalid dataitem (i.e. datasets.data[x]
+     *  this.validationError    - the error message produced by the validation 
      * note: this.message must not be set - as it produces a message based on the above set of properties
      * 
      * this allows the Validate.validateParams() method to produce a Request status and error message for this dataset param  
     */
-    _validate(datasetName, validationFunction) {
-
+    validate() {
+        if (this._isValidation()) {                                         // check if the validation 'feature' is on (it should be off in production, but can be switched on when troubleshooting)
+            
         let key;
-        let datasets = this.value;
+            let datasets = this.value;
+            let datasetName = this.name;                                    // this.name is dataset name - set by constructor        
 
-        console.log('ok..............')
-        console.log(datasets)
-        // extract and add messages to results 
-        datasets.forEach(dataset => {                                               // e.g. "pms": { "id": "PMS-01-001" }, "data": [ { time_local: '20190809T150006.032+0700', pack: [Object] }, ... ]
+            // select 1 of the validation functions based on the dataset name    
+            let schema = this._getSchema(datasetName);
 
-            if (this.isValid) {
-                
-                key = dataset[datasetName].id;                                          // e.g. id from.. "pms": { "id": 
-                console.log(key);
+            // validate each dataset
+            datasets.forEach(dataset => {                                     // e.g. "datasets": ["pms": { "id": "PMS-01-001" }, "data": [ { time_local: '20190809T150006.032+0700', pack: [Object] }, ... ]
+                key = dataset[datasetName].id;                               // e.g. id from.. "pms": { "id": 
 
-                // add each data item in the dataset as an individual message
-                dataset.data.forEach(dataItem => {                                      // e.g. "data": [ { "time_local": "2
-                    if (this.isValid) {
-                        console.log(dataItem.time_local);
-                        validationFunction(this, dataItem);                                               // call the validation function 
-                    }
-                });
+                if (this.isValid) {
+                    // validate each data item in the dataset
+                    dataset.data.forEach(dataItem => {                        // e.g. "data": [ { "time_local": "2
 
-            }
-        });
+                        // call the validation function 
+                        if (this.isValid) { 
 
+                            // const { error, value } = schema.validate(dataItem);
+                            let result = schema.validate(dataItem);
+                            if (result.error) {
+                                let errDetails = result.error.details[0];
+
+                                this.isValid = false;                          // this prevents further validation  
+                                this.value = dataItem;
+                                this.validationError = `${key}: ${errDetails.message} (${errDetails.context.value})`;
+                            }
+                        }
+                        
+                    });
+                }
+            });
+
+        }
+
+        return this;
     }
 
-    _validateMppt(param, dataItem) {
-        console.log(`is array ? ${Array.isArray(dataItem.pv.volts)}`);
+    _getSchemaePms() {
         /* 
         param.name = 'pv.volts';
         param.value = '48.000';
         param.optional = false;
         param.isValid = false;
-        param.validationRule = 'This element must contain an array';
+        param.validationError = 'This element must contain an array';
         */
+    }
+
+    _getSchemaMppt() {
+
+       const schema = Joi.object({ 
+            pv: Joi.object({                                          // "pv": { "volts": [48.000, 48.000], "amps": [6.0, 6.0] },      
+                volts: Joi.array().items(Joi.number().positive()).max(4),        
+                amps: Joi.array().items(Joi.number().positive()).max(4)
+            })
+        });                   
+       
+
+       return schema; 
+    }
+
+    _getSchemaInverter() {
+        /* 
+        param.name = 'pv.volts';
+        param.value = '48.000';
+        param.optional = false;
+        param.isValid = false;
+        param.validationError = 'This element must contain an array';
+        */
+    }
+    
+    // selects the validation function for the dataset  
+    _getSchema(datasetName) {
+
+        let schema;
+
+        switch (datasetName) {
+            case enums.params.datasets.pms:                             // pms
+                schema = this._getSchemaPms();
+                break;
+            case enums.params.datasets.mppt:                            // mppt 
+                schema = this._getSchemaMppt();
+                break;
+            case enums.params.datasets.inverter:                        // inverter 
+                schema = this._getSchemaInverter();
+                break;
+        }
+        return schema;
     }
 
 
@@ -102,4 +134,7 @@ class Datasets extends Param {
     _isValidation() { return env.active.features.operational.includes(enums.features.operational.validation); }
 }
 
+
+
 module.exports = Datasets;
+

@@ -19,6 +19,7 @@
   "dependencies": {
     "@google-cloud/error-reporting": "^1.1.2",
     "@google-cloud/logging": "^5.4.1",
+    "@hapi/joi": "^16.1.7",
     "body-parser": "1.18.3",
     "csv-parse": "^4.4.5",
     "ejs": "^2.6.1",

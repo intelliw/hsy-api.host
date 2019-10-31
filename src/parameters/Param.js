@@ -42,10 +42,10 @@ class Param {
             && (this.isOptional === true ? true : this.value != consts.NONE);       // there must be a value unless isOptional    
 
         // optional exception message set by validatin functions, this is appended to the message below   
-        this.validationRule = '';
+        this.validationError = '';
 
         // add error message detail only if there are errors
-        this.message = () => { return this.isValid ? "" : `${(!this.isOptional && !this.value ? 'mandatory ' : 'invalid')} parameter: '${this.name}'. ${this.validationRule}` };
+        this.message = () => { return this.isValid ? "" : `${(!this.isOptional && !this.value ? 'mandatory ' : 'invalid')} parameter: '${this.name}'. ${this.validationError}` };
 
     }
 }

@@ -74,7 +74,7 @@ const _LOGGING = {
             enums.logging.statements.error,
             enums.logging.statements.trace],
         verbosity: [
-            enums.logging.verbosity.debug],
+            enums.logging.verbosity.info],
         appenders: [
             enums.logging.appenders.stackdriver,
             enums.logging.appenders.console]
