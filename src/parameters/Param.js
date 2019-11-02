@@ -44,7 +44,7 @@ class Param {
         // optional exception message set by validatin functions, this is appended to the message below   
         this.validationError = '';
 
-        // add error message detail only if there are errors
+        // produce the message through a function - add the above validation error message, which will be updated by the subclass if there are errors
         this.message = () => { return this.isValid ? "" : `${(!this.isOptional && !this.value ? 'mandatory ' : 'invalid')} parameter: '${this.name}'. ${this.validationError}` };
 
     }

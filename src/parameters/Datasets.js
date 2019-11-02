@@ -63,7 +63,7 @@ class Datasets extends Param {
                                 let errDetails = result.error.details[0];
 
                                 this.isValid = false;                          // this prevents further validation  
-                                this.value = dataItem;
+                                //this.value = JSON.stringify(dataItem);
                                 this.validationError = `${key}: ${errDetails.message} (${errDetails.context.value})`;
                             }
                         }
@@ -90,7 +90,7 @@ class Datasets extends Param {
     _getSchemaMppt() {
 
        const schema = Joi.object({ 
-            pv: Joi.object({                                          // "pv": { "volts": [48.000, 48.000], "amps": [6.0, 6.0] },      
+            pv: Joi.object({                                            // "pv": { "volts": [48.000, 48.000], "amps": [6.0, 6.0] },      
                 volts: Joi.array().items(Joi.number().positive()).max(4),        
                 amps: Joi.array().items(Joi.number().positive()).max(4)
             })
