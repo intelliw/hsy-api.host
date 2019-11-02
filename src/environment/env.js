@@ -25,8 +25,8 @@ const _API = {
 
     // API host for dev, prod, and test
     HOST: {
-        DEV: 'dev.api.sundaya.monitored.equipment',
-        TEST: 'test.api.sundaya.monitored.equipment',
+        DEV: 'dev.sundaya.monitored.equipment',
+        TEST: 'test.sundaya.monitored.equipment',
         PROD: 'api.sundaya.monitored.equipment'
     },
 
@@ -170,9 +170,9 @@ const _TOPICS = {
 
 // GCP project configs per environment 
 const _GCP = {
-    DEV: { project: "sundaya" },
-    TEST: { project: "sundaya" },
-    PROD: { project: "sundaya" }
+    DEV: { project: "sundaya2" },
+    TEST: { project: "sundaya2" },
+    PROD: { project: "sundaya2" }
 }
 
 
@@ -286,4 +286,4 @@ module.exports.CONFIGS = {
 }
 
 // env.active returns the active environment 
-module.exports.active = this.CONFIGS.prodcloud;      // change enums.environments to 'local' to develop locally or to 'devcloud' to develop online                               
+module.exports.active = this.CONFIGS.local;      // change enums.environments to 'local' to develop locally or to 'devcloud' to develop online                               
