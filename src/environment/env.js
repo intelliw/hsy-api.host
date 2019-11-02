@@ -27,7 +27,7 @@ const _API = {
     HOST: {
         DEV: 'dev.api.sundaya.monitored.equipment',
         TEST: 'test.api.sundaya.monitored.equipment',
-        PROD: 'api.sundaya2.monitored.equipment'
+        PROD: 'api.sundaya.monitored.equipment'
     },
 
     // API versions 
