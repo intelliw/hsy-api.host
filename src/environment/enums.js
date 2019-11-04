@@ -175,6 +175,8 @@ module.exports.logging = {
 // gcp project enumerations
 module.exports.gcp = {
     projects: {
-        sundaya: "sundaya"
+        sundayaProd: "sundaya",
+        sundayaDev: "sundaya-dev",
+        sundayaTest: "sundaya-test"
     }
 }

@@ -17,7 +17,7 @@ class GenericMessageDetail extends Definitions {
     instance attributes:  
      super.getElements().. => []
         message = 'The requested Accept header type is not supported.';
-        target = 'Accept header'
+        description = 'Accept header'
 
     constructor arguments 
     */
@@ -27,9 +27,9 @@ class GenericMessageDetail extends Definitions {
 
     }
 
-    add (message, target) {
+    add (message, description) {
        
-       const detail = { "message": message, "target": target };
+       const detail = { "message": message, "description": description };
        super.add(detail);    
 
     }
@@ -37,12 +37,12 @@ class GenericMessageDetail extends Definitions {
 
 }
 
-// makes a detail object for the status, with message and target properties 
+// makes a detail object for the status, with message and description properties 
 function getDetail(statusEnum) {
 
     // detail
     let message;
-    let target;
+    let description;
 
     switch (statusEnum) {
         case enums.responseStatus[401]:                             // Unauthorized
@@ -50,7 +50,7 @@ function getDetail(statusEnum) {
     }
 
     // return a detail object
-    return { "message": message, "target": target };
+    return { "message": message, "description": description };
 
 }
 

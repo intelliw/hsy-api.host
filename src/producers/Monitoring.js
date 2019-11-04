@@ -78,7 +78,7 @@ class Monitoring extends KafkaProducer {
             dataset.data.forEach(dataItem => {                                      // e.g. "data": [ { "time_local": "2
 
                 // add elements into the dataset
-                let newDataItem = this.addGenericAttributes(dataItem, sender);             // add common attributes
+                let newDataItem = this.addGenericAttributes(dataItem, sender);      // add common attributes
 
                 // add the message to the items buffer
                 dataItems.push(newDataItem);
@@ -110,17 +110,20 @@ class Monitoring extends KafkaProducer {
     */
     addGenericAttributes(dataItem, sender) {
 
-        let eventTime = dataItem.time_local;     // "data": [ { "time_local": "20190209T150017.020+0700",
+        // create a new dataitem
+        let newDataItem = utils.clone(dataItem);                // clone the object before any modifications, to prevent errors due to object re-referencing 
 
-        // create a new dataitem and add standard attributes
-        let newDataItem = {
-            ...dataItem,                         // use spread operator to clone datasItem. ..so that original dataItem is not referenced by reentrant threads
-            sys: { source: sender },             // is based on the apikey from the sender and identifies the source of the data. this value is added to sys.source attribute
-            time_event: moment.utc(eventTime).format(consts.dateTime.bigqueryZonelessTimestampFormat),
-            time_zone: utils.datetimeZoneOffset(eventTime),
-            time_processing: moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat)
-        };
-        delete newDataItem.time_local;           //  delete time_local as it has been replaced with the 3 standard time attributes above
+        // add standard attributes
+        let eventTime = newDataItem.time_local;                 // "data": [ { "time_local": "20190209T150017.020+0700",
+
+        newDataItem.sys = { source: sender };                    // is based on the apikey from the sender and identifies the source of the data. this value is added to sys.source attribute
+
+        newDataItem.time_event = moment.utc(eventTime).format(consts.dateTime.bigqueryZonelessTimestampFormat);
+        newDataItem.time_zone = utils.datetimeZoneOffset(eventTime);
+        newDataItem.time_processing = moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat);
+
+        //  delete time_local as it has been replaced with the 3 standard time attributes above
+        delete newDataItem.time_local;
 
         return newDataItem;
 

@@ -12,6 +12,7 @@ const enums = require('../environment/enums');
 const consts = require('../host/constants');
 
 const Param = require('./Param');
+const THIS_PARAM_NAME = 'datasests';
 
 class Datasets extends Param {
     /**
@@ -22,8 +23,14 @@ class Datasets extends Param {
      */
     constructor(datasetName, datasets) {
 
-        // constuct the param
-        super(datasetName, datasets);                                       // name and value will get replaced with the faulty element name and value if validation fails    
+        // constuct the param 
+        super(THIS_PARAM_NAME, datasets);                                       
+        this.datasetName = datasetName;
+
+        // validate the datasets
+        if (this._isValidation()) {                                     // only if validation 'feature' is on (usually off in production)                              
+            this._validate();
+        }
 
     }
 
@@ -36,43 +43,39 @@ class Datasets extends Param {
      * 
      * this allows the Validate.validateParams() method to produce a Request status and error message for this dataset param  
     */
-    validate() {
-        if (this._isValidation()) {                                         // check if the validation 'feature' is on (it should be off in production, but can be switched on when troubleshooting)
-            
+    _validate() {
+
         let key;
-            let datasets = this.value;
-            let datasetName = this.name;                                    // this.name is dataset name - set by constructor        
+        let datasets = this.value;
+        let datasetName = this.datasetName;                                    // this.name is dataset name - set by constructor        
 
-            // select 1 of the validation functions based on the dataset name    
-            let schema = this._getSchema(datasetName);
+        // select 1 of the validation functions based on the dataset name    
+        let schema = this._getSchema(datasetName);
 
-            // validate each dataset
-            datasets.forEach(dataset => {                                     // e.g. "datasets": ["pms": { "id": "PMS-01-001" }, "data": [ { time_local: '20190809T150006.032+0700', pack: [Object] }, ... ]
-                key = dataset[datasetName].id;                               // e.g. id from.. "pms": { "id": 
+        // validate each dataset
+        datasets.forEach(dataset => {                                     // e.g. "datasets": ["pms": { "id": "PMS-01-001" }, "data": [ { time_local: '20190809T150006.032+0700', pack: [Object] }, ... ]
+            key = dataset[datasetName].id;                               // e.g. id from.. "pms": { "id": 
 
-                if (this.isValid) {
-                    // validate each data item in the dataset
-                    dataset.data.forEach(dataItem => {                        // e.g. "data": [ { "time_local": "2
+            if (this.isValid) {
+                // validate each data item in the dataset
+                dataset.data.forEach(dataItem => {                        // e.g. "data": [ { "time_local": "2
 
-                        // call the validation function 
-                        if (this.isValid) { 
+                    // call the validation function 
+                    if (this.isValid) {
 
-                            // const { error, value } = schema.validate(dataItem);
-                            let result = schema.validate(dataItem);
-                            if (result.error) {
-                                let errDetails = result.error.details[0];
+                        // const { error, value } = schema.validate(dataItem);
+                        let result = schema.validate(dataItem);
+                        if (result.error) {
+                            let errDetails = result.error.details[0];
 
-                                this.isValid = false;                          // this prevents further validation  
-                                //this.value = JSON.stringify(dataItem);
-                                this.validationError = `${key}: ${errDetails.message} (${errDetails.context.value})`;
-                            }
+                            this.isValid = false;                          // this prevents further validation  
+                            this.validationError = `${key}: ${errDetails.message} (${errDetails.context.value})`;
                         }
-                        
-                    });
-                }
-            });
+                    }
 
-        }
+                });
+            }
+        });
 
         return this;
     }
@@ -89,15 +92,15 @@ class Datasets extends Param {
 
     _getSchemaMppt() {
 
-       const schema = Joi.object({ 
+        const schema = Joi.object({
             pv: Joi.object({                                            // "pv": { "volts": [48.000, 48.000], "amps": [6.0, 6.0] },      
-                volts: Joi.array().items(Joi.number().positive()).max(4),        
+                volts: Joi.array().items(Joi.number().positive()).max(4),
                 amps: Joi.array().items(Joi.number().positive()).max(4)
             })
-        });                   
-       
+        });
 
-       return schema; 
+
+        return schema;
     }
 
     _getSchemaInverter() {
@@ -109,7 +112,7 @@ class Datasets extends Param {
         param.validationError = 'This element must contain an array';
         */
     }
-    
+
     // selects the validation function for the dataset  
     _getSchema(datasetName) {
 

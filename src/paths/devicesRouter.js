@@ -18,6 +18,9 @@ const Request = require('./Request');
 const Param = require('../parameters');
 const Datasets = require('../parameters/Datasets');
 
+const RESPONSE_STATUS_LABEL = "Response";
+const REQUEST_STATUS_LABEL = "Request";
+
 const DevicesDatasetsPostResponse = require('../responses/DevicesDatasetsPostResponse');
 
 /*  [devices.dataset.pms.post]
@@ -34,8 +37,10 @@ router.post('/dataset/:dataset',
         let response = request.response;                                // execute the operation and return a response 
         let items = response.content;
 
-        // trace log the response
-        log.trace(response.contentType, `${response.statusCode} response`, JSON.stringify(items));
+        // trace log the response if it is not a 200 
+        if (!utils.is200response(response.contentType)) {
+            log.trace(RESPONSE_STATUS_LABEL, `${response.statusCode}`, JSON.stringify(items));
+        }
         
         // response
         res
@@ -84,14 +89,14 @@ class DevicesDatasetsPost extends Request {
         // parameters                                                       
         let params = {};
         params.dataset = new Param('dataset', datasetName, consts.NONE, enums.params.datasets);         // this is the path parameter e.g. pms
-        params.datasets = new Datasets(datasetName, datasets).validate();                                     // Datasets is a param validator for the devices body payload. 
+        params.datasets = new Datasets(datasetName, datasets);                                     // Datasets is a param validator for the devices body payload. 
 
         // super Request- creates a Validate object to validate all params, auth, and accept header
         super(req, params, DevicesDatasetsPostResponse.produces, DevicesDatasetsPostResponse.consumes);           // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
         params.apiKey = this.apiKey;                                                                // add apiKey as a param as it is used to produce the sys.source attribute in the Producer  
 
         // trace log the request
-        log.trace(`${contentType} sender:${utils.keynameFromValue(enums.apiKey, this.apiKey.value)} valid:${this.validation.isValid}`,  `${datasetName} POST`, JSON.stringify({datasets: datasets}));
+        log.trace(REQUEST_STATUS_LABEL, `${datasetName} POST ${contentType}, sender:${utils.keynameFromValue(enums.apiKey, this.apiKey.value)}, valid?${this.validation.isValid}`, JSON.stringify({datasets: datasets}));
 
         // execute the response only if super isValid                                               // if not isValid  super constuctor would have created a this.response = ErrorResponse 
         this.response = this.validation.isValid === true ? new DevicesDatasetsPostResponse(this.params, this.accept) : this.response;

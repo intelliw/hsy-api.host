@@ -30,23 +30,23 @@ class Validate {
     * @param {*} requestObj             // application Request object
     */
     constructor(req, requestObj) {
-        
+
         // errors
         this.errors = new GenericMessageDetail();                                                                   // each validation above added a detail elemeent to the errors object passed in by reference
-        
+
         // validations               
         this.isAuthorised = validateAuthorisation(req, requestObj.apiKey, this.errors);             // validate authorisation 
         this.isAcceptTypeValid = validateAcceptType(req, requestObj.accept, this.errors);           // validate accept Type 
         this.isContentTypeValid = validateContentType(req, requestObj.contentType, this.errors);    // validate content-type 
         this.isParamsValid = validateParams(req, requestObj.params, this.errors);                   // validate params 
-        
+
         // check if Request isValid 
         this.isValid = this.isAcceptTypeValid
             && this.isContentTypeValid
             && this.isParamsValid
             && this.isAuthorised;
     }
-    
+
 }
 
 
@@ -79,7 +79,7 @@ function validateParams(req, params, errors) {
     const ERROR_MESSAGE = 'The client specified an invalid argument.';
 
     let param;
-    
+
     let allParamsValid = true;
     if (params) {
 
@@ -87,17 +87,17 @@ function validateParams(req, params, errors) {
 
         paramKeys.forEach(key => {                                                  // Request.isValid is true only if *all* params are valid
             param = params[key];
-            
+
             if (!param.isValid) {                                                   // check if param was declared valid during construction 
                 errors.add(
-                    `${ERROR_MESSAGE} | ${param.value} | ${req.path}`,
+                    `${ERROR_MESSAGE} | ${req.path} | ${param.name} | ${param.value}`,
                     param.message());                                                 // add the message detail to the errors
             }
             allParamsValid = allParamsValid && param.isValid;
         });
 
     }
-    
+
     return allParamsValid;
 
 }
@@ -109,13 +109,13 @@ function validateContentType(req, contentTypeParam, errors) {
     const ERROR_MESSAGE = 'Content-Type not supported.';
 
     let isContentTypeValid = contentTypeParam.isValid;                              // if content type is undefined it is not valid
-    
+
     if (!isContentTypeValid) {
         errors.add(
             `${ERROR_MESSAGE} | ${req.headers[enums.request.headers.contentType]}`,
             `Content-Type header`);                                                 // add the message detail to the errors
     }
-    
+
     return isContentTypeValid;
 }
 

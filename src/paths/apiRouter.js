@@ -18,6 +18,8 @@ const log = require('../logger').log;
 
 let utils = env.utils;
 
+const CONFIGS_CHANGED_LABEL = "Configs";
+
 // [devops.api.versions.get] /api/versions
 router.get('/versions', (req, res, next) => {
 
@@ -77,8 +79,8 @@ router.get('/logging', (req, res, next) => {
         let producer = producers.getProducer(enums.paths.logging);                // returns a Features producer, apiPathIdentifier = enums.features.. 
         producer.sendToTopic(env.active.logging, sender);                           // send the complete logging configs to the topic: which is env.active.topics.system.feature
 
-        // log it
-        log.trace(`${enums.paths.features}`, producer.kafkaTopic, env.active.logging);
+        // trace log the logging config change
+        log.trace(CONFIGS_CHANGED_LABEL, `${enums.paths.logging}`, env.active.logging);
         
     }
 
@@ -131,8 +133,8 @@ router.get('/features', (req, res, next) => {
         let producer = producers.getProducer(enums.paths.features);                     // returns a Features producer, apiPathIdentifier = enums.paths.. 
         producer.sendToTopic(env.active.features, sender);                              // send the complete logging configs to the topic: which is env.active.topics.system.feature
 
-        // log it
-        log.trace(enums.paths.features, producer.kafkaTopic, env.active.features);
+        // trace log the features config change
+        log.trace(CONFIGS_CHANGED_LABEL, `${enums.paths.features}`, env.active.features);
         
     }
 

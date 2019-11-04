@@ -26,7 +26,6 @@ class Statement {
         this.logWriter = logWriter;
         this.resourceType = env.active.stackdriver.logging.resource;
         this.instanceId = consts.system.INSTANCE_ID;
-        
     }
 
     // Stackdriver write operatation

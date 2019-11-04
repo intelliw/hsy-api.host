@@ -25,8 +25,8 @@ const _API = {
 
     // API host for dev, prod, and test
     HOST: {
-        DEV: 'dev.sundaya.monitored.equipment',
-        TEST: 'test.sundaya.monitored.equipment',
+        DEV: 'dev.api.sundaya.monitored.equipment',
+        TEST: 'test.api.sundaya.monitored.equipment',
         PROD: 'api.sundaya.monitored.equipment'
     },
 
@@ -74,7 +74,7 @@ const _LOGGING = {
             enums.logging.statements.error,
             enums.logging.statements.trace],
         verbosity: [
-            enums.logging.verbosity.info],
+            enums.logging.verbosity.debug],
         appenders: [
             enums.logging.appenders.stackdriver,
             enums.logging.appenders.console]
@@ -170,9 +170,9 @@ const _TOPICS = {
 
 // GCP project configs per environment 
 const _GCP = {
-    DEV: { project: "sundaya2" },
-    TEST: { project: "sundaya2" },
-    PROD: { project: "sundaya2" }
+    DEV: { project: enums.gcp.projects.sundayaDev },
+    TEST: { project: enums.gcp.projects.sundayaTest },
+    PROD: { project: enums.gcp.projects.sundayaProd }
 }
 
 
