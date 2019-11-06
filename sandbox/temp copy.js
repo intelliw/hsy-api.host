@@ -5,8 +5,8 @@
  * ./environment/log.js
  * performs all logging operations including changes to log levels at runtime 
  */
-const enums = require('./enums');
-const env = require('./env');
+const enums = require('../src/environment/enums');
+const env = require('../src/environment');
 const Stackdriver = require('./Stackdriver');
 
 // create a stackdriver appender instance

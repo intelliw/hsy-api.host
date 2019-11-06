@@ -18,9 +18,6 @@ const Request = require('./Request');
 const Param = require('../parameters');
 const Datasets = require('../parameters/Datasets');
 
-const RESPONSE_STATUS_LABEL = "Response";
-const REQUEST_STATUS_LABEL = "Request";
-
 const DevicesDatasetsPostResponse = require('../responses/DevicesDatasetsPostResponse');
 
 /*  [devices.dataset.pms.post]
@@ -39,7 +36,7 @@ router.post('/dataset/:dataset',
 
         // trace log the response if it is not a 200 
         if (!utils.is200response(response.contentType)) {
-            log.trace(RESPONSE_STATUS_LABEL, `${response.statusCode}`, JSON.stringify(items));
+            log.trace(log.enums.labels.responseStatus, `${response.statusCode}`, JSON.stringify(items));
         }
         
         // response
@@ -96,7 +93,7 @@ class DevicesDatasetsPost extends Request {
         params.apiKey = this.apiKey;                                                                // add apiKey as a param as it is used to produce the sys.source attribute in the Producer  
 
         // trace log the request
-        log.trace(REQUEST_STATUS_LABEL, `${datasetName} POST ${contentType}, sender:${utils.keynameFromValue(enums.apiKey, this.apiKey.value)}, valid?${this.validation.isValid}`, JSON.stringify({datasets: datasets}));
+        log.trace(log.enums.labels.requestStatus, `${datasetName} POST ${contentType}, sender:${utils.keynameFromValue(enums.apiKey, this.apiKey.value)}, valid?${this.validation.isValid}`, JSON.stringify({datasets: datasets}));
 
         // execute the response only if super isValid                                               // if not isValid  super constuctor would have created a this.response = ErrorResponse 
         this.response = this.validation.isValid === true ? new DevicesDatasetsPostResponse(this.params, this.accept) : this.response;

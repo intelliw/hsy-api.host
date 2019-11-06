@@ -54,6 +54,7 @@ class Logger {
         errorStatement = new ErrorStatement(logWriter, errorReporter);
         traceStatement = new TraceStatement(logWriter);
 
+
         // create the public interface for this Logger, for clients to use 
         this.messaging = function (topic, offset, msgsArray, itemQty, sender) { 
             messagingStatement.write(topic, offset, msgsArray, itemQty, sender);
@@ -71,7 +72,19 @@ class Logger {
             traceStatement.write(label, value, payload);
         }
 
+        
+        // runtime enums for log statements
+        this.enums = {
+            labels: {                                                               // lables used in trace statements
+                requestStatus: "Request",
+                responseStatus: "Response",
+                configChange: "Configs",
+                watchVar: "Variable"                                                // use for watch variables - this can be combined with an release or experiment feature, to watch a variable in a new feature
+            }
+        }
+
     }
 
 }
+
 module.exports = Logger;

@@ -9,7 +9,6 @@
 const utils = require('./utils');
 const enums = require('./enums');
 
-
 /* environment configurables  
     env.js is mastered in hse-api-host project and shared by hse-api-consumers etc.
         it should be edited in hse-api-host and copied across to hse-api-consumers project if any changes are made 
@@ -50,14 +49,16 @@ const _FEATURES = {
     TEST: {
         release: [enums.features.release.none],
         operational: [
-            enums.features.operational.logging],
+            enums.features.operational.logging,
+            enums.features.operational.validation],
         experiment: [enums.features.experiment.none],
         permission: [enums.features.permission.none]
     },
     PROD: {
         release: [enums.features.release.none],
         operational: [
-            enums.features.operational.logging],
+            enums.features.operational.logging,
+            enums.features.operational.validation],
         experiment: [enums.features.experiment.none],
         permission: [enums.features.permission.none]
     }
@@ -150,14 +151,14 @@ const _KAFKAJS = {
 // standard kafka topics for each environment type 
 const _TOPICS = {
     DEV: {                                                                  // kafka topics for DEV environments 
-        monitoring: { pms: 'monitoring.dev_pms', mppt: 'monitoring.dev_mppt', inverter: 'monitoring.dev_inverter' },
-        system: { feature: 'system.dev_feature' },
-        dataset: { pms: 'monitoring.dev_pms.dataset', mppt: 'monitoring.dev_mppt.dataset', inverter: 'monitoring.dev_inverter.dataset' }
+        monitoring: { pms: 'monitoring.pms', mppt: 'monitoring.mppt', inverter: 'monitoring.inverter' },
+        system: { feature: 'system.feature' },
+        dataset: { pms: 'monitoring.pms.dataset', mppt: 'monitoring.mppt.dataset', inverter: 'monitoring.inverter.dataset' }
     },
     TEST: {                                                                  // kafka topics for TEST environments 
-        monitoring: { pms: 'monitoring.test_pms', mppt: 'monitoring.test_mppt', inverter: 'monitoring.test_inverter' },
-        system: { feature: 'system.test_feature' },
-        dataset: { pms: 'monitoring.test_pms.dataset', mppt: 'monitoring.test_mppt.dataset', inverter: 'monitoring.test_inverter.dataset' }
+        monitoring: { pms: 'monitoring.pms', mppt: 'monitoring.mppt', inverter: 'monitoring.inverter' },
+        system: { feature: 'system.feature' },
+        dataset: { pms: 'monitoring.pms.dataset', mppt: 'monitoring.mppt.dataset', inverter: 'monitoring.inverter.dataset' }
     },
     PROD: {                                                                 // kafka topics for PROD environments 
         monitoring: { pms: 'monitoring.pms', mppt: 'monitoring.mppt', inverter: 'monitoring.inverter' },                            //  topics for monitoring data received from api host
@@ -198,15 +199,15 @@ const _STACKDRIVER = {
 const _DATAWAREHOUSE = {
     DEV: {                                                                  // bq datasets for DEV environments 
         datasets: { monitoring: 'monitoring' },
-        tables: { pms: 'dev_pms', mppt: 'dev_mppt', inverter: 'dev_inverter', TEST: 'TEST' }
+        tables: { pms: 'pms', mppt: 'mppt', inverter: 'inverter'}
     },
     TEST: {                                                                  // bq datasets for TEST environments 
         datasets: { monitoring: 'monitoring' },
-        tables: { pms: 'test_pms', mppt: 'test_mppt', inverter: 'test_inverter', TEST: 'TEST' }
+        tables: { pms: 'pms', mppt: 'mppt', inverter: 'inverter'}
     },
     PROD: {                                                                 // bq datasets for PROD environments 
         datasets: { monitoring: 'monitoring' },
-        tables: { pms: 'pms', mppt: 'mppt', inverter: 'inverter', TEST: 'TEST' }
+        tables: { pms: 'pms', mppt: 'mppt', inverter: 'inverter'}
     }
 }
 

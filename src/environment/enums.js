@@ -20,9 +20,9 @@ module.exports.paths = {
     energy: 'energy',
     device: 'device',
     devices: 'devices',
-    logging: 'logging',         //  api/logging
-    features: 'features',       //  api/features
-    versions: 'versions'        //  api/versions
+    logging: 'logging',                             //  api/logging
+    features: 'features',                           //  api/features
+    versions: 'versions'                            //  api/versions
 }
 
 // api parameter enumerations 
@@ -55,6 +55,27 @@ module.exports.params = {
 }
 module.exports.params.energy.default = this.params.energy.hse;
 module.exports.params.period.default = this.params.period.week;
+
+
+// enums for logging and error reporting configuration 
+module.exports.logging = {
+    statements: {                                       // determines which log statements will be included in log output 
+        data: "data",
+        error: "error",
+        exception: "exception",
+        messaging: "messaging",
+        trace: "trace"
+    },
+    verbosity: {                                        // log levels for error reporting and logged events
+        none: "none",
+        info: "info",
+        debug: "debug"
+    },
+    appenders: {                                        // output options for logging and error reporting      
+        console: "console",
+        stackdriver: "stackdriver"
+    }
+}
 
 // flags for feature toogles
 module.exports.features = {
@@ -134,10 +155,10 @@ module.exports.apiKey = {
 module.exports.apiKey.default = this.apiKey.PROXY;
 
 // kafka
-module.exports.messageBroker = {                    // kafka message broker. topics are based on enums.params.datasets. 
-    consumerGroups: {                                            // consumer group ids
+module.exports.messageBroker = {                        // kafka message broker. topics are based on enums.params.datasets. 
+    consumerGroups: {                                   // consumer group ids
         monitoring: {
-            pms: 'group.monitoring.pms',                    // group id convention = <target system>.<target dataset>.<target table>
+            pms: 'group.monitoring.pms',                // group id convention = <target system>.<target dataset>.<target table>
             mppt: 'group.monitoring.mppt',
             inverter: 'group.monitoring.inverter'
         },
@@ -146,32 +167,13 @@ module.exports.messageBroker = {                    // kafka message broker. top
         }
     },
     ack: {
-        all: -1,                                    // -1 = all replicas must acknowledge (default) 
-        none: 0,                                    //  0 = no acknowledgments 
-        leader: 1                                   //  1 = only waits for the leader to acknowledge 
+        all: -1,                                        // -1 = all replicas must acknowledge (default) 
+        none: 0,                                        //  0 = no acknowledgments 
+        leader: 1                                       //  1 = only waits for the leader to acknowledge 
     }
 }
 module.exports.messageBroker.ack.default = this.messageBroker.ack.leader
 
-// logging and error reporting framework 
-module.exports.logging = {
-    statements: {                                   // determines which log statements will be included in log output 
-        data: "data",
-        error: "error",
-        exception: "exception",
-        messaging: "messaging",
-        trace: "trace"
-    },
-    verbosity: {                                    // log levels for error reporting and logged events
-        none: "none",
-        info: "info",
-        debug: "debug"
-    },
-    appenders: {                                    // output options for logging and error reporting      
-        console: "console",
-        stackdriver: "stackdriver"
-    }
-}
 // gcp project enumerations
 module.exports.gcp = {
     projects: {
