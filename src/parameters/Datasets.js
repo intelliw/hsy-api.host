@@ -12,7 +12,8 @@ const enums = require('../environment/enums');
 const consts = require('../host/constants');
 
 const Param = require('./Param');
-const THIS_PARAM_NAME = 'datasests';
+
+const THIS_PARAM_NAME = 'datasets';
 
 class Datasets extends Param {
     /**
@@ -69,7 +70,7 @@ class Datasets extends Param {
                             let errDetails = result.error.details[0];
 
                             this.isValid = false;                          // this prevents further validation  
-                            this.validationError = `${key}: ${errDetails.message} (${errDetails.context.value})`;
+                            this.validationError = `${key}: ${errDetails.message} | ${errDetails.context.value}`;
                         }
                     }
 
@@ -93,6 +94,7 @@ class Datasets extends Param {
     _getSchemaMppt() {
 
         const schema = Joi.object({
+            time_local: Joi.date().format('YYYY/MM/DD'),
             pv: Joi.object({                                            // "pv": { "volts": [48.000, 48.000], "amps": [6.0, 6.0] },      
                 volts: Joi.array().items(Joi.number().positive()).max(4),
                 amps: Joi.array().items(Joi.number().positive()).max(4)
