@@ -54,7 +54,7 @@ class Period extends Param {
         this.grandparent = consts.NONE;              // getChild sets this after construction
 
         // duration     
-        this.duration = duration;
+        this.duration = Math.abs(duration);
 
         // epoch and end millisecond timestamps                                                 // validates and normalises the epoch and end for the supplied period and duration
         let valid = isEpochValid(epoch, MILLISECOND_FORMAT);                                    // make sure epoch is a valid date-time 

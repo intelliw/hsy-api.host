@@ -47,7 +47,6 @@ router.route([
             .render(response.view, {
                 collections: collections, utils: utils, consts: consts, env: env
             });
-        // */ // 
 
         /* // debug START
         res
@@ -57,7 +56,6 @@ router.route([
         */ // debug END 
 
     });
-
 
 
 /**

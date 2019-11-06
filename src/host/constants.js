@@ -126,12 +126,12 @@ module.exports.period = {
 
     // returns max allowed durations for each period. each period cap is proportional to the large number of items in its collection
     maxDurationsAllowed: {
-        instant: '1',                                                       // max allowed for time periods is 1 due to large number of items in each collection 
+        instant: '1',                                           // max allowed for time periods is 1 due to large number of items in each collection 
         second: '1',
         minute: '1',
         hour: '1',
-        timeofday: '8',                                             // max allowed for time-of-day is 8 (2 days)  
-        day: '31',                                                  // only 4 items per day    
+        timeofday: '8',                                         // max allowed for time-of-day is 8 (2 days)  
+        day: '31',                                              // only 4 items per day    
         week: '12',
         month: '3',                                             // there are 31 items in a month.. so cap to 3 (1 quarter)
         quarter: '8',

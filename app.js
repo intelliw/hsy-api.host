@@ -17,6 +17,9 @@ const consts = host.consts;
 
 const log = require('./src/logger').log;
 
+const GenericMessage = require('./src/definitions/GenericMessage');
+const GenericMessageDetail = require('./src/definitions/GenericMessageDetail');
+
 // [START setup]------------------------------
 const app = express();
 
@@ -44,42 +47,35 @@ app.use('/static', express.static(consts.folders.STATIC));                      
 
 // log errors - error handler 
 app.use((err, req, res, next) => {
-    console.log('EH 1')
-
-    const status = enums.responseStatus[500];
-    const code = 500;
+    const statusCode = 500;
+    const status = enums.responseStatus[statusCode];
+    
+    if (!err.statusCode) err.statusCode = statusCode;
+    next(err);
 
     if (err) {
-        if (!err.statusCode) err.statusCode = code;
         log.error(log.enums.labels.unexpected, err);
     } else {
-        res.status(500).send(errObj);
         log.exception(log.enums.labels.unexpected, status, log.ERR.event());
     }
-    next(err);
+
 });
 
 // catch all - error handler 
 app.use((err, req, res, next) => {
 
-    const status = enums.responseStatus[500];
-    const code = 500;
+    const statusCode = 500;
+    const status = enums.responseStatus[statusCode];
+    
+    if (res.headersSent) return next(err);
 
-    if (res.headersSent) {
-        return next(err)
-    }
+    res.status(statusCode)
 
-    res.status(code)
-    res.json(
-        [{
-            status: code,
-            message: `${log.enums.labels.unexpected}: ${status}`,
-            details: [{
-                message: err.message,
-                description: err.stack
-            }]
-        }]
-    );
+    let responseDetail = new GenericMessageDetail();
+    responseDetail.add(err.message, err.stack);
+
+    let response = new GenericMessage(statusCode, status, responseDetail.getElements());
+    res.json(response.getElements());
 
 });
 
