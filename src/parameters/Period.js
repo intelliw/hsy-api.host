@@ -48,21 +48,21 @@ class Period extends Param {
     constructor(reqPeriod, epoch, duration = consts.params.defaults.duration) {
 
         // period, context
-        super(THIS_PARAM_NAME, reqPeriod, enums.params.period.default, enums.params.period);                  // e.g. reqPeriod' ='week';' 
+        super(THIS_PARAM_NAME, reqPeriod, enums.params.period.default, enums.params.period);    // e.g. reqPeriod' ='week';' 
         this.context = this.value;
         this.parent = consts.NONE;                   // getChild sets this after construction
         this.grandparent = consts.NONE;              // getChild sets this after construction
 
-        // duration     
-        this.duration = Math.abs(duration);
+        // duration
+        this.duration =  Math.abs(duration);
 
         // epoch and end millisecond timestamps                                                 // validates and normalises the epoch and end for the supplied period and duration
         let valid = isEpochValid(epoch, MILLISECOND_FORMAT);                                    // make sure epoch is a valid date-time 
         epoch = valid ? epoch : moment.utc().format(MILLISECOND_FORMAT);                        // if not valid default to 'now'
-        epoch = periodEpoch(this.value, epoch, MILLISECOND_FORMAT);                             // normalise the epoch to the exact start of the period
+        epoch = periodEpoch(this.value, epoch, MILLISECOND_FORMAT, duration);                   // normalise the epoch to the exact start of the period
         //..
         this.epochInstant = epoch;
-        this.endInstant = periodEnd(this.value, this.epochInstant, this.duration, MILLISECOND_FORMAT);   // period end - get the end date-time based on the epoch and duration 
+        this.endInstant = periodEnd(this.value, this.epochInstant, MILLISECOND_FORMAT, this.duration);   // period end - get the end date-time based on the epoch and duration 
 
         // epoch and end formatted timestamps
         this.epoch = datetimeFormatISO(this.epochInstant, this.value);                          // format for the period  
@@ -230,7 +230,7 @@ class Period extends Param {
 
             // if grandchild calculate total duration including parent                      // e.g 28 if perent (week.day) is 7 and child (day.timeofday) is 4 
             if (grandparent) {
-                duration = Number(this.duration) * Number(duration);
+                duration = parseInt(this.duration) * parseInt(duration);
             }
 
             //set child props and relationship
@@ -264,8 +264,8 @@ class Period extends Param {
 
 }
 
-// returns an epoch adjusted for the start of the period
-function periodEpoch(periodEnum, epoch, format) {
+// returns an epoch adjusted to the start of the period, and subtracted by a number of periods if duration is negative  
+function periodEpoch(periodEnum, epoch, format, duration) {
 
     switch (periodEnum) {
 
@@ -300,6 +300,7 @@ function periodEpoch(periodEnum, epoch, format) {
             epoch = moment.utc(epoch).startOf('year').format(format);                       // set to January 1st of that year
             break;
 
+        // periods with a clear start
         case enums.params.period.hour:
         case enums.params.period.minute:
         case enums.params.period.second:
@@ -310,11 +311,17 @@ function periodEpoch(periodEnum, epoch, format) {
             epoch = moment.utc(epoch).startOf(periodEnum).format(format);                   // get the start of the period 
             break;
     }
+    
+    // if duration is negative, rewind epoch by a number of periods corresponding to duration 
+    if (Math.sign(duration) < 0) {
+        console.log(`it's negative ${duration} ${epoch}`);      // @@@@@@
+    } 
+
     return epoch;
 }
 
 // returns the end of the period based on its epoch and duration 
-function periodEnd(periodEnum, epoch, duration, format) {
+function periodEnd(periodEnum, epoch, format, duration) {
 
     let periodEnd;
     let periodsToAdd = (duration - 1);                                                      // add these periods to the period to get the end of the duration which starts at epoch

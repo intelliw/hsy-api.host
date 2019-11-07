@@ -26,7 +26,7 @@ module.exports.timeOfDayStart = {
 // constants for period algebra
 module.exports.period = {
 
-    /* child period ('c') and duration ('d') lookup.  the lookup is parent => child or parent-+-child => grandchild. The fields are c: for child and d: for duration
+    /* child period ('c') and duration ('d') lookup.  the lookup is parent => child or parent+child => grandchild. The fields are c: for child and d: for duration
     this lookup needs to be commutatively equivalent to the descendentParent lookup
     */
     ancestorChild: {
@@ -128,19 +128,18 @@ module.exports.period = {
     maxDurationsAllowed: {
         instant: '1',                                           // max allowed for time periods is 1 due to large number of items in each collection 
         second: '1',
-        minute: '1',                                            // 1 hr     - there are 60 items per minute
-        hour: '1',                                              // 1 hr     - there are 60 items per hour
-        timeofday: '8',                                         // 2 days   - there are 6 items per timeofday
-        day: '31',                                              // 1 months - there are 4 items per day    
-        week: '12',                                             // 3 months - there are 7 items in a week
-        month: '6',                                             // 6 months - there are 31 items in a month.. so cap to 6 (2 quarters)
-        quarter: '8',                                           // 2 years
-        year: '5',                                              // 
-        fiveyear: '5'
+        minute: '1',                                            // 1 hr     - there are 60 items (seconds) per minute
+        hour: '6',                                              // 6 hrs    - there are 60 items (minutes) per hour
+        timeofday: '8',                                         // 2 days   - there are 6 items (hours) per timeofday 
+        day: '31',                                              // 1 months - there are 4 items (timeofdays) per day    
+        week: '12',                                             // 3 months - there are 7 items (days) in a week
+        month: '6',                                             // 6 months - there are 31 items (days) in a month.. so cap to 6 (2 quarters)
+        quarter: '8',                                           // 2 years  - there are 3 items (months) in a quarter
+        year: '5',                                              // 5 years  - there are 4 items (quarters) in a year
+        fiveyear: '5'                                           // 5 years  - there are 5 items (years) in a fiveyear    
     }
 
 }
-
 
 // constants for dates and timestamps
 module.exports.dateTime = {
@@ -158,7 +157,7 @@ module.exports.params = {
     },
     defaults: {
         site: '999',
-        duration: '1'                                                       // energy api duration parameter 
+        duration: 1                                                         // energy api duration parameter 
     }
 }
 

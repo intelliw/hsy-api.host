@@ -25,7 +25,7 @@ class ErrorResponse extends Response {
 
       // create the error message
       let statusEnum = selectResponseStatus(validation);
-      let statusCode = Number(utils.keynameFromValue(enums.responseStatus, statusEnum));     // e.g. 415
+      let statusCode = parseInt(utils.keynameFromValue(enums.responseStatus, statusEnum));     // e.g. 415
       let genericMessage = new GenericMessage(statusCode, statusEnum, validation.errors.getElements());
 
       // create the Response including the message content

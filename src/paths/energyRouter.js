@@ -32,14 +32,14 @@ router.route([
     '/:energy?/period/:period?/:epoch?/:duration?'])
 
     .get((req, res, next) => {
-
+        
         // request ---------------------
         let request = new EnergyGet(req);
-
+        
         //  execute if valid
         let response = request.response;                       // execute the operation and return a response 
         let collections = response.content;
-
+        // console.dir(collections[0].collection.links.length);      // @@@@@@
         // /* response
         res
             .status(response.statusCode)
@@ -78,11 +78,19 @@ class EnergyGet extends Request {
     constructor(req) {
 
         const OPTIONAL = true;
+        
+        // duration  - cap the number of durations for this period
+        let duration = parseInt(req.params.duration) || consts.params.defaults.duration;                                     // this handles NaN being passed in as the duration,  
+        let period = req.params.period;
+        if (utils.valueExistsInObject(enums.params.period, period))  {
+            let maxDurationsAllowed = parseInt(consts.period.maxDurationsAllowed[period]);                                   // cap the number of durations for this period
+            duration = (Math.abs(duration) > maxDurationsAllowed ? maxDurationsAllowed * Math.sign(duration): duration);     // check if requested duration is negative - for periods retrospective to epoch 
+        } 
 
         // parameters                                                   // validate and default all parameters
         let params = {};
         params.energy = new Param('energy', req.params.energy, enums.params.energy.default, enums.params.energy);
-        params.period = new Param.Period(req.params.period, req.params.epoch, req.params.duration);
+        params.period = new Param.Period(period, req.params.epoch, duration);
         params.site = new Param('site', req.query.site, consts.params.defaults.site);
         params.productCatalogItems = new Param('productCatalogItems', req.body.productCatalogItems, consts.NONE, consts.NONE, OPTIONAL);
 

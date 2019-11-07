@@ -35,7 +35,7 @@ class Response {
 
         // statusCode    
         let statusCode = utils.keynameFromValue(enums.responseStatus,statusEnum);
-        this.statusCode = Number(statusCode);                   // 400
+        this.statusCode = parseInt(statusCode);                   // 400
 
         // content 
         this.content = content;

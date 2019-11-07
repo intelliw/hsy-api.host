@@ -211,7 +211,7 @@ module.exports.indexFromValue = (obj, value) => {
 module.exports.is200response = (status) => {
 
     const status200 = 200;
-    const responseStatus = Number(status);
+    const responseStatus = parseInt(status);
 
     let is200 = (responseStatus >= status200) && (responseStatus < (status200 + 100));
 
@@ -309,7 +309,7 @@ module.exports.randomTrue = () => {
     const max = 30;                                                     // the larger this number the more skips there will be  
     const random_match = 5;                                             // this can be any number less than MOCK_max
 
-    randomnum = Number(randomFloat(1, max, 0));                    // get a random integer between 1 and MOCK_max
+    randomnum = Number(randomFloat(1, max, 0));                         // get a random integer between 1 and MOCK_max
     randomTrue = (randomnum == random_match) ? false : true;            // skip unless there is a match
 
     return randomTrue;                                                  // return whether to skip  

@@ -488,7 +488,7 @@
             const chartDiv = pane.find('.pane-column-chart-div');
             const tableDiv = pane.find('.pane-table-chart-div');
             
-            let panelIndex = Number(pane.closest('.select-collection-panel').attr('index'));
+            let panelIndex = parseInt(pane.closest('.select-collection-panel').attr('index'));
             let panelMapObj = panelMap[panelIndex];            
 
             // get the filters 
