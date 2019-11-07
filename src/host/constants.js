@@ -128,14 +128,14 @@ module.exports.period = {
     maxDurationsAllowed: {
         instant: '1',                                           // max allowed for time periods is 1 due to large number of items in each collection 
         second: '1',
-        minute: '1',
-        hour: '1',
-        timeofday: '8',                                         // max allowed for time-of-day is 8 (2 days)  
-        day: '31',                                              // only 4 items per day    
-        week: '12',
-        month: '3',                                             // there are 31 items in a month.. so cap to 3 (1 quarter)
-        quarter: '8',
-        year: '5',
+        minute: '1',                                            // 1 hr     - there are 60 items per minute
+        hour: '1',                                              // 1 hr     - there are 60 items per hour
+        timeofday: '8',                                         // 2 days   - there are 6 items per timeofday
+        day: '31',                                              // 1 months - there are 4 items per day    
+        week: '12',                                             // 3 months - there are 7 items in a week
+        month: '6',                                             // 6 months - there are 31 items in a month.. so cap to 6 (2 quarters)
+        quarter: '8',                                           // 2 years
+        year: '5',                                              // 
         fiveyear: '5'
     }
 
