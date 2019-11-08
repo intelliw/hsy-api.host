@@ -39,7 +39,7 @@ router.route([
         //  execute if valid
         let response = request.response;                       // execute the operation and return a response 
         let collections = response.content;
-        // console.dir(collections[0].collection.links.length);      // @@@@@@
+        
         // /* response
         res
             .status(response.statusCode)
@@ -96,10 +96,6 @@ class EnergyGet extends Request {
 
         // The 'GET' operations in the `/energy` path does not require an API key for the default site (`site=999`)    
         let apikeyRequired = !(params.site.value == consts.params.defaults.site);               // required unless site == 999
-
-        // cap the number of durations for this period
-        let maxDurationsAllowed = Number(consts.period.maxDurationsAllowed[params.period.value]);
-        params.period.duration = (params.period.duration > maxDurationsAllowed ? maxDurationsAllowed : params.period.duration);
 
         // super - validate params, auth, accept header
         super(req, params, EnergyGetResponse.produces, EnergyGetResponse.consumes, apikeyRequired);                 // super validates and sets this.accepts this.isValid, this.isAuthorised params valid

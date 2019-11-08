@@ -9,6 +9,7 @@ const bodyParser = require('body-parser')
 const Buffer = require('safe-buffer').Buffer;
 
 const paths = require('./src/paths');
+
 const env = require('./src/environment');
 const enums = env.enums;
 
@@ -16,9 +17,11 @@ const host = require('./src/host');
 const consts = host.consts;
 
 const log = require('./src/logger').log;
-
 const GenericMessage = require('./src/definitions/GenericMessage');
 const GenericMessageDetail = require('./src/definitions/GenericMessageDetail');
+
+const UNEXPECTED_CODE = 500;
+const UNEXPECTED_STATUS = enums.responseStatus[UNEXPECTED_CODE];
 
 // [START setup]------------------------------
 const app = express();
@@ -45,36 +48,33 @@ app.use('/device', paths.deviceRouter);                                         
 app.use('/api', paths.apiRouter);                                                       // openapi tag: DevOps
 app.use('/static', express.static(consts.folders.STATIC));                              // static folders 
 
-// log errors - error handler 
+// error handlers ------------------------
+
+// log errors 
 app.use((err, req, res, next) => {
-    const statusCode = 500;
-    const status = enums.responseStatus[statusCode];
     
-    if (!err.statusCode) err.statusCode = statusCode;
+    if (!err.statusCode) err.statusCode = UNEXPECTED_CODE;
     next(err);
 
     if (err) {
         log.error(log.enums.labels.unexpected, err);
     } else {
-        log.exception(log.enums.labels.unexpected, status, log.ERR.event());
+        log.exception(log.enums.labels.unexpected, UNEXPECTED_STATUS, log.ERR.event());
     }
 
 });
 
-// catch all - error handler 
+// catch all error handler 
 app.use((err, req, res, next) => {
 
-    const statusCode = 500;
-    const status = enums.responseStatus[statusCode];
-    
     if (res.headersSent) return next(err);
 
-    res.status(statusCode)
+    res.status(UNEXPECTED_CODE);
 
     let responseDetail = new GenericMessageDetail();
     responseDetail.add(err.message, err.stack);
 
-    let response = new GenericMessage(statusCode, status, responseDetail.getElements());
+    let response = new GenericMessage(UNEXPECTED_CODE, UNEXPECTED_STATUS, responseDetail.getElements());
     res.json(response.getElements());
 
 });
@@ -83,7 +83,6 @@ app.use((err, req, res, next) => {
 // app.use(log.ERR.express);
 
 // [END setup]-----------------------------------
-
 
 
 // listen for requests---------------------------
