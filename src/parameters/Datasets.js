@@ -4,7 +4,7 @@
  * ./parameters/Datasets.js
  *  supertype to validate datasets in POST body
  */
-const Joi = require('@hapi/joi');
+const Joi = require('@hapi/joi').extend(require('@hapi/joi-date'));
 
 const utils = require('../environment/utils');
 const env = require('../environment/env');
@@ -94,7 +94,7 @@ class Datasets extends Param {
     _getSchemaMppt() {
 
         const schema = Joi.object({
-            time_local: Joi.date().format('YYYY/MM/DD'),
+            time_local: Joi.date().utc().format(['YYYYMMDDTHHmmss.SSSS+HHmm', 'YYYYMMDDTHHmmss.SSSSZ']),
             pv: Joi.object({                                            // "pv": { "volts": [48.000, 48.000], "amps": [6.0, 6.0] },      
                 volts: Joi.array().items(Joi.number().positive()).max(4),
                 amps: Joi.array().items(Joi.number().positive()).max(4)
