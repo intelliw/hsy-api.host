@@ -52,9 +52,10 @@ function executeGet(params) {
     links = new Links.EnergyLinks(params.energy, period, params.site, selfDescription);   // constructor creates a 'self' link with an energy and epoch description
 
     child = period.getChild();                                                    // create the child link with a period description (if one has been configured for it in consts.period.childDescription)
-    child.addDescription();
 
     if (child) {                                                                  // instant does not have a child
+      child.addDescription();
+
       links.addLink(child, enums.linkRender.none, child.description);             // child collection link - not rendered, with a period description
       grandchild = child.getChild();
     }

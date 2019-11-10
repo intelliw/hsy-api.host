@@ -18,11 +18,24 @@ function test2(value) {
     
 }
 
-/* a normativeEpoch is a prefix bloom filter, 
-    prefixed with date-and-time-parts from the request epoch if present,
-    and padded on the right with date-and-time-parts from the current date and time 
+/* blends the provided epoch with the current date and time, 
+    and returns a normalised epoch string in UTC millisecond format.
+    The returned epoch will contain date-and-time-parts from the request epoch argument, 
+    blended (on the right) with date-and-time-parts from the current date and time 
+    e.g:
+        ''                              - 20191110T055113.2690
+        '2017'                          - 20171110T055113.2840
+        '201710'                        - 20171010T055113.2890
+        '20171002'                      - 20171002T055113.2900
+        '20171002T14'                   - 20171002T145113.2910
+        '20171002T1437'                 - 20171002T143713.2930
+        '20171002T143733'               - 20171002T143733.3180
+        '20171002T143733+0700'          - 20171002T073733.0000
+        '20171002T143733.1011'          - 20171002T143733.1010
+        '20171002T143733.1011+0700'     - 20171002T073733.1010
+    If the provided epoch is not valid the current date and time is returned
 */
-function normativeEpoch(epoch) {
+function blendEpoch(epoch) {
 
     const MIN_YEAR_LENGTH = 4;                                                          // year must be 4 characters            (e.g 2019)
     const MIN_WITH_MONTH_LENGTH = 6;                                                    // with month, >=6 and <=7 characters   (e.g 201911 or 2019-11)
@@ -35,10 +48,15 @@ function normativeEpoch(epoch) {
     
     const ISO8601_TIME_DELIMITER = 'T';
 
-    // build the normative date and time (based on the request epoch)
-    let normativeEpoch = moment.utc().format(MILLISECOND_FORMAT);                       // start with the current date and time        
+    // start with the current date and time        
+    let normativeEpoch = moment.utc().format(MILLISECOND_FORMAT);                       // start with the current date and time and blend requ epoch below
     
-    if (moment.utc(epoch, MILLISECOND_FORMAT).isValid()) {                              // first check if there is a valid date of any sort (this returns true for 2019, 201911, 20191108, 20191108T14, 20191108T1437, 20191108T143733, 20191108T143733.0001
+    // first check if there is a valid date of any sort                             
+    if (moment.utc(epoch, MILLISECOND_FORMAT).isValid()) {                              // returns true for partial dates and times including 2019, 201911, 20191108, 20191108T14, 20191108T1437, 20191108T143733, 20191108T143733.0001 and 20171002T143733+0700 etc
+        
+        // convert to utc string
+        epoch = /[+-]/.test(epoch) ? moment.utc(epoch).format(MILLISECOND_FORMAT) : epoch;      // if there is a +/- offset convert the epoch string to utc
+
         // separate date and time
         let date = epoch.indexOf(ISO8601_TIME_DELIMITER) >= 0 ?                             
             epoch.substring(0, epoch.indexOf(ISO8601_TIME_DELIMITER) + 1) :             // get the date part
@@ -47,14 +65,14 @@ function normativeEpoch(epoch) {
             epoch.substring(epoch.indexOf(ISO8601_TIME_DELIMITER) + 1) :                // get the time part 
             consts.NONE;
 
-        // normalise the date part
+        // normalise the date 
         let year = date.length >= MIN_YEAR_LENGTH ? moment.utc(epoch, MILLISECOND_FORMAT).year() : moment.utc(normativeEpoch, MILLISECOND_FORMAT).year();
         let month = date.length >= MIN_WITH_MONTH_LENGTH ? moment.utc(epoch, MILLISECOND_FORMAT).month() : moment.utc(normativeEpoch, MILLISECOND_FORMAT).month();
         let day = date.length >= MIN_WITH_DAY_LENGTH ? moment.utc(epoch, MILLISECOND_FORMAT).date() : moment.utc(normativeEpoch, MILLISECOND_FORMAT).date();
         //..
         normativeEpoch = moment.utc(normativeEpoch).year(year).month(month).date(day).format(MILLISECOND_FORMAT)
 
-        // normalise the time part
+        // normalise the time 
         if (time) {
 
             let hour = time.length >= MIN_HOURS_LENGTH ? moment.utc(epoch, MILLISECOND_FORMAT).hour() : moment.utc(normativeEpoch, MILLISECOND_FORMAT).hour();
@@ -71,13 +89,15 @@ function normativeEpoch(epoch) {
 }
 
 // test... node sandbox/tester
-console.log(normativeEpoch('')); 
-console.log(normativeEpoch('2017')); 
-console.log(normativeEpoch('201710')); 
-console.log(normativeEpoch('20171002')); 
-console.log(normativeEpoch('20171002T14')); 
-console.log(normativeEpoch('20171002T1437')); 
-console.log(normativeEpoch('20171002T143733')); 
-console.log(normativeEpoch('20171002T143733.1011'));
+console.log(`'' - ${blendEpoch('')}`); 
+console.log(`'2017' - ${blendEpoch('2017')}`); 
+console.log(`'201710' - ${blendEpoch('201710')}`); 
+console.log(`'20171002' - ${blendEpoch('20171002')}`); 
+console.log(`'20171002T14' - ${blendEpoch('20171002T14')}`); 
+console.log(`'20171002T1437' - ${blendEpoch('20171002T1437')}`); 
+console.log(`'20171002T143733' - ${blendEpoch('20171002T143733')}`); 
+console.log(`'20171002T143733+0700' - ${blendEpoch('20171002T143733+0700')}`); 
+console.log(`'20171002T143733.1011' - ${blendEpoch('20171002T143733.1011')}`);
+console.log(`'20171002T143733.1011+0700' - ${blendEpoch('20171002T143733.1011+0700')}`);
 
 //console.log(test2(''));

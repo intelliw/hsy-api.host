@@ -12,14 +12,16 @@ const consts = require('../host/constants');
 const utils = require('../environment/utils');
 
 const Param = require('./Param');
+
 const MILLISECOND_FORMAT = consts.period.datetimeISO.instant;                                    // the default format, YYYYMMDDTHHmmss.SSS
+
 const THIS_PARAM_NAME = 'period';
 
-
 /**
- * expects a date-time value in utc format. period.value is required (as a string) and must contain a complete date (isEpochValid() === true)
- * checks to see if value is a valid time and sets default to current time if it is not.
- * the value is formatted according to the specified period (def.enum.period) argument 
+ * expects a date-time value in local or utc format. period.value is required (as a string) and must contain a valid date/time (moment.utc(value).isValid() == true)
+ * checks to see if value is valid and sets default to current time if it is not.
+ * if value is valid calls blendEpoch() to merge partial date-and time componets in value, with the current date and time
+ * value is formatted according to the specified period (def.enum.period argument)
  */
 class Period extends Param {
     /**
@@ -41,7 +43,7 @@ class Period extends Param {
      "description": "Mon Tue Wed Thu Fri Sat Sun"         ..if period retrieved through get Child() otherwise undefined
     
      constructor arguments  
-    * @param {*} reqPeriod      // enums.params.period             e.g. 'week'
+    * @param {*} reqPeriod      // enums.params.period             e.g. 'week' - stored as this.value
     * @param {*} epoch          // date-time 
     * @param {*} duration       // positive or negative integer
     */
@@ -49,30 +51,31 @@ class Period extends Param {
 
         // period, context
         super(THIS_PARAM_NAME, reqPeriod, enums.params.period.default, enums.params.period);    // e.g. reqPeriod' ='week';' 
-        this.context = this.value;
+        reqPeriod = this.value;                      // this.value was set to default period if reqPeriod was undefined
+
+        this.context = reqPeriod;
         this.parent = consts.NONE;                   // getChild sets this after construction
         this.grandparent = consts.NONE;              // getChild sets this after construction
 
         // duration
-        this.duration = Math.abs(duration);
+        this.duration = Math.abs(duration);                                                     // duration could be a negative number - store the absolute value in this.duration as it will be applicable to the adjusted epoch returned for the negative duration, from periodEpoch() 
 
-        // epoch and end millisecond timestamps                                                 // validates and normalises the epoch and end for the supplied period and duration
-        let valid = isEpochValid(epoch, MILLISECOND_FORMAT);                                    // make sure epoch is a valid date-time 
-        epoch = valid ? epoch : moment.utc().format(MILLISECOND_FORMAT);                        // if not valid default to 'now'
-        epoch = periodEpoch(this.value, epoch, MILLISECOND_FORMAT, duration);                   // normalise the epoch to the exact start of the period
+        // epoch and end millisecond timestamps                                                 // validates and normalises the epoch and end, for the supplied period and duration
+        epoch = blendEpoch(epoch);                                                              // blend and normalise the epoch, if not valid the current date and time is returned                    
+        epoch = periodEpoch(reqPeriod, epoch, MILLISECOND_FORMAT, duration);                    // normalise the epoch to the exact start of the period. If duration is negative the returned epoch will be adjusted by subtracting periods for -n durations 
         //..
         this.epochInstant = epoch;
-        this.endInstant = periodEnd(this.value, this.epochInstant, MILLISECOND_FORMAT, this.duration);   // period end - get the end date-time based on the epoch and duration 
+        this.endInstant = periodEnd(reqPeriod, this.epochInstant, MILLISECOND_FORMAT, this.duration);   // period end - get the end date-time based on the epoch and duration 
 
         // epoch and end formatted timestamps
-        this.epoch = datetimeFormatISO(this.epochInstant, this.value);                          // format for the period  
-        this.end = datetimeFormatISO(this.endInstant, this.value);
+        this.epoch = datetimeFormatISO(this.epochInstant, reqPeriod);                           // format for the period  
+        this.end = datetimeFormatISO(this.endInstant, reqPeriod);
 
         // hypermedia properties 
         this.rel = enums.linkRelations.self;                                                    // default is 'self' this is overwritten for parent, child, etc after construction
-        this.prompt = periodPrompt(this.epochInstant, this.endInstant, this.value);
+        this.prompt = periodPrompt(this.epochInstant, this.endInstant, reqPeriod);
 
-        this.title = periodTitle(this.epochInstant, this.endInstant, this.value);               // "04/02/2019 - 10/02/2019";
+        this.title = periodTitle(this.epochInstant, this.endInstant, reqPeriod);                // "04/02/2019 - 10/02/2019";
         this.description = consts.NONE;                                                         // by default label is undefined except in a collection and overwritten by get Child() after construction
 
         // data arrays
@@ -217,7 +220,7 @@ class Period extends Param {
 
         // lookup child period
         let childMap = consts.period.ancestorChild[`${grandparent ? grandparent : ''}${parent}`];
-        let childEnum = childMap.c;
+        let childEnum = childMap ? childMap.c: consts.NONE;
 
         if (childEnum) {                                                                    // e.g. instant has no child    
 
@@ -264,40 +267,122 @@ class Period extends Param {
 
 }
 
+/* blends the provided epoch with the current date and time, 
+    and returns a normalised epoch string in UTC millisecond format.
+    The returned epoch will contain date-and-time-parts from the request epoch argument, 
+    blended (on the right) with date-and-time-parts from the current date and time 
+    e.g:
+        ''                              - 20191110T055113.2690
+        '2017'                          - 20171110T055113.2840
+        '201710'                        - 20171010T055113.2890
+        '20171002'                      - 20171002T055113.2900
+        '20171002T14'                   - 20171002T145113.2910
+        '20171002T1437'                 - 20171002T143713.2930
+        '20171002T143733'               - 20171002T143733.3180
+        '20171002T143733+0700'          - 20171002T073733.0000
+        '20171002T143733.1011'          - 20171002T143733.1010
+        '20171002T143733.1011+0700'     - 20171002T073733.1010
+    If the provided epoch is not valid the current date and time is returned
+*/
+function blendEpoch(epoch) {
+
+    const MIN_YEAR_LENGTH = 4;                                                          // year must be 4 characters            (e.g 2019)
+    const MIN_WITH_MONTH_LENGTH = 6;                                                    // with month, >=6 and <=7 characters   (e.g 201911 or 2019-11)
+    const MIN_WITH_DAY_LENGTH = 8;                                                      // with date, >=8 and <=10 characters   (e.g 20191108 or 2019-11-08)
+
+    const MIN_HOURS_LENGTH = 2;                                                         // hour must be 2 characters            (e.g 12)
+    const MIN_WITH_MINUTES_LENGTH = 4;                                                  // with minutes, >=4 and <=5 characters (e.g 1200 or 12:00)
+    const MIN_WITH_SECONDS_LENGTH = 6;                                                  // with seconds, >=6 and <=8 characters (e.g 120050 or 12:00:50)
+    const MIN_WITH_MILLISECONDS_LENGTH = 10;                                            // with milliseconds, >=10              (e.g 120050.001 or 120050.0001 or 12:00:50.001...)
+
+    const ISO8601_TIME_DELIMITER = 'T';
+
+    // start with the current date and time        
+    let normativeEpoch = moment.utc().format(MILLISECOND_FORMAT);                       // start with the current date and time and blend requ epoch below
+
+    // first check if there is a valid date of any sort                             
+    if (moment.utc(epoch, MILLISECOND_FORMAT).isValid()) {                              // returns true for partial dates and times including 2019, 201911, 20191108, 20191108T14, 20191108T1437, 20191108T143733, 20191108T143733.0001 and 20171002T143733+0700 etc
+
+        // convert to utc string
+        epoch = /[+-]/.test(epoch) ? moment.utc(epoch).format(MILLISECOND_FORMAT) : epoch;      // if there is a +/- offset convert the epoch string to utc
+
+        // separate date and time
+        let date = epoch.indexOf(ISO8601_TIME_DELIMITER) >= 0 ?
+            epoch.substring(0, epoch.indexOf(ISO8601_TIME_DELIMITER) + 1) :             // get the date part
+            epoch;
+        let time = epoch.indexOf(ISO8601_TIME_DELIMITER) >= 0 ?
+            epoch.substring(epoch.indexOf(ISO8601_TIME_DELIMITER) + 1) :                // get the time part 
+            consts.NONE;
+
+        // normalise the date 
+        let year = date.length >= MIN_YEAR_LENGTH ? moment.utc(epoch, MILLISECOND_FORMAT).year() : moment.utc(normativeEpoch, MILLISECOND_FORMAT).year();
+        let month = date.length >= MIN_WITH_MONTH_LENGTH ? moment.utc(epoch, MILLISECOND_FORMAT).month() : moment.utc(normativeEpoch, MILLISECOND_FORMAT).month();
+        let day = date.length >= MIN_WITH_DAY_LENGTH ? moment.utc(epoch, MILLISECOND_FORMAT).date() : moment.utc(normativeEpoch, MILLISECOND_FORMAT).date();
+        //..
+        normativeEpoch = moment.utc(normativeEpoch).year(year).month(month).date(day).format(MILLISECOND_FORMAT)
+
+        // normalise the time 
+        if (time) {
+
+            let hour = time.length >= MIN_HOURS_LENGTH ? moment.utc(epoch, MILLISECOND_FORMAT).hour() : moment.utc(normativeEpoch, MILLISECOND_FORMAT).hour();
+            let minute = time.length >= MIN_WITH_MINUTES_LENGTH ? moment.utc(epoch, MILLISECOND_FORMAT).minute() : moment.utc(normativeEpoch, MILLISECOND_FORMAT).minute();
+            let second = time.length >= MIN_WITH_SECONDS_LENGTH ? moment.utc(epoch, MILLISECOND_FORMAT).second() : moment.utc(normativeEpoch, MILLISECOND_FORMAT).second();
+            let millisecond = time.length >= MIN_WITH_MILLISECONDS_LENGTH ? moment.utc(epoch, MILLISECOND_FORMAT).millisecond() : moment.utc(normativeEpoch, MILLISECOND_FORMAT).millisecond();
+            //..
+            normativeEpoch = moment.utc(normativeEpoch).hour(hour).minute(minute).second(second).millisecond(millisecond).format(MILLISECOND_FORMAT)
+
+        }
+
+    }
+    return normativeEpoch;
+}
+
 // returns an epoch adjusted to the start of the period, and subtracted by a number of periods if duration is negative  
 function periodEpoch(periodEnum, epoch, format, duration) {
 
+    // if duration is negative, rewind epoch by a number of periods corresponding to duration 
+    let periodsToSubtract = Math.sign(duration) < 0 ? Math.abs(duration) : 0;                    // subtract zero periods if duration is positive              
+
+    // set the epoch and if needed adjust for negative duration 
     switch (periodEnum) {
 
-        // epoch format YYYYMMDDTHHmmss.SSS -----------------------------------              
+        // epoch format YYYYMMDDTHHmmss.SSS -------------------------------              
         case enums.params.period.instant:
 
-            epoch = moment.utc(epoch).format(format);                                       // no adjustment - return milliseconds epoch (format YYYYMMDDTHHmmss.SSS)  
+            epoch = moment.utc(epoch).subtract(periodsToSubtract, 'milliseconds').format(format);   // no adjustment - return milliseconds epoch (format YYYYMMDDTHHmmss.SSS)  
             break;
 
-        case enums.params.period.timeofday:                                                        // adjust to the start of the last 6hr block in the day (morning=6, afternoon=12, evening-18, night=00)   
+        case enums.params.period.timeofday:                                                         // adjust to the start of the last 6hr block in the day (morning=6, afternoon=12, evening-18, night=00)   
+            const TIMEOFDAY_DURATION_HRS = 6;                                                       // hours
 
-            let hr = consts.timeOfDayStart[selectTimeOfDayEnum(epoch)];                         // get the starting hour for the timeofday     
-            epoch = moment.utc(epoch).set('hour', hr).format(format);                       // set hour to 0,6,12,or 18
+            // normalise the epoch
+            let hr = consts.timeOfDayStart[selectTimeOfDayEnum(epoch)];                             // get the starting hour for the timeofday     
+            epoch = moment.utc(epoch).set('hour', hr).format(format);                               // set hour to 0,6,12,or 18
 
-            epoch = moment.utc(epoch).set('minute', 0).format(format);                      // set minute, second, millisecond to zero
+            epoch = moment.utc(epoch).set('minute', 0).format(format);                              // set minute, second, millisecond to zero
             epoch = moment.utc(epoch).set('second', 0).format(format);
             epoch = moment.utc(epoch).set('millisecond', 0).format(format);
-
+        
+            periodsToSubtract = Math.sign(duration) < 0 ? Math.abs(duration) * TIMEOFDAY_DURATION_HRS : 0;    // subtract zero periods if duration is positive              
+            epoch = moment.utc(epoch).subtract(periodsToSubtract, 'hours').startOf('hour').format(format);
             break;
 
         // epoch format YYYYMMDD -----------------------------------------
-        case enums.params.period.week:                                                             // adjust to start of the week
+        case enums.params.period.week:                                                              // adjust to start of the week
 
-            epoch = moment.utc(epoch).startOf('isoWeek').format(format);                    // adjust to monday (iso week starts on monday)
+            epoch = moment.utc(epoch).subtract(periodsToSubtract, 'weeks').startOf('isoWeek').format(format);      // adjust to monday (iso week starts on monday) 
             break;
 
-        case enums.params.period.fiveyear:                                                         // adjust to start of last 5 year block (2010, 2015, 2020 etc.)
+        case enums.params.period.fiveyear:                                                          // adjust to start of last 5 year block (2010, 2015, 2020 etc.)
+            const FIVEYEAR_DURATION_YRS = 5;                // years
 
-            let yr = moment.utc(epoch).get('year');                                         // get the year
-            yr = yr - (yr % 5);                                                             // round down to nearest 5 year epoch
-            epoch = moment.utc(epoch).set('year', yr).format(format);                       // set year
-            epoch = moment.utc(epoch).startOf('year').format(format);                       // set to January 1st of that year
+            let yr = moment.utc(epoch).get('year');                                                 // get the year
+            yr = yr - (yr % 5);                                                                     // round down to nearest 5 year epoch
+            epoch = moment.utc(epoch).set('year', yr).format(format);                               // set year
+            epoch = moment.utc(epoch).startOf('year').format(format);                               // set to January 1st of that year
+
+            periodsToSubtract = Math.sign(duration) < 0 ? Math.abs(duration) * FIVEYEAR_DURATION_YRS : 0;    // subtract durations for 5yr                         
+            epoch = moment.utc(epoch).subtract(periodsToSubtract, 'years').startOf('year').format(format);      
             break;
 
         // periods with a clear start
@@ -308,13 +393,9 @@ function periodEpoch(periodEnum, epoch, format, duration) {
         case enums.params.period.month:
         case enums.params.period.quarter:
         case enums.params.period.year:
-            epoch = moment.utc(epoch).startOf(periodEnum).format(format);                   // get the start of the period 
+            
+            epoch = moment.utc(epoch).subtract(periodsToSubtract, `${periodEnum}s`).startOf(periodEnum).format(format);  // get the start of the period and subtract if durations are negative
             break;
-    }
-
-    // if duration is negative, rewind epoch by a number of periods corresponding to duration 
-    if (Math.sign(duration) < 0) {
-        console.log(`it's negative ${duration} ${epoch}`);      // @@@@@@
     }
 
     return epoch;
@@ -324,7 +405,7 @@ function periodEpoch(periodEnum, epoch, format, duration) {
 function periodEnd(periodEnum, epoch, format, duration) {
 
     let periodEnd;
-    let periodsToAdd = (duration - 1);                                                      // add these periods to the period to get the end of the duration which starts at epoch
+    let periodsToAdd = (Math.abs(duration) - 1);                                                      // add these periods to the period to get the end of the duration which starts at epoch
 
     switch (periodEnum) {
 
@@ -335,7 +416,7 @@ function periodEnd(periodEnum, epoch, format, duration) {
         case enums.params.period.timeofday:                        // adjust to the start of the last 6hr block in the day (morning=6, afternoon=12, evening-18, night=00)   
             const TIMEOFDAY_DURATION_HRS = 6;                                                           // hours
 
-            periodsToAdd = (duration * TIMEOFDAY_DURATION_HRS) - 1;                                     // add at least one for tod to get to the endOf its period
+            periodsToAdd = (Math.abs(duration) * TIMEOFDAY_DURATION_HRS) - 1;                           // -1 to make endOf the last hour 
             periodEnd = moment.utc(epoch).add(periodsToAdd, 'hours').endOf('hour').format(format);
             break;
 
@@ -346,7 +427,7 @@ function periodEnd(periodEnum, epoch, format, duration) {
         case enums.params.period.fiveyear:                         // add 5 years to epoch
             const FIVEYEAR_DURATION_YRS = 5;                // years
 
-            periodsToAdd = (duration * FIVEYEAR_DURATION_YRS) - 1;                                          // add at least one for 5yr to get to the endOf its period
+            periodsToAdd = (Math.abs(duration) * FIVEYEAR_DURATION_YRS) - 1;                            // add at least one for 5yr to get to the endOf its period
             periodEnd = moment.utc(epoch).add(periodsToAdd, 'years').endOf('year').format(format);      // add duration for 5yr to get to the endOf its period
 
             break;
@@ -460,99 +541,6 @@ function periodPrompt(epoch, end, periodEnum) {
     return prompt;                                                                      // return formatted title
 
 };
-
-
-
-// checks if the epoch is a valid date-time:  is a valid UTC date, datepart >= 8 characters, timepart       
-function isEpochValid(epoch, format) {
-
-    const MIN_DATE_LENGTH = 8;                                                          // e.g. 20181202    datepart must be at least 8 characters 
-    const MAX_DATE_LENGTH = 10;                                                         // e.g. 2018-12-02  
-
-    const HOURS_LENGTH = 2;                                                             // hour must 2 characters (e.g 12)
-    const MINUTES_LENGTH = 4;                                                           // minutes must be 4 characters (e.g 1200)
-    const SECONDS_LENGTH = 6;                                                           // secondss must be 6 characters (e.g 120050)
-    const MILLISECONDS_MIN_LENGTH = 10;                                                 // if 3 digit millseconds, the time value must be at least 10 characters (e.g 120050.233)
-
-    const ISO8601_TIME_DELIMITER = 'T';
-
-    let isValid = false;
-
-    // check if date is valid. 
-    if (epoch) {                                                                        // first check if there was a date     
-        let date = epoch;
-        if (epoch.indexOf(ISO8601_TIME_DELIMITER) >= 0) {                               // if there is a time component
-            date = epoch.substring(0, epoch.indexOf(ISO8601_TIME_DELIMITER) + 1);       // get the date part
-        }
-        
-        // check date
-        isValid = (moment.utc(date, format).isValid());
-        isValid = isValid && (date.length == MIN_DATE_LENGTH
-            || date.length == MAX_DATE_LENGTH);                                     // e.g. 20181202 or 2018-12-02
-
-        // check time
-        if (epoch.indexOf(ISO8601_TIME_DELIMITER) >= 0) {                               // if there is a time component
-            let time = epoch.substring(epoch.indexOf(ISO8601_TIME_DELIMITER) + 1);      // get the time part 
-            isValid = isValid && (time.length == HOURS_LENGTH                           // the time can be 2,4,6, or 10+ characters long            
-                || time.length == MINUTES_LENGTH
-                || time.length == SECONDS_LENGTH
-                || time.length >= MILLISECONDS_MIN_LENGTH);                             // enforce minimum length of ms
-        }
-    }
-    return isValid
-}
-
-/* a normativeEpoch is a prefix bloom filter, 
-    prefixed with date-and-time-parts from the request epoch if present,
-    and padded on the right with date-and-time-parts from the current date and time 
-*/
-function normativeEpoch(epoch) {
-
-    const MIN_YEAR_LENGTH = 4;                                                          // year must be 4 characters            (e.g 2019)
-    const MIN_WITH_MONTH_LENGTH = 6;                                                    // with month, >=6 and <=7 characters   (e.g 201911 or 2019-11)
-    const MIN_WITH_DAY_LENGTH = 8;                                                      // with date, >=8 and <=10 characters   (e.g 20191108 or 2019-11-08)
-
-    const MIN_HOURS_LENGTH = 2;                                                         // hour must be 2 characters            (e.g 12)
-    const MIN_WITH_MINUTES_LENGTH = 4;                                                  // with minutes, >=4 and <=5 characters (e.g 1200 or 12:00)
-    const MIN_WITH_SECONDS_LENGTH = 6;                                                  // with seconds, >=6 and <=8 characters (e.g 120050 or 12:00:50)
-    const MIN_WITH_MILLISECONDS_LENGTH = 10;                                            // with milliseconds, >=10              (e.g 120050.001 or 120050.0001 or 12:00:50.001...)
-    
-    const ISO8601_TIME_DELIMITER = 'T';
-
-    // build the normative date and time (based on a 'partial' epoch)
-    let normativeEpoch = moment.utc().format(MILLISECOND_FORMAT);                       // start with the current date and time        
-    
-    if (moment.utc(epoch, MILLISECOND_FORMAT).isValid()) {                              // first check if there is a valid date of any sort (this returns true for 2019, 201911, 20191108, 20191108T14, 20191108T1437, 20191108T143733, 20191108T143733.0001
-        // separate date and time
-        let date = epoch.indexOf(ISO8601_TIME_DELIMITER) >= 0 ?                             
-            epoch.substring(0, epoch.indexOf(ISO8601_TIME_DELIMITER) + 1) :             // get the date part
-            epoch;
-        let time = epoch.indexOf(ISO8601_TIME_DELIMITER) >= 0 ?
-            epoch.substring(epoch.indexOf(ISO8601_TIME_DELIMITER) + 1) :                // get the time part 
-            consts.NONE;
-
-        // normalise the date part
-        let year = date.length >= MIN_YEAR_LENGTH ? moment.utc(epoch, MILLISECOND_FORMAT).year() : moment.utc(normativeEpoch, MILLISECOND_FORMAT).year();
-        let month = date.length >= MIN_WITH_MONTH_LENGTH ? moment.utc(epoch, MILLISECOND_FORMAT).month() : moment.utc(normativeEpoch, MILLISECOND_FORMAT).month();
-        let day = date.length >= MIN_WITH_DAY_LENGTH ? moment.utc(epoch, MILLISECOND_FORMAT).date() : moment.utc(normativeEpoch, MILLISECOND_FORMAT).date();
-        //..
-        normativeEpoch = moment.utc(normativeEpoch).year(year).month(month).date(day).format(MILLISECOND_FORMAT)
-
-        // normalise the time part
-        if (time) {
-
-            let hour = time.length >= MIN_HOURS_LENGTH ? moment.utc(epoch, MILLISECOND_FORMAT).hour() : moment.utc(normativeEpoch, MILLISECOND_FORMAT).hour();
-            let minute = time.length >= MIN_WITH_MINUTES_LENGTH ? moment.utc(epoch, MILLISECOND_FORMAT).minute() : moment.utc(normativeEpoch, MILLISECOND_FORMAT).minute();
-            let second = time.length >= MIN_WITH_SECONDS_LENGTH ? moment.utc(epoch, MILLISECOND_FORMAT).second() : moment.utc(normativeEpoch, MILLISECOND_FORMAT).second();
-            let millisecond = time.length >= MIN_WITH_MILLISECONDS_LENGTH ? moment.utc(epoch, MILLISECOND_FORMAT).millisecond() : moment.utc(normativeEpoch, MILLISECOND_FORMAT).millisecond();
-            //..
-            normativeEpoch = moment.utc(normativeEpoch).hour(hour).minute(minute).second(second).millisecond(millisecond).format(MILLISECOND_FORMAT)
-    
-        }
-    
-    }
-    return normativeEpoch;
-}
 
 // select the quarter label (eg 'Q1' for the year of the epoch
 function selectQuarterLabel(epoch) {

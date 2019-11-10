@@ -86,7 +86,6 @@ class EnergyGet extends Request {
             let maxDurationsAllowed = parseInt(consts.period.maxDurationsAllowed[period]);                                   // cap the number of durations for this period
             duration = (Math.abs(duration) > maxDurationsAllowed ? maxDurationsAllowed * Math.sign(duration): duration);     // check if requested duration is negative - for periods retrospective to epoch 
         } 
-
         // parameters                                                   // validate and default all parameters
         let params = {};
         params.energy = new Param('energy', req.params.energy, enums.params.energy.default, enums.params.energy);
