@@ -35,7 +35,7 @@ router.post('/dataset/:dataset',
         let items = response.content;
 
         // trace log the response if it is not a 200 
-        if (!utils.is200response(response.contentType)) {
+        if (!utils.is200response(response.statusCode)) {
             log.trace(log.enums.labels.responseStatus, `${response.statusCode}`, JSON.stringify(items));
         }
         
@@ -85,8 +85,8 @@ class DevicesDatasetsPost extends Request {
         
         // parameters                                                       
         let params = {};
-        params.dataset = new Param('dataset', datasetName, consts.NONE, enums.params.datasets);         // this is the path parameter e.g. pms
-        params.datasets = new Datasets(datasetName, datasets);                                     // Datasets is a param validator for the devices body payload. 
+        params.dataset = new Param('dataset', datasetName, consts.NONE, enums.params.datasets);     // this is the path parameter e.g. pms
+        params.datasets = new Datasets(datasetName, datasets);                                      // Datasets validates the devices req.body.datasets payload. 
 
         // super Request- creates a Validate object to validate all params, auth, and accept header
         super(req, params, DevicesDatasetsPostResponse.produces, DevicesDatasetsPostResponse.consumes);           // super validates and sets this.accepts this.isValid, this.isAuthorised params valid

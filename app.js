@@ -71,10 +71,9 @@ app.use((err, req, res, next) => {
 
     res.status(UNEXPECTED_CODE);
 
-    let responseDetail = new GenericMessageDetail();
-    responseDetail.add(err.message, err.stack);
-
-    let response = new GenericMessage(UNEXPECTED_CODE, UNEXPECTED_STATUS, responseDetail.getElements());
+    let response = new GenericMessage(UNEXPECTED_CODE, UNEXPECTED_STATUS, 
+        new GenericMessageDetail().add(err.message, err.stack).getElements());
+        
     res.json(response.getElements());
 
 });

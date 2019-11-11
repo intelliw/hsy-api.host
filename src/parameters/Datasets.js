@@ -19,13 +19,14 @@ class Datasets extends Param {
     /**
      * instance attributes:  
         "name": the dataset name from the path apramter (e.g. 'pms' 
-        "datasets": the body paramter e.g. { "datasets": [ { "mppt": { "id": "IT6415AD-01-001" }, "data": [ .. 
+        "datasets": the body paramter e.g. [ { mppt: { id: 'IT6415AD-01-001' }, data: [ [Object] ] } ]
      * constructor validates all datasets and the dataitems in them
      */
     constructor(datasetName, datasets) {
+        
 
         // constuct the param 
-        super(THIS_PARAM_NAME, datasets);                                       
+        super(THIS_PARAM_NAME, datasets);
         this.datasetName = datasetName;
 
         // validate the datasets
@@ -46,37 +47,29 @@ class Datasets extends Param {
     */
     _validate() {
 
-        let key;
-        let datasets = this.value;
-        let datasetName = this.datasetName;                                    // this.name is dataset name - set by constructor        
-
-        // select 1 of the validation functions based on the dataset name    
-        let schema = this._getSchema(datasetName);
-
         // validate each dataset
-        datasets.forEach(dataset => {                                     // e.g. "datasets": ["pms": { "id": "PMS-01-001" }, "data": [ { time_local: '20190809T150006.032+0700', pack: [Object] }, ... ]
-            key = dataset[datasetName].id;                               // e.g. id from.. "pms": { "id": 
+        if (this.isValid) {
 
-            if (this.isValid) {
-                // validate each data item in the dataset
-                dataset.data.forEach(dataItem => {                        // e.g. "data": [ { "time_local": "2
+            let datasetsArray = this.value;
+            let datasetName = this.datasetName;                                     // this.name is dataset name - set by constructor        
 
-                    // call the validation function 
-                    if (this.isValid) {
+            let schema = this._getSchema(datasetName);                              // select a validation schema based on the dataset name    
 
-                        // const { error, value } = schema.validate(dataItem);
-                        let result = schema.validate(dataItem);
-                        if (result.error) {
-                            let errDetails = result.error.details[0];
+            // { error, value } = schema.validate(dataItem);
+            let result = schema.validate(datasetsArray);                            // e.g. "datasetsArray is from the body paramter e.g. [ { mppt: { id: 'IT6415AD-01-001' }, data: [ [Object] ] } ]
+            
+            // error 
+            if (result.error) {
+                let errDetails = result.error.details[0];
 
-                            this.isValid = false;                          // this prevents further validation  
-                            this.validationError = `${key}: ${errDetails.message} | ${errDetails.context.value}`;
-                        }
-                    }
-
-                });
+                this.isValid = false;                                               // this prevents further validation  
+                this.validationError = `${errDetails.message} | ${errDetails.context.value}`;
+            
+            // valid 
+            } else {
+                this.value  = result.value;                                         // result.value contains a validated clone of the datasets 
             }
-        });
+        }
 
         return this;
     }
@@ -93,17 +86,35 @@ class Datasets extends Param {
 
     _getSchemaMppt() {
 
-        const schema = Joi.object({
-            time_local: Joi.date().utc().format(['YYYYMMDDTHHmmss.SSSS+HHmm', 'YYYYMMDDTHHmmss.SSSSZ']),
-            pv: Joi.object({                                            // "pv": { "volts": [48.000, 48.000], "amps": [6.0, 6.0] },      
-                volts: Joi.array().items(Joi.number().positive()).max(4),
-                amps: Joi.array().items(Joi.number().positive()).max(4)
-            })
-        });
-
+        const schema = Joi.array().items(Joi.object({                               // [
+                mppt: Joi.object({                                                  //  { "mppt": { "id": "IT6415AD-01-001" }, 
+                    id: Joi.string()                                                //    
+                }),
+                data: Joi.array().items(Joi.object({                                //    "data": [
+                    time_local: Joi.date().utc().format([                           //      "time_local": "20190209T150006.032+0700",
+                        'YYYYMMDDTHHmmss.SSSS+HHmm',                                //          RFC 3339
+                        'YYYYMMDDTHHmmss.SSSSZ',
+                        'YYYYMMDDTHHmmss.SSSS']),
+                    pv: Joi.object({                                                // "pv": { "volts": [48.000, 48.000], "amps": [6.0, 6.0] },      
+                        volts: Joi.array().items(Joi.number().positive()).max(4),   //      float (array), array size 1-4, + only
+                        amps: Joi.array().items(Joi.number().positive()).max(4)     //      float (array), array size 1-4, + only 
+                    }),
+                    battery: Joi.object({                                           // "battery": { "volts" : 55.1, "amps": 0.0 },
+                        volts: Joi.number().positive(),                             //      float, + only
+                        amps: Joi.number()                                          //      float, +/-
+                    }),
+                    load: Joi.object({                                              // "load": { "volts": [48.000, 48.000], "amps": [1.2, 1.2] },
+                        volts: Joi.array().items(Joi.number().positive()).max(2),   //      float (array), array size 1-2, + only
+                        amps: Joi.array().items(Joi.number().positive()).max(2)     //      float (array), array size 1-2, + only 
+                    }),
+                    status: Joi.string()                                            // "status": "0801"
+                        .hex().length(4)                                            //      4-character, hex-encoded                    
+                }))
+            }));
 
         return schema;
     }
+
 
     _getSchemaInverter() {
         /* 
@@ -115,7 +126,7 @@ class Datasets extends Param {
         */
     }
 
-    // selects the validation function for the dataset  
+    // selects the validation schema for the dataset  
     _getSchema(datasetName) {
 
         let schema;

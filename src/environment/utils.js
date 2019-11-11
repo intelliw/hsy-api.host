@@ -206,15 +206,16 @@ module.exports.indexFromValue = (obj, value) => {
 
 
 // returns whether the response status is a 200 level response
-module.exports.is200response = (status) => {
+module.exports.is200response = (statusCode) => {
 
-    const status200 = 200;
-    const responseStatus = parseInt(status);
-
-    let is200 = (responseStatus >= status200) && (responseStatus < (status200 + 100));
+    const statusCode200 = 200;
+    
+    statusCode = parseInt(statusCode);
+    
+    let is200 = (statusCode >= statusCode200) && (statusCode < (statusCode200 + 100));
 
     return is200;
-
+    
 }
 
 

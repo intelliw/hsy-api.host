@@ -224,7 +224,7 @@ class Period extends Param {
 
         if (childEnum) {                                                                    // e.g. instant has no child    
 
-            // duration - if monthday get the nubmer of days for the month
+            // duration - if monthday get the number of days for the month
             if (parent == enums.params.period.month && childEnum == enums.params.period.day) {
                 duration = monthdayDuration(this.epochInstant)
             } else {

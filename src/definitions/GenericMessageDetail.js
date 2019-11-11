@@ -27,10 +27,13 @@ class GenericMessageDetail extends Definitions {
 
     }
 
+    // return this to enable 'fluent' coding with the returned object 
     add (message, description) {
        
        const detail = { "message": message, "description": description };
        super.add(detail);    
+
+       return this;
 
     }
 

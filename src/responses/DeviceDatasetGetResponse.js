@@ -34,11 +34,9 @@ function executeGet(params) {
 
   let content = "";   // 2DO
 
-  let responseDetail = new GenericMessageDetail();
-  responseDetail.add('datasets retrieved', `device:${params.device.value} | dataset:${params.dataset.value}`);
-
   let statusCode = utils.keynameFromValue(enums.responseStatus, RESPONSE_STATUS);
-  let response = new GenericMessage(statusCode, RESPONSE_STATUS, responseDetail.getElements());
+  let response = new GenericMessage(statusCode, RESPONSE_STATUS, 
+    new GenericMessageDetail().add('datasets retrieved', `device:${params.device.value} | dataset:${params.dataset.value}`).getElements());
 
   return response.getElements();
 }

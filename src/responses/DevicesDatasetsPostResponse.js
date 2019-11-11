@@ -59,20 +59,22 @@ function executePost(params) {
 
   // construct a producer
   let apiPathIdentifier = params.dataset.value;                                   //  enums.params.datasets              - e.g. pms  
-  
+
   let sender = utils.keynameFromValue(enums.apiKey, params.apiKey.value);         // the 'source' is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
   let datasets = params.datasets.value;                                           // for application/json the req.body is a 'datasets' object with array of datasets {"datasets": [.. ] 
+
+  // sendToTopic (asynchronously)
+  let producer = producers.getProducer(apiPathIdentifier);                        // apiPathIdentifier = enums.params.datasets..
+  producer.sendToTopic(datasets, sender);                                         // async sendToTopic() ok as by now we have connected to kafka, and the dataset should have been validated and the only outcome is a 200 response
   
-  // get a producer (MonitoringPms etc) from the factory and process the messages (sendToTopic) asynchronously.
-  let producer = producers.getProducer(apiPathIdentifier);                           // apiPathIdentifier = enums.params.datasets..
-  producer.sendToTopic(datasets, sender);                                         // async ok as by now we have connected to kafka, and the dataset should have been validated and the only outcome is a 200 response
 
   // prepare the response
-  let responseDetail = new GenericMessageDetail();
-  responseDetail.add('Data queued for processing.', `datasets:${apiPathIdentifier} | ${datasets.length}`);
-
-  let statusCode = utils.keynameFromValue(enums.responseStatus, RESPONSE_STATUS);
-  let response = new GenericMessage(statusCode, RESPONSE_STATUS, responseDetail.getElements());
+  let message = 'Data queued for processing.';
+  let description = `datasets:${apiPathIdentifier} | ${datasets.length}`;
+  let code = utils.keynameFromValue(enums.responseStatus, RESPONSE_STATUS);
+  let status = RESPONSE_STATUS;
+  let response = new GenericMessage(code, status, 
+    new GenericMessageDetail().add(message, description).getElements());
 
   return response.getElements();
 

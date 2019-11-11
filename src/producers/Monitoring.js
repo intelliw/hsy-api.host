@@ -46,7 +46,7 @@ class Monitoring extends KafkaProducer {
         } catch (e) {
             log.error(`${this.apiPathIdentifier} sendToTopic`, e);
         }
-
+        
     }
 
     /**
