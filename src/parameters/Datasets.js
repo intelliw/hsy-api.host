@@ -23,7 +23,7 @@ class Datasets extends Param {
      * constructor validates all datasets and the dataitems in them
      */
     constructor(datasetName, datasets) {
-        
+
 
         // constuct the param 
         super(THIS_PARAM_NAME, datasets);
@@ -57,73 +57,126 @@ class Datasets extends Param {
 
             // { error, value } = schema.validate(dataItem);
             let result = schema.validate(datasetsArray);                            // e.g. "datasetsArray is from the body paramter e.g. [ { mppt: { id: 'IT6415AD-01-001' }, data: [ [Object] ] } ]
-            
+
             // error 
             if (result.error) {
                 let errDetails = result.error.details[0];
 
                 this.isValid = false;                                               // this prevents further validation  
                 this.validationError = `${errDetails.message} | ${errDetails.context.value}`;
-            
-            // valid 
+
+                // valid 
             } else {
-                this.value  = result.value;                                         // result.value contains a validated clone of the datasets 
+                this.value = result.value;                                         // result.value contains a validated clone of the datasets 
             }
         }
 
         return this;
     }
 
-    _getSchemaePms() {
-        /* 
-        param.name = 'pv.volts';
-        param.value = '48.000';
-        param.optional = false;
-        param.isValid = false;
-        param.validationError = 'This element must contain an array';
-        */
+    // pms schema (see https://docs.sundaya.monitored.equipment/docs/api.sundaya.monitored.equipment/0/c/Examples/POST/pms%20POST%20example)
+    _getSchemaPms() {
+
+        const schema = Joi.array().items(Joi.object({                           // [
+            pms: Joi.object({                                                   //  { "pms": { "id": "PMS-01-001", "temp": 48.3 }, 
+                id: Joi.string(),                                               //    
+                temp: Joi.number().positive()                                   //     float	+ only 
+            }),
+            data: Joi.array().items(Joi.object({                                //    "data": [
+                time_local: Joi.date().utc().format([                           //      "time_local": "20190209T150006.032+0700",
+                    'YYYYMMDDTHHmmss.SSSS+HHmm',                                //          RFC 3339
+                    'YYYYMMDDTHHmmss.SSSSZ',
+                    'YYYYMMDDTHHmmss.SSSS']),
+                pack: Joi.object({                                              //  "pack": { "id": "0241", "dock": 1, "amps": -1.601, "temp": [35.0, 33.0, 34.0],
+                    id: Joi.string(),                                                       //    
+                    dock: Joi.number().integer().positive().min(1).max(48),                 //      integer, + only,  1-48
+                    amps: Joi.number(),                                                     //      float, +/-
+                    temp: Joi.array().items(Joi.number().positive()).min(3).max(3),         //      float (array)	array size 3, + only
+                    cell: Joi.object({                                                      // "cell": { "open": [], "volts": [3.92, 3.92, 3.92, 3.92, 3.92, 3.92, 3.92, 3.92, 3.92, 3.92, 3.92, 3.92, 3.92, 3.91] },
+                        volts: Joi.array().items(Joi.number().positive()).min(14).max(14),  //      float (array)	array size 14, + only
+                        open: Joi.array().unique().items(Joi.number().integer().positive().max(14)).max(14)     // integer (array)	1-14, uniqueitems, array size 0-14
+                    }),
+                    fet: Joi.object({                                                       // "load": { "volts": [48.000, 48.000], "amps": [1.2, 1.2] },
+                        temp: Joi.array().items(Joi.number().positive()).min(2).max(2),     //      float	array size 2, + only
+                        open: Joi.array().unique().items(Joi.number().integer().positive().max(2)).max(2)     // integer (array)	1-2, uniqueitems, array size 2
+                    }),
+                    status: Joi.string()                                                    // "status": "0801"
+                        .hex().length(4)                                                    //      4-character, hex-encoded                    
+                }),
+            }))
+        }));
+
+        return schema;
+
     }
 
+    // mppt schema (see https://docs.sundaya.monitored.equipment/docs/api.sundaya.monitored.equipment/0/c/Examples/POST/mppt%20POST%20example)
     _getSchemaMppt() {
 
         const schema = Joi.array().items(Joi.object({                               // [
-                mppt: Joi.object({                                                  //  { "mppt": { "id": "IT6415AD-01-001" }, 
-                    id: Joi.string()                                                //    
+            mppt: Joi.object({                                                  //  { "mppt": { "id": "IT6415AD-01-001" }, 
+                id: Joi.string()                                                //    
+            }),
+            data: Joi.array().items(Joi.object({                                //    "data": [
+                time_local: Joi.date().utc().format([                           //      "time_local": "20190209T150006.032+0700",
+                    'YYYYMMDDTHHmmss.SSSS+HHmm',                                //          RFC 3339
+                    'YYYYMMDDTHHmmss.SSSSZ',
+                    'YYYYMMDDTHHmmss.SSSS']),
+                pv: Joi.object({                                                // "pv": { "volts": [48.000, 48.000], "amps": [6.0, 6.0] },      
+                    volts: Joi.array().items(Joi.number().positive()).min(1).max(4),   //      float (array), array size 1-4, + only
+                    amps: Joi.array().items(Joi.number().positive()).min(1).max(4)     //      float (array), array size 1-4, + only 
                 }),
-                data: Joi.array().items(Joi.object({                                //    "data": [
-                    time_local: Joi.date().utc().format([                           //      "time_local": "20190209T150006.032+0700",
-                        'YYYYMMDDTHHmmss.SSSS+HHmm',                                //          RFC 3339
-                        'YYYYMMDDTHHmmss.SSSSZ',
-                        'YYYYMMDDTHHmmss.SSSS']),
-                    pv: Joi.object({                                                // "pv": { "volts": [48.000, 48.000], "amps": [6.0, 6.0] },      
-                        volts: Joi.array().items(Joi.number().positive()).max(4),   //      float (array), array size 1-4, + only
-                        amps: Joi.array().items(Joi.number().positive()).max(4)     //      float (array), array size 1-4, + only 
-                    }),
-                    battery: Joi.object({                                           // "battery": { "volts" : 55.1, "amps": 0.0 },
-                        volts: Joi.number().positive(),                             //      float, + only
-                        amps: Joi.number()                                          //      float, +/-
-                    }),
-                    load: Joi.object({                                              // "load": { "volts": [48.000, 48.000], "amps": [1.2, 1.2] },
-                        volts: Joi.array().items(Joi.number().positive()).max(2),   //      float (array), array size 1-2, + only
-                        amps: Joi.array().items(Joi.number().positive()).max(2)     //      float (array), array size 1-2, + only 
-                    }),
-                    status: Joi.string()                                            // "status": "0801"
-                        .hex().length(4)                                            //      4-character, hex-encoded                    
-                }))
-            }));
+                battery: Joi.object({                                           // "battery": { "volts" : 55.1, "amps": 0.0 },
+                    volts: Joi.number().positive(),                             //      float, + only
+                    amps: Joi.number()                                          //      float, +/-
+                }),
+                load: Joi.object({                                              // "load": { "volts": [48.000, 48.000], "amps": [1.2, 1.2] },
+                    volts: Joi.array().items(Joi.number().positive()).min(1).max(2),   //      float (array), array size 1-2, + only
+                    amps: Joi.array().items(Joi.number().positive()).min(1).max(2)     //      float (array), array size 1-2, + only 
+                }),
+                status: Joi.string()                                            // "status": "0801"
+                    .hex().length(4)                                            //      4-character, hex-encoded                    
+            }))
+        }));
 
         return schema;
     }
 
-
+    // inverter schema (see https://docs.sundaya.monitored.equipment/docs/api.sundaya.monitored.equipment/0/c/Examples/POST/inverter%20POST%20example)
     _getSchemaInverter() {
-        /* 
-        param.name = 'pv.volts';
-        param.value = '48.000';
-        param.optional = false;
-        param.isValid = false;
-        param.validationError = 'This element must contain an array';
-        */
+
+        const schema = Joi.array().items(Joi.object({                               // [
+            inverter: Joi.object({                                                  // { "inverter": { "id": "SPI-B2-01-001" }, 
+                id: Joi.string()                                                //    
+            }),
+            data: Joi.array().items(Joi.object({                                //    "data": [
+                time_local: Joi.date().utc().format([                           //      "time_local": "20190209T150006.032+0700",
+                    'YYYYMMDDTHHmmss.SSSS+HHmm',                                //          RFC 3339
+                    'YYYYMMDDTHHmmss.SSSSZ',
+                    'YYYYMMDDTHHmmss.SSSS']),
+                pv: Joi.object({                                                // "pv": { "volts": [48.000, 48.000], "amps": [6.0, 6.0] },      
+                    volts: Joi.array().items(Joi.number().positive()).min(1).max(4),   //      float (array), array size 1-4, + only
+                    amps: Joi.array().items(Joi.number().positive()).min(1).max(4)     //      float (array), array size 1-4, + only 
+                }),
+                battery: Joi.object({                                           // "battery": { "volts" : 55.1, "amps": 0.0 },
+                    volts: Joi.number().positive(),                             //      float, + only
+                    amps: Joi.number()                                          //      float, +/-
+                }),
+                load: Joi.object({                                              // "load": { "volts": [48.000, 48.000], "amps": [1.2, 1.2] },
+                    volts: Joi.array().items(Joi.number().positive()).min(1).max(2),   //      float (array), array size 1-2, + only
+                    amps: Joi.array().items(Joi.number().positive()).min(1).max(2)     //      float (array), array size 1-2, + only 
+                }),
+                grid: Joi.object({                                              // "load": { "volts": [48.000, 48.000], "amps": [1.2, 1.2] },
+                    volts: Joi.array().items(Joi.number().positive()).min(1).max(3),   //      float (array), array size 1-3, + only
+                    amps: Joi.array().items(Joi.number()).min(1).max(3),               //      float (array), array size 1-3, +/-
+                    pf: Joi.array().items(Joi.number().positive().max(1)).min(1).max(3),      //      float, max 1.0, (array), array size 1-3, + only
+                }),
+                status: Joi.string()                                            // "status": "0801"
+                    .hex().length(4)                                            //      4-character, hex-encoded                    
+            }))
+        }));
+
+        return schema;
     }
 
     // selects the validation schema for the dataset  

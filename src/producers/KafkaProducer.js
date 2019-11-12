@@ -62,7 +62,7 @@ class KafkaProducer {
 
             // log output                                                           // e.g. [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
             log.messaging(this.kafkaTopic, result[0].baseOffset, msgObj.messages, msgObj.itemCount, sender);         // info = (topic, offset, msgqty, itemqty, sender) {
-            
+
             // log.data("monitoring", "pms", "TEST-09", []); 
             // log.exception('sendToTopic', 'there was an error in ' + env.active.kafkajs.producer.clientId, log.ERR.event()); 
             // log.error('Unexpected', new Error('sendToTopic connection')); 

@@ -137,8 +137,8 @@ const _KAFKAJS = {
         requestTimeout: 25000,                                              // milliseconds to wait for a successful request. (25000)   
         timeout: 30000,
         retry: {                                                            // retry options  https://kafka.js.org/docs/configuration
-            maxRetryTime: 10000,                                            // max milliseconds wait for a retry (30000) (10000)
-            initialRetryTime: 100,                                          // initial value in milliseconds (300), randomized after first time 
+            maxRetryTime: 30000,                                            // max milliseconds wait for a retry (30000) (10000)
+            initialRetryTime: 300,                                          // initial value in milliseconds (300), randomized after first time 
             factor: 0.2,                                                    // Randomization factor	(0.2)   
             multiplier: 2,                                                  // Exponential factor (2)
             retries: 8,                                                     // max number of retries per call (5)

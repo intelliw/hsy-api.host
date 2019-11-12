@@ -40,7 +40,7 @@ class Monitoring extends KafkaProducer {
         try {
 
             // get the data     - e.g. msgObj = { itemCount: 0, messages: [] };
-            let msgObj = this.extractData(data, sender);                           // e.g. results: { itemCount: 9, messages: [. . .] }
+            let msgObj = this._extractData(data, sender);                           // e.g. results: { itemCount: 9, messages: [. . .] }
             super.sendToTopic(msgObj, sender);
 
         } catch (e) {
@@ -62,7 +62,7 @@ class Monitoring extends KafkaProducer {
      *  messages[] - array of kafka messages, each message.value contains a dataset with modified data items
      *      e.g. { itemCount: 9, messages: [. . .] }
     */
-    extractData(datasets, sender) {
+    _extractData(datasets, sender) {
 
         let key
         let dataItems = [];
