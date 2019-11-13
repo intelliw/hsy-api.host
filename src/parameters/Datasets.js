@@ -57,10 +57,10 @@ class Datasets extends Param {
             let datasetName = this.datasetName;                                     // this.name is dataset name - set by constructor        
 
             let schema = this._getSchema(datasetName);                              // select a validation schema based on the dataset name    
-
+            
             // { error, value } = schema.validate(dataItem);
             let result = schema.validate(datasetsArray);                            // e.g. "datasetsArray is from the body paramter e.g. [ { mppt: { id: 'IT6415AD-01-001' }, data: [ [Object] ] } ]
-
+            
             // error 
             if (result.error) {
                 let errDetails = result.error.details[0];
@@ -68,9 +68,9 @@ class Datasets extends Param {
                 this.isValid = false;                                               // this prevents further validation  
                 this.validationError = `${errDetails.message} | ${errDetails.context.value}`;
 
-                // valid 
-            } else {
-                this.value = result.value;                                         // result.value contains a validated clone of the datasets 
+            // valid 
+            // } else {                                                              // keep 'this.value' - as joi-date converting time_local to utc and losing the timezone offset 
+                //this.value = result.value;                                         // result.value contains a validated clone of the datasets 
             }
         }
 

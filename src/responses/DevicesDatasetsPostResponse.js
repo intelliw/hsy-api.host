@@ -61,8 +61,8 @@ function executePost(params) {
   let apiPathIdentifier = params.dataset.value;                                   //  enums.params.datasets              - e.g. pms  
 
   let sender = utils.keynameFromValue(enums.apiKey, params.apiKey.value);         // the 'source' is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
-  let datasets = params.datasets.value;                                           // for application/json datasets param is the *array* (of datasets) in the req.body {"datasets": [.. ] 
-
+  let datasets = params.datasets.value;                                           // for application/json datasets param is the *array* (of datasets) in the req.body e.g.  the [.. ] array in {"datasets": [.. ] 
+  
   // sendToTopic (asynchronously)
   let producer = producers.getProducer(apiPathIdentifier);                        // apiPathIdentifier = enums.params.datasets..
   producer.sendToTopic(datasets, sender);                                         // async sendToTopic() ok as by now we have connected to kafka, and the dataset should have been validated and the only outcome is a 200 response

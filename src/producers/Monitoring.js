@@ -31,7 +31,7 @@ class Monitoring extends KafkaProducer {
     }
 
     /** extracts an array of modified data items and sends these as messages to the broker 
-    * @param {*} datasets                                                           // an array of datasets
+    * @param {*} data                                                               // the *array* (of datasets) in the req.body e.g. the [.. ] array in {"datasets": [.. ] ..}
     * @param {*} sender                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
     */
     async sendToTopic(data, sender) {
@@ -51,7 +51,8 @@ class Monitoring extends KafkaProducer {
 
     /**
      * creates an array of kafka messages and returns them in a results object
-     *  data - object array of dataset items. 
+     *  datasets - object array of dataset items. 
+     *      the *array* (of datasets) in the req.body e.g. the [.. ] array in {"datasets": [.. ] ..}
      *  each dataset item has an id and an array of data objects
      *  each data object has a time_local event timestamp
      *  dataset objects have a common structure
@@ -69,8 +70,10 @@ class Monitoring extends KafkaProducer {
         let dataItemCount = 0;
         let results = { itemCount: 0, messages: [] };
 
+        let datasetsClone = utils.clone(datasets);                                  // clone the byref object before any modifications 
+
         // extract and add messages to results 
-        datasets.forEach(dataset => {                                               // e.g. "pms": { "id": "PMS-01-001" }, "data": [ { time_local: '20190809T150006.032+0700', pack: [Object] }, ... ]
+        datasetsClone.forEach(dataset => {                                          // e.g. "pms": { "id": "PMS-01-001" }, "data": [ { time_local: '20190809T150006.032+0700', pack: [Object] }, ... ]
 
             key = dataset[this.apiPathIdentifier].id;                               // e.g. id from.. "pms": { "id": 
 
@@ -78,16 +81,16 @@ class Monitoring extends KafkaProducer {
             dataset.data.forEach(dataItem => {                                      // e.g. "data": [ { "time_local": "2
 
                 // add elements into the dataset
-                let newDataItem = this.addGenericAttributes(dataItem, sender);      // add common attributes
+                let dataItemClone = this.addGenericAttributes(dataItem, sender);    // clone the dataItem and add common attributes (time_event, time_zone, time_processing)
 
                 // add the message to the items buffer
-                dataItems.push(newDataItem);
+                dataItems.push(dataItemClone);
 
             });
 
-            // replace data array with new dataItems 
-            dataset.data = dataItems;
+            // replace data array with newly created dataItems array
             dataItemCount += dataItems.length;
+            dataset.data = dataItems;
             dataItems = [];
 
             // add the modified dataset to the message buffer
@@ -109,23 +112,23 @@ class Monitoring extends KafkaProducer {
     *  sender is the keyname of the apikey enum, sent in the POST request  and identifies the source of the data. this value is added to sys.source attribute
     */
     addGenericAttributes(dataItem, sender) {
-
+        
         // create a new dataitem
-        let newDataItem = utils.clone(dataItem);                // clone the object before any modifications, to prevent errors due to object re-referencing 
+        let dataItemClone = utils.clone(dataItem);                // clone the object before any modifications, to prevent errors due to object re-referencing 
 
         // add standard attributes
-        let eventTime = newDataItem.time_local;                 // "data": [ { "time_local": "20190209T150017.020+0700",
+        let eventTime = dataItemClone.time_local;                 // "data": [ { "time_local": "20190209T150017.020+0700",
 
-        newDataItem.sys = { source: sender };                    // is based on the apikey from the sender and identifies the source of the data. this value is added to sys.source attribute
+        dataItemClone.sys = { source: sender };                    // is based on the apikey from the sender and identifies the source of the data. this value is added to sys.source attribute
 
-        newDataItem.time_event = moment.utc(eventTime).format(consts.dateTime.bigqueryZonelessTimestampFormat);
-        newDataItem.time_zone = utils.datetimeZoneOffset(eventTime);
-        newDataItem.time_processing = moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat);
+        dataItemClone.time_event = moment.utc(eventTime).format(consts.dateTime.bigqueryZonelessTimestampFormat);
+        dataItemClone.time_zone = utils.datetimeZoneOffset(eventTime);
+        dataItemClone.time_processing = moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat);
 
         //  delete time_local as it has been replaced with the 3 standard time attributes above
-        delete newDataItem.time_local;
+        delete dataItemClone.time_local;
 
-        return newDataItem;
+        return dataItemClone;
 
     }
 
