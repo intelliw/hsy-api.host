@@ -15,6 +15,9 @@ const Param = require('./Param');
 
 const THIS_PARAM_NAME = 'datasets';
 
+const VALID_TIMESTAMP_FORMATS = ['YYYYMMDDTHHmmss.SSSS+HHmm',           //      "time_local": "20190209T150006.032+0700",
+    'YYYYMMDDTHHmmss.SSSSZ', 'YYYYMMDDTHHmmss.SSSS'];
+
 class Datasets extends Param {
     /**
      * instance attributes:  
@@ -80,15 +83,12 @@ class Datasets extends Param {
         const schema = Joi.array().items(Joi.object({                           // [
             pms: Joi.object({                                                   //  { "pms": { "id": "PMS-01-001", "temp": 48.3 }, 
                 id: Joi.string(),                                               //    
-                temp: Joi.number().positive()                                   //     float	+ only 
+                temp: Joi.number().positive()                                   //      float	+ only 
             }),
-            data: Joi.array().items(Joi.object({                                //    "data": [
-                time_local: Joi.date().utc().format([                           //      "time_local": "20190209T150006.032+0700",
-                    'YYYYMMDDTHHmmss.SSSS+HHmm',                                //          RFC 3339
-                    'YYYYMMDDTHHmmss.SSSSZ',
-                    'YYYYMMDDTHHmmss.SSSS']),
-                pack: Joi.object({                                              //  "pack": { "id": "0241", "dock": 1, "amps": -1.601, "temp": [35.0, 33.0, 34.0],
-                    id: Joi.string(),                                                       //    
+            data: Joi.array().items(Joi.object({                                //      "data": [
+                time_local: Joi.date().utc().format(VALID_TIMESTAMP_FORMATS),   //          "time_local": "20190209T150006.032+0700", 
+                pack: Joi.object({                                              //          "pack": { "id": "0241", "dock": 1, "amps": -1.601, "temp": [35.0, 33.0, 34.0],
+                    id: Joi.string(),                                                       //      string
                     dock: Joi.number().integer().positive().min(1).max(48),                 //      integer, + only,  1-48
                     amps: Joi.number(),                                                     //      float, +/-
                     temp: Joi.array().items(Joi.number().positive()).min(3).max(3),         //      float (array)	array size 3, + only
@@ -118,24 +118,21 @@ class Datasets extends Param {
                 id: Joi.string()                                                //    
             }),
             data: Joi.array().items(Joi.object({                                //    "data": [
-                time_local: Joi.date().utc().format([                           //      "time_local": "20190209T150006.032+0700",
-                    'YYYYMMDDTHHmmss.SSSS+HHmm',                                //          RFC 3339
-                    'YYYYMMDDTHHmmss.SSSSZ',
-                    'YYYYMMDDTHHmmss.SSSS']),
-                pv: Joi.object({                                                // "pv": { "volts": [48.000, 48.000], "amps": [6.0, 6.0] },      
-                    volts: Joi.array().items(Joi.number().positive()).min(1).max(4),   //      float (array), array size 1-4, + only
-                    amps: Joi.array().items(Joi.number().positive()).min(1).max(4)     //      float (array), array size 1-4, + only 
+                time_local: Joi.date().utc().format(VALID_TIMESTAMP_FORMATS),           // "time_local": "20190209T150006.032+0700", 
+                pv: Joi.object({                                                        // "pv": { "volts": [48.000, 48.000], "amps": [6.0, 6.0] },      
+                    volts: Joi.array().items(Joi.number().positive()).min(1).max(4),    //      float (array), array size 1-4, + only
+                    amps: Joi.array().items(Joi.number().positive()).min(1).max(4)      //      float (array), array size 1-4, + only 
                 }),
-                battery: Joi.object({                                           // "battery": { "volts" : 55.1, "amps": 0.0 },
-                    volts: Joi.number().positive(),                             //      float, + only
-                    amps: Joi.number()                                          //      float, +/-
+                battery: Joi.object({                                                   // "battery": { "volts" : 55.1, "amps": 0.0 },
+                    volts: Joi.number().positive(),                                     //      float, + only
+                    amps: Joi.number()                                                  //      float, +/-
                 }),
-                load: Joi.object({                                              // "load": { "volts": [48.000, 48.000], "amps": [1.2, 1.2] },
-                    volts: Joi.array().items(Joi.number().positive()).min(1).max(2),   //      float (array), array size 1-2, + only
-                    amps: Joi.array().items(Joi.number().positive()).min(1).max(2)     //      float (array), array size 1-2, + only 
+                load: Joi.object({                                                      // "load": { "volts": [48.000, 48.000], "amps": [1.2, 1.2] },
+                    volts: Joi.array().items(Joi.number().positive()).min(1).max(2),    //      float (array), array size 1-2, + only
+                    amps: Joi.array().items(Joi.number().positive()).min(1).max(2)      //      float (array), array size 1-2, + only 
                 }),
-                status: Joi.string()                                            // "status": "0801"
-                    .hex().length(4)                                            //      4-character, hex-encoded                    
+                status: Joi.string()                                                    // "status": "0801"
+                    .hex().length(4)                                                    //      4-character, hex-encoded                    
             }))
         }));
 
@@ -147,32 +144,29 @@ class Datasets extends Param {
 
         const schema = Joi.array().items(Joi.object({                               // [
             inverter: Joi.object({                                                  // { "inverter": { "id": "SPI-B2-01-001" }, 
-                id: Joi.string()                                                //    
+                id: Joi.string()                                                    //    
             }),
-            data: Joi.array().items(Joi.object({                                //    "data": [
-                time_local: Joi.date().utc().format([                           //      "time_local": "20190209T150006.032+0700",
-                    'YYYYMMDDTHHmmss.SSSS+HHmm',                                //          RFC 3339
-                    'YYYYMMDDTHHmmss.SSSSZ',
-                    'YYYYMMDDTHHmmss.SSSS']),
-                pv: Joi.object({                                                // "pv": { "volts": [48.000, 48.000], "amps": [6.0, 6.0] },      
-                    volts: Joi.array().items(Joi.number().positive()).min(1).max(4),   //      float (array), array size 1-4, + only
-                    amps: Joi.array().items(Joi.number().positive()).min(1).max(4)     //      float (array), array size 1-4, + only 
+            data: Joi.array().items(Joi.object({                                    //    "data": [
+                time_local: Joi.date().utc().format(VALID_TIMESTAMP_FORMATS),           // "time_local": "20190209T150006.032+0700", 
+                pv: Joi.object({                                                        // "pv": { "volts": [48.000, 48.000], "amps": [6.0, 6.0] },      
+                    volts: Joi.array().items(Joi.number().positive()).min(1).max(4),    //      float (array), array size 1-4, + only
+                    amps: Joi.array().items(Joi.number().positive()).min(1).max(4)      //      float (array), array size 1-4, + only 
                 }),
-                battery: Joi.object({                                           // "battery": { "volts" : 55.1, "amps": 0.0 },
-                    volts: Joi.number().positive(),                             //      float, + only
-                    amps: Joi.number()                                          //      float, +/-
+                battery: Joi.object({                                                   // "battery": { "volts" : 55.1, "amps": 0.0 },
+                    volts: Joi.number().positive(),                                     //      float, + only
+                    amps: Joi.number()                                                  //      float, +/-
                 }),
-                load: Joi.object({                                              // "load": { "volts": [48.000, 48.000], "amps": [1.2, 1.2] },
-                    volts: Joi.array().items(Joi.number().positive()).min(1).max(2),   //      float (array), array size 1-2, + only
-                    amps: Joi.array().items(Joi.number().positive()).min(1).max(2)     //      float (array), array size 1-2, + only 
+                load: Joi.object({                                                      // "load": { "volts": [48.000, 48.000], "amps": [1.2, 1.2] },
+                    volts: Joi.array().items(Joi.number().positive()).min(1).max(2),    //      float (array), array size 1-2, + only
+                    amps: Joi.array().items(Joi.number().positive()).min(1).max(2)      //      float (array), array size 1-2, + only 
                 }),
-                grid: Joi.object({                                              // "load": { "volts": [48.000, 48.000], "amps": [1.2, 1.2] },
-                    volts: Joi.array().items(Joi.number().positive()).min(1).max(3),   //      float (array), array size 1-3, + only
-                    amps: Joi.array().items(Joi.number()).min(1).max(3),               //      float (array), array size 1-3, +/-
+                grid: Joi.object({                                                      // "load": { "volts": [48.000, 48.000], "amps": [1.2, 1.2] },
+                    volts: Joi.array().items(Joi.number().positive()).min(1).max(3),    //      float (array), array size 1-3, + only
+                    amps: Joi.array().items(Joi.number()).min(1).max(3),                //      float (array), array size 1-3, +/-
                     pf: Joi.array().items(Joi.number().positive().max(1)).min(1).max(3),      //      float, max 1.0, (array), array size 1-3, + only
                 }),
-                status: Joi.string()                                            // "status": "0801"
-                    .hex().length(4)                                            //      4-character, hex-encoded                    
+                status: Joi.string()                                                    // "status": "0801"
+                    .hex().length(4)                                                    //      4-character, hex-encoded                    
             }))
         }));
 

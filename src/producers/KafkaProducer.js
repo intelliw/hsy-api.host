@@ -22,21 +22,17 @@ class KafkaProducer {
      * constructor arguments 
      * @param {*} apiPathIdentifier                                                    // enums.params.datasets              - e.g. pms       
      */
-    constructor(apiPathIdentifier, kafkaTopic) {
+    constructor(apiPathIdentifier, writeTopic) {
 
         // create a kafka producer
         const kafka = new Kafka({
-            brokers: env.active.kafka.brokers,                 //  e.g. [`${this.KAFKA_HOST}:9092`, `${this.KAFKA_HOST}:9094`]
-            clientId: env.active.kafkajs.producer.clientId,
-            retry: env.active.kafkajs.producer.retry,                                   // retry options  https://kafka.js.org/docs/configuration   
-            connectionTimeout: env.active.kafkajs.producer.connectionTimeout,           // milliseconds to wait for a successful connection   
-            requestTimeout: env.active.kafkajs.producer.requestTimeout                  // milliseconds to wait for a successful request.     
+            brokers: env.active.kafka.brokers                                       //  e.g. [`${this.KAFKA_HOST}:9092`, `${this.KAFKA_HOST}:9094`]                                                       // https://kafka.js.org/docs/producing   
         });
 
-        // instance variables
-        this.producerObj = kafka.producer();
+        // setup instance variables
+        this.producerObj = kafka.producer(env.active.kafkajs.producer);
         this.apiPathIdentifier = apiPathIdentifier;
-        this.kafkaTopic = kafkaTopic;
+        this.writeTopic = writeTopic;
 
     }
 
@@ -46,35 +42,30 @@ class KafkaProducer {
     */
     async sendToTopic(msgObj, sender) {
 
-        // send the message to the topics
-        try {
 
-            // connect 
-            await this.producerObj.connect();
+            // send the message to the topic
+            await this.producerObj.connect()
+                .catch(e => log.error(`${this.apiPathIdentifier} connect Error [${this.writeTopic}]`, e));
 
-            // send the message to the topics
             let result = await this.producerObj.send({
-                topic: this.kafkaTopic,
+                topic: this.writeTopic,
                 messages: msgObj.messages,
-                acks: enums.messageBroker.ack.default,                              // default is 'leader'
-                timeout: env.active.kafkajs.producer.timeout
-            });
+                acks: enums.messageBroker.ack.all,                                  // default is 'all'
+                timeout: env.active.kafkajs.send.timeout                            // milliseconds    
+            })
+                // log output               e.g. 2019-09-10 05:04:44.6630 [monitoring.mppt:2-3] 2 messages, 4 items 
+                .then(r => log.messaging(this.writeTopic, r[0].baseOffset, msgObj.messages,msgObj.itemCount, sender))         // info = (topic, offset, msgqty, itemqty, sender) {
+                // log.data("monitoring", "pms", "TEST-09", []); 
+                // log.exception('sendToTopic', 'there was an error in ' + env.active.kafkajs.producer.clientId, log.ERR.event()); 
+                // log.error('Unexpected', new Error('sendToTopic connection')); 
+                // log.trace(log.enums.labels.watchVar, 'id', log.ERR.event());
+                // log.trace(log.enums.labels.watchVar, 'id');
 
-            // log output                                                           // e.g. [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
-            log.messaging(this.kafkaTopic, result[0].baseOffset, msgObj.messages, msgObj.itemCount, sender);         // info = (topic, offset, msgqty, itemqty, sender) {
-
-            // log.data("monitoring", "pms", "TEST-09", []); 
-            // log.exception('sendToTopic', 'there was an error in ' + env.active.kafkajs.producer.clientId, log.ERR.event()); 
-            // log.error('Unexpected', new Error('sendToTopic connection')); 
-            // log.trace(log.enums.labels.watchVar, 'id', log.ERR.event());
-            // log.trace(log.enums.labels.watchVar, 'id');
+                .catch(e => log.error(`${this.apiPathIdentifier} send Error [${this.writeTopic}]`, e));
 
             // disconnect
-            await this.producerObj.disconnect();
-
-        } catch (e) {
-            log.error(`${this.apiPathIdentifier} sendToTopic`, e);
-        }
+            await this.producerObj.disconnect()
+                .catch(e => log.error(`${this.apiPathIdentifier} disconnect Error [${this.writeTopic}]`, e));
 
     }
 

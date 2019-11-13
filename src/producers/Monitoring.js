@@ -24,9 +24,9 @@ class Monitoring extends KafkaProducer {
      * constructor arguments 
      * @param {*} apiPathIdentifier                                                    // enums.params.datasets              - e.g. pms       
      */
-    constructor(apiPathIdentifier, kafkaTopic) {
+    constructor(apiPathIdentifier, writeTopic) {
 
-        super(apiPathIdentifier, kafkaTopic);
+        super(apiPathIdentifier, writeTopic);
 
     }
 
