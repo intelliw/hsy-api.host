@@ -43,29 +43,24 @@ class KafkaProducer {
     async sendToTopic(msgObj, sender) {
 
 
-            // send the message to the topic
-            await this.producerObj.connect()
-                .catch(e => log.error(`${this.apiPathIdentifier} connect Error [${this.writeTopic}]`, e));
-
-            let result = await this.producerObj.send({
+        // send the message to the topic
+        await this.producerObj.connect()                                            // try connecting         
+            .then(() => this.producerObj.send({                                     //.. send    
                 topic: this.writeTopic,
                 messages: msgObj.messages,
-                acks: enums.messageBroker.ack.all,                                  // default is 'all'
-                timeout: env.active.kafkajs.send.timeout                            // milliseconds    
-            })
-                // log output               e.g. 2019-09-10 05:04:44.6630 [monitoring.mppt:2-3] 2 messages, 4 items 
-                .then(r => log.messaging(this.writeTopic, r[0].baseOffset, msgObj.messages,msgObj.itemCount, sender))         // info = (topic, offset, msgqty, itemqty, sender) {
-                // log.data("monitoring", "pms", "TEST-09", []); 
-                // log.exception('sendToTopic', 'there was an error in ' + env.active.kafkajs.producer.clientId, log.ERR.event()); 
-                // log.error('Unexpected', new Error('sendToTopic connection')); 
-                // log.trace(log.enums.labels.watchVar, 'id', log.ERR.event());
-                // log.trace(log.enums.labels.watchVar, 'id');
+                acks: enums.messageBroker.ack.all,                                  //      default is 'all'
+                timeout: env.active.kafkajs.send.timeout                            //      milliseconds    
+            }))
+            .then(r => log.messaging(this.writeTopic, r[0].baseOffset, msgObj.messages, msgObj.itemCount, sender))         // info = (topic, offset, msgqty, itemqty, sender) {
+            .then(this.producerObj.disconnect())                                    // disconnect    
+            .catch(e => log.error(`${this.apiPathIdentifier} sendToTopic Error [${this.writeTopic}]`, e));
 
-                .catch(e => log.error(`${this.apiPathIdentifier} send Error [${this.writeTopic}]`, e));
-
-            // disconnect
-            await this.producerObj.disconnect()
-                .catch(e => log.error(`${this.apiPathIdentifier} disconnect Error [${this.writeTopic}]`, e));
+        // send the message to the topic
+        // log.data("monitoring", "pms", "TEST-09", []); 
+        // log.exception('sendToTopic', 'there was an error in ' + env.active.kafkajs.producer.clientId, log.ERR.event()); 
+        // log.error('Unexpected', new Error('sendToTopic connection')); 
+        // log.trace(log.enums.labels.watchVar, 'id', log.ERR.event());
+        // log.trace(log.enums.labels.watchVar, 'id');
 
     }
 
