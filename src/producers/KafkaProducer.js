@@ -43,7 +43,7 @@ class KafkaProducer {
     async sendToTopic(msgObj, sender) {
 
         // [start trace] -------------------------------
-        const sp = log.TRACE.createChildSpan({ name: `${log.enums.methods.kafkaSendToTopic}` });
+        const sp = log.TRACE.createChildSpan({ name: `${log.enums.methods.kafkaSendToTopic}` });    // 2do  - consumer tracing does not have a root span ..
 
 
         // send the message to the topic
