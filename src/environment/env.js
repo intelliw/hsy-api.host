@@ -132,7 +132,7 @@ const _KAFKAJS = {
         retry: 10,
         readUncommitted: false
     },
-    producer: {      
+    producer: {
         clientId: `producer.${utils.randomIntegerString(1, 9999)}`,         // generate a unique client id for this container instance - if this consumer is clustered each instance will have a unique id                               // producer client id prefix - preferred convention = <api path>.<api path> 
         connectionTimeout: 3000,                                            // milliseconds to wait for a successful connection (3000)  
         requestTimeout: 25000,                                              // milliseconds to wait for a successful request. (25000)   
@@ -147,7 +147,7 @@ const _KAFKAJS = {
         metadataMaxAge: 300000,                                             // milliseconds after which we force refresh of partition leadership changes to proactively discover new brokers or partitions
         allowAutoTopicCreation: true,
         transactionTimeout: 25000                                           // maximum ms that transaction coordinator will wait for a status update from producer before aborting
-    }, 
+    },
     send: {
         timeout: 30000                                                      // time to await a response in ms
     }
@@ -173,16 +173,28 @@ const _GCP = {
 // stackdriver client configuration options
 const _STACKDRIVER = {
     DEV: {
-        logging: { logName: 'monitoring_dev', resource: 'gce_instance' },       // appears in logs as jsonPayload.logName: "projects/sundaya/logs/monitoring"  the format is "projects/[PROJECT_ID]/logs/[LOG_ID]"
-        errors: { reportMode: 'always', logLevel: 5 }                           // 'production' (default), 'always', or 'never' - 'production' (default), 'always', 'never' - production will not log unless NODE-ENV=production. Specifies when errors are reported to the Error Reporting Console. // 2 (warnings). 0 (no logs) 5 (all logs)      
+        logging: { logName: 'monitoring_dev', resource: 'gce_instance' },               // appears in logs as jsonPayload.logName: "projects/sundaya/logs/monitoring"  the format is "projects/[PROJECT_ID]/logs/[LOG_ID]"
+        errors: { reportMode: 'always', logLevel: 5 },                                  // 'production' (default), 'always', or 'never' - 'production' (default), 'always', 'never' - production will not log unless NODE-ENV=production. Specifies when errors are reported to the Error Reporting Console. // 2 (warnings). 0 (no logs) 5 (all logs)      
+        trace: {
+            samplingRate: 500, enabled: true,                                           // set enabled = false to trurn off tracing, samplingRate 5 means sample at most 1 trace every 200 ms. if 500, Sample one trace every half-second.
+            ignoreUrls: [/^\/static/], ignoreMethods: ['OPTIONS', 'PUT']                // ignore /static path, ignore requests with OPTIONS & PUT methods (case-insensitive)
+        }      
     },
     TEST: {
         logging: { logName: 'monitoring_test', resource: 'gce_instance' },
-        errors: { reportMode: 'always', logLevel: 5 }
+        errors: { reportMode: 'always', logLevel: 5 },
+        trace: {
+            samplingRate: 500, enabled: true,
+            ignoreUrls: [/^\/static/], ignoreMethods: ['OPTIONS', 'PUT']
+        }
     },
     PROD: {
         logging: { logName: 'monitoring_prod', resource: 'gce_instance' },
-        errors: { reportMode: 'always', logLevel: 5 }
+        errors: { reportMode: 'always', logLevel: 5 },
+        trace: {
+            samplingRate: 500, enabled: true,
+            ignoreUrls: [/^\/static/], ignoreMethods: ['OPTIONS', 'PUT']
+        }
     }
 }
 

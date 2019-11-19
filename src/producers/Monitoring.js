@@ -44,7 +44,7 @@ class Monitoring extends KafkaProducer {
             super.sendToTopic(msgObj, sender);
 
         } catch (e) {
-            log.error(`${this.apiPathIdentifier} sendToTopic`, e);
+            log.error(`${this.apiPathIdentifier} ${log.enums.methods.kafkaSendToTopic}`, e);
         }
         
     }

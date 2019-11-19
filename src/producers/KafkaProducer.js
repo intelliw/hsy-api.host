@@ -42,6 +42,9 @@ class KafkaProducer {
     */
     async sendToTopic(msgObj, sender) {
 
+        // [start trace] -------------------------------
+        const sp = log.TRACE.createChildSpan({ name: `${log.enums.methods.kafkaSendToTopic}` });
+
 
         // send the message to the topic
         await this.producerObj.connect()                                            // try connecting         
@@ -53,8 +56,12 @@ class KafkaProducer {
             }))
             .then(r => log.messaging(this.writeTopic, r[0].baseOffset, msgObj.messages, msgObj.itemCount, sender))         // info = (topic, offset, msgqty, itemqty, sender) {
             .then(this.producerObj.disconnect())                                    // disconnect    
-            .catch(e => log.error(`${this.apiPathIdentifier} sendToTopic Error [${this.writeTopic}]`, e));
+            .catch(e => log.error(`${this.apiPathIdentifier} ${log.enums.methods.kafkaSendToTopic} Error [${this.writeTopic}]`, e));
+        
 
+        // [end trace] -------------------------------
+        sp.endSpan();
+        
         // send the message to the topic
         // log.data("monitoring", "pms", "TEST-09", []); 
         // log.exception('sendToTopic', 'there was an error in ' + env.active.kafkajs.producer.clientId, log.ERR.event()); 

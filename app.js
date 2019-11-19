@@ -3,20 +3,20 @@
 /**
  * version 00.08
  */
-
-const express = require('express');
-const bodyParser = require('body-parser')
-const Buffer = require('safe-buffer').Buffer;
-
-const paths = require('./src/paths');
-
 const env = require('./src/environment');
 const enums = env.enums;
 
 const host = require('./src/host');
 const consts = host.consts;
 
+const paths = require('./src/paths');
+
 const log = require('./src/logger').log;
+
+const express = require('express');
+const bodyParser = require('body-parser')
+const Buffer = require('safe-buffer').Buffer;
+
 const GenericMessage = require('./src/definitions/GenericMessage');
 const GenericMessageDetail = require('./src/definitions/GenericMessageDetail');
 

@@ -4,13 +4,14 @@
  * ./paths/EnergyGet.js
  * prepares data and response for the energy path 
  */
-const express = require('express');
-const router = express.Router();
 
 const utils = require('../environment/utils');
 const consts = require('../host/constants');
 const env = require('../environment');
 const enums = env.enums;
+
+const express = require('express');
+const router = express.Router();
 
 const Request = require('./Request');
 const Param = require('../parameters');

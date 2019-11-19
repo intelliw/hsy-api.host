@@ -58,7 +58,7 @@ router.get('/logging', (req, res, next) => {
     configs = setConfigs(req.query.appenders, enums.logging.appenders);
     env.active.logging.appenders = configs.length == 0 ? env.active.logging.appenders : configs;
     hasChanged = hasChanged || configs.length > 0;
-
+    
     configs = setConfigs(req.query.verbosity, enums.logging.verbosity);
     env.active.logging.verbosity = configs.length == 0 ? env.active.logging.verbosity : configs;
     hasChanged = hasChanged || configs.length > 0;
@@ -71,11 +71,11 @@ router.get('/logging', (req, res, next) => {
     if (hasChanged) { 
         log.initialise(); 
         
-        let sender = utils.keynameFromValue(enums.apiKey, enums.apiKey.PROXY);      // make sender the system PROXY as it is an internal message
+        let sender = utils.keynameFromValue(enums.apiKey, enums.apiKey.PROXY);          // make sender the system PROXY as it is an internal message
 
         // communicate logging config changes from host to consumer instances  
-        let producer = producers.getProducer(enums.paths.logging);                // returns a Features producer, apiPathIdentifier = enums.features.. 
-        producer.sendToTopic(env.active.logging, sender);                           // send the complete logging configs to the topic: which is env.active.topics.system.feature
+        let producer = producers.getProducer(enums.paths.logging);                      // returns a Features producer, apiPathIdentifier = enums.features.. 
+        producer.sendToTopic(env.active.logging, sender);                               // send the complete logging configs to the topic: which is env.active.topics.system.feature
 
         // trace log the logging config change
         log.trace(log.enums.labels.configChange, `${enums.paths.logging}`, env.active.logging);
