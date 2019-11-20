@@ -24,8 +24,8 @@ const _API = {
 
     // API host for dev, prod, and test
     HOST: {
-        DEV: 'dev.api.sundaya.monitored.equipment',
-        TEST: 'test.api.sundaya.monitored.equipment',
+        DEV: 'api.dev.sundaya.monitored.equipment',
+        TEST: 'api.test.sundaya.monitored.equipment',
         PROD: 'api.sundaya.monitored.equipment'
     },
 
