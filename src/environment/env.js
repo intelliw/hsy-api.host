@@ -239,7 +239,7 @@ module.exports.CONFIGS = {
         api: { host: _API.HOST.DEV, scheme: 'https', versions: _API.VERSIONS },
         features: _FEATURES.DEV,
         logging: _LOGGING.DEV,
-        kafka: { brokers: _KAFKA.BROKERS.SINGLE },                                     // array of kafka message brokers                       // kafka-1-vm  | 10.140.0.11
+        kafka: { brokers: _KAFKA.BROKERS.SINGLE },                              // array of kafka message brokers                       // kafka-1-vm  | 10.140.0.11
         kafkajs: _KAFKAJS,
         topics: _TOPICS,
         gcp: _GCP.DEV,
@@ -250,7 +250,7 @@ module.exports.CONFIGS = {
         api: { host: _API.HOST.DEV, scheme: 'https', versions: _API.VERSIONS },
         features: _FEATURES.DEV,
         logging: _LOGGING.DEV,
-        kafka: { brokers: _KAFKA.BROKERS.HA },                                         // array of kafka message brokers                       // [kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
+        kafka: { brokers: _KAFKA.BROKERS.HA },                                  // array of kafka message brokers                       // [kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
         kafkajs: _KAFKAJS,
         topics: _TOPICS,
         gcp: _GCP.DEV,
@@ -261,7 +261,7 @@ module.exports.CONFIGS = {
         api: { host: _API.HOST.PROD, scheme: 'https', versions: _API.VERSIONS },
         features: _FEATURES.PROD,
         logging: _LOGGING.PROD,
-        kafka: { brokers: _KAFKA.BROKERS.SINGLE },                                     // array of kafka message brokers                       // kafka-1-vm  | 10.140.0.11   
+        kafka: { brokers: _KAFKA.BROKERS.SINGLE },                              // array of kafka message brokers                       // kafka-1-vm  | 10.140.0.11   
         kafkajs: _KAFKAJS,
         topics: _TOPICS,
         gcp: _GCP.PROD,
@@ -272,7 +272,7 @@ module.exports.CONFIGS = {
         api: { host: _API.HOST.PROD, scheme: 'https', versions: _API.VERSIONS },
         features: _FEATURES.PROD,
         logging: _LOGGING.PROD,
-        kafka: { brokers: _KAFKA.BROKERS.HA },                                         // array of kafka message brokers                       // [kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
+        kafka: { brokers: _KAFKA.BROKERS.HA },                                  // array of kafka message brokers                       // [kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
         kafkajs: _KAFKAJS,
         topics: _TOPICS,
         gcp: _GCP.PROD,

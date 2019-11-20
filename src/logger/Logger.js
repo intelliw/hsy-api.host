@@ -55,6 +55,7 @@ class Logger {
             enabled: env.active.stackdriver.trace.enabled,                                                      // tracing is disabled if the trace statments are off     
             ignoreUrls: env.active.stackdriver.trace.ignoreUrls,                // ignore /static path
             ignoreMethods: env.active.stackdriver.trace.ignoreMethods,          // ignore requests with OPTIONS & PUT methods (case-insensitive)
+            flushDelaySeconds: 1,
             serviceContext: {
                 service: env.active.api.host,
                 version: env.active.api.versions.current,
