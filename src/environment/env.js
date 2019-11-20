@@ -17,7 +17,7 @@ const enums = require('./enums');
     - appenders determines the output destination (console, or stackdriver)
 */
 
-// referenced configs - these configs are reused in the ENVIRONMENT section -----------------------------------------------------------------------------------------------------------------
+// referenced configs - these configs are included by reference in the CONFIGS block below -----------------------------------------------------------------------------------------------------------------
 
 // API 
 const _API = {
@@ -118,7 +118,7 @@ const _KAFKA = {
 // kafkajs client configuration options
 const _KAFKAJS = {
     consumer: {
-        clientId: `consumer.${utils.randomIntegerString(1, 9999)}`,         // unique client id for this instance, created at startup - preferred convention = <api path>.<api path>
+        clientId: `consumer.${utils.randomIntegerString(1, 9999)}`,             // unique client id for this instance, created at startup - preferred convention = <api path>.<api path>
         consumeFromBeginning: true,
         sessionTimeout: 30000,
         heartbeatInterval: 3000,
@@ -154,7 +154,7 @@ const _KAFKAJS = {
 }
 
 // standard kafka topics for each environment type                          
-const _TOPICS = {                                                           // kafka topics for all environments 
+const _TOPICS = {                                                                       // kafka topics for all environments 
     monitoring: { pms: 'monitoring.pms', mppt: 'monitoring.mppt', inverter: 'monitoring.inverter' },
     system: { feature: 'system.feature' },
     dataset: { pms: 'monitoring.pms.dataset', mppt: 'monitoring.mppt.dataset', inverter: 'monitoring.inverter.dataset' }
@@ -176,7 +176,7 @@ const _STACKDRIVER = {
         logging: { logName: 'monitoring_dev', resource: 'gce_instance' },               // appears in logs as jsonPayload.logName: "projects/sundaya/logs/monitoring"  the format is "projects/[PROJECT_ID]/logs/[LOG_ID]"
         errors: { reportMode: 'always', logLevel: 5 },                                  // 'production' (default), 'always', or 'never' - 'production' (default), 'always', 'never' - production will not log unless NODE-ENV=production. Specifies when errors are reported to the Error Reporting Console. // 2 (warnings). 0 (no logs) 5 (all logs)      
         trace: {
-            samplingRate: 500, enabled: true,                                           // set enabled = false to trurn off tracing, samplingRate 5 means sample at most 1 trace every 200 ms. if 500, Sample one trace every half-second.
+            samplingRate: 500, enabled: true,                                           // enabled=false to turn OFF tracing. samplingRate 500 means sample 1 trace every half-second, 5 means at most 1 every 200 ms.
             ignoreUrls: [/^\/static/], ignoreMethods: ['OPTIONS', 'PUT']                // ignore /static path, ignore requests with OPTIONS & PUT methods (case-insensitive)
         }      
     },
@@ -201,7 +201,7 @@ const _STACKDRIVER = {
 
 
 // bq datasets for each environment type 
-const _DATAWAREHOUSE = {                                                    // bq datasets for all environments 
+const _DATAWAREHOUSE = {                                                                // bq datasets for all environments 
     datasets: { monitoring: 'monitoring' },
     tables: { pms: 'pms', mppt: 'mppt', inverter: 'inverter' }
 }

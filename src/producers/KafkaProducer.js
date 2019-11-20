@@ -17,10 +17,10 @@ class KafkaProducer {
      * 
      * instance attributes:  
      *  producerObj": kafka.producer()
-     * apiPathIdentifier                                                               // enums.params.datasets
+     * apiPathIdentifier                                                            // enums.params.datasets
      * kafkaTopic                                                                   // env.active.topics.monitoring
      * constructor arguments 
-     * @param {*} apiPathIdentifier                                                    // enums.params.datasets              - e.g. pms       
+     * @param {*} apiPathIdentifier                                                 // enums.params.datasets              - e.g. pms       
      */
     constructor(apiPathIdentifier, writeTopic) {
 
@@ -42,7 +42,7 @@ class KafkaProducer {
     */
     async sendToTopic(msgObj, sender) {
 
-        // [start trace] -------------------------------
+        // [start trace] -------------------------------    
         const sp = log.TRACE.createChildSpan({ name: `${log.enums.methods.kafkaSendToTopic}` });    // 2do  - consumer tracing does not have a root span ..
 
 
@@ -59,7 +59,7 @@ class KafkaProducer {
             .catch(e => log.error(`${this.apiPathIdentifier} ${log.enums.methods.kafkaSendToTopic} Error [${this.writeTopic}]`, e));
         
 
-        // [end trace] -------------------------------
+        // [end trace] ---------------------------------    
         sp.endSpan();
         
         // send the message to the topic

@@ -7,8 +7,9 @@
 const enums = require('../environment/enums');
 const utils = require('../environment/utils');
 const consts = require('../host/constants');
-
 const env = require('../environment');
+
+const log = require('../logger').log;
 
 const Response = require('./Response');
 const Collections = require('../definitions/Collections');
@@ -26,7 +27,14 @@ class EnergyGetResponse extends Response {
   */
   constructor(params, reqAcceptParam) {
 
-    let content = executeGet(params);                                             // perform the data retrieval operation 
+    // [start trace] -------------------------------  
+    const sp = log.TRACE.createChildSpan({ name: `${log.enums.methods.energyExecuteGet}` });
+
+    // perform the energy data retrieval operation 
+    let content = executeGet(params);                                             
+
+    // [end trace] ---------------------------------  
+    sp.endSpan();
 
     super(RESPONSE_STATUS, reqAcceptParam, VIEW_PREFIX, content);
 
@@ -42,11 +50,11 @@ function executeGet(params) {
 
   let child;
   let grandchild;
-  
+
   // get a collection for each period in the duration
   let periods = params.period.getEach();                                          // break up the period duration into individual periods (though typically there is only 1 period) 
   periods.forEach(period => {
-    
+
     // create the collection links  
     let selfDescription = `${params.energy.value} ${period.value} ${period.epoch} ${period.duration} ${params.site.value}`;    // e.g hse week 20190204 1 999   (this is the self description format for energy periods) 
     links = new Links.EnergyLinks(params.energy, period, params.site, selfDescription);   // constructor creates a 'self' link with an energy and epoch description
