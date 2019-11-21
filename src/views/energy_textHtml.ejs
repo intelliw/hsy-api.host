@@ -86,7 +86,7 @@
 
         <!-- TITLE / period-->
         <span class="d-flex align-item-start">
-            <a class="navbar-brand pl-1" href="#navbarAPI, #navbarMain" data-toggle="collapse">Sundaya Energy API</a>
+            <a class="navbar-brand pl-1" href="#navbarAPI, #navbarMain" data-toggle="collapse"><div data-toggle="tooltip" data-placement="bottom" title="<%= 'v ' + env.active.api.versions.current %>">Sundaya Energy API</div></a>
 
             <ul id="titlePeriod" class="navbar-nav show" data-toggle="tooltip" data-placement="right" title="<%= params_duration %> <%=params_period%><%= params_duration > 1 ? 's' : ''%>">
                 <a class="nav-link pl-0" href="#" data-toggle="collapse">

@@ -39,7 +39,7 @@ app.use(bodyParser.json({ verify: rawBodySaver, limit: `${consts.system.BODYPARS
 app.use(bodyParser.raw({ verify: rawBodySaver, limit: `${consts.system.BODYPARSER_LIMIT_MB}mb`, type: function () { return true } }));   // for raw body parse function must return true
 
 // routes        
-app.use('/energy', paths.energyRouter);                                                 // openapi tag: Energy - this is als to the default route
+app.use(['/energy'], paths.energyRouter);                                               // openapi tag: Energy - this is also the default route
 
 // app.use(['/devices', '/device'], paths.devicesRouter);                               // openapi tag: Devices
 app.use('/devices', paths.devicesRouter);                                               // openapi tag: Devices

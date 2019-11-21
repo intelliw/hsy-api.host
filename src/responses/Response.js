@@ -31,11 +31,11 @@ class Response {
         
         // view
         let contentTypeKeyname = utils.keynameFromValue(enums.mimeType,reqAcceptParam.value);
-        this.view = `${viewPrefix}${contentTypeKeyname}`;       // e.g. energy.applicationCollectionJson todo: this should be selected dynamically
+        this.view = `${viewPrefix}${contentTypeKeyname}`;                           // e.g. energy_textHtml, or energy_applicationCollectionJson - todo: this should really be a dynamic selection
 
         // statusCode    
-        let statusCode = utils.keynameFromValue(enums.responseStatus,statusEnum);
-        this.statusCode = parseInt(statusCode);                   // 400
+        let statusCode = utils.keynameFromValue(enums.responseStatus,statusEnum);   // e.g. '200'   
+        this.statusCode = parseInt(statusCode);                                     // 400
 
         // content 
         this.content = content;

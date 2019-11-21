@@ -45,8 +45,8 @@ router.route([
         res
             .status(response.statusCode)
             .type(response.contentType)
-            .render(response.view, {
-                collections: collections, utils: utils, consts: consts, env: env
+            .render(response.view, {                            // all responses are rendered into an ejs view, including e.g. energy_textHtml, or energy_applicationCollectionJson
+                collections: collections, utils: utils, env: env
             });
 
         /* // debug START

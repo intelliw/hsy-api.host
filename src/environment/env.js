@@ -22,18 +22,12 @@ const enums = require('./enums');
 // API 
 const _API = {
 
-    // API host for dev, prod, and test
-    HOST: {
-        DEV: 'api.dev.sundaya.monitored.equipment',
-        TEST: 'api.test.sundaya.monitored.equipment',
-        PROD: 'api.sundaya.monitored.equipment'
-    },
+    // API host and versions for dev, prod, and test            version = major.minor[.build[.revision]]   ..Odd-numbers for development even for stable
+    LOCAL: { host: '192.168.1.108:8080', scheme: 'http', versions: { supported: '0.2 0.3', current: '0.3.12.10' } },
+    DEV: { host: 'api.dev.sundaya.monitored.equipment', scheme: 'https', versions: { supported: '0.2 0.3', current: '0.3.12.10' } },
+    TEST: { host: 'api.test.sundaya.monitored.equipment', scheme: 'https', versions: { supported: '0.2 0.3', current: '0.3.12.10' } },
+    PROD: { host: 'api.sundaya.monitored.equipment', scheme: 'https', versions: { supported: '0.2 0.3', current: '0.3.12.10' } }
 
-    // API versions 
-    VERSIONS: {
-        supported: '0.2 0.3',
-        current: '0.3.12.10'
-    }
 }
 
 // feature toggles - a feature is 'on' if it is present in the list    
@@ -178,13 +172,13 @@ const _STACKDRIVER = {
         trace: {
             samplingRate: 500, enabled: true, flushDelaySeconds: 1,                     // enabled=false to turn OFF tracing. samplingRate 500 means sample 1 trace every half-second, 5 means at most 1 every 200 ms. flushDelaySeconds = seconds to buffer traces before publishing to Stackdriver, keep short to allow cloud run to async trace immedatily after sync run
             ignoreUrls: [/^\/static/], ignoreMethods: ['OPTIONS', 'PUT']                // ignore /static path, ignore requests with OPTIONS & PUT methods (case-insensitive)
-        }      
+        }
     },
     TEST: {
         logging: { logName: 'monitoring_test', resource: 'gce_instance' },
         errors: { reportMode: 'always', logLevel: 5 },
         trace: {
-            samplingRate: 500, enabled: true,  flushDelaySeconds: 1,
+            samplingRate: 500, enabled: true, flushDelaySeconds: 1,
             ignoreUrls: [/^\/static/], ignoreMethods: ['OPTIONS', 'PUT']
         }
     },
@@ -192,7 +186,7 @@ const _STACKDRIVER = {
         logging: { logName: 'monitoring_prod', resource: 'gce_instance' },
         errors: { reportMode: 'always', logLevel: 5 },
         trace: {
-            samplingRate: 500, enabled: true,  flushDelaySeconds: 1,
+            samplingRate: 500, enabled: true, flushDelaySeconds: 1,
             ignoreUrls: [/^\/static/], ignoreMethods: ['OPTIONS', 'PUT']
         }
     }
@@ -214,7 +208,7 @@ const _DATAWAREHOUSE = {                                                        
 */
 module.exports.CONFIGS = {
     local: {
-        api: { host: '192.168.1.108:8080', scheme: 'http', versions: _API.VERSIONS },
+        api: _API.LOCAL,
         features: _FEATURES.DEV,
         logging: _LOGGING.DEV,
         kafka: { brokers: ['192.168.1.108:9092'] },                             // localhost   | 192.168.1.108            
@@ -225,7 +219,7 @@ module.exports.CONFIGS = {
         datawarehouse: _DATAWAREHOUSE
     },
     testcloud: {                                                                // single node kafka, or Kafka Std - 1 master, N workers
-        api: { host: _API.HOST.TEST, scheme: 'https', versions: _API.VERSIONS },
+        api: _API.TEST,
         features: _FEATURES.TEST,
         logging: _LOGGING.TEST,
         kafka: { brokers: _KAFKA.BROKERS.SINGLE },
@@ -236,7 +230,7 @@ module.exports.CONFIGS = {
         datawarehouse: _DATAWAREHOUSE
     },
     devcloud: {                                                                 // single node kafka, or Kafka Std - 1 master, N workers
-        api: { host: _API.HOST.DEV, scheme: 'https', versions: _API.VERSIONS },
+        api: _API.DEV,
         features: _FEATURES.DEV,
         logging: _LOGGING.DEV,
         kafka: { brokers: _KAFKA.BROKERS.SINGLE },                              // array of kafka message brokers                       // kafka-1-vm  | 10.140.0.11
@@ -247,7 +241,7 @@ module.exports.CONFIGS = {
         datawarehouse: _DATAWAREHOUSE
     },
     devcloud_HA: {                                                              // single node kafka, or Kafka Std - 1 master, N workers
-        api: { host: _API.HOST.DEV, scheme: 'https', versions: _API.VERSIONS },
+        api: _API.DEV,
         features: _FEATURES.DEV,
         logging: _LOGGING.DEV,
         kafka: { brokers: _KAFKA.BROKERS.HA },                                  // array of kafka message brokers                       // [kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
@@ -258,7 +252,7 @@ module.exports.CONFIGS = {
         datawarehouse: _DATAWAREHOUSE
     },
     prodcloud: {                                                                // single node kafka, or Kafka Std - 1 master, N workers
-        api: { host: _API.HOST.PROD, scheme: 'https', versions: _API.VERSIONS },
+        api: _API.PROD,
         features: _FEATURES.PROD,
         logging: _LOGGING.PROD,
         kafka: { brokers: _KAFKA.BROKERS.SINGLE },                              // array of kafka message brokers                       // kafka-1-vm  | 10.140.0.11   
@@ -269,7 +263,7 @@ module.exports.CONFIGS = {
         datawarehouse: _DATAWAREHOUSE
     },
     prodcloud_HA: {                                                             // Kafka HA - 3 masters, N workers
-        api: { host: _API.HOST.PROD, scheme: 'https', versions: _API.VERSIONS },
+        api: _API.PROD,
         features: _FEATURES.PROD,
         logging: _LOGGING.PROD,
         kafka: { brokers: _KAFKA.BROKERS.HA },                                  // array of kafka message brokers                       // [kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
