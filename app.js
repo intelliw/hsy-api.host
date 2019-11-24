@@ -38,13 +38,18 @@ var rawBodySaver = function (req, res, buf, encoding) {
 app.use(bodyParser.json({ verify: rawBodySaver, limit: `${consts.system.BODYPARSER_LIMIT_MB}mb` }));
 app.use(bodyParser.raw({ verify: rawBodySaver, limit: `${consts.system.BODYPARSER_LIMIT_MB}mb`, type: function () { return true } }));   // for raw body parse function must return true
 
+// echo TEST
+app.get('/', (req, res) => res.send(env.active.api.versions.current));
+app.post('/echo', (req, res) => res.send('Echo answers. . ..'));
+
 // routes        
 app.use(['/energy'], paths.energyRouter);                                               // openapi tag: Energy - this is also the default route
 
-// app.use(['/devices', '/device'], paths.devicesRouter);                               // openapi tag: Devices
+// devices, device
 app.use('/devices', paths.devicesRouter);                                               // openapi tag: Devices
 app.use('/device', paths.deviceRouter);                                                 // openapi tag: Devices
 
+// ...
 app.use('/api', paths.apiRouter);                                                       // openapi tag: DevOps
 app.use('/static', express.static(consts.folders.STATIC));                              // static folders 
 
