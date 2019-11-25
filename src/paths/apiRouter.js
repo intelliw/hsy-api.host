@@ -23,7 +23,7 @@ router.get('/versions', (req, res, next) => {
 
     res
         .status(200)
-        .json({ versions: env.active.api.versions.supported })
+        .json({ versions: env.active.api.versions })
         .end();
 
 });

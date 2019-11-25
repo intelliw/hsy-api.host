@@ -155,7 +155,6 @@ const _TOPICS = {                                                               
 }
 
 
-
 // GCP project configs per environment 
 const _GCP = {
     DEV: { project: enums.gcp.projects.sundayaDev },
@@ -167,7 +166,7 @@ const _GCP = {
 // stackdriver client configuration options
 const _STACKDRIVER = {
     DEV: {
-        logging: { logName: 'monitoring_dev', resource: 'gce_instance' },               // appears in logs as jsonPayload.logName: "projects/sundaya/logs/monitoring"  the format is "projects/[PROJECT_ID]/logs/[LOG_ID]"
+        logging: { logName: 'monitoring_dev', resourceType: 'gce_instance' },           // cloud run resourceType is "cloud_run_revision", for GCE VM Instance it is ''gce_instance' logName appears in logs as jsonPayload.logName: "projects/sundaya/logs/monitoring"  the format is "projects/[PROJECT_ID]/logs/[LOG_ID]". 
         errors: { reportMode: 'always', logLevel: 5 },                                  // 'production' (default), 'always', or 'never' - 'production' (default), 'always', 'never' - production will not log unless NODE-ENV=production. Specifies when errors are reported to the Error Reporting Console. // 2 (warnings). 0 (no logs) 5 (all logs)      
         trace: {
             samplingRate: 500, enabled: true, flushDelaySeconds: 1,                     // enabled=false to turn OFF tracing. samplingRate 500 means sample 1 trace every half-second, 5 means at most 1 every 200 ms. flushDelaySeconds = seconds to buffer traces before publishing to Stackdriver, keep short to allow cloud run to async trace immedatily after sync run
@@ -175,7 +174,7 @@ const _STACKDRIVER = {
         }
     },
     TEST: {
-        logging: { logName: 'monitoring_test', resource: 'gce_instance' },
+        logging: { logName: 'monitoring_test', resourceType: 'gce_instance' },
         errors: { reportMode: 'always', logLevel: 5 },
         trace: {
             samplingRate: 500, enabled: true, flushDelaySeconds: 1,
@@ -183,7 +182,7 @@ const _STACKDRIVER = {
         }
     },
     PROD: {
-        logging: { logName: 'monitoring_prod', resource: 'gce_instance' },
+        logging: { logName: 'monitoring_prod', resourceType: 'gce_instance' },
         errors: { reportMode: 'always', logLevel: 5 },
         trace: {
             samplingRate: 500, enabled: true, flushDelaySeconds: 1,
