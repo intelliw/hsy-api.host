@@ -268,7 +268,7 @@ module.exports.CONFIGS = {
         kafka: { brokers: _KAFKA.BROKERS.HA },                                  // array of kafka message brokers                       // [kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092']
         kafkajs: _KAFKAJS,
         topics: _TOPICS,
-        gcp: _GCP.PROD,
+        gcp: _GCP.PROD, 
         stackdriver: _STACKDRIVER.PROD,
         datawarehouse: _DATAWAREHOUSE
     }
