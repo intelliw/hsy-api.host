@@ -24,3 +24,10 @@ API packages more or less mirror, the OpenAPI specification's structure.
 
 Package associations are  
 
+
+# Commands
+
+gcloud builds submit `
+    --project=sundaya-dev `
+    --tag gcr.io/sundaya-dev/host-image . `
+

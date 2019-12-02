@@ -40,7 +40,7 @@ app.use(bodyParser.raw({ verify: rawBodySaver, limit: `${consts.system.BODYPARSE
 
 // echo TEST
 app.get('/', (req, res) => res.send(env.active.api.versions.current));
-app.post('/echo', (req, res) => res.send('Echo answers. . ..'));
+app.post('/echo', (req, res) => res.send('Echo answers. . ..'));                        // res.send({message: req.body.message});
 
 // routes        
 app.use(['/energy'], paths.energyRouter);                                               // openapi tag: Energy - this is also the default route
