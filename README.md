@@ -27,10 +27,8 @@ Package associations are
 
 # Commands
 
-__checkin__
 git add . ; git commit -m "ok" ; git push origin master ; git push origin --tags
 
-__build__
 gcloud builds submit `
     --project=sundaya-dev `
     --tag asia.gcr.io/sundaya-dev/host-image . `
