@@ -15,8 +15,34 @@ const consts = require('../host/constants');
 
 const env = require('../environment');
 const log = require('../logger').log;
+const utils = env.utils;
 
-let utils = env.utils;
+// [devops.api.get] /api
+router.get('/', (req, res, next) => {
+
+    res
+        .status(200)
+        .json({
+            paths: utils.objectKeysToArray(enums.paths),                    // e.g. {"paths":["logging","features","versions"]}        
+            api: {
+                logging: {                                                          // e.g. {"logging":{"verbosity":["info"]}}
+                    statements: utils.objectKeysToArray(enums.logging.statements),
+                    verbosity: utils.objectKeysToArray(enums.logging.verbosity),
+                    appenders: utils.objectKeysToArray(enums.logging.appenders)
+                },
+                features: {                                                         // e.g. "{features":{"release":["none"],"operational":["none","logging","validation"],"experiment":["none"],"permission":["none"]}
+                    release: utils.objectKeysToArray(enums.features.release),
+                    operational: utils.objectKeysToArray(enums.features.operational),
+                    experiment: utils.objectKeysToArray(enums.features.experiment),
+                    permission: utils.objectKeysToArray(enums.features.permission)
+                },
+                versions: utils.objectKeysToArray(env.active.api.versions)
+            }
+        })
+        .end();
+
+});
+
 
 // [devops.api.versions.get] /api/versions
 router.get('/versions', (req, res, next) => {
@@ -28,26 +54,6 @@ router.get('/versions', (req, res, next) => {
 
 });
 
-// [devops.api.logging.help.get] /api/logging/help
-router.get('/logging/help', (req, res, next) => {
-
-    // return logging configurables 
-    res
-        .status(200)
-        .json({
-            logging: {
-                configurables: {
-                    statements: utils.objectKeysToArray(enums.logging.statements),
-                    verbosity: utils.objectKeysToArray(enums.logging.verbosity),
-                    appenders: utils.objectKeysToArray(enums.logging.appenders)
-                }
-            }
-        })                         // e.g. {"logging":{"verbosity":["info"]}}
-        .end();
-
-});
-
-
 // [devops.api.logging.get] /api/logging?verbosity=debug,info
 router.get('/logging', (req, res, next) => {
 
@@ -58,7 +64,7 @@ router.get('/logging', (req, res, next) => {
     configs = setConfigs(req.query.appenders, enums.logging.appenders);
     env.active.logging.appenders = configs.length == 0 ? env.active.logging.appenders : configs;
     hasChanged = hasChanged || configs.length > 0;
-    
+
     configs = setConfigs(req.query.verbosity, enums.logging.verbosity);
     env.active.logging.verbosity = configs.length == 0 ? env.active.logging.verbosity : configs;
     hasChanged = hasChanged || configs.length > 0;
@@ -68,44 +74,24 @@ router.get('/logging', (req, res, next) => {
     hasChanged = hasChanged || configs.length > 0;
 
     // if there were changes reconfigure the logger
-    if (hasChanged) { 
-        log.initialise(); 
-        
+    if (hasChanged) {
+        log.initialise();
+
         let sender = utils.keynameFromValue(enums.apiKey, enums.apiKey.PROXY);          // make sender the system PROXY as it is an internal message
 
         // communicate logging config changes from host to consumer instances  
-        let producer = producers.getProducer(enums.paths.logging);                      // returns a Features producer, apiPathIdentifier = enums.features.. 
+        let producer = producers.getProducer(enums.paths.api.logging);                      // returns a Features producer, apiPathIdentifier = enums.features.. 
         producer.sendToTopic(env.active.logging, sender);                               // send the complete logging configs to the topic: which is env.active.topics.system.feature
 
         // trace log the logging config change
-        log.trace(log.enums.labels.configChange, `${enums.paths.logging}`, env.active.logging);
-        
+        log.trace(log.enums.labels.configChange, `${enums.paths.api.logging}`, env.active.logging);
+
     }
 
     // return logging configuration 
     res
         .status(200)
         .json({ logging: env.active.logging })                                          // e.g. {"logging":{"verbosity":["info"]}}
-        .end();
-
-});
-
-// [devops.api.features.help.get] /api/logging/help
-router.get('/features/help', (req, res, next) => {
-
-    // return features configurables 
-    res
-        .status(200)
-        .json({
-            features: {
-                configurables: {
-                    release: utils.objectKeysToArray(enums.features.release),
-                    operational: utils.objectKeysToArray(enums.features.operational),
-                    experiment: utils.objectKeysToArray(enums.features.experiment),
-                    permission: utils.objectKeysToArray(enums.features.permission)
-                }
-            }
-        })                         // e.g. {"logging":{"verbosity":["info"]}}
         .end();
 
 });
@@ -123,17 +109,17 @@ router.get('/features', (req, res, next) => {
     hasChanged = hasChanged || configs.length > 0;
 
     // if there were changes reconfigure the features
-    if (hasChanged) { 
+    if (hasChanged) {
 
         let sender = utils.keynameFromValue(enums.apiKey, enums.apiKey.PROXY);          // make sender the system PROXY as it is an internal message
 
         // communicate logging config changes from host to consumer instances  
-        let producer = producers.getProducer(enums.paths.features);                     // returns a Features producer, apiPathIdentifier = enums.paths.. 
+        let producer = producers.getProducer(enums.paths.api.features);                     // returns a Features producer, apiPathIdentifier = enums.paths.. 
         producer.sendToTopic(env.active.features, sender);                              // send the complete logging configs to the topic: which is env.active.topics.system.feature
 
         // trace log the features config change
-        log.trace(log.enums.labels.configChange, `${enums.paths.features}`, env.active.features);
-        
+        log.trace(log.enums.labels.configChange, `${enums.paths.api.features}`, env.active.features);
+
     }
 
     // return logging configuration 

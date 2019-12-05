@@ -20,9 +20,11 @@ module.exports.paths = {
     energy: 'energy',
     device: 'device',
     devices: 'devices',
-    logging: 'logging',                             //  api/logging
-    features: 'features',                           //  api/features
-    versions: 'versions'                            //  api/versions
+    api: {
+        logging: 'logging',                             //  api/logging
+        features: 'features',                           //  api/features
+        versions: 'versions'                            //  api/versions
+    }
 }
 
 // api parameter enumerations 

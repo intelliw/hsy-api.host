@@ -1,16 +1,14 @@
-# The Google App Engine Flexible Environment base Docker image can
-# also be used on Google Container Engine, or any other Docker host.
-# This image is based on Debian Jessie and includes nodejs and npm
-# installed from nodejs.org. The source is located in
-# https://github.com/GoogleCloudPlatform/nodejs-docker
+# App Engine Flexible Environment base Docker image
+# based on Debian Jessie and includes nodejs and npm, and  be used on GCE or any other Docker host.
+# The source is located in https://github.com/GoogleCloudPlatform/nodejs-docker
 FROM gcr.io/google_appengine/nodejs
 
 ADD . /app
 WORKDIR /app
 
 RUN npm install
-ENV PORT=8080
+ENV PORT=8081
 
-EXPOSE 8080
+EXPOSE 8081
 
 ENTRYPOINT ["node", "app.js"]

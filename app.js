@@ -22,6 +22,7 @@ const GenericMessageDetail = require('./src/definitions/GenericMessageDetail');
 
 const UNEXPECTED_CODE = 500;
 const UNEXPECTED_STATUS = enums.responseStatus[UNEXPECTED_CODE];
+const DEFAULT_PORT = process.env.PORT || 8081;
 
 // [START setup]------------------------------
 const app = express();
@@ -39,8 +40,8 @@ app.use(bodyParser.json({ verify: rawBodySaver, limit: `${consts.system.BODYPARS
 app.use(bodyParser.raw({ verify: rawBodySaver, limit: `${consts.system.BODYPARSER_LIMIT_MB}mb`, type: function () { return true } }));   // for raw body parse function must return true
 
 // echo TEST
-app.get('/', (req, res) => res.send(env.active.api.versions.current));
-app.post('/echo', (req, res) => res.send('Echo answers. . ..'));                        // res.send({message: req.body.message});
+app.get('/', (req, res) => res.redirect('/api/versions'));
+app.post('/echo', (req, res) => res.send({version: env.active.api.versions.current, echo: req.body.message}));                        // res.send({message: req.body.message});
 
 // routes        
 app.use(['/energy'], paths.energyRouter);                                               // openapi tag: Energy - this is also the default route
@@ -92,10 +93,8 @@ app.use((err, req, res, next) => {
 // listen for requests---------------------------
 if (module === require.main) {
 
-    const PORT = process.env.PORT || 8080;
-
-    app.listen(PORT, () => {
-        console.log(`App listening (inside container) on port ${PORT}`);
+    app.listen(DEFAULT_PORT, () => {
+        console.log(`App listening (inside container) on port ${DEFAULT_PORT}`);
         console.log('Press Ctrl+C to quit.');
     });
 }
