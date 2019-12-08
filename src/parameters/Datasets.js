@@ -15,7 +15,7 @@ const Param = require('./Param');
 
 const THIS_PARAM_NAME = 'datasets';
 
-const VALID_TIMESTAMP_FORMATS = ['YYYYMMDDTHHmmss.SSSS+HHmm',           //      "time_local": "20190209T150006.032+0700",
+const VALID_TIMESTAMP_FORMATS = ['YYYYMMDDTHHmmss.SSSS+HHmm',                       //      "time_local": "20190209T150006.032+0700",
     'YYYYMMDDTHHmmss.SSSSZ', 'YYYYMMDDTHHmmss.SSSS'];
 
 class Datasets extends Param {
@@ -33,7 +33,7 @@ class Datasets extends Param {
         this.datasetName = datasetName;
 
         // validate the datasets
-        if (this._isValidation()) {                                     // only if validation 'feature' is on (usually off in production)                              
+        if (this._isValidation()) {                                                 // only if validation 'feature' is on (usually off in production)                              
             this._validate();
         }
 

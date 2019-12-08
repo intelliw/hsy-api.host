@@ -33,3 +33,25 @@ gcloud builds submit `
     --project=sundaya-dev `
     --tag asia.gcr.io/sundaya-dev/host-image . `
 
+
+
+# Local ESP
+
+docker run `
+    --detach `
+    --name="esp" `
+    -p 8080:8080 `
+    --volume=C:/_frg/credentials:/esp `
+    --publish=8080 `
+    gcr.io/endpoints-release/endpoints-runtime:1 `
+    --service=api.stage.sundaya.monitored.equipment `
+    --rollout_strategy=managed `
+    --http_port=8080 `
+    --backend=192.168.1.108:8081 `
+    --service_account_key=/esp/sundaya-dev_compute_developer.gserviceaccount.json `
+
+_TEST_
+
+curl -d "{ \"message\": \"hello world\" }" --request "POST" -k -H "content-type:application/json" -H "x-api-key:AIzaSyBS-hovvEYLAWQMQ35YUfBlr8AfERLtp28" http://localhost:8080/echo
+
+.. {"version":"0.3.12.22beta","echo":"hello world"}
