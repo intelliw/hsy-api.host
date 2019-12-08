@@ -36,13 +36,12 @@ class Request {
     * @param {*} params                 // list of validated params { }
     * @param {*} responseProduces       // array of mime types which the response is capable of producing and returning
     * @param {*} responseConsumes       // array of mime types which the response expects to consume from the request 
-    * @param {*} apikeyRequired         // whether a apikey is required for this request (default is true)   
     */
-    constructor(req, params, responseProduces, responseConsumes, apikeyRequired = true) {
+    constructor(req, params, responseProduces, responseConsumes) {
         
         // update instance properties before validation 
         this.params = params;
-        this.apiKey = new Param.ApiKey(req, apikeyRequired);
+        this.apiKey = new Param.ApiKey(req);
         this.accept = new Param.Accept(req, responseProduces);
         this.contentType = new Param.ContentType(req, responseConsumes);
         

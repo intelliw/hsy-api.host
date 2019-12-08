@@ -1,9 +1,8 @@
 //@ts-check
 'use strict';
 /**
- * ./path/devops.js
- * handlers for /api path, which is for devops
- * basepath /api
+ * ./path/apiRouter.js
+ * handlers for /api path
  */
 const express = require('express');
 const router = express.Router();

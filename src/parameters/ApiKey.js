@@ -18,7 +18,7 @@ const HEADER_APIKEY_NAME = enums.request.headers.apiKey         // POST, GET | `
 
 /** 
  * gets the api key from the request header (preferred) or query parameter 
- * if no key is provided in the request a default apikey (enums.apiKey.default) is injected into the request
+ * apikeys are now all managed in the service endpoint ('apis & services -> credentials') so an apikey registered in enum.apikeys is not required 
  */
 class ApiKey extends Param {
     /**
@@ -29,18 +29,14 @@ class ApiKey extends Param {
     
      constructor arguments  
     * @param {*} req                    // express request
-    * @param {*} apikeyRequired         // whether a apikeyis required, if false (not reuqired) and no key provided a default apikey (enums.apiKey.default) is injected
     */
-    constructor(req, apikeyRequired) {
+    constructor(req) {
         
         // get apikey - header is preferred
         let headerKey = req.headers[HEADER_APIKEY_NAME];
-        
-        // decide whether to default - if apikeyRequired there should be no default 
-        let defaultApikey = apikeyRequired ? consts.NONE : enums.apiKey.default;
 
-        // call super 
-        super(THIS_PARAM_NAME, headerKey, defaultApikey, enums.apiKey, false);
+        // call super                                       
+        super(THIS_PARAM_NAME, headerKey, enums.apiKey.default);
     }
 
 }

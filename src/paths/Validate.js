@@ -55,10 +55,10 @@ function validateAuthorisation(req, apiKeyParam, errors) {
 
     const ERROR_MESSAGE = 'The client does not have sufficient permission.';
 
-    let isAuth = false;                                                             // 2DO: current logic allows no key as valid. in future need to call gcloud IAM REST api to check if key is valid and has access to this API 
+    let isAuth = false;                                                             // 2DO: current logic allows no key as valid. in future all calls must be checked through gcloud IAM REST api to check if key is valid and has access to this API 
     if (apiKeyParam) {
 
-        isAuth = apiKeyParam.isValid;                                               // this may need to check jwt claims in future
+        isAuth = apiKeyParam.isValid;                                               // this must check jwt claims in future
 
         if (!isAuth) {                                                              // check if param was declared valid during construction 
 
