@@ -5,10 +5,12 @@
  * prepares data and response for the energy path 
  */
 
+const env = require('../environment');
+
+const enums = env.enums;
 const utils = require('../environment/utils');
 const consts = require('../host/constants');
-const env = require('../environment');
-const enums = env.enums;
+const log = require('../logger').log;
 
 const express = require('express');
 const router = express.Router();
@@ -94,11 +96,11 @@ class EnergyGet extends Request {
         params.site = new Param('site', req.query.site, consts.params.defaults.site);
         params.productCatalogItems = new Param('productCatalogItems', req.body.productCatalogItems, consts.NONE, consts.NONE, OPTIONAL);
 
-        // The 'GET' operations in the `/energy` path does not require an API key for the default site (`site=999`)    
-        let apikeyRequired = !(params.site.value == consts.params.defaults.site);               // required unless site == 999
-
         // super - validate params, auth, accept header
-        super(req, params, EnergyGetResponse.produces, EnergyGetResponse.consumes, apikeyRequired);                 // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
+        super(req, params, EnergyGetResponse.produces, EnergyGetResponse.consumes);                 // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
+
+        // trace log the request
+        log.trace(log.enums.labels.requestStatus, `energy GET ${this.accept.value}, sender:${Param.ApiKey.getSender(this.apiKey.value)}, valid?${this.validation.isValid}`, JSON.stringify({params: params}));
 
         // execute the response only if super isValid                   // if not isValid  super constuctor would have created a this.response = ErrorResponse 
         this.response = this.validation.isValid === true ? new EnergyGetResponse(this.params, this.accept) : this.response;

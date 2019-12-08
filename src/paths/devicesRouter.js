@@ -93,7 +93,7 @@ class DevicesDatasetsPost extends Request {
         params.apiKey = this.apiKey;                                                                // add apiKey as a param as it is used to produce the sys.source attribute in the Producer  
 
         // trace log the request
-        log.trace(log.enums.labels.requestStatus, `${datasetName} POST ${contentType}, sender:${utils.keynameFromValue(enums.apiKey, this.apiKey.value)}, valid?${this.validation.isValid}`, JSON.stringify({datasets: datasets}));
+        log.trace(log.enums.labels.requestStatus, `${datasetName} POST ${contentType}, sender:${Param.ApiKey.getSender(this.apiKey.value)}, valid?${this.validation.isValid}`, JSON.stringify({datasets: datasets}));
 
         // execute the response only if super isValid                                               // if not isValid  super constuctor would have created a this.response = ErrorResponse 
         this.response = this.validation.isValid === true ? new DevicesDatasetsPostResponse(this.params, this.accept) : this.response;

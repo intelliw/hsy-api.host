@@ -8,6 +8,7 @@ const enums = require('../environment/enums');
 const utils = require('../environment/utils');
 
 const Response = require('./Response');
+const Param = require('../parameters');
 const producers = require('../producers');
 
 const GenericMessage = require('../definitions/GenericMessage');
@@ -60,7 +61,7 @@ function executePost(params) {
   // construct a producer
   let apiPathIdentifier = params.dataset.value;                                   //  enums.params.datasets              - e.g. pms  
 
-  let sender = utils.keynameFromValue(enums.apiKey, params.apiKey.value);         // the 'source' is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
+  let sender = Param.ApiKey.getSender(params.apiKey.value);                       // the 'source' is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
   let datasets = params.datasets.value;                                           // for application/json datasets param is the *array* (of datasets) in the req.body e.g.  the [.. ] array in {"datasets": [.. ] 
   
   // sendToTopic (asynchronously)

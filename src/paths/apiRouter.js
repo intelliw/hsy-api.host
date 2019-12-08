@@ -8,6 +8,7 @@ const express = require('express');
 const router = express.Router();
 
 const producers = require('../producers');
+const Param = require('../parameters');
 
 const enums = require('../environment/enums');
 const consts = require('../host/constants');
@@ -76,7 +77,7 @@ router.get('/logging', (req, res, next) => {
     if (hasChanged) {
         log.initialise();
 
-        let sender = utils.keynameFromValue(enums.apiKey, enums.apiKey.PROXY);          // make sender the system PROXY as it is an internal message
+        let sender = Param.ApiKey.getSender(enums.apiKey.PROXY);          // make sender the system PROXY as it is an internal message
 
         // communicate logging config changes from host to consumer instances  
         let producer = producers.getProducer(enums.paths.api.logging);                      // returns a Features producer, apiPathIdentifier = enums.features.. 
@@ -110,10 +111,10 @@ router.get('/features', (req, res, next) => {
     // if there were changes reconfigure the features
     if (hasChanged) {
 
-        let sender = utils.keynameFromValue(enums.apiKey, enums.apiKey.PROXY);          // make sender the system PROXY as it is an internal message
+        let sender = Param.ApiKey.getSender(enums.apiKey.PROXY);                        // make sender the system PROXY as it is an internal message
 
         // communicate logging config changes from host to consumer instances  
-        let producer = producers.getProducer(enums.paths.api.features);                     // returns a Features producer, apiPathIdentifier = enums.paths.. 
+        let producer = producers.getProducer(enums.paths.api.features);                 // returns a Features producer, apiPathIdentifier = enums.paths.. 
         producer.sendToTopic(env.active.features, sender);                              // send the complete logging configs to the topic: which is env.active.topics.system.feature
 
         // trace log the features config change

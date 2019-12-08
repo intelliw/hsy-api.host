@@ -6,6 +6,7 @@
  *  
  */
 const consts = require('../host/constants');
+const utils = require('../environment/utils');
 
 const enums = require('../environment/enums');
 
@@ -37,6 +38,17 @@ class ApiKey extends Param {
 
         // call super                                       
         super(THIS_PARAM_NAME, headerKey, enums.apiKey.default);
+    }
+
+    // gets the name of the sender based on the apikey. 
+    // If a sender is not registered in enums.apikeys this function returns the last 10 characters of the apikey    
+    static getSender(apiKey) {
+        const NUM_APIKEY_CHARACTERS = 10;
+
+        let sender = utils.keynameFromValue(enums.apiKey, apiKey);
+
+        // return the sender from enums.apiokeys, or the last 10 characters of the apikey 
+        return sender === consts.NONE ? apiKey.substr(apiKey.length - NUM_APIKEY_CHARACTERS) :  sender;
     }
 
 }
