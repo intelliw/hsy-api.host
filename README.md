@@ -1,8 +1,10 @@
 # Energy Management API Host
 
-## Docker
+## Deployment
+'environment' and 'logger' pacakges are shared with hse-consumer. 
+Before building copy these packages to hse-consumer project and test.
 
-If you're running locally, build the image with local.Dockerfile
+If running locally, build the image with local.Dockerfile
 
 ```
 docker build -f local.Dockerfile -t axc-hse .
@@ -15,10 +17,12 @@ API packages more or less mirror, the OpenAPI specification's structure.
     - sandbox               // ignore - this package contains stashed or transient content which will eventually be deleted.   
     - src                 
         - definitions       // data objects
-        - host              // setup and configuration for the app runtime. shared utilities and tools.
+        - environment       // configs and enums shared with other services runing in the environment. Mastered in hse-api-host project and shared by hse-api-consumers.
+        - host              // setup and configuration needed by hse-api-host (not shared). 
+        - logger            // logging framework, shared with other services runing in the environment. Mastered in hse-api-host project and shared by hse-api-consumers. 
         - parameters        // generic class for simple params, specialised classes for complex params such as Period
-        - paths             // routers for paths these handle top level routes. 
-                            // inner Request classes validate params, headers, and authorisation
+        - paths             // routers for paths, these handle top level routes. 
+        - producers         // message producers
         - responses         // view and response handlers for data and errors. Each response is constructed with a data objectand selects a view based on headers
         - views             // view templates
 

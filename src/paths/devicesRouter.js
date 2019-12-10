@@ -134,9 +134,9 @@ function pmsCsvToJson(csvData) {
         }
 
         // make the data arrays for cell.open[], cell.volts[], fet.open[]
-        let cellOpen = csvToFloatArray(csvRow, 'cell.open', CELL_OPEN_COLUMNS);
+        let cellOpen = csvBooleanToColumnPosArray(csvRow, 'cell.open', CELL_OPEN_COLUMNS);
         let cellVolts = csvToFloatArray(csvRow, 'cell.volts', CELL_VOLTS_COLUMNS);
-        let fetOpen = csvToFloatArray(csvRow, 'fet.open', FET_OPEN_COLUMNS);
+        let fetOpen = csvBooleanToColumnPosArray(csvRow, 'fet.open', FET_OPEN_COLUMNS);
 
         // add a data object for this csv row, to the 'dataset.data' array
         dataset.data.push(csvToPmsDataObj(csvRow, cellOpen, cellVolts, fetOpen));
@@ -148,16 +148,32 @@ function pmsCsvToJson(csvData) {
 
 }
 
-// converts a sequence of csv columns into a float array
+// converts a sequence of csv columns into a float array. numColumns gives the number of 'columnName' columns to parse into the array
 function csvToFloatArray(csvRow, columnName, numColumns) {
     let floatArray = [];
 
-    for (let i = 1; i <= numColumns; i++) {
-        let value = csvRow[`${columnName}.${i}`].trim();
-        if (value !== '') floatArray.push(parseFloat(value));
+    for (let col = 1; col <= numColumns; col++) {
+        let value = csvRow[`${columnName}.${col}`].trim();
+        floatArray.push(parseFloat(value));
     }
 
     return floatArray;
+}
+
+/* converts boolean true in csv columns into an array of column positiuons. 
+ * e.g. csv 0,0,0 returns an empty array [] as there are no true value; 
+ * csv 0,1,0 returns [2] as column 2 is true. 
+ * number of 'columnName' columns to parse into the array
+ */ 
+function csvBooleanToColumnPosArray(csvRow, columnName, numColumns) {
+    let columnPosArray = [];
+
+    for (let col = 1; col <= numColumns; col++) {
+        let value = parseInt(csvRow[`${columnName}.${col}`].trim());
+        if (value) columnPosArray.push(col);
+    }
+
+    return columnPosArray;
 }
 
 // converts a csv row into a pms data object e.g. 
