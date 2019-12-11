@@ -39,8 +39,8 @@ var rawBodySaver = function (req, res, buf, encoding) {
 app.use(bodyParser.json({ verify: rawBodySaver, limit: `${consts.system.BODYPARSER_LIMIT_MB}mb` }));
 app.use(bodyParser.raw({ verify: rawBodySaver, limit: `${consts.system.BODYPARSER_LIMIT_MB}mb`, type: function () { return true } }));   // for raw body parse function must return true
 
-// echo TEST
-app.get('/', (req, res) => res.redirect('/api/versions'));
+// root and echo TEST path
+app.get('/', (req, res) => res.redirect('/energy'));
 app.post('/echo', (req, res) => res.send({version: env.active.api.versions.current, echo: req.body.message}));                        // res.send({message: req.body.message});
 
 // routes        
