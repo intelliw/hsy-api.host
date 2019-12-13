@@ -46,13 +46,12 @@ router.get('/', (req, res, next) => {
 
 // [devops.api.versions.get] /api/versions
 router.get('/versions', (req, res, next) => {
-
-    res
-        .status(200)
-        .json({ versions: env.active.api.versions })
-        .end();
-
+    res.status(200).json({ versions: env.active.api.versions }).end();
 });
+router.get('/versions/current', (req, res, next) => {
+    res.status(200).json({ versions: { current: env.active.api.versions.current } }).end();
+});
+
 
 // [devops.api.logging.get] /api/logging?verbosity=debug,info
 router.get('/logging', (req, res, next) => {

@@ -1,37 +1,31 @@
 # Energy Management API Host
 
-## Deployment
-'environment' and 'logger' pacakges are shared with hse-consumer. 
-Before building copy these packages to hse-consumer project and test.
+# GIT
+https://github.com/intelliw/hse-api.host
 
-If running locally, build the image with local.Dockerfile
+git add . ; git commit -m "ok" ; git push origin master ; git push origin --tags
 
-```
-docker build -f local.Dockerfile -t axc-hse .
-
-```
 
 ## Package structure 
-
 API packages more or less mirror, the OpenAPI specification's structure.
     - sandbox               // ignore - this package contains stashed or transient content which will eventually be deleted.   
     - src                 
-        - definitions       // data objects
-        - environment       // configs and enums shared with other services runing in the environment. Mastered in hse-api-host project and shared by hse-api-consumers.
-        - host              // setup and configuration needed by hse-api-host (not shared). 
-        - logger            // logging framework, shared with other services runing in the environment. Mastered in hse-api-host project and shared by hse-api-consumers. 
-        - parameters        // generic class for simple params, specialised classes for complex params such as Period
-        - paths             // routers for paths, these handle top level routes. 
-        - producers         // message producers
-        - responses         // view and response handlers for data and errors. Each response is constructed with a data objectand selects a view based on headers
-        - views             // view templates
+        -  definitions       // data objects
+        - `environment`       // configs and enums shared by other services in the environment. 
+        -  host              // setup and configuration needed by hse-api-host (not shared). 
+        - `logger`            // logging framework, shared by other services in the environment. 
+        -  parameters        // generic class for simple params, specialised classes for complex params such as Period
+        -  paths             // routers for paths, these handle top level routes. 
+        -  producers         // message producers
+        -  responses         // views and response handlers for data and errors.
+                                Each response object is constructed with a data object; and selects a view based on headers
+        -  views             // view templates
 
-Package associations are  
+`environment` and `logger` packages are mastered in hse-api-host (this project) and shared with hse-api-consumers.
+Before building copy these packages to hse-consumer project and test.
 
 
-# Commands
-
-git add . ; git commit -m "ok" ; git push origin master ; git push origin --tags
+## Cloud Build 
 
 gcloud builds submit `
     --project=sundaya-dev `
@@ -39,7 +33,13 @@ gcloud builds submit `
 
 
 
-# Local ESP
+## Local Build
+If running locally, build the image with local.Dockerfile (optional)
+
+docker build -f local.Dockerfile -t axc-hse .
+
+
+## Local ESP
 
 docker run `
     --detach `

@@ -40,7 +40,7 @@ app.use(bodyParser.json({ verify: rawBodySaver, limit: `${consts.system.BODYPARS
 app.use(bodyParser.raw({ verify: rawBodySaver, limit: `${consts.system.BODYPARSER_LIMIT_MB}mb`, type: function () { return true } }));   // for raw body parse function must return true
 
 // root and echo TEST path
-app.get('/', (req, res) => res.redirect('/energy'));
+app.get('/', (req, res) => res.redirect('/energy'));                                    // redirec to default path (/energy)
 app.post('/echo', (req, res) => res.send({version: env.active.api.versions.current, echo: req.body.message}));                        // res.send({message: req.body.message});
 
 // routes        

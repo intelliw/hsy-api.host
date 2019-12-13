@@ -24,8 +24,8 @@ const _API = {
 
     // API host and versions for dev, prod, and test            version = major.minor[.build[.revision]]   ..Odd-numbers for development even for stable
     LOCAL: { host: '192.168.1.108:8080', scheme: 'http', versions: { supported: '0.2 0.3', current: '0.3.12.10' } },
-    DEV: { host: 'api.dev.sundaya.monitored.equipment', scheme: 'https', versions: { supported: '0.2 0.3', current: '0.3.12.22beta' } },
-    STAGE: { host: 'api.stage.sundaya.monitored.equipment', scheme: 'https', versions: { supported: '0.2 0.3', current: '0.3.12.22beta' } },
+    DEV: { host: 'api.dev.sundaya.monitored.equipment', scheme: 'https', versions: { supported: '0.2 0.3', current: '0.3.12.22a' } },
+    STAGE: { host: 'api.stage.sundaya.monitored.equipment', scheme: 'https', versions: { supported: '0.2 0.3', current: '0.3.12.22a' } },
     TEST: { host: 'api.test.sundaya.monitored.equipment', scheme: 'https', versions: { supported: '0.2 0.3', current: '0.3.12.10' } },
     PROD: { host: 'api.sundaya.monitored.equipment', scheme: 'https', versions: { supported: '0.2 0.3', current: '0.3.12.10' } }
 
@@ -288,4 +288,4 @@ module.exports.CONFIGS = {
 }  
 
 // env.active returns the active environment 
-module.exports.active = this.CONFIGS.devcloud;      // change enums.environments to 'local' to develop locally or to 'devcloud' to develop online                               
+module.exports.active = this.CONFIGS.stagecloud;      // change enums.environments to 'local' to develop locally or to 'devcloud' to develop online                               
