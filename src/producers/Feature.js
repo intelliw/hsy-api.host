@@ -4,19 +4,18 @@
  * ./producers/Feature.js
  *  topic producer for feature toggles - to propogate configuration changes from host to consumer through message broker 
  */
-const KafkaProducer = require('./KafkaProducer');
 
+const ActiveMessageProducer = require('../producers').ActiveMessageProducer;
 const log = require('../logger').log;
 
-class Feature extends KafkaProducer {
+class Feature extends ActiveMessageProducer {
     /**
      * superclass - 
      * clients must call sendToTopic() 
      * 
      * instance attributes:  
-     *  producerObj": kafka.producer()
      * apiPathIdentifier                                                             // enums.features
-     * kafkaTopic                                                                    // env.active.topics.monitoring
+     * kafkaTopic                                                                    // env.active.messagebroker.topics.monitoring
      * constructor arguments 
      * @param {*} apiPathIdentifier                                                  // identifer based on the api path: this is typically from enums.params.datasets - e.g. pms; or 
      */
@@ -40,7 +39,7 @@ class Feature extends KafkaProducer {
             super.sendToTopic(msgObj, sender);
 
         } catch (e) {
-            log.error(`${this.apiPathIdentifier} ${log.enums.methods.kafkaSendToTopic}`, e);
+            log.error(`${this.apiPathIdentifier} ${log.enums.methods.mbSendToTopic}`, e);
         }
 
     }

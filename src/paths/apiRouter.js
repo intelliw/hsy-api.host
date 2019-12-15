@@ -80,7 +80,7 @@ router.get('/logging', (req, res, next) => {
 
         // communicate logging config changes from host to consumer instances  
         let producer = producers.getProducer(enums.paths.api.logging);                      // returns a Features producer, apiPathIdentifier = enums.features.. 
-        producer.sendToTopic(env.active.logging, sender);                               // send the complete logging configs to the topic: which is env.active.topics.system.feature
+        producer.sendToTopic(env.active.logging, sender);                               // send the complete logging configs to the topic: which is env.active.messagebroker.topics.system.feature
 
         // trace log the logging config change
         log.trace(log.enums.labels.configChange, `${enums.paths.api.logging}`, env.active.logging);
@@ -114,7 +114,7 @@ router.get('/features', (req, res, next) => {
 
         // communicate logging config changes from host to consumer instances  
         let producer = producers.getProducer(enums.paths.api.features);                 // returns a Features producer, apiPathIdentifier = enums.paths.. 
-        producer.sendToTopic(env.active.features, sender);                              // send the complete logging configs to the topic: which is env.active.topics.system.feature
+        producer.sendToTopic(env.active.features, sender);                              // send the complete logging configs to the topic: which is env.active.messagebroker.topics.system.feature
 
         // trace log the features config change
         log.trace(log.enums.labels.configChange, `${enums.paths.api.features}`, env.active.features);

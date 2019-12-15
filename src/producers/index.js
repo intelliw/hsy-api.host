@@ -8,6 +8,10 @@
 const env = require('../environment');
 const enums = require('../environment/enums');
 
+// kafka or pubsub - depending on active configs
+module.exports.ActiveMessageProducer = require(`${env.active.messagebroker.provider == enums.messageBroker.providers.pubSub ? './PubSubProducer' : './KafkaProducer'}`);
+
+module.exports.MessageProducer = require('./MessageProducer');
 module.exports.KafkaProducer = require('./KafkaProducer');
 module.exports.Monitoring = require('./Monitoring');
 module.exports.Feature = require('./Feature');
@@ -19,29 +23,29 @@ module.exports.getProducer = (apiPathIdentifier) => {
 
         // pms
         case enums.params.datasets.pms:
-            producer = new this.Monitoring(enums.params.datasets.pms, env.active.topics.monitoring.pms);
+            producer = new this.Monitoring(enums.params.datasets.pms, env.active.messagebroker.topics.monitoring.pms);
             break;
 
         // mppt 
         case enums.params.datasets.mppt:
-            producer = new this.Monitoring(enums.params.datasets.mppt, env.active.topics.monitoring.mppt);
+            producer = new this.Monitoring(enums.params.datasets.mppt, env.active.messagebroker.topics.monitoring.mppt);
             break;
 
         // inverter 
         case enums.params.datasets.inverter:
-            producer = new this.Monitoring(enums.params.datasets.inverter, env.active.topics.monitoring.inverter);
+            producer = new this.Monitoring(enums.params.datasets.inverter, env.active.messagebroker.topics.monitoring.inverter);
             break;
 
         // logging feature - communicates logging configuration changes from host to consumer instances  
         case enums.paths.api.logging:
-            producer = new this.Feature(enums.paths.api.logging, env.active.topics.system.feature);
+            producer = new this.Feature(enums.paths.api.logging, env.active.messagebroker.topics.system.feature);
             break;
 
         // feature toggles
         case enums.paths.api.features:
-            producer = new this.Feature(enums.paths.api.features, env.active.topics.system.feature);
+            producer = new this.Feature(enums.paths.api.features, env.active.messagebroker.topics.system.feature);
             break;
-            
+
     }
 
     return producer;

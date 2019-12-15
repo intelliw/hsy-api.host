@@ -4,7 +4,7 @@
  * ./producers/Monitoring.js
  *  base type for Kafka message producers  
  */
-const KafkaProducer = require('./KafkaProducer');
+const ActiveMessageProducer = require('../producers').ActiveMessageProducer;
 
 const consts = require('../host/constants');
 const utils = require('../environment/utils');
@@ -12,17 +12,16 @@ const log = require('../logger').log;
 
 const moment = require('moment');
 
-class Monitoring extends KafkaProducer {
+class Monitoring extends ActiveMessageProducer {
     /**
      * superclass - 
      * clients must call sendToTopic() 
      * 
      * instance attributes:  
-     *  producerObj": kafka.producer()
-     * apiPathIdentifier                                                               // enums.params.datasets
-     * kafkaTopic                                                                   // env.active.topics.monitoring
+     * apiPathIdentifier                                                            // enums.params.datasets
+     * kafkaTopic                                                                   // env.active.messagebroker.topics.monitoring
      * constructor arguments 
-     * @param {*} apiPathIdentifier                                                    // enums.params.datasets              - e.g. pms       
+     * @param {*} apiPathIdentifier                                                 // enums.params.datasets              - e.g. pms       
      */
     constructor(apiPathIdentifier, writeTopic) {
 
@@ -44,7 +43,7 @@ class Monitoring extends KafkaProducer {
             super.sendToTopic(msgObj, sender);
 
         } catch (e) {
-            log.error(`${this.apiPathIdentifier} ${log.enums.methods.kafkaSendToTopic}`, e);
+            log.error(`${this.apiPathIdentifier} ${log.enums.methods.mbSendToTopic}`, e);
         }
         
     }
