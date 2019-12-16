@@ -1,17 +1,17 @@
 //@ts-check
 "use strict";
 /**
- * ./producers/KafkaProducer.js
+ * ./producers/PubSubProducer.js
  *  base type for Kafka message producers  
  */
-const { Kafka } = require('kafkajs');
+const {PubSub} = require('@google-cloud/pubsub');
 const Producer = require('./Producer');
 
 const env = require('../environment');
 const enums = require('../environment/enums');
 const log = require('../logger').log;
 
-class KafkaProducer extends Producer {
+class PubSubProducer extends Producer {
     /**
      * superclass - 
      * clients must call sendToTopic() 
@@ -28,12 +28,10 @@ class KafkaProducer extends Producer {
         super(apiPathIdentifier, writeTopic);
 
         // create a kafka producer
-        const kafka = new Kafka({
-            brokers: env.active.kafka.brokers                                       //  e.g. [`${this.KAFKA_HOST}:9092`, `${this.KAFKA_HOST}:9094`]                                                       // https://kafka.js.org/docs/producing   
-        });
+        const pubsub = new PubSub();
 
-        // setup instance variables specific to KafkaProducer 
-        this.producerObj = kafka.producer(env.active.kafkajs.producer);
+        // setup instance variables specific to PubSubProducer 
+        this.producerObj = pubsub;
 
     }
 
@@ -46,19 +44,14 @@ class KafkaProducer extends Producer {
         // [start trace] -------------------------------    
         const sp = log.TRACE.createChildSpan({ name: `${log.enums.methods.kafkaSendToTopic}` });    // 2do  - consumer tracing does not have a root span ..
 
+        // Publishes the message as a string, e.g. "Hello, world!" or JSON.stringify(someObject)
+        const dataBuffer = Buffer.from(msgObj.messages);
 
         // send the message to the topic
-        await this.producerObj.connect()                                            // try connecting         
-            .then(() => this.producerObj.send({                                     //.. send    
-                topic: this.writeTopic,
-                messages: msgObj.messages,
-                acks: enums.messageBroker.ack.all,                                  //      default is 'all'
-                timeout: env.active.kafkajs.send.timeout                            //      milliseconds    
-            }))
-            .then(r => log.messaging(this.writeTopic, r[0].baseOffset, msgObj.messages, msgObj.itemCount, sender))         // info = (topic, offset, msgqty, itemqty, sender) {
-            .then(this.producerObj.disconnect())                                    // disconnect    
+        await this.producerObj.topic(this.writeTopic).publish(dataBuffer)
+            .then(messageId => log.messaging(this.writeTopic, messageId, msgObj.messages, msgObj.itemCount, sender))         // info = (topic, offset, msgqty, itemqty, sender) {
             .catch(e => log.error(`${this.apiPathIdentifier} ${log.enums.methods.kafkaSendToTopic} Error [${this.writeTopic}]`, e));
-        
+        // console.log(`message id:  ${messageId}`);
 
         // [end trace] ---------------------------------    
         sp.endSpan();
@@ -74,4 +67,4 @@ class KafkaProducer extends Producer {
 
 }
 
-module.exports = KafkaProducer;
+module.exports = PubSubProducer;

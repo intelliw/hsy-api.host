@@ -150,7 +150,7 @@ const _KAFKAJS = {
 
 // topics for each environment type                          
 const _MESSAGEBROKER = {
-    provider: enums.messageBroker.providers.kafka,
+    provider: enums.messageBroker.providers.pubSub,
     topics: {                                                               // kafka / pubsub topics for all environments 
         monitoring: { pms: 'monitoring.pms', mppt: 'monitoring.mppt', inverter: 'monitoring.inverter' },
         system: { feature: 'system.feature' },

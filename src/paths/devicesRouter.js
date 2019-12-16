@@ -3,7 +3,6 @@
 /**
  * ./paths/DevicesDatasetsPost.js
  * handlers for /devices path  
- * basepath /devices
  */
 const express = require('express');
 const router = express.Router();
