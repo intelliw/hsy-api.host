@@ -45,7 +45,6 @@ function selectResponseStatus(validation) {
 
   // Unauthorized
   if (!validation.isAuthorised) {
-
     messageStatusEnum = enums.responseStatus[401];
 
     // Unsupported Media Type

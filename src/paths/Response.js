@@ -39,7 +39,6 @@ class Response {
 
         // content 
         this.content = content;
-
         
     }
 

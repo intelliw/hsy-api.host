@@ -18,7 +18,15 @@ const Request = require('./Request');
 const Param = require('../parameters');
 const Datasets = require('../parameters/Datasets');
 
-const DevicesDatasetsPostResponse = require('../responses/DevicesDatasetsPostResponse');
+const Response = require('./Response');
+const producers = require('../producers');
+
+const GenericMessage = require('../definitions/GenericMessage');
+const GenericMessageDetail = require('../definitions/GenericMessageDetail');
+
+// constants
+const VIEW_PREFIX = 'message_';     // prefix for a generic response  message
+const RESPONSE_STATUS = enums.responseStatus[200];
 
 /*  [devices.dataset.pms.post]
     [devices.dataset.mppt.post]
@@ -26,7 +34,7 @@ const DevicesDatasetsPostResponse = require('../responses/DevicesDatasetsPostRes
 */
 router.post('/dataset/:dataset',
     (req, res, next) => {
-        
+
         // request ---------------------                                
         let request = new DevicesDatasetsPost(req);
 
@@ -38,7 +46,7 @@ router.post('/dataset/:dataset',
         if (!utils.is200response(response.statusCode)) {
             log.trace(log.enums.labels.responseStatus, `${response.statusCode}`, JSON.stringify(items));
         }
-        
+
         // response
         res
             .status(response.statusCode)
@@ -47,12 +55,11 @@ router.post('/dataset/:dataset',
                 collections: items
             });
 
-});
+    });
 
 
-/**
- * 
- */
+// REQUEST -----------------------------------------------------------------------------------------------------------
+
 class DevicesDatasetsPost extends Request {
 
     /**
@@ -82,7 +89,7 @@ class DevicesDatasetsPost extends Request {
         } else {
             datasets = req.body.datasets;
         }
-        
+
         // parameters                                                       
         let params = {};
         params.dataset = new Param('dataset', datasetName, consts.NONE, enums.params.datasets);     // this is the path parameter e.g. pms
@@ -93,7 +100,7 @@ class DevicesDatasetsPost extends Request {
         params.apiKey = this.apiKey;                                                                // add apiKey as a param as it is used to produce the sys.source attribute in the Producer  
 
         // trace log the request
-        log.trace(log.enums.labels.requestStatus, `${datasetName} POST ${contentType}, sender:${Param.ApiKey.getSender(this.apiKey.value)}, valid?${this.validation.isValid}`, JSON.stringify({datasets: datasets}));
+        log.trace(log.enums.labels.requestStatus, `${datasetName} POST ${contentType}, sender:${Param.ApiKey.getSender(this.apiKey.value)}, valid?${this.validation.isValid}`, JSON.stringify({ datasets: datasets }));
 
         // execute the response only if super isValid                                               // if not isValid  super constuctor would have created a this.response = ErrorResponse 
         this.response = this.validation.isValid === true ? new DevicesDatasetsPostResponse(this.params, this.accept) : this.response;
@@ -164,7 +171,7 @@ function csvToFloatArray(csvRow, columnName, numColumns) {
  * e.g. csv 0,0,0 returns an empty array [] as there are no true value; 
  * csv 0,1,0 returns [2] as column 2 is true. 
  * number of 'columnName' columns to parse into the array
- */ 
+ */
 function csvBooleanToColumnPosArray(csvRow, columnName, numColumns) {
     let columnPosArray = [];
 
@@ -189,13 +196,14 @@ function csvToPmsDataObj(csvRow, cellOpenArray, cellVoltsArray, fetOpenArray) {
                 parseFloat(csvRow['pack.temp.1']),
                 parseFloat(csvRow['pack.temp.2']),
                 parseFloat(csvRow['pack.temp.3'])],
-            cell: { 
-                open: cellOpenArray, 
-                volts: cellVoltsArray },
+            cell: {
+                open: cellOpenArray,
+                volts: cellVoltsArray
+            },
             fet: {
                 open: fetOpenArray,
                 temp: [
-                    parseFloat(csvRow['fet.temp.1']), 
+                    parseFloat(csvRow['fet.temp.1']),
                     parseFloat(csvRow['fet.temp.2'])]
             },
             status: csvRow['status']
@@ -203,6 +211,79 @@ function csvToPmsDataObj(csvRow, cellOpenArray, cellVoltsArray, fetOpenArray) {
     }
 
     return dataObj;
+}
+
+// RESPONSE -----------------------------------------------------------------------------------------------------------
+
+class DevicesDatasetsPostResponse extends Response {
+
+    /**
+    * posts dataset data and responds with a generic 201 response
+    * constructor arguments 
+      * @param {*} params                                                       // dataset, datasets, apiKey
+      * @param {*} reqAcceptParam                                               // request Accepts
+      * 
+      { dataset:
+      Param {
+        name: 'dataset',
+        value: 'pms',
+        isOptional: false,
+        isValid: true },
+      datasets:
+      Param {
+        name: 'datasets',
+        value: [ [Object], [Object], [Object], [Object] ],
+        isOptional: false,
+        isValid: true },
+      apiKey:
+      Param {
+        name: 'apikey',
+        value: 'AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0',
+        isOptional: false,
+        isValid: true } }
+      * 
+    */
+    constructor(params, reqAcceptParam) {
+
+        let content = executePost(params);                                            // perform the post operation 
+
+        super(RESPONSE_STATUS, reqAcceptParam, VIEW_PREFIX, content);
+
+    }
+
+    /**
+      * a list of mimetypes which this responder's request (DeviceDataPost) is able to support. 
+      * the default mimetype must be the first item
+      * this list must match the list specified in the 'produces' property in the openapi spec
+      */
+    static get produces() { return [enums.mimeType.applicationJson] };
+    static get consumes() { return [enums.mimeType.applicationJson, enums.mimeType.textCsv] };
+
+}
+
+// perform the POST operation - all devices will create a kafka producer and send the dataset to a topic
+function executePost(params) {
+
+    // construct a producer
+    let apiPathIdentifier = params.dataset.value;                                   //  enums.params.datasets              - e.g. pms  
+
+    let sender = Param.ApiKey.getSender(params.apiKey.value);                       // the 'source' is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
+    let datasets = params.datasets.value;                                           // for application/json datasets param is the *array* (of datasets) in the req.body e.g.  the [.. ] array in {"datasets": [.. ] 
+
+    // sendToTopic (asynchronously)
+    let producer = producers.getProducer(apiPathIdentifier);                        // apiPathIdentifier = enums.params.datasets..
+    producer.sendToTopic(datasets, sender);                                         // async sendToTopic() ok as by now we have connected to kafka, and the dataset should have been validated and the only outcome is a 200 response
+
+    // prepare the response
+    let message = 'Data queued for processing.';
+    let description = `datasets:${apiPathIdentifier} | ${datasets.length}`;
+    let code = utils.keynameFromValue(enums.responseStatus, RESPONSE_STATUS);
+    let status = RESPONSE_STATUS;
+    let response = new GenericMessage(code, status,
+        new GenericMessageDetail().add(message, description).getElements());
+
+    return response.getElements();
+
 }
 
 

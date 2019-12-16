@@ -8,7 +8,7 @@
 const enums = require('../environment/enums');
 const consts = require('../host/constants');
 
-const ErrorResponse = require('../responses/ErrorResponse');
+const ErrorResponse = require('./ErrorResponse');
 const Param = require('../parameters');
 const Validate = require('./Validate');
 
