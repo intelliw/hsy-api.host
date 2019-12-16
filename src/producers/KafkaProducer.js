@@ -5,13 +5,13 @@
  *  base type for Kafka message producers  
  */
 const { Kafka } = require('kafkajs');
-const MessageProducer = require('./MessageProducer');
+const Producer = require('./Producer');
 
 const env = require('../environment');
 const enums = require('../environment/enums');
 const log = require('../logger').log;
 
-class KafkaProducer extends MessageProducer {
+class KafkaProducer extends Producer {
     /**
      * superclass - 
      * clients must call sendToTopic() 

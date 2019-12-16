@@ -4,7 +4,7 @@
  * ./producers/Monitoring.js
  *  base type for Kafka message producers  
  */
-const ActiveMessageProducer = require('../producers').ActiveMessageProducer;
+const ActiveProducer = require('../producers').ActiveProducer;
 
 const consts = require('../host/constants');
 const utils = require('../environment/utils');
@@ -12,7 +12,7 @@ const log = require('../logger').log;
 
 const moment = require('moment');
 
-class Monitoring extends ActiveMessageProducer {
+class Monitoring extends ActiveProducer {
     /**
      * superclass - 
      * clients must call sendToTopic() 

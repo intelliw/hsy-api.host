@@ -5,10 +5,10 @@
  *  topic producer for feature toggles - to propogate configuration changes from host to consumer through message broker 
  */
 
-const ActiveMessageProducer = require('../producers').ActiveMessageProducer;
+const ActiveProducer = require('../producers').ActiveProducer;
 const log = require('../logger').log;
 
-class Feature extends ActiveMessageProducer {
+class Feature extends ActiveProducer {
     /**
      * superclass - 
      * clients must call sendToTopic() 
