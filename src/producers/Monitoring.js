@@ -40,7 +40,7 @@ class Monitoring extends ActiveProducer {
 
             // get the data     - e.g. msgObj = { itemCount: 0, messages: [] };
             let msgObj = this._extractData(data, sender);                           // e.g. results: { itemCount: 9, messages: [. . .] }
-            super.sendToTopic(msgObj, sender);
+            super.sendToTopic(msgObj, sender);                                      // super is PubSubProducer or KafkaProducer depending on which is active  
 
         } catch (e) {
             log.error(`${this.apiPathIdentifier} ${log.enums.methods.mbSendToTopic}`, e);
@@ -59,9 +59,16 @@ class Monitoring extends ActiveProducer {
      *      e.g. { "pms": { "id": "PMS-01-001" },  "data": [ { "time_local": "20190209T150006.032+0700", ..]
      * the returned results object contains these properties
      *  itemCount  - a count of the total number of dataitems in all datasets / message
-     *  messages[] - array of kafka messages, each message.value contains a dataset with modified data items
-     *      e.g. { itemCount: 9, messages: [. . .] }
-    */
+     *  messages[] - array of kafka messages, includes key,. value, header attributes (header is optional)
+     *              each message.value contains a dataset with modified data items
+     *  returned results object, e.g. :
+     *  { itemCount: 1,
+     *    messages: [ 
+     *    { key: 'TEST-01',
+     *      value: '{"pms":{"id":"TEST-01"},"data":[{"pack":{"id":"0241","dock":1,"amps":-1.601,"temp":[35,33,34],"cell":{"open":[],"volts":[3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.91]},"fet":{"open":[1,2],"temp":[34.1,32.2]},"status":"0001"},"sys":{"source":"STAGE001"},"time_event":"2019-09-09 08:00:06.0320","time_zone":"+07:00","time_processing":"2019-12-17 04:07:20.7790"}]}' 
+     *      } ]
+     *   }
+     */
     _extractData(datasets, sender) {
 
         let key

@@ -28,11 +28,23 @@ class MessagingStatement extends Statement {
 
     }
 
-    // calls to super - these are annulled by initialise function based on configs  
+    // calls to super - these are annulled into no-ops by initialise function based on configs  
     _writeConsoleInfo(topic, id, msgsArray, itemQty, sender) {
         let payload = `[${topic}:${id}] ${msgsArray.length} msgs, ${itemQty} items, sender:${sender}`;
         super._writeConsole(this.statementName, Statement.Severity.INFO, enums.logging.verbosity.info, payload);
     }
+    /** MESSAGING.debug, 
+    *   e.g. 
+    *   { messages: [ 
+    *    { key: 'TEST-01',
+    *      value: '{"pms":{"id":"TEST-01"},"data":[{"pack":{"id":"0241","dock":1,"amps":-1.601,"temp":[35,33,34],"cell":{"open":[],"volts":[3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.91]},"fet":{"open":[1,2],"temp":[34.1,32.2]},"status":"0001"},"sys":{"source":"STAGE001"},"time_event":"2019-09-09 08:00:06.0320","time_zone":"+07:00","time_processing":"2019-12-17 04:07:20.7790"}]}' 
+    *      } ],
+    *    msgsqty: 1,
+    *    itemqty: 1,
+    *    topic: 'monitoring.pms',
+    *    id: '886302092013959',
+    *    sender: 'STAGE001' }
+    */
     _writeConsoleDebug(topic, id, msgsArray, itemQty, sender) {
         let payload = {
             messages: msgsArray, msgsqty: msgsArray.length, itemqty: itemQty,

@@ -4,7 +4,7 @@
  * ./producers/PubSubProducer.js
  *  base type for Kafka message producers  
  */
-const {PubSub} = require('@google-cloud/pubsub');
+const { PubSub } = require('@google-cloud/pubsub');
 const Producer = require('./Producer');
 
 const env = require('../environment');
@@ -36,32 +36,54 @@ class PubSubProducer extends Producer {
     }
 
     /** implemented by subtype
-    * @param {*} msgObj                                                             // e.g. msgObj = { itemCount: 0, messages: [] };
-    * @param {*} sender                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
+    * @param {*} msgObj               // msgObj = { itemCount: 0, messages: [] };
+    *                                 e.g. : { itemCount: 1,
+    *                                          messages: [ 
+    *                                          { key: 'TEST-01',
+    *                                            value: '{"pms":{"id":"TEST-01"},"data":[{"pack":{"id":"0241","dock":1,"amps":-1.601,"temp":[35,33,34],"cell":{"open":[],"volts":[3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.91]},"fet":{"open":[1,2],"temp":[34.1,32.2]},"status":"0001"},"sys":{"source":"STAGE001"},"time_event":"2019-09-09 08:00:06.0320","time_zone":"+07:00","time_processing":"2019-12-17 04:07:20.7790"}]}' 
+    *                                            } ]
+    *                                         }
+    * @param {*} sender               // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
     */
     async sendToTopic(msgObj, sender) {
+
+        // miocrobatch settings - note: these apply only for large msgObj.messages[] where you call batchPub.publish multiple times. The microbatch prevents client libs from sending messages to pubsub. 
+        const MAX_MESSAGES_PER_BATCH = 50;              // number of message to include in a batch before client library sends to topic 
+        const MAX_BATCH_WAIT_TIME = 1000;               // max number of millisecs to wait for MAX_MESSAGES_PER_BATCH before client lib sends all messages to the topic 
+
+        let dataBuffer, dataAttributes;
 
         // [start trace] -------------------------------    
         const sp = log.TRACE.createChildSpan({ name: `${log.enums.methods.kafkaSendToTopic}` });    // 2do  - consumer tracing does not have a root span ..
 
-        // Publishes the message as a string, e.g. "Hello, world!" or JSON.stringify(someObject)
-        const dataBuffer = Buffer.from(msgObj.messages);
 
-        // send the message to the topic
-        await this.producerObj.topic(this.writeTopic).publish(dataBuffer)
-            .then(messageId => log.messaging(this.writeTopic, messageId, msgObj.messages, msgObj.itemCount, sender))         // info = (topic, offset, msgqty, itemqty, sender) {
-            .catch(e => log.error(`${this.apiPathIdentifier} ${log.enums.methods.kafkaSendToTopic} Error [${this.writeTopic}]`, e));
-        // console.log(`message id:  ${messageId}`);
+        // create microbatching publisher    
+        const batchPub = this.producerObj.topic(this.writeTopic, {
+            batching: {
+                maxMessages: MAX_MESSAGES_PER_BATCH,
+                maxMilliseconds: MAX_BATCH_WAIT_TIME
+            },
+        });
+
+        //= Buffer.from(JSON.stringify({ foo: 'bar' }));
+        // send each message to the topic
+        for (let i = 0; i < msgObj.messages.length; i++) {
+            (async () => {
+                
+                dataBuffer = Buffer.from(msgObj.messages[i].value);                                                             // value attribute if kafka 
+                dataAttributes = {
+                    key: msgObj.messages[i].key                                                                                 // 
+                };
+
+                await batchPub.publish(dataBuffer, dataAttributes);
+
+            })().then(messageId => log.messaging(this.writeTopic, messageId, msgObj.messages, msgObj.itemCount, sender))         // info = (topic, id, msgqty, itemqty, sender) {;
+                .catch(e => log.error(`${this.apiPathIdentifier} ${log.enums.methods.kafkaSendToTopic} Error [${this.writeTopic}]`, e));
+        }
+
 
         // [end trace] ---------------------------------    
         sp.endSpan();
-        
-        // send the message to the topic
-        // log.data("monitoring", "pms", "TEST-09", []); 
-        // log.exception('sendToTopic', 'there was an error in ' + env.active.kafkajs.producer.clientId, log.ERR.event()); 
-        // log.error('Unexpected', new Error('sendToTopic connection')); 
-        // log.trace(log.enums.labels.watchVar, 'id', log.ERR.event());
-        // log.trace(log.enums.labels.watchVar, 'id');
 
     }
 

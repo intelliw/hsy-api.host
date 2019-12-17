@@ -38,8 +38,14 @@ class KafkaProducer extends Producer {
     }
 
     /** implemented by subtype
-    * @param {*} msgObj                                                             // e.g. msgObj = { itemCount: 0, messages: [] };
-    * @param {*} sender                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
+    * @param {*} msgObj               // msgObj = { itemCount: 0, messages: [] };
+    *                                 e.g. : { itemCount: 1,
+    *                                          messages: [ 
+    *                                          { key: 'TEST-01',
+    *                                            value: '{"pms":{"id":"TEST-01"},"data":[{"pack":{"id":"0241","dock":1,"amps":-1.601,"temp":[35,33,34],"cell":{"open":[],"volts":[3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.91]},"fet":{"open":[1,2],"temp":[34.1,32.2]},"status":"0001"},"sys":{"source":"STAGE001"},"time_event":"2019-09-09 08:00:06.0320","time_zone":"+07:00","time_processing":"2019-12-17 04:07:20.7790"}]}' 
+    *                                            } ]
+    *                                         }
+    * @param {*} sender               // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
     */
     async sendToTopic(msgObj, sender) {
 
@@ -55,7 +61,7 @@ class KafkaProducer extends Producer {
                 acks: enums.messageBroker.ack.all,                                  //      default is 'all'
                 timeout: env.active.kafkajs.send.timeout                            //      milliseconds    
             }))
-            .then(r => log.messaging(this.writeTopic, r[0].baseOffset, msgObj.messages, msgObj.itemCount, sender))         // info = (topic, offset, msgqty, itemqty, sender) {
+            .then(r => log.messaging(this.writeTopic, `${r[0].baseOffset}-${parseInt(r[0].baseOffset) + (msgObj.messages.length - 1)}`, msgObj.messages, msgObj.itemCount, sender))         // info = (topic, id, msgqty, itemqty, sender) {
             .then(this.producerObj.disconnect())                                    // disconnect    
             .catch(e => log.error(`${this.apiPathIdentifier} ${log.enums.methods.kafkaSendToTopic} Error [${this.writeTopic}]`, e));
         
