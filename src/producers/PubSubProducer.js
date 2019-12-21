@@ -47,9 +47,6 @@ class PubSubProducer extends Producer {
     */
     async sendToTopic(msgObj, sender) {
 
-        // miocrobatch settings - note: these apply only for large msgObj.messages[] where you call batchPub.publish multiple times. The microbatch prevents client libs from sending messages to pubsub. 
-        const MAX_MESSAGES_PER_BATCH = 50;              // number of message to include in a batch before client library sends to topic 
-        const MAX_BATCH_WAIT_TIME = 1000;               // max number of millisecs to wait for MAX_MESSAGES_PER_BATCH before client lib sends all messages to the topic 
 
         let dataBuffer, dataAttributes;
 
@@ -57,16 +54,14 @@ class PubSubProducer extends Producer {
         const sp = log.TRACE.createChildSpan({ name: `${log.enums.methods.kafkaSendToTopic}` });    // 2do  - consumer tracing does not have a root span ..
 
 
-        // create microbatching publisher    
-        const batchPub = this.producerObj.topic(this.writeTopic, {
-            batching: {
-                maxMessages: MAX_MESSAGES_PER_BATCH,
-                maxMilliseconds: MAX_BATCH_WAIT_TIME
-            },
-        });
+        // create microbatching publisher                                                           //note:  miocrobatch settings apply only for large msgObj.messages[] where you call batchPub.publish multiple times. The microbatch prevents client libs from sending messages to pubsub.             
+        const BATCHING = env.active.messagebroker.pubsub.batching;
+        BATCHING.maxMessages = msgObj.messages.length;                                              // number of message to include in a batch before client library sends to topic. If batch size is msobj.messages.length batch will go to server after all are published 
 
-        //= Buffer.from(JSON.stringify({ foo: 'bar' }));
-        // send each message to the topic
+        const batchPub = this.producerObj.topic(this.writeTopic, { batching: BATCHING });
+        
+
+        // send each message to the topic - pubsub will batch and send to server after all are published
         for (let i = 0; i < msgObj.messages.length; i++) {
             (async () => {
                 

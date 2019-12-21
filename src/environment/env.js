@@ -150,12 +150,17 @@ const _KAFKAJS = {
 
 // topics for each environment type                          
 const _MESSAGEBROKER = {
-    provider: enums.messageBroker.providers.pubSub,
+    provider: enums.messageBroker.providers.pubSub,                         // kafka or pubsub        
     topics: {                                                               // kafka / pubsub topics for all environments 
         monitoring: { pms: 'monitoring.pms', mppt: 'monitoring.mppt', inverter: 'monitoring.inverter' },
         system: { feature: 'system.feature' },
         dataset: { pms: 'monitoring.pms.dataset', mppt: 'monitoring.mppt.dataset', inverter: 'monitoring.inverter.dataset' }
-    } 
+    },
+    pubsub: {
+        batching: { 
+            maxMessages: 1,                                                 // number of message to include in a batch before client library sends to topic. If batch size is msobj.messages.length batch will go to server after all are published. if batch size is 1 batching is effectively off. 
+            maxMilliseconds: 10000 }                                        // max number of millisecs to wait for MAX_MESSAGES_PER_BATCH before client lib sends all messages to the topic 
+    }
 }
 
 // GCP project configs per environment 
