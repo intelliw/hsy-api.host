@@ -31,7 +31,7 @@ const app = express();
 host.configs.initialise(app);                                                            // configuration settings
 
 /* body parser
- * use  verify function to get raw body - bodyParser.raw applies only if bodyParser.json fails due to incorrect content-type header
+ * use  'verify: ..' to get raw body - bodyParser.raw will apply only if bodyParser.json fails (due to incorrect content-type header)
  * this allows us to check if body is empty when validating the content-type header in ContentType constructor   */
 var rawBodySaver = function (req, res, buf, encoding) {
     // if (buf && buf.length) { req.rawBody = buf.toString(encoding || 'utf8');}

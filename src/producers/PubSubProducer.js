@@ -55,7 +55,7 @@ class PubSubProducer extends Producer {
 
 
         // create microbatching publisher                                                           //note:  miocrobatch settings apply only for large msgObj.messages[] where you call batchPub.publish multiple times. The microbatch prevents client libs from sending messages to pubsub.             
-        const BATCHING = env.active.messagebroker.pubsub.batching;
+        const BATCHING = env.active.pubsub.batching;
         BATCHING.maxMessages = msgObj.messages.length;                                              // number of message to include in a batch before client library sends to topic. If batch size is msobj.messages.length batch will go to server after all are published 
 
         const batchPub = this.producerObj.topic(this.writeTopic, { batching: BATCHING });

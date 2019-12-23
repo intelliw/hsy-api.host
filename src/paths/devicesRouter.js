@@ -253,7 +253,7 @@ class DevicesDatasetsPostResponse extends Response {
     /**
       * a list of mimetypes which this responder's request (DeviceDataPost) is able to support. 
       * the default mimetype must be the first item
-      * this list must match the list specified in the 'produces' property in the openapi spec
+      * this list must match the list specified in the 'produces' property in the openapi spec for this API 
       */
     static get produces() { return [enums.mimeType.applicationJson] };
     static get consumes() { return [enums.mimeType.applicationJson, enums.mimeType.textCsv] };
