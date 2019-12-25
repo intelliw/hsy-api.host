@@ -164,7 +164,7 @@ class EnergyGetResponse extends Response {
     periods.forEach(period => {
   
       // create the collection links  
-      let selfDescription = `${params.energy.value} ${period.value} ${period.epoch} ${period.duration} ${params.site.value}`;    // e.g hse week 20190204 1 999   (this is the self description format for energy periods) 
+      let selfDescription = `${params.energy.value} ${period.value} ${period.epoch} ${period.duration} ${params.site.value}`;    // e.g hsy week 20190204 1 999   (this is the self description format for energy periods) 
       links = new Links.EnergyLinks(params.energy, period, params.site, selfDescription);   // constructor creates a 'self' link with an energy and epoch description
   
       child = period.getChild();                                                    // create the child link with a period description (if one has been configured for it in consts.period.childDescription)
@@ -242,9 +242,9 @@ class EnergyGetResponse extends Response {
     energy is a param object e.g.
       Param {
       name: 'energy',
-      value: 'hse',
+      value: 'hsy',
       isOptional: false,
-      isValid: 'hse' }
+      isValid: 'hsy' }
    */
   function createItemData(energy, childPeriod, grandChildPeriod, site) {
   
@@ -338,7 +338,7 @@ class EnergyGetResponse extends Response {
         names.push(enums.energyData.gridin);
         names.push(enums.energyData.gridout);
         break;
-      case enums.params.energy.hse:                                           // hse returns all names               
+      case enums.params.energy.hsy:                                           // hsy returns all names               
         names.push(enums.energyData.harvest);
         names.push(enums.energyData.storein);
         names.push(enums.energyData.storeout);

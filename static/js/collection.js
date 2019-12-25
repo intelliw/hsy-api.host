@@ -204,8 +204,8 @@ $(document).ready(function () {
         redrawPanels();
     });
 
-    // hse (live) filter button click             ...calls redrawPanels
-    $('.hse-filter-btn.live').click(function () {
+    // hsy (live) filter button click             ...calls redrawPanels
+    $('.hsy-filter-btn.live').click(function () {
         
         $(this).hasClass('active') ? $(this).removeClass("active") : $(this).addClass("active");
 
@@ -216,18 +216,18 @@ $(document).ready(function () {
         redrawPanels();
     });
 
-    // hse filter buttons reset click       ...calls redrawPanels
-    $(".hse-filter-reset").click(function () {
+    // hsy filter buttons reset click       ...calls redrawPanels
+    $(".hsy-filter-reset").click(function () {
 
         let resetActive;
         
-        $('.hse-filter-btn.active.live').each(function () {
+        $('.hsy-filter-btn.active.live').each(function () {
             $(this).removeClass("active");
             resetActive = true;
         });
 
         if (!resetActive) { 
-            $('.hse-filter-btn.live').each(function () {
+            $('.hsy-filter-btn.live').each(function () {
                 if (!$(this).hasClass("active")) { $(this).addClass("active"); }
             });
         }            

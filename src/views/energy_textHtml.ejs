@@ -30,8 +30,8 @@
 
         ...                                                         <!-- FOOTER 
             id = btnSumAvg    
-            hse-filter-btn
-            hse-filter-reset btn
+            hsy-filter-btn
+            hsy-filter-reset btn
     */ 
 
     // constants - some of these are placed into client side script blocks at the bottom of this page
@@ -43,7 +43,7 @@
     let links = collections[0].collection.links; 
 
     let link_self = utils.findByPropertyValue(links, 'rel', 'self')[0] ;
-    let self_descriptions = link_self.description.split(' ');               // e.g. 'hse week 20190204 1' 
+    let self_descriptions = link_self.description.split(' ');               // e.g. 'hsy week 20190204 1' 
 
     let params_energy = self_descriptions[0]; 
     let params_period = self_descriptions[1];
@@ -56,7 +56,7 @@
     let params_site = self_descriptions[4];
 
     // check which energy params are active 
-    let isHse = params_energy == 'hse';
+    let isHsy = params_energy == 'hsy';
     let isHarvest = params_energy == 'harvest';
     let isStore = params_energy == 'store';
     let isEnjoy = params_energy == 'enjoy';
@@ -355,31 +355,31 @@
     <nav class="navbar navbar-expand-sm navbar-dark bg-light border-top border-primary d-flex justify-content-md-between flex-nowrap py-0 pr-3">
         
     
-            <!-- HSE filter BUTTONS -->
+            <!-- HSY filter BUTTONS -->
             <div class="row flex-nowrap pl-1 ml-0">     
                 <div class="d-flex my-1" data-toggle="tooltip" data-placement="bottom" title="filter by Energy type">
-                        <div class="btn btn-success badge pr-0 mb-1 mr-1<%= !isHse && !isHarvest ? ' disabled' : '' %>">Harvest
-                            <button type="button" class="hse-filter-btn btn btn-sm btn-success btn-toggle<%= !isHse ? (isHarvest ? ' active static' : ' invisible') : ' active live' %>">
+                        <div class="btn btn-success badge pr-0 mb-1 mr-1<%= !isHsy && !isHarvest ? ' disabled' : '' %>">Harvest
+                            <button type="button" class="hsy-filter-btn btn btn-sm btn-success btn-toggle<%= !isHsy ? (isHarvest ? ' active static' : ' invisible') : ' active live' %>">
                                 <div class="handle"></div>
                             </button>
                         </div>
-                        <div class="btn btn-primary badge pr-0 mb-1 mr-1<%= !isHse  && !isStore? ' disabled' : '' %>">Store
-                            <button type="button" class="hse-filter-btn btn btn-sm btn-primary btn-toggle<%= !isHse ? (isStore ? ' active static' : ' invisible') : ' active live' %>">
+                        <div class="btn btn-primary badge pr-0 mb-1 mr-1<%= !isHsy  && !isStore? ' disabled' : '' %>">Store
+                            <button type="button" class="hsy-filter-btn btn btn-sm btn-primary btn-toggle<%= !isHsy ? (isStore ? ' active static' : ' invisible') : ' active live' %>">
                                 <div class="handle"></div>
                             </button>
                         </div>
-                        <div class="btn btn-danger badge pr-0 mb-1 mr-1<%= !isHse  && !isEnjoy? ' disabled' : '' %>">Enjoy
-                            <button type="button" class="hse-filter-btn btn btn-sm btn-danger btn-toggle<%= !isHse ? (isEnjoy ? ' active static' : ' invisible') : ' active live' %>">
+                        <div class="btn btn-danger badge pr-0 mb-1 mr-1<%= !isHsy  && !isEnjoy? ' disabled' : '' %>">Enjoy
+                            <button type="button" class="hsy-filter-btn btn btn-sm btn-danger btn-toggle<%= !isHsy ? (isEnjoy ? ' active static' : ' invisible') : ' active live' %>">
                                 <div class="handle"></div>
                             </button>
                         </div>
-                        <div class="btn btn-dark badge pr-0 mb-1 mr-0<%= !isHse && !isGrid ? ' disabled' : '' %>">Grid
-                            <button type="button" class="hse-filter-btn btn btn-sm btn-dark btn-toggle<%= !isHse ? (isGrid ? ' active static' : ' invisible') : ' active live' %>">
+                        <div class="btn btn-dark badge pr-0 mb-1 mr-0<%= !isHsy && !isGrid ? ' disabled' : '' %>">Grid
+                            <button type="button" class="hsy-filter-btn btn btn-sm btn-dark btn-toggle<%= !isHsy ? (isGrid ? ' active static' : ' invisible') : ' active live' %>">
                                 <div class="handle"></div>
                             </button>
                         </div>
                 </div>
-                <button type="button" class="hse-filter-reset btn collapse<%= !isHse ? ' hide' : ' show' %> btn-sm m-0 py-0 pr-3">
+                <button type="button" class="hsy-filter-reset btn collapse<%= !isHsy ? ' hide' : ' show' %> btn-sm m-0 py-0 pr-3">
                     <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="reset energy filters"
                         style="font-size:24px;color:darkgrey;">link_off</i>
                 </button>
@@ -433,10 +433,10 @@
         // draws the active pane
         function redrawActivePane(pane) {
             
-        <% if (isHse) {  %>  
-            const AGGDATA_CHART_COLUMNS = [1, 2, 3, 4, 6, 7];    // if hse chart 0 and all columns except (store=5) and (grid=8) deficit columns, if store/grid = 0, 1 ,2, 3,  others = 0, 1) // chart order is harvest, enjoy, storein/out/store, gridout/in/grid 
-            const RAWDATA_HSE_COLUMNS = [2, 3, 4, 5, 6, 7, 8, 9];   // 8 cols for hse,  '2,3,4' if store or grid, otherwise '2'
-            const AGGDATA_HSE_COLUMNS = [1, 2, 3, 4, 5, 6, 7, 8];   // 8 cols for hse,  '1,2,3' if store or grid, otherwise '1'
+        <% if (isHsy) {  %>  
+            const AGGDATA_CHART_COLUMNS = [1, 2, 3, 4, 6, 7];    // if hsy chart 0 and all columns except (store=5) and (grid=8) deficit columns, if store/grid = 0, 1 ,2, 3,  others = 0, 1) // chart order is harvest, enjoy, storein/out/store, gridout/in/grid 
+            const RAWDATA_HSY_COLUMNS = [2, 3, 4, 5, 6, 7, 8, 9];   // 8 cols for hsy,  '2,3,4' if store or grid, otherwise '2'
+            const AGGDATA_HSY_COLUMNS = [1, 2, 3, 4, 5, 6, 7, 8];   // 8 cols for hsy,  '1,2,3' if store or grid, otherwise '1'
             const STORE_CHILD_COLUMN = 6;  
             const GRID_CHILD_COLUMN = 9; 
             const STORE_GRANDCHILD_COLUMN = 5; 
@@ -445,8 +445,8 @@
 
         <% } else if (isStore) { %> 
             const AGGDATA_CHART_COLUMNS = [1, 2];     
-            const RAWDATA_HSE_COLUMNS = [2, 3, 4];   
-            const AGGDATA_HSE_COLUMNS = [1, 2, 3];   
+            const RAWDATA_HSY_COLUMNS = [2, 3, 4];   
+            const AGGDATA_HSY_COLUMNS = [1, 2, 3];   
             const STORE_CHILD_COLUMN = 4;  
             const GRID_CHILD_COLUMN = undefined; 
             const STORE_GRANDCHILD_COLUMN = 3;  
@@ -455,8 +455,8 @@
 
         <% } else if (isGrid) { %> 
             const AGGDATA_CHART_COLUMNS = [1, 2];     
-            const RAWDATA_HSE_COLUMNS = [2, 3, 4];   
-            const AGGDATA_HSE_COLUMNS = [1, 2, 3];   
+            const RAWDATA_HSY_COLUMNS = [2, 3, 4];   
+            const AGGDATA_HSY_COLUMNS = [1, 2, 3];   
             const STORE_CHILD_COLUMN = undefined; 
             const GRID_CHILD_COLUMN = 4; 
             const STORE_GRANDCHILD_COLUMN = undefined; 
@@ -465,8 +465,8 @@
 
         <% } else { %>
             const AGGDATA_CHART_COLUMNS = [1];     
-            const RAWDATA_HSE_COLUMNS = [2];   
-            const AGGDATA_HSE_COLUMNS = [1];   
+            const RAWDATA_HSY_COLUMNS = [2];   
+            const AGGDATA_HSY_COLUMNS = [1];   
             const STORE_CHILD_COLUMN = undefined; 
             const GRID_CHILD_COLUMN =  undefined; 
             const STORE_GRANDCHILD_COLUMN = undefined; 
@@ -481,7 +481,7 @@
             const FORMATTED_DATA_CHILD_COLUMN = 0;
             const FORMATTED_DATA_GRANDCHILD_COLUMN = 1;
 
-            const ALL_COLUMNS = [FORMATTED_DATA_CHILD_COLUMN, FORMATTED_DATA_GRANDCHILD_COLUMN].concat(RAWDATA_HSE_COLUMNS);
+            const ALL_COLUMNS = [FORMATTED_DATA_CHILD_COLUMN, FORMATTED_DATA_GRANDCHILD_COLUMN].concat(RAWDATA_HSY_COLUMNS);
 
             let filterColumn; let groupColumn;
 
@@ -494,10 +494,10 @@
             // get the filters 
             let sumAvg = getGroupOption();
             let periodFilters = getActivePeriodFilters(pane);
-        <% if (isHse) {  %>  
-            let hseFilter = getActiveHseFilters(AGGDATA_CHART_COLUMNS, CHART_COLORS);
+        <% if (isHsy) {  %>  
+            let hsyFilter = getActiveHsyFilters(AGGDATA_CHART_COLUMNS, CHART_COLORS);
         <% } else { %>
-            let hseFilter = { columns: AGGDATA_CHART_COLUMNS, colours: CHART_COLORS };
+            let hsyFilter = { columns: AGGDATA_CHART_COLUMNS, colours: CHART_COLORS };
         <% } %>
             
             // initialise child datatable 
@@ -517,14 +517,14 @@
                 
                 // filter & aggregate child 
                 let filteredData = filterDataTable(panelMapObj.child.dataTable, filterColumn, periodFilters, ALL_COLUMNS);
-                let groupedData = groupFilteredData(filteredData, groupColumn, sumAvg, RAWDATA_HSE_COLUMNS, AGGDATA_HSE_COLUMNS);
+                let groupedData = groupFilteredData(filteredData, groupColumn, sumAvg, RAWDATA_HSY_COLUMNS, AGGDATA_HSY_COLUMNS);
 
                 // draw child
                 panelMapObj.child.table = drawTableChart(filteredData, tableDiv, panelMapObj.child.table);
-                panelMapObj.child.chart = drawColumnChart(groupedData, chartDiv, hseFilter.columns, hseFilter.colours, panelMapObj.child.chart);
+                panelMapObj.child.chart = drawColumnChart(groupedData, chartDiv, hsyFilter.columns, hsyFilter.colours, panelMapObj.child.chart);
 
                 // register child event handlers                                                    // currently not using addChartEventHandler(panelMapObj.grandchild);  
-                addTableEventHandler(panelMapObj.child, hseFilter.columns.length-1);                // skip the id column
+                addTableEventHandler(panelMapObj.child, hsyFilter.columns.length-1);                // skip the id column
                 
             // draw grandchild
             } else {
@@ -534,7 +534,7 @@
 
                 // filter & aggregate grandchild 
                 let filteredData = filterDataTable(panelMapObj.child.dataTable, filterColumn, periodFilters, ALL_COLUMNS);
-                let groupedData = groupFilteredData(filteredData, groupColumn, sumAvg, RAWDATA_HSE_COLUMNS, AGGDATA_HSE_COLUMNS);
+                let groupedData = groupFilteredData(filteredData, groupColumn, sumAvg, RAWDATA_HSY_COLUMNS, AGGDATA_HSY_COLUMNS);
 
                 // format grandchild datatable
                 let dt = groupedData.toDataTable();
@@ -543,10 +543,10 @@
 
                 // draw grandchild
                 panelMapObj.grandchild.table = drawTableChart(dt, tableDiv, panelMapObj.grandchild.table);
-                panelMapObj.grandchild.chart = drawColumnChart(dt, chartDiv, hseFilter.columns, hseFilter.colours, panelMapObj.child.chart);
+                panelMapObj.grandchild.chart = drawColumnChart(dt, chartDiv, hsyFilter.columns, hsyFilter.colours, panelMapObj.child.chart);
 
                 // register grandchild event handlers                                             // currently not using addChartEventHandler(panelMapObj.grandchild);  
-                addTableEventHandler(panelMapObj.grandchild, hseFilter.columns.length-1);         // skip the id column
+                addTableEventHandler(panelMapObj.grandchild, hsyFilter.columns.length-1);         // skip the id column
 
             } 
 
@@ -559,7 +559,7 @@
             const dataCols = [
                 { id: '0', type: 'number', label: '<%= utils.capitalise(child_period) %>' },        // v: 0, f: 'Mon Feb 4th'
                 { id: '1', type: 'number', label: '<%= utils.capitalise(grandchild_period) %>' },   // v: 0, f: 'Night'
-            <% if (isHse) {  %>               
+            <% if (isHsy) {  %>               
                 { id: '2', type: 'number', label: 'Harvest' },                                      
                 { id: '3', type: 'number', label: 'Enjoy' },
                 { id: '4', type: 'number', label: 'Store in' },
@@ -590,7 +590,7 @@
                         for (var n_gch_desc=0; n_gch_desc < num_item_data_items; n_gch_desc++) { 
                             chart_json_header_col_1 = `{ v: ${n_gch_desc}, f: '${grandchild_descriptions[n_gch_desc]}' }`;
 
-                            if (isHse) {
+                            if (isHsy) {
                                 if (n_gch_desc==0) {                                                   // load the itemdata arrays only once, the first time         
                                     item_data_harvest = grandchild_item_data[0].value.split(' ');      // harvest
                                     item_data_store_in = grandchild_item_data[1].value.split(' ');     // store.in

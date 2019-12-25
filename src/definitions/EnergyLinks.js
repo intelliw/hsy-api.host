@@ -23,7 +23,7 @@ class EnergyLinks extends Links {
         this.href = periodHref(energy, period, site);                                   // this href is used for the whole collection 
         
         // the self link is needed for both collections and items - add others after construction if needed e.g. for collections
-        this.addLink(period, enums.linkRender.link, description);                     // self - is rendered, and a description if requested eg hse 
+        this.addLink(period, enums.linkRender.link, description);                     // self - is rendered, and a description if requested eg hsy 
         
     }
 

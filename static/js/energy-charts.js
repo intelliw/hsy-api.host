@@ -41,7 +41,7 @@ function tableSelectEvent(paneObj, numChartColumns) {
 
 }
 // returns aggregate (sum or average) from the raw data.
-function groupFilteredData(filteredData, groupColumn, groupOption, rawDataHseColumns, groupDataHseColumns) {
+function groupFilteredData(filteredData, groupColumn, groupOption, rawDataHsyColumns, groupDataHsyColumns) {
 
     const AGGDATA_ID_COLUMN = 0;
 
@@ -56,10 +56,10 @@ function groupFilteredData(filteredData, groupColumn, groupOption, rawDataHseCol
         [   // group by these columns and include in output
             { column: groupColumn },
         ],
-        // in addition output these columns  e.g. { column: rawDataHseColumns[0], aggregation: groupFunction, type: 'number' }
-        rawDataHseColumns.map(function (hseColumn) {
+        // in addition output these columns  e.g. { column: rawDataHsyColumns[0], aggregation: groupFunction, type: 'number' }
+        rawDataHsyColumns.map(function (hsyColumn) {
             return {
-                column: hseColumn,
+                column: hsyColumn,
                 aggregation: groupFunction,
                 type: 'number'
             };
@@ -67,14 +67,14 @@ function groupFilteredData(filteredData, groupColumn, groupOption, rawDataHseCol
     );
 
     // join with raw data to get formatted key column (as grouping drops all formatting..) 
-    let joinedFormatDataColumn = groupDataHseColumns.length + 1;
+    let joinedFormatDataColumn = groupDataHsyColumns.length + 1;
     let joinedData = new google.visualization.DataView(
         google.visualization.data.join(groupedData,
             filteredData,
             JOIN_OPTION_LEFT,
-            [[AGGDATA_ID_COLUMN, groupColumn]], groupDataHseColumns, [groupColumn])
+            [[AGGDATA_ID_COLUMN, groupColumn]], groupDataHsyColumns, [groupColumn])
     );
-    joinedData.setColumns([joinedFormatDataColumn].concat(groupDataHseColumns));
+    joinedData.setColumns([joinedFormatDataColumn].concat(groupDataHsyColumns));
 
     return joinedData;
 }
@@ -222,10 +222,10 @@ function setChartTitles(pane) {
 
 }
 
-/* get columns and colours based on hse filters. the returned filter object has an array of columns and colours 
+/* get columns and colours based on hsy filters. the returned filter object has an array of columns and colours 
    order of elements in allColumns and allColours are: vAxis + harvest(0), enjoy(1), storein/out(2,3), gridout/in(4,5) 
 */
-function getActiveHseFilters(allColumns, allColours) {
+function getActiveHsyFilters(allColumns, allColours) {
     
     const HARVEST = 0;
     const ENJOY = 1;
@@ -240,17 +240,17 @@ function getActiveHseFilters(allColumns, allColours) {
     let filterObj = { columns:[], colours:[] }; 
        
 
-    // add columns and colours depending on which hse buttons are active and live    
+    // add columns and colours depending on which hsy buttons are active and live    
 
     // harvest
-    if ($('.hse-filter-btn.btn-success.live').hasClass('active')) {              
+    if ($('.hsy-filter-btn.btn-success.live').hasClass('active')) {              
         numFilters++;
         filterObj.columns.push(allColumns[HARVEST]);
         filterObj.colours.push(allColours[HARVEST]);
     }
     
     // enjoy
-    if ($('.hse-filter-btn.btn-danger.live').hasClass('active')) {              
+    if ($('.hsy-filter-btn.btn-danger.live').hasClass('active')) {              
         numFilters++;
         filterObj.columns.push(allColumns[ENJOY]);
         filterObj.colours.push(allColours[ENJOY]);
@@ -258,7 +258,7 @@ function getActiveHseFilters(allColumns, allColours) {
     }
 
     // store
-    if ($('.hse-filter-btn.btn-primary.live').hasClass('active')) {              
+    if ($('.hsy-filter-btn.btn-primary.live').hasClass('active')) {              
         numFilters++;
         filterObj.columns.push(allColumns[STORE_IN]);
         filterObj.colours.push(allColours[STORE_IN]);
@@ -268,7 +268,7 @@ function getActiveHseFilters(allColumns, allColours) {
     }
 
     // grid
-    if ($('.hse-filter-btn.btn-dark.live').hasClass('active')) {              
+    if ($('.hsy-filter-btn.btn-dark.live').hasClass('active')) {              
         numFilters++;
         filterObj.columns.push(allColumns[GRID_IN]);
         filterObj.colours.push(allColours[GRID_IN]);

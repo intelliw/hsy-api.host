@@ -33,7 +33,7 @@ const Definitions = require('./Definitions');
        prompt: 'Mon Feb 4th',
        title: '04/02/19',
        href: 'http://localhost:8080/energy/harvest/period/day/20190204/1?site=900',
-       description: 'hse week 20190204 1',
+       description: 'hsy week 20190204 1',
        render: 'link' },
      { rel: 'collection',
        name: 'day.timeofday',

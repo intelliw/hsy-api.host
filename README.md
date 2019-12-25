@@ -1,7 +1,7 @@
 # Energy Management API Host
 
 # GIT
-https://github.com/intelliw/hse-api.host
+https://github.com/intelliw/hsy-api.host
 
 git add . ; git commit -m "ok" ; git push origin master ; git push origin --tags
 
@@ -12,7 +12,7 @@ API packages more or less mirror, the OpenAPI specification's structure.
     - src                 
         -  definitions       // data objects
         - `environment`       // configs and enums shared by other services in the environment. 
-        -  host              // setup and configuration needed by hse-api-host (not shared). 
+        -  host              // setup and configuration needed by hsy-api-host (not shared). 
         - `logger`            // logging framework, shared by other services in the environment. 
         -  parameters        // generic class for simple params, specialised classes for complex params such as Period
         -  paths             // routers for paths, these handle top level routes. 
@@ -21,8 +21,8 @@ API packages more or less mirror, the OpenAPI specification's structure.
                                 Each response object is constructed with a data object; and selects a view based on headers
         -  views             // view templates
 
-`environment` and `logger` packages are mastered in hse-api-host (this project) and shared with hse-api-consumers.
-Before building copy these packages to hse-consumer project and test.
+`environment` and `logger` packages are mastered in hsy-api-host (this project) and shared with hsy-api-consumers.
+Before building copy these packages to hsy-consumer project and test.
 
 
 ## Cloud Build 
@@ -36,7 +36,7 @@ gcloud builds submit `
 ## Local Build
 If running locally, build the image with local.Dockerfile (optional)
 
-docker build -f local.Dockerfile -t axc-hse .
+docker build -f local.Dockerfile -t axc-hsy .
 
 
 ## Local ESP

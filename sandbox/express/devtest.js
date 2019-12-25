@@ -75,7 +75,7 @@ router.get('/allperiods/:epoch?/:duration?', (req, res, next) => {
         .status(200)
         .json({
             params: msg,
-            // EACHSECONDSINSTANTS: second.getEachChild(),
+            // EAChsyCONDSINSTANTS: second.getEachChild(),
             // EACHMINUTESECONDS: minute.getEachChild(),
             INSTANTS : { INSTANTPREV: instantprev, INSTANT: instant, INSTANTNEXT: instantnext, INSTANTPARENT: instantparent,INSTANTCHILD: instantchild },
             SECONDS : { SECONDPREV: secondprev, SECOND: second, SECONDNEXT: secondnext, SECONDPARENT: secondparent,SECONDCHILD: secondchild },
