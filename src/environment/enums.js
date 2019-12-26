@@ -11,8 +11,8 @@ module.exports.energyData = {
     storein: 'store.in',
     storeout: 'store.out',
     yield: 'yield',
-    gridin: 'grid.in',
-    gridout: 'grid.out'
+    buyin: 'buy.in',
+    buyout: 'buy.out'
 }
 
 // api paths enumerations 
@@ -34,7 +34,7 @@ module.exports.params = {
         harvest: 'harvest',
         store: 'store',
         yield: 'yield',
-        grid: 'grid'
+        buy: 'buy'
     },
     period: {
         instant: 'instant',

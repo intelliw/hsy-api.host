@@ -102,7 +102,7 @@ function filterDataTable(dt, filterColumn, includeRows, includeColumns) {
 }
 
 // format datatable in red 
-function colorDataTable(dt, storeTotalColumn, gridTotalColumn) {
+function colorDataTable(dt, storeTotalColumn, buyTotalColumn) {
     const COLOR = 'red';
     let formatter;
 
@@ -111,10 +111,10 @@ function colorDataTable(dt, storeTotalColumn, gridTotalColumn) {
         formatter.addRange(0, null, COLOR, '');
         formatter.format(dt, storeTotalColumn);
     }
-    if (gridTotalColumn) {    
+    if (buyTotalColumn) {    
         formatter = new google.visualization.ColorFormat();
         formatter.addRange(null, 0, COLOR, '');
-        formatter.format(dt, gridTotalColumn);
+        formatter.format(dt, buyTotalColumn);
     }
 }
 
@@ -223,14 +223,14 @@ function setChartTitles(pane) {
 }
 
 /* get columns and colours based on hsy filters. the returned filter object has an array of columns and colours 
-   order of elements in allColumns and allColours are: vAxis + harvest(0), yield(1), storein/out(2,3), gridout/in(4,5) 
+   order of elements in allColumns and allColours are: vAxis + harvest(0), yield(1), storein/out(2,3), buyout/in(4,5) 
 */
 function getActiveHsyFilters(allColumns, allColours) {
     
     const HARVEST = 0;
     const YIELD = 1;
     const STORE_IN = 2;  const STORE_OUT = 3;
-    const GRID_IN = 4;   const GRID_OUT = 5;
+    const BUY_IN = 4;   const BUY_OUT = 5;
 
     const ALL_FILTERS_ADDED = 4;
 
@@ -267,14 +267,14 @@ function getActiveHsyFilters(allColumns, allColours) {
         filterObj.colours.push(allColours[STORE_OUT]);
     }
 
-    // grid
+    // buy
     if ($('.hsy-filter-btn.btn-dark.live').hasClass('active')) {              
         numFilters++;
-        filterObj.columns.push(allColumns[GRID_IN]);
-        filterObj.colours.push(allColours[GRID_IN]);
+        filterObj.columns.push(allColumns[BUY_IN]);
+        filterObj.colours.push(allColours[BUY_IN]);
 
-        filterObj.columns.push(allColumns[GRID_OUT]);
-        filterObj.colours.push(allColours[GRID_OUT]);
+        filterObj.columns.push(allColumns[BUY_OUT]);
+        filterObj.colours.push(allColours[BUY_OUT]);
 
     }
     

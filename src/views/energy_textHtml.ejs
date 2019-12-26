@@ -60,7 +60,7 @@
     let isHarvest = params_energy == 'harvest';
     let isStore = params_energy == 'store';
     let isYield = params_energy == 'yield';
-    let isGrid = params_energy == 'grid';
+    let isBuy = params_energy == 'buy';
 
     let panel_map = '';
 %>
@@ -373,8 +373,8 @@
                                 <div class="handle"></div>
                             </button>
                         </div>
-                        <div class="btn btn-dark badge pr-0 mb-1 mr-0<%= !isHsy && !isGrid ? ' disabled' : '' %>">Grid
-                            <button type="button" class="hsy-filter-btn btn btn-sm btn-dark btn-toggle<%= !isHsy ? (isGrid ? ' active static' : ' invisible') : ' active live' %>">
+                        <div class="btn btn-dark badge pr-0 mb-1 mr-0<%= !isHsy && !isBuy ? ' disabled' : '' %>">Buy
+                            <button type="button" class="hsy-filter-btn btn btn-sm btn-dark btn-toggle<%= !isHsy ? (isBuy ? ' active static' : ' invisible') : ' active live' %>">
                                 <div class="handle"></div>
                             </button>
                         </div>
@@ -434,13 +434,13 @@
         function redrawActivePane(pane) {
             
         <% if (isHsy) {  %>  
-            const AGGDATA_CHART_COLUMNS = [1, 2, 3, 4, 6, 7];    // if hsy chart 0 and all columns except (store=5) and (grid=8) deficit columns, if store/grid = 0, 1 ,2, 3,  others = 0, 1) // chart order is harvest, yield, storein/out/store, gridout/in/grid 
-            const RAWDATA_HSY_COLUMNS = [2, 3, 4, 5, 6, 7, 8, 9];   // 8 cols for hsy,  '2,3,4' if store or grid, otherwise '2'
-            const AGGDATA_HSY_COLUMNS = [1, 2, 3, 4, 5, 6, 7, 8];   // 8 cols for hsy,  '1,2,3' if store or grid, otherwise '1'
+            const AGGDATA_CHART_COLUMNS = [1, 2, 3, 4, 6, 7];    // if hsy chart 0 and all columns except (store=5) and (buy=8) deficit columns, if store/buy = 0, 1 ,2, 3,  others = 0, 1) // chart order is harvest, yield, storein/out/store, buyout/in/buy 
+            const RAWDATA_HSY_COLUMNS = [2, 3, 4, 5, 6, 7, 8, 9];   // 8 cols for hsy,  '2,3,4' if store or buy, otherwise '2'
+            const AGGDATA_HSY_COLUMNS = [1, 2, 3, 4, 5, 6, 7, 8];   // 8 cols for hsy,  '1,2,3' if store or buy, otherwise '1'
             const STORE_CHILD_COLUMN = 6;  
-            const GRID_CHILD_COLUMN = 9; 
+            const BUY_CHILD_COLUMN = 9; 
             const STORE_GRANDCHILD_COLUMN = 5; 
-            const GRID_GRANDCHILD_COLUMN = 8; 
+            const BUY_GRANDCHILD_COLUMN = 8; 
             const CHART_COLORS = ['#28a745', '#FF0000', '#007bff', '#007bff', '#000000', '#000000'];
 
         <% } else if (isStore) { %> 
@@ -448,19 +448,19 @@
             const RAWDATA_HSY_COLUMNS = [2, 3, 4];   
             const AGGDATA_HSY_COLUMNS = [1, 2, 3];   
             const STORE_CHILD_COLUMN = 4;  
-            const GRID_CHILD_COLUMN = undefined; 
+            const BUY_CHILD_COLUMN = undefined; 
             const STORE_GRANDCHILD_COLUMN = 3;  
-            const GRID_GRANDCHILD_COLUMN = undefined; 
+            const BUY_GRANDCHILD_COLUMN = undefined; 
             const CHART_COLORS = ['#007bff', '#007bff'];
 
-        <% } else if (isGrid) { %> 
+        <% } else if (isBuy) { %> 
             const AGGDATA_CHART_COLUMNS = [1, 2];     
             const RAWDATA_HSY_COLUMNS = [2, 3, 4];   
             const AGGDATA_HSY_COLUMNS = [1, 2, 3];   
             const STORE_CHILD_COLUMN = undefined; 
-            const GRID_CHILD_COLUMN = 4; 
+            const BUY_CHILD_COLUMN = 4; 
             const STORE_GRANDCHILD_COLUMN = undefined; 
-            const GRID_GRANDCHILD_COLUMN = 3; 
+            const BUY_GRANDCHILD_COLUMN = 3; 
             const CHART_COLORS = ['#000000', '#000000'];
 
         <% } else { %>
@@ -468,9 +468,9 @@
             const RAWDATA_HSY_COLUMNS = [2];   
             const AGGDATA_HSY_COLUMNS = [1];   
             const STORE_CHILD_COLUMN = undefined; 
-            const GRID_CHILD_COLUMN =  undefined; 
+            const BUY_CHILD_COLUMN =  undefined; 
             const STORE_GRANDCHILD_COLUMN = undefined; 
-            const GRID_GRANDCHILD_COLUMN = undefined; 
+            const BUY_GRANDCHILD_COLUMN = undefined; 
             <% if (isHarvest) { %> 
                 const CHART_COLORS = ['#28a745'];
             <% } else if (isYield) { %> 
@@ -504,7 +504,7 @@
             if (!panelMapObj.child.dataTable) {
 
                 let dt = new google.visualization.DataTable(getJsonChartData(panelIndex));
-                colorDataTable(dt, STORE_CHILD_COLUMN, GRID_CHILD_COLUMN);
+                colorDataTable(dt, STORE_CHILD_COLUMN, BUY_CHILD_COLUMN);
                 panelMapObj.child.dataTable = dt;
                 
             }
@@ -538,7 +538,7 @@
 
                 // format grandchild datatable
                 let dt = groupedData.toDataTable();
-                colorDataTable(dt, STORE_GRANDCHILD_COLUMN, GRID_GRANDCHILD_COLUMN);
+                colorDataTable(dt, STORE_GRANDCHILD_COLUMN, BUY_GRANDCHILD_COLUMN);
                 panelMapObj.grandchild.dataTable = dt;
 
                 // draw grandchild
@@ -565,10 +565,10 @@
                 { id: '4', type: 'number', label: 'Store in' },
                 { id: '5', type: 'number', label: 'Store out' },
                 { id: '6', type: 'number', label: '(Store)' },
-                { id: '7', type: 'number', label: 'Grid out' },
-                { id: '8', type: 'number', label: 'Grid in' },
-                { id: '9', type: 'number', label: '(Grid)' }
-            <% } else if (isStore || isGrid ) { %> 
+                { id: '7', type: 'number', label: 'Buy out' },
+                { id: '8', type: 'number', label: 'Buy in' },
+                { id: '9', type: 'number', label: '(Buy)' }
+            <% } else if (isStore || isBuy ) { %> 
                 { id: '2', type: 'number', label: '<%= utils.capitalise(params_energy) %> in' },
                 { id: '3', type: 'number', label: '<%= utils.capitalise(params_energy) %> out' },
                 { id: '4', type: 'number', label: '(<%= utils.capitalise(params_energy) %>)' }
@@ -596,16 +596,16 @@
                                     item_data_store_in = grandchild_item_data[1].value.split(' ');     // store.in
                                     item_data_store_out = grandchild_item_data[2].value.split(' ');    // store.out
                                     item_data_yield = grandchild_item_data[3].value.split(' ');        // yield    
-                                    item_data_grid_in = grandchild_item_data[4].value.split(' ');      // grid.in
-                                    item_data_grid_out = grandchild_item_data[5].value.split(' ');     // grid.out
+                                    item_data_buy_in = grandchild_item_data[4].value.split(' ');      // buy.in
+                                    item_data_buy_out = grandchild_item_data[5].value.split(' ');     // buy.out
                                 }
-                                // chart order must be harvest, yield, storein/out/store, gridout/in/grid 
+                                // chart order must be harvest, yield, storein/out/store, buyout/in/buy 
                                 chart_json_data_harvest = `{ v: ${item_data_harvest[n_gch_desc] || 0} }`;
                                 chart_json_data_yield = `{ v: ${(item_data_yield[n_gch_desc] || 0) * -1} }`;
                                 chart_json_data_store = `{ v: ${(item_data_store_in[n_gch_desc] || 0) * -1} }, { v: ${item_data_store_out[n_gch_desc] || 0} }, { v: ${(eval(item_data_store_out[n_gch_desc]) + eval(item_data_store_in[n_gch_desc]) * -1).toFixed(4)} }`;
-                                chart_json_data_grid = `{ v: ${item_data_grid_out[n_gch_desc] || 0} }, { v: ${(item_data_grid_in[n_gch_desc] || 0) * -1} }, { v: ${(eval(item_data_grid_out[n_gch_desc]) + eval(item_data_grid_in[n_gch_desc]) * -1).toFixed(4)} }`;
+                                chart_json_data_buy = `{ v: ${item_data_buy_out[n_gch_desc] || 0} }, { v: ${(item_data_buy_in[n_gch_desc] || 0) * -1} }, { v: ${(eval(item_data_buy_out[n_gch_desc]) + eval(item_data_buy_in[n_gch_desc]) * -1).toFixed(4)} }`;
 
-                                chart_json_data_cols = chart_json_data_harvest + ', ' + chart_json_data_yield + ', ' + chart_json_data_store + ', ' + chart_json_data_grid;
+                                chart_json_data_cols = chart_json_data_harvest + ', ' + chart_json_data_yield + ', ' + chart_json_data_store + ', ' + chart_json_data_buy;
 
                             } else if (isStore) { 
                                 if (n_gch_desc==0) {
@@ -615,13 +615,13 @@
                                 chart_json_data_store = `{ v: ${(item_data_store_in[n_gch_desc] || 0) * -1} }, { v: ${item_data_store_out[n_gch_desc] || 0} }, { v: ${(eval(item_data_store_out[n_gch_desc]) + eval(item_data_store_in[n_gch_desc]) * -1).toFixed(4)} }`;
                                 chart_json_data_cols = chart_json_data_store;
 
-                            } else if (isGrid) { 
+                            } else if (isBuy) { 
                                 if (n_gch_desc==0) {
-                                    item_data_grid_in = grandchild_item_data[0].value.split(' ');      // grid.in
-                                    item_data_grid_out = grandchild_item_data[1].value.split(' ');     // grid.out
+                                    item_data_buy_in = grandchild_item_data[0].value.split(' ');      // buy.in
+                                    item_data_buy_out = grandchild_item_data[1].value.split(' ');     // buy.out
                                 }
-                                chart_json_data_grid = `{ v: ${item_data_grid_out[n_gch_desc] || 0}}, { v: ${(item_data_grid_in[n_gch_desc] || 0) * -1} }, { v: ${(eval(item_data_grid_out[n_gch_desc]) + eval(item_data_grid_in[n_gch_desc]) * -1).toFixed(4)} }`;
-                                chart_json_data_cols = chart_json_data_grid;
+                                chart_json_data_buy = `{ v: ${item_data_buy_out[n_gch_desc] || 0}}, { v: ${(item_data_buy_in[n_gch_desc] || 0) * -1} }, { v: ${(eval(item_data_buy_out[n_gch_desc]) + eval(item_data_buy_in[n_gch_desc]) * -1).toFixed(4)} }`;
+                                chart_json_data_cols = chart_json_data_buy;
 
                             } else if (isHarvest) {                            
                                 if (n_gch_desc==0) {

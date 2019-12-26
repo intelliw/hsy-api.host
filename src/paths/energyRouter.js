@@ -334,17 +334,17 @@ class EnergyGetResponse extends Response {
       case enums.params.energy.yield:
         names.push(enums.energyData.yield);
         break;
-      case enums.params.energy.grid:
-        names.push(enums.energyData.gridin);
-        names.push(enums.energyData.gridout);
+      case enums.params.energy.buy:
+        names.push(enums.energyData.buyin);
+        names.push(enums.energyData.buyout);
         break;
       case enums.params.energy.hsy:                                           // hsy returns all names               
         names.push(enums.energyData.harvest);
         names.push(enums.energyData.storein);
         names.push(enums.energyData.storeout);
         names.push(enums.energyData.yield);
-        names.push(enums.energyData.gridin);
-        names.push(enums.energyData.gridout);
+        names.push(enums.energyData.buyin);
+        names.push(enums.energyData.buyout);
         break;
     };
     return names;
