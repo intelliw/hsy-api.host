@@ -17,7 +17,7 @@ const env = require('../environment');
 const log = require('../logger').log;
 const utils = env.utils;
 
-// [devops.api.get] /api
+// [admin.api.get] /api
 router.get('/', (req, res, next) => {
 
     res
@@ -44,7 +44,7 @@ router.get('/', (req, res, next) => {
 });
 
 
-// [devops.api.versions.get] /api/versions
+// [admin.api.versions.get] /api/versions
 router.get('/versions', (req, res, next) => {
     res.status(200).json({ versions: env.active.api.versions }).end();
 });
@@ -53,7 +53,7 @@ router.get('/versions/current', (req, res, next) => {
 });
 
 
-// [devops.api.logging.get] /api/logging?verbosity=debug,info
+// [admin.api.logging.get] /api/logging?verbosity=debug,info
 router.get('/logging', (req, res, next) => {
 
     let configs = [];
@@ -96,7 +96,7 @@ router.get('/logging', (req, res, next) => {
 });
 
 
-// [devops.api.feature.get] /api/features?operational=logging,validation
+// [admin.api.feature.get] /api/features?operational=logging,validation
 router.get('/features', (req, res, next) => {
 
     let configs = [];

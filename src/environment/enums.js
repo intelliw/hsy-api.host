@@ -10,7 +10,7 @@ module.exports.energyData = {
     harvest: 'harvest',
     storein: 'store.in',
     storeout: 'store.out',
-    enjoy: 'enjoy',
+    yield: 'yield',
     gridin: 'grid.in',
     gridout: 'grid.out'
 }
@@ -33,7 +33,7 @@ module.exports.params = {
         hsy: 'hsy',
         harvest: 'harvest',
         store: 'store',
-        enjoy: 'enjoy',
+        yield: 'yield',
         grid: 'grid'
     },
     period: {

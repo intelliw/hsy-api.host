@@ -59,7 +59,7 @@
     let isHsy = params_energy == 'hsy';
     let isHarvest = params_energy == 'harvest';
     let isStore = params_energy == 'store';
-    let isEnjoy = params_energy == 'enjoy';
+    let isYield = params_energy == 'yield';
     let isGrid = params_energy == 'grid';
 
     let panel_map = '';
@@ -368,8 +368,8 @@
                                 <div class="handle"></div>
                             </button>
                         </div>
-                        <div class="btn btn-danger badge pr-0 mb-1 mr-1<%= !isHsy  && !isEnjoy? ' disabled' : '' %>">Enjoy
-                            <button type="button" class="hsy-filter-btn btn btn-sm btn-danger btn-toggle<%= !isHsy ? (isEnjoy ? ' active static' : ' invisible') : ' active live' %>">
+                        <div class="btn btn-danger badge pr-0 mb-1 mr-1<%= !isHsy  && !isYield? ' disabled' : '' %>">Yield
+                            <button type="button" class="hsy-filter-btn btn btn-sm btn-danger btn-toggle<%= !isHsy ? (isYield ? ' active static' : ' invisible') : ' active live' %>">
                                 <div class="handle"></div>
                             </button>
                         </div>
@@ -434,7 +434,7 @@
         function redrawActivePane(pane) {
             
         <% if (isHsy) {  %>  
-            const AGGDATA_CHART_COLUMNS = [1, 2, 3, 4, 6, 7];    // if hsy chart 0 and all columns except (store=5) and (grid=8) deficit columns, if store/grid = 0, 1 ,2, 3,  others = 0, 1) // chart order is harvest, enjoy, storein/out/store, gridout/in/grid 
+            const AGGDATA_CHART_COLUMNS = [1, 2, 3, 4, 6, 7];    // if hsy chart 0 and all columns except (store=5) and (grid=8) deficit columns, if store/grid = 0, 1 ,2, 3,  others = 0, 1) // chart order is harvest, yield, storein/out/store, gridout/in/grid 
             const RAWDATA_HSY_COLUMNS = [2, 3, 4, 5, 6, 7, 8, 9];   // 8 cols for hsy,  '2,3,4' if store or grid, otherwise '2'
             const AGGDATA_HSY_COLUMNS = [1, 2, 3, 4, 5, 6, 7, 8];   // 8 cols for hsy,  '1,2,3' if store or grid, otherwise '1'
             const STORE_CHILD_COLUMN = 6;  
@@ -473,7 +473,7 @@
             const GRID_GRANDCHILD_COLUMN = undefined; 
             <% if (isHarvest) { %> 
                 const CHART_COLORS = ['#28a745'];
-            <% } else if (isEnjoy) { %> 
+            <% } else if (isYield) { %> 
                 const CHART_COLORS = ['#FF0000'];
             <% } %>    
         <% } %>
@@ -561,7 +561,7 @@
                 { id: '1', type: 'number', label: '<%= utils.capitalise(grandchild_period) %>' },   // v: 0, f: 'Night'
             <% if (isHsy) {  %>               
                 { id: '2', type: 'number', label: 'Harvest' },                                      
-                { id: '3', type: 'number', label: 'Enjoy' },
+                { id: '3', type: 'number', label: 'Yield' },
                 { id: '4', type: 'number', label: 'Store in' },
                 { id: '5', type: 'number', label: 'Store out' },
                 { id: '6', type: 'number', label: '(Store)' },
@@ -595,17 +595,17 @@
                                     item_data_harvest = grandchild_item_data[0].value.split(' ');      // harvest
                                     item_data_store_in = grandchild_item_data[1].value.split(' ');     // store.in
                                     item_data_store_out = grandchild_item_data[2].value.split(' ');    // store.out
-                                    item_data_enjoy = grandchild_item_data[3].value.split(' ');        // enjoy    
+                                    item_data_yield = grandchild_item_data[3].value.split(' ');        // yield    
                                     item_data_grid_in = grandchild_item_data[4].value.split(' ');      // grid.in
                                     item_data_grid_out = grandchild_item_data[5].value.split(' ');     // grid.out
                                 }
-                                // chart order must be harvest, enjoy, storein/out/store, gridout/in/grid 
+                                // chart order must be harvest, yield, storein/out/store, gridout/in/grid 
                                 chart_json_data_harvest = `{ v: ${item_data_harvest[n_gch_desc] || 0} }`;
-                                chart_json_data_enjoy = `{ v: ${(item_data_enjoy[n_gch_desc] || 0) * -1} }`;
+                                chart_json_data_yield = `{ v: ${(item_data_yield[n_gch_desc] || 0) * -1} }`;
                                 chart_json_data_store = `{ v: ${(item_data_store_in[n_gch_desc] || 0) * -1} }, { v: ${item_data_store_out[n_gch_desc] || 0} }, { v: ${(eval(item_data_store_out[n_gch_desc]) + eval(item_data_store_in[n_gch_desc]) * -1).toFixed(4)} }`;
                                 chart_json_data_grid = `{ v: ${item_data_grid_out[n_gch_desc] || 0} }, { v: ${(item_data_grid_in[n_gch_desc] || 0) * -1} }, { v: ${(eval(item_data_grid_out[n_gch_desc]) + eval(item_data_grid_in[n_gch_desc]) * -1).toFixed(4)} }`;
 
-                                chart_json_data_cols = chart_json_data_harvest + ', ' + chart_json_data_enjoy + ', ' + chart_json_data_store + ', ' + chart_json_data_grid;
+                                chart_json_data_cols = chart_json_data_harvest + ', ' + chart_json_data_yield + ', ' + chart_json_data_store + ', ' + chart_json_data_grid;
 
                             } else if (isStore) { 
                                 if (n_gch_desc==0) {
@@ -630,12 +630,12 @@
                                 chart_json_data_harvest = `{ v: ${item_data_harvest[n_gch_desc] || 0} }`;
                                 chart_json_data_cols = chart_json_data_harvest;
 
-                            } else if (isEnjoy) {  
+                            } else if (isYield) {  
                                 if (n_gch_desc==0) {
-                                    item_data_enjoy = grandchild_item_data[0].value.split(' ');        // enjoy        
+                                    item_data_yield = grandchild_item_data[0].value.split(' ');        // yield        
                                 }
-                                chart_json_data_enjoy = `{ v: ${(item_data_enjoy[n_gch_desc] || 0) * -1} }`;
-                                chart_json_data_cols = chart_json_data_enjoy;
+                                chart_json_data_yield = `{ v: ${(item_data_yield[n_gch_desc] || 0) * -1} }`;
+                                chart_json_data_cols = chart_json_data_yield;
 
                             }
                          %>

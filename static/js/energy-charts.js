@@ -223,12 +223,12 @@ function setChartTitles(pane) {
 }
 
 /* get columns and colours based on hsy filters. the returned filter object has an array of columns and colours 
-   order of elements in allColumns and allColours are: vAxis + harvest(0), enjoy(1), storein/out(2,3), gridout/in(4,5) 
+   order of elements in allColumns and allColours are: vAxis + harvest(0), yield(1), storein/out(2,3), gridout/in(4,5) 
 */
 function getActiveHsyFilters(allColumns, allColours) {
     
     const HARVEST = 0;
-    const ENJOY = 1;
+    const YIELD = 1;
     const STORE_IN = 2;  const STORE_OUT = 3;
     const GRID_IN = 4;   const GRID_OUT = 5;
 
@@ -249,11 +249,11 @@ function getActiveHsyFilters(allColumns, allColours) {
         filterObj.colours.push(allColours[HARVEST]);
     }
     
-    // enjoy
+    // yield
     if ($('.hsy-filter-btn.btn-danger.live').hasClass('active')) {              
         numFilters++;
-        filterObj.columns.push(allColumns[ENJOY]);
-        filterObj.colours.push(allColours[ENJOY]);
+        filterObj.columns.push(allColumns[YIELD]);
+        filterObj.colours.push(allColours[YIELD]);
 
     }
 
