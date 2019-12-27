@@ -7,7 +7,7 @@
 
 const env = require('../environment');
 
-const enums = env.enums;
+const enums = require('../environment/enums');
 const utils = require('../environment/utils');
 const consts = require('../host/constants');
 const log = require('../logger').log;
@@ -53,7 +53,7 @@ router.route([
             .status(response.statusCode)
             .type(response.contentType)
             .render(response.view, {                            // all responses are rendered into an ejs view, including e.g. energy_textHtml, or energy_applicationCollectionJson
-                collections: collections, utils: utils, env: env
+                collections: collections, utils: utils, env: env, enums: enums
             });
 
         /* // debug START

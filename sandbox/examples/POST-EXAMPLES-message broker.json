@@ -41,7 +41,7 @@
     "load": [
         { "volts": 48, "amps": 1.2, "watts": 57.6 },
         { "volts": 48, "amps": 1.2, "watts": 57.6 } ],
-    "grid": [
+    "buy": [
         {"volts": 48, "amps": 1.2, "pf": 0.92, "watts": 91.785 },
         {"volts": 48, "amps": 1.2, "pf": 0.92, "watts": 91.785 },
         {"volts": 48, "amps": 1.2, "pf": 0.92, "watts": 91.785 } ],

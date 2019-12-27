@@ -4,7 +4,7 @@
  * version 00.08
  */
 const env = require('./src/environment');
-const enums = env.enums;
+const enums = require('./src/environment/enums');
 
 const host = require('./src/host');
 const consts = host.consts;
