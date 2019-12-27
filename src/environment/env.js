@@ -19,131 +19,7 @@ const enums = require('./enums');
 
 // referenced configs - these configs are included by reference in the CONFIGS block below -----------------------------------------------------------------------------------------------------------------
 
-// API 
-const _API = {
-
-    // API host and versions for dev, prod, and test            version = major.minor[.build[.revision]]   ..Odd-numbers for development even for stable
-    LOCAL: { host: '192.168.1.108:8080', scheme: 'http', versions: { supported: '0.2 0.3', current: '0.3.12.10' } },
-    DEV: { host: 'api.dev.sundaya.monitored.equipment', scheme: 'https', versions: { supported: '0.2 0.3', current: '0.3.12.21' } },
-    STAGE: { host: 'api.stage.sundaya.monitored.equipment', scheme: 'https', versions: { supported: '0.2 0.3', current: '0.3.12.21' } },
-    TEST: { host: 'api.test.sundaya.monitored.equipment', scheme: 'https', versions: { supported: '0.2 0.3', current: '0.3.12.10' } },
-    PROD: { host: 'api.sundaya.monitored.equipment', scheme: 'https', versions: { supported: '0.2 0.3', current: '0.3.12.10' } }
-
-}
-
-// feature toggles - a feature is 'on' if it is present in the list    
-const _FEATURES = {
-    DEV: {
-        release: [enums.features.release.none],
-        operational: [
-            enums.features.operational.logging,
-            enums.features.operational.validation],
-        experiment: [enums.features.experiment.none],
-        permission: [enums.features.permission.none]
-    },
-    TEST: {
-        release: [enums.features.release.none],
-        operational: [
-            enums.features.operational.logging,
-            enums.features.operational.validation],
-        experiment: [enums.features.experiment.none],
-        permission: [enums.features.permission.none]
-    },
-    PROD: {
-        release: [enums.features.release.none],
-        operational: [
-            enums.features.operational.logging,
-            enums.features.operational.validation],
-        experiment: [enums.features.experiment.none],
-        permission: [enums.features.permission.none]
-    }
-}
-
-
-// logging configurations - statements, verbosity, and appenders, for each environment
-const _LOGGING = {
-    DEV: {
-        statements: [
-            enums.logging.statements.messaging,
-            enums.logging.statements.data,
-            enums.logging.statements.exception,
-            enums.logging.statements.error,
-            enums.logging.statements.trace],
-        verbosity: [
-            enums.logging.verbosity.debug],
-        appenders: [
-            enums.logging.appenders.stackdriver,
-            enums.logging.appenders.console]
-    },
-    TEST: {
-        statements: [
-            enums.logging.statements.messaging,
-            enums.logging.statements.data,
-            enums.logging.statements.exception,
-            enums.logging.statements.error],
-        verbosity: [
-            enums.logging.verbosity.info],
-        appenders: [
-            enums.logging.appenders.stackdriver]
-    },
-    PROD: {
-        statements: [
-            enums.logging.statements.messaging,
-            enums.logging.statements.data,
-            enums.logging.statements.exception,
-            enums.logging.statements.error],
-        verbosity: [
-            enums.logging.verbosity.info],
-        appenders: [
-            enums.logging.appenders.stackdriver]
-    }
-}
-
-
-const _KAFKA = {
-    LOCAL: { brokers: ['192.168.1.108:9092'] },
-    SINGLE: { brokers: ['kafka-1-vm:9092'] },
-    HA: { brokers: ['kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092'] }               // array of kafka message brokers                       // kafka-1-vm  | 10.140.0.11
-}
-
-
-
-// GCP project configs per environment 
-const _GCP = {
-    DEV: { project: enums.gcp.projects.sundayaDev },
-    STAGE: { project: enums.gcp.projects.sundayaStage },
-    TEST: { project: enums.gcp.projects.sundayaTest },
-    PROD: { project: enums.gcp.projects.sundayaProd }
-}
-
-// stackdriver client configuration options
-const _STACKDRIVER = {
-    DEV: {
-        logging: { logName: 'monitoring_dev', resourceType: 'gce_instance' },           // cloud run resourceType is "cloud_run_revision", for GCE VM Instance it is ''gce_instance' logName appears in logs as jsonPayload.logName: "projects/sundaya/logs/monitoring"  the format is "projects/[PROJECT_ID]/logs/[LOG_ID]". 
-        errors: { reportMode: 'always', logLevel: 5 },                                  // 'production' (default), 'always', or 'never' - 'production' (default), 'always', 'never' - production will not log unless NODE-ENV=production. Specifies when errors are reported to the Error Reporting Console. // 2 (warnings). 0 (no logs) 5 (all logs)      
-        trace: {
-            samplingRate: 500, enabled: true, flushDelaySeconds: 1,                     // enabled=false to turn OFF tracing. samplingRate 500 means sample 1 trace every half-second, 5 means at most 1 every 200 ms. flushDelaySeconds = seconds to buffer traces before publishing to Stackdriver, keep short to allow cloud run to async trace immedatily after sync run
-            ignoreUrls: [/^\/static/], ignoreMethods: ['OPTIONS', 'PUT']                // ignore /static path, ignore requests with OPTIONS & PUT methods (case-insensitive)
-        }
-    },
-    TEST: {
-        logging: { logName: 'monitoring_test', resourceType: 'gce_instance' },
-        errors: { reportMode: 'always', logLevel: 5 },
-        trace: {
-            samplingRate: 500, enabled: true, flushDelaySeconds: 1,
-            ignoreUrls: [/^\/static/], ignoreMethods: ['OPTIONS', 'PUT']
-        }
-    },
-    PROD: {
-        logging: { logName: 'monitoring_prod', resourceType: 'gce_instance' },
-        errors: { reportMode: 'always', logLevel: 5 },
-        trace: {
-            samplingRate: 500, enabled: true, flushDelaySeconds: 1,
-            ignoreUrls: [/^\/static/], ignoreMethods: ['OPTIONS', 'PUT']
-        }
-    }
-}
-
+// these configurations are shared across all environments
 const _SHARED = {
     MESSAGEBROKER: {
         topics: {                                                           // kafka / pubsub topics for all environments 
@@ -154,8 +30,7 @@ const _SHARED = {
         subscriptions: {                                                    // for kafka these are groupids 
             monitoring: { pms: 'sub-monitoring.pms', mppt: 'sub-monitoring.mppt', inverter: 'sub-monitoring.inverter' },
             system: { feature: 'sub-system.feature' }
-        },
-
+        }
     },
     DATAWAREHOUSE: {                                                                // bq datasets for all environments 
         datasets: { monitoring: 'monitoring' },
@@ -202,13 +77,111 @@ const _SHARED = {
         send: {
             timeout: 30000                                                      // time to await a response in ms
         }
+    },
+    API: {
+        host: 'api.dev.sundaya.monitored.equipment',
+        scheme: 'https',
+        versions: {
+            supported: '0.2 0.3',
+            current: '0.3.12.22'
+        }
+    },
+    STACKDRIVER: {
+        logging: { logName: 'monitoring_prod', resourceType: 'gce_instance' },  // cloud run resourceType is "cloud_run_revision", for GCE VM Instance it is ''gce_instance' logName appears in logs as jsonPayload.logName: "projects/sundaya/logs/monitoring"  the format is "projects/[PROJECT_ID]/logs/[LOG_ID]". 
+        errors: { reportMode: 'always', logLevel: 5 },                          // 'production' (default), 'always', or 'never' - 'production' (default), 'always', 'never' - production will not log unless NODE-ENV=production. Specifies when errors are reported to the Error Reporting Console. // 2 (warnings). 0 (no logs) 5 (all logs)      
+        trace: {
+            samplingRate: 500, enabled: true, flushDelaySeconds: 1,             // enabled=false to turn OFF tracing. samplingRate 500 means sample 1 trace every half-second, 5 means at most 1 every 200 ms. flushDelaySeconds = seconds to buffer traces before publishing to Stackdriver, keep short to allow cloud run to async trace immedatily after sync run
+            ignoreUrls: [/^\/static/], ignoreMethods: ['OPTIONS', 'PUT']        // ignore /static path, ignore requests with OPTIONS & PUT methods (case-insensitive)
+        }
     }
 }
 
 
+// API host and versions for dev, prod, and test            version = major.minor[.build[.revision]]   ..Odd-numbers for development even for stable
+const _API = {
+    LOCAL: { ..._SHARED.API, host: '192.168.1.108:8081', scheme: 'http', versions: { supported: '0.2 0.3', current: '0.3.14.22' } },
+    DEV: { ..._SHARED.API, host: 'api.dev.sundaya.monitored.equipment', versions: { supported: '0.2 0.3', current: '0.3.14.22' } },
+    STAGE: { ..._SHARED.API, host: 'api.stage.sundaya.monitored.equipment' },
+    TEST: { ..._SHARED.API, host: 'api.test.sundaya.monitored.equipment' },
+    PROD: { ..._SHARED.API, host: 'api.sundaya.monitored.equipment' }
+}
+
+// feature toggles - a feature is 'on' if it is present in the list    
+const _FEATURES = {
+    DEV: {
+        release: [enums.features.release.none],
+        operational: [enums.features.operational.logging, enums.features.operational.validation],
+        experiment: [enums.features.experiment.none],
+        permission: [enums.features.permission.none]
+    },
+    TEST: {
+        release: [enums.features.release.none],
+        operational: [enums.features.operational.logging, enums.features.operational.validation],
+        experiment: [enums.features.experiment.none],
+        permission: [enums.features.permission.none]
+    },
+    PROD: {
+        release: [enums.features.release.none],
+        operational: [enums.features.operational.logging, enums.features.operational.validation],
+        experiment: [enums.features.experiment.none],
+        permission: [enums.features.permission.none]
+    }
+}
+
+
+// logging configurations - statements, verbosity, and appenders, for each environment
+const _LOGGING = {
+    DEV: {
+        statements: [
+            enums.logging.statements.messaging, enums.logging.statements.data,
+            enums.logging.statements.exception, enums.logging.statements.error, enums.logging.statements.trace],
+        verbosity: [enums.logging.verbosity.debug],
+        appenders: [enums.logging.appenders.stackdriver, enums.logging.appenders.console]
+    },
+    TEST: {
+        statements: [
+            enums.logging.statements.messaging, enums.logging.statements.data,
+            enums.logging.statements.exception, enums.logging.statements.error, enums.logging.statements.trace],
+        verbosity: [enums.logging.verbosity.info],
+        appenders: [enums.logging.appenders.stackdriver]
+    },
+    PROD: {
+        statements: [
+            enums.logging.statements.messaging, enums.logging.statements.data,
+            enums.logging.statements.exception, enums.logging.statements.error, enums.logging.statements.trace],
+        verbosity: [enums.logging.verbosity.info],
+        appenders: [enums.logging.appenders.stackdriver]
+    }
+}
+
+
+const _KAFKA = {
+    LOCAL: { brokers: ['192.168.1.108:9092'] },
+    SINGLE: { brokers: ['kafka-1-vm:9092'] },
+    HA: { brokers: ['kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092'] }               // array of kafka message brokers                       // kafka-1-vm  | 10.140.0.11
+}
+
+
+
+// GCP project configs per environment 
+const _GCP = {
+    DEV: { project: enums.gcp.projects.sundayaDev },
+    STAGE: { project: enums.gcp.projects.sundayaStage },
+    TEST: { project: enums.gcp.projects.sundayaTest },
+    PROD: { project: enums.gcp.projects.sundayaProd }
+}
+
+// stackdriver client configuration options
+const _STACKDRIVER = {
+    DEV: { ..._SHARED.STACKDRIVER, logging: { logName: 'monitoring_dev', resourceType: 'gce_instance' } },
+    TEST: { ..._SHARED.STACKDRIVER, logging: { logName: 'monitoring_test', resourceType: 'gce_instance' } },
+    PROD: { ..._SHARED.STACKDRIVER, logging: { logName: 'monitoring_prod', resourceType: 'gce_instance' } }
+}
+
+
 /* // list of environments  and their configs -----------------------------------------------------------------------------------------------------------------
-    environment definitions - these share fixed configs per environemtn type (PROD, DEV, CLOUD) as defined in above constants, 
-    or the constants can be overridden and defined individually for each environment if needed 
+    environment definitions - these include fixed configs per environemtn type (PROD, DEV, CLOUD) and shared configurations across all  environemnts, 
+    configs may be overridden /defined individually for each environment if needed 
 */
 module.exports.CONFIGS = {
     local: {
