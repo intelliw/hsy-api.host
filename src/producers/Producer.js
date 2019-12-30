@@ -37,7 +37,7 @@ class Producer {
     /** creates and returns a formatted message object 
     * this method is for subtypes to call while extracting data from a request body
     * the returned object contains stringified JSON 
-    * e.g.
+    * e.g. returned message :
     *   { key: 'TEST-01',
     *     value: '{"pms":{"id":"TEST-01"},"data":[{"pack":{"id":"0241","dock":1,"amps":-1.601,"temp":[35,33,34],"cell":{"open":[],"volts":[3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.91]},"fet":{"open":[1,2],"temp":[34.1,32.2]},"status":"0001"},"sys":{"source":"STAGE001"},"time_event":"2019-09-09 08:00:06.0320","time_zone":"+07:00","time_processing":"2019-12-17 04:07:20.7790"}]}' 
     *     headers: ''  
@@ -65,7 +65,7 @@ class Producer {
 
 
     _isKafka() { return env.active.messagebroker.provider == enums.messageBroker.providers.kafka; }
-    _isPubSub() { return env.active.messagebroker.provider == enums.messageBroker.providers.pubSub; }
+    _isPubSub() { return env.active.messagebroker.provider == enums.messageBroker.providers.pubsub; }
 
 
 }

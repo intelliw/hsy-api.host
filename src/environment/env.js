@@ -29,10 +29,11 @@ const _SHARED = {
         },
         subscriptions: {                                                    // for kafka these are groupids 
             monitoring: { pms: 'sub-monitoring.pms', mppt: 'sub-monitoring.mppt', inverter: 'sub-monitoring.inverter' },
-            system: { feature: 'sub-system.feature' }
+            system: { feature: 'sub-system.feature' },
+            dataset: { pms: 'sub-monitoring.pms.dataset', mppt: 'sub-monitoring.mppt.dataset', inverter: 'sub-monitoring.inverter.dataset' }
         }
     },
-    DATAWAREHOUSE: {                                                                // bq datasets for all environments 
+    DATAWAREHOUSE: {                                                            // bq datasets for all environments 
         datasets: { monitoring: 'monitoring' },
         tables: { pms: 'pms', mppt: 'mppt', inverter: 'inverter' }
     },
@@ -42,7 +43,7 @@ const _SHARED = {
             maxMilliseconds: 10000
         }                                                                       // max number of millisecs to wait for MAX_MESSAGES_PER_BATCH before client lib sends all messages to the topic 
     },
-    KAFKAJS: {                                                                 // kafkajs client configuration options
+    KAFKAJS: {                                                                  // kafkajs client configuration options
         consumer: {
             clientId: `consumer.${utils.randomIntegerString(1, 9999)}`,         // unique client id for this instance, created at startup - preferred convention = <api path>.<api path>
             consumeFromBeginning: true,
@@ -185,13 +186,13 @@ const _STACKDRIVER = {
 */
 module.exports.CONFIGS = {
     local: {
-        messagebroker: { provider: enums.messageBroker.providers.kafka, ..._SHARED.MESSAGEBROKER },
+        messagebroker: { ..._SHARED.MESSAGEBROKER, provider: enums.messageBroker.providers.pubsub },
         kafka: _KAFKA.LOCAL, pubsub: _SHARED.PUBSUB, kafkajs: _SHARED.KAFKAJS, datawarehouse: _SHARED.DATAWAREHOUSE,
         api: _API.LOCAL, gcp: _GCP.DEV,
         features: _FEATURES.DEV, logging: _LOGGING.DEV, stackdriver: _STACKDRIVER.DEV
     },
     devcloud: {                                                                 // single node kafka, or Kafka Std - 1 master, N workers
-        messagebroker: { provider: enums.messageBroker.providers.kafka, ..._SHARED.MESSAGEBROKER },
+        messagebroker: { ..._SHARED.MESSAGEBROKER, provider: enums.messageBroker.providers.kafka },
         kafka: _KAFKA.SINGLE, pubsub: _SHARED.PUBSUB, kafkajs: _SHARED.KAFKAJS, datawarehouse: _SHARED.DATAWAREHOUSE,
         api: _API.DEV, gcp: _GCP.DEV,
         features: _FEATURES.DEV, logging: _LOGGING.DEV, stackdriver: _STACKDRIVER.DEV
@@ -203,13 +204,13 @@ module.exports.CONFIGS = {
         features: _FEATURES.DEV, logging: _LOGGING.DEV, stackdriver: _STACKDRIVER.DEV
     },
     testcloud: {                                                                // single node kafka, or Kafka Std - 1 master, N workers
-        messagebroker: { provider: enums.messageBroker.providers.kafka, ..._SHARED.MESSAGEBROKER },
+        messagebroker: { ..._SHARED.MESSAGEBROKER, provider: enums.messageBroker.providers.kafka },
         kafka: _KAFKA.SINGLE, pubsub: _SHARED.PUBSUB, kafkajs: _SHARED.KAFKAJS, datawarehouse: _SHARED.DATAWAREHOUSE,
         api: _API.TEST, gcp: _GCP.TEST,
         features: _FEATURES.TEST, logging: _LOGGING.TEST, stackdriver: _STACKDRIVER.TEST
     },
     prodcloud: {                                                                // single node kafka, or Kafka Std - 1 master, N workers
-        messagebroker: { provider: enums.messageBroker.providers.kafka, ..._SHARED.MESSAGEBROKER },
+        messagebroker: { ..._SHARED.MESSAGEBROKER, provider: enums.messageBroker.providers.kafka },
         kafka: _KAFKA.HA, pubsub: _SHARED.PUBSUB, kafkajs: _SHARED.KAFKAJS, datawarehouse: _SHARED.DATAWAREHOUSE,
         api: _API.PROD, gcp: _GCP.PROD,
         features: _FEATURES.PROD, logging: _LOGGING.PROD, stackdriver: _STACKDRIVER.PROD

@@ -9,10 +9,11 @@ const env = require('../environment');
 const enums = require('../environment/enums');
 
 // kafka or pubsub - depending on active configs
-module.exports.ActiveProducer = require(`${env.active.messagebroker.provider == enums.messageBroker.providers.pubSub ? './PubSubProducer' : './KafkaProducer'}`);
+module.exports.ActiveMsgProducer = require(`${env.active.messagebroker.provider == enums.messageBroker.providers.pubsub ? './PubSubProducer' : './KafkaProducer'}`);
 
 module.exports.Producer = require('./Producer');
 module.exports.KafkaProducer = require('./KafkaProducer');
+module.exports.PubSubProducer = require('./PubSubProducer');
 module.exports.Monitoring = require('./Monitoring');
 module.exports.Feature = require('./Feature');
 

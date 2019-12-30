@@ -27,7 +27,7 @@ class PubSubProducer extends Producer {
 
         super(apiPathIdentifier, writeTopic);
 
-        // create a kafka producer
+        // create a pubsub producer
         const pubsub = new PubSub();
 
         // setup instance variables specific to PubSubProducer 
@@ -55,10 +55,10 @@ class PubSubProducer extends Producer {
 
 
         // create microbatching publisher                                                           //note:  miocrobatch settings apply only for large msgObj.messages[] where you call batchPub.publish multiple times. The microbatch prevents client libs from sending messages to pubsub.             
-        const BATCHING = env.active.pubsub.batching;
-        BATCHING.maxMessages = msgObj.messages.length;                                              // number of message to include in a batch before client library sends to topic. If batch size is msobj.messages.length batch will go to server after all are published 
+        const BATCH_OPTIONS = env.active.pubsub.batching;
+        BATCH_OPTIONS.maxMessages = msgObj.messages.length;                                              // number of message to include in a batch before client library sends to topic. If batch size is msobj.messages.length batch will go to server after all are published 
 
-        const batchPub = this.producerObj.topic(this.writeTopic, { batching: BATCHING });
+        const batchPub = this.producerObj.topic(this.writeTopic, { batching: BATCH_OPTIONS });
         
 
         // send each message to the topic - pubsub will batch and send to server after all are published
@@ -67,7 +67,7 @@ class PubSubProducer extends Producer {
                 
                 dataBuffer = Buffer.from(msgObj.messages[i].value);                                                             // value attribute if kafka 
                 dataAttributes = {
-                    key: msgObj.messages[i].key                                                                                 // 
+                    key: msgObj.messages[i].key                                                                                 
                 };
 
                 await batchPub.publish(dataBuffer, dataAttributes);
