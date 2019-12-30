@@ -51,7 +51,7 @@ class PubSubProducer extends Producer {
         let dataBuffer, dataAttributes;
 
         // [start trace] -------------------------------    
-        const sp = log.TRACE.createChildSpan({ name: `${log.enums.methods.kafkaSendToTopic}` });    // 2do  - consumer tracing does not have a root span ..
+        const sp = log.TRACE.createChildSpan({ name: `${log.enums.methods.mbSendToTopic}` });    // 2do  - consumer tracing does not have a root span ..
 
 
         // create microbatching publisher                                                           //note:  miocrobatch settings apply only for large msgObj.messages[] where you call batchPub.publish multiple times. The microbatch prevents client libs from sending messages to pubsub.             
@@ -73,7 +73,7 @@ class PubSubProducer extends Producer {
                 await batchPub.publish(dataBuffer, dataAttributes);
 
             })().then(messageId => log.messaging(this.writeTopic, messageId, msgObj.messages, msgObj.itemCount, sender))         // info = (topic, id, msgqty, itemqty, sender) {;
-                .catch(e => log.error(`${this.apiPathIdentifier} ${log.enums.methods.kafkaSendToTopic} Error [${this.writeTopic}]`, e));
+                .catch(e => log.error(`${this.apiPathIdentifier} ${log.enums.methods.mbSendToTopic} Error [${this.writeTopic}]`, e));
         }
 
 

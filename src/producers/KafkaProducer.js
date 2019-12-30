@@ -50,7 +50,7 @@ class KafkaProducer extends Producer {
     async sendToTopic(msgObj, sender) {
 
         // [start trace] -------------------------------    
-        const sp = log.TRACE.createChildSpan({ name: `${log.enums.methods.kafkaSendToTopic}` });    // 2do  - consumer tracing does not have a root span ..
+        const sp = log.TRACE.createChildSpan({ name: `${log.enums.methods.mbSendToTopic}` });    // 2do  - consumer tracing does not have a root span ..
 
 
         // send the message to the topic
@@ -63,7 +63,7 @@ class KafkaProducer extends Producer {
             }))
             .then(r => log.messaging(this.writeTopic, `${r[0].baseOffset}-${parseInt(r[0].baseOffset) + (msgObj.messages.length - 1)}`, msgObj.messages, msgObj.itemCount, sender))         // info = (topic, id, msgqty, itemqty, sender) {
             .then(this.producerObj.disconnect())                                    // disconnect    
-            .catch(e => log.error(`${this.apiPathIdentifier} ${log.enums.methods.kafkaSendToTopic} Error [${this.writeTopic}]`, e));
+            .catch(e => log.error(`${this.apiPathIdentifier} ${log.enums.methods.mbSendToTopic} Error [${this.writeTopic}]`, e));
         
 
         // [end trace] ---------------------------------    
