@@ -51,29 +51,43 @@ class PubSubProducer extends Producer {
         let dataBuffer, dataAttributes;
 
         // [start trace] -------------------------------    
-        const sp = log.TRACE.createChildSpan({ name: `${log.enums.methods.mbSendToTopic}` });    // 2do  - consumer tracing does not have a root span ..
+        const sp = log.TRACE.createChildSpan({ name: `${log.enums.methods.mbSendToTopic}` });           // 2do  - consumer tracing does not have a root span ..
 
 
-        // create microbatching publisher                                                           //note:  miocrobatch settings apply only for large msgObj.messages[] where you call batchPub.publish multiple times. The microbatch prevents client libs from sending messages to pubsub.             
+        // create microbatching publisher                                                               //note:  miocrobatch settings apply only for large msgObj.messages[] where you call batchPub.publish multiple times. The microbatch prevents client libs from sending messages to pubsub.             
         const BATCH_OPTIONS = env.active.pubsub.batching;
-        BATCH_OPTIONS.maxMessages = msgObj.messages.length;                                              // number of message to include in a batch before client library sends to topic. If batch size is msobj.messages.length batch will go to server after all are published 
+        BATCH_OPTIONS.maxMessages = msgObj.messages.length;                                             // number of message to include in a batch before client library sends to topic. If batch size is msobj.messages.length batch will go to server after all are published 
 
         const batchPub = this.producerObj.topic(this.writeTopic, { batching: BATCH_OPTIONS });
-        
+        let messageIds = [];
 
         // send each message to the topic - pubsub will batch and send to server after all are published
         for (let i = 0; i < msgObj.messages.length; i++) {
+
             (async () => {
-                
-                dataBuffer = Buffer.from(msgObj.messages[i].value);                                                             // value attribute if kafka 
+
+                dataBuffer = Buffer.from(msgObj.messages[i].value);                                             // value attribute if kafka 
                 dataAttributes = {
-                    key: msgObj.messages[i].key                                                                                 
+                    key: msgObj.messages[i].key
                 };
 
-                await batchPub.publish(dataBuffer, dataAttributes);
+                // publish message 
+                await batchPub.publish(dataBuffer, dataAttributes, (e, messageId) => {
+                    // log errors
+                    if (e) {
+                        log.error(`${this.apiPathIdentifier} ${log.enums.methods.mbSendToTopic} Error [${this.writeTopic}]`, e);
 
-            })().then(messageId => log.messaging(this.writeTopic, messageId, msgObj.messages, msgObj.itemCount, sender))         // info = (topic, id, msgqty, itemqty, sender) {;
-                .catch(e => log.error(`${this.apiPathIdentifier} ${log.enums.methods.mbSendToTopic} Error [${this.writeTopic}]`, e));
+                    // log messaging once only, after all messages in this loop have been published 
+                    } else {
+                        messageIds.push(messageId);
+                        if (i == (msgObj.messages.length - 1)) {
+                            log.messaging(this.writeTopic, messageIds, msgObj.messages, msgObj.itemCount, sender)     // info = (topic, id, msgqty, itemqty, sender) {;
+                        };
+                    };
+
+                });
+
+            })().catch(e => log.error(`${this.apiPathIdentifier} ${log.enums.methods.mbSendToTopic} Error (async) [${this.writeTopic}]`, e));
         }
 
 
