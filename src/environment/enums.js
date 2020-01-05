@@ -84,8 +84,8 @@ module.exports.features = {
     release: { none: "none" },
     operational: {
         none: "none",
-        logging: 'logging',                             // logging reconfiguration feature
-        validation: 'validation'                        // whether or not to to perform in-depth input validation for post requests
+        logging: "logging",                             // logging reconfiguration feature
+        validation: "validation"                        // whether or not to to perform in-depth input validation for post requests
     },
     experiment: { none: "none" },
     permission: { none: "none" }
