@@ -77,7 +77,7 @@ class PubSubProducer extends Producer {
                     if (e) {
                         log.error(`${this.apiPathIdentifier} ${log.enums.methods.mbSendToTopic} Error [${this.writeTopic}]`, e);
 
-                    // log messaging once only, after all messages in this loop have been published 
+                    // log messaging once only, after all messages in this batch/loop have been published 
                     } else {
                         messageIds.push(messageId);
                         if (i == (msgObj.messages.length - 1)) {

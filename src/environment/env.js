@@ -93,11 +93,11 @@ const _SHARED = {
         }
     },
     STACKDRIVER: {
-        logging: { logName: 'monitoring_prod', resourceType: 'gce_instance' },  // use 'generic_task' (not tested) for microservices. cloud run resourceType is "cloud_run_revision", for GCE VM Instance it is ''gce_instance' logName appears in logs as jsonPayload.logName: "projects/sundaya/logs/monitoring"  the format is "projects/[PROJECT_ID]/logs/[LOG_ID]". 
-        errors: { reportMode: 'always', logLevel: 5 },                          // 'production' (default), 'always', or 'never' - 'production' (default), 'always', 'never' - production will not log unless NODE-ENV=production. Specifies when errors are reported to the Error Reporting Console. // 2 (warnings). 0 (no logs) 5 (all logs)      
+        logging: { logName: "monitoring_prod", resourceType: "gce_instance" },  // use 'generic_task' (not tested) for microservices. cloud run resourceType is "cloud_run_revision", for GCE VM Instance it is ''gce_instance' logName appears in logs as jsonPayload.logName: "projects/sundaya/logs/monitoring"  the format is "projects/[PROJECT_ID]/logs/[LOG_ID]". 
+        errors: { reportMode: "always", logLevel: 5 },                          // 'production' (default), 'always', or 'never' - production will not log unless NODE-ENV=production. `logLevel' specifies when errors are reported to the Error Reporting Console. // 2 (warnings). 0 (no logs) 5 (all logs) 
         trace: {
             samplingRate: 500, enabled: true, flushDelaySeconds: 1,             // enabled=false to turn OFF tracing. samplingRate 500 means sample 1 trace every half-second, 5 means at most 1 every 200 ms. flushDelaySeconds = seconds to buffer traces before publishing to Stackdriver, keep short to allow cloud run to async trace immedatily after sync run
-            ignoreUrls: [/^\/static/], ignoreMethods: ['OPTIONS', 'PUT']        // ignore /static path, ignore requests with OPTIONS & PUT methods (case-insensitive)
+            ignoreUrls: [/^\/static/], ignoreMethods: ["OPTIONS", "PUT"]        // ignoreUrls is configured to ignore /static path, ignoreMethods is configured to ignore requests with OPTIONS & PUT methods (case-insensitive)
         }
     }
 }

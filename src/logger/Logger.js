@@ -100,12 +100,12 @@ class Logger {
                 requestStatus: 'Request',
                 responseStatus: 'Response',
                 configChange: 'Configs',
-                watchVar: 'Variable',                                                // use for watch variables - this can be combined with an release or experiment feature, to watch a variable in a new feature
-                watchEnv: 'Environment',                                             // use to inspect environment configurations
+                watchVar: 'Variable',                                               // use for watch variables - this can be combined with an release or experiment feature, to watch a variable in a new feature
+                watchEnv: 'Environment',                                            // use to inspect environment configurations
                 unexpected: 'Unexpected'
             },
-            methods: {                                                               // methods used in trace agent child spans, and trace statements
-                mbSendToTopic: 'messageBroker: sendToTopic',                         // message broker can be kafka or pubsub   
+            methods: {                                                              // methods used in trace agent child spans, and trace statements
+                mbSendToTopic: 'mb: sendToTopic',                                   // message broker can be kafka or pubsub   
                 bqInsertRows: 'bq: insertRows',
                 energyExecuteGet: 'energy: executeGet',
             }
