@@ -1,14 +1,18 @@
 # Logger Framework 
-_Logger decouples parts of the logging proceess and makes these configurable and extensible_
-_Logger can be configured differently for each environment_
+_Logger provides a wrapper over Stackdriver's multiple APIs (`Logging`, `Error Reporting`, `Tracing`)_
+
+_it decouples constituent parts of the logging process (output (`appenders`), content (`verbosity`), coverage (`statements`) and makes these configurable and extensible_
+
+_Logger can be configured differently in each environment_
 
 ## configurables
-_Logger can be configured and extended through these dependencies_
+_Logger can be configured through these instruments_
 
 `environment`
     `enums.js`   -   enumerations for   `logging`, `features`
-    `env.js`     -   configuration for  `logging`, `features`, `stackdriver` 
+    `env.js`     -   configurations per environment for  `logging`, `features`, `stackdriver` 
 
+_these configuratioons are described below_ 
 
 ### env.LOGGING configuration
 ```json
@@ -110,7 +114,7 @@ _enumerations for logging and error reporting configuration_
         }
     }
 ```
-__statements__  determines which log statements will be included in log output 
+__statements__  determines which log statements will produce log output 
 __verbosity__   log levels for error reporting and logged events
 __appenders__   output options for logging and error reporting   
 
