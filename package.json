@@ -17,6 +17,7 @@
     "test": "repo-tools test run --cmd ava -- -T 20s --verbose test/*.test.js"
   },
   "dependencies": {
+    "@google-cloud/bigtable": "^2.3.0",
     "@google-cloud/error-reporting": "^1.1.2",
     "@google-cloud/logging": "^5.4.1",
     "@google-cloud/pubsub": "^1.1.6",

@@ -223,7 +223,7 @@ function setChartTitles(pane) {
 }
 
 /* get columns and colours based on hsy filters. the returned filter object has an array of columns and colours 
-   order of elements in allColumns and allColours are: vAxis + harvest(0), yield(1), storein/out(2,3), buyout/in(4,5) 
+   order of elements in allColumns and allColours are: vAxis + harvest(0), yield(1), storein/out(2,3), gridout/in(4,5) 
 */
 function getActiveHsyFilters(allColumns, allColours) {
     
