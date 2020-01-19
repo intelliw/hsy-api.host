@@ -243,14 +243,14 @@ function getActiveHsyFilters(allColumns, allColours) {
     // add columns and colours depending on which hsy buttons are active and live    
 
     // harvest
-    if ($('.hsy-filter-btn.btn-success.live').hasClass('active')) {              
+    if ($('.hsy-filter-btn.hsy-harvest.live').hasClass('active')) {              
         numFilters++;
         filterObj.columns.push(allColumns[HARVEST]);
         filterObj.colours.push(allColours[HARVEST]);
     }
     
     // yield
-    if ($('.hsy-filter-btn.btn-danger.live').hasClass('active')) {              
+    if ($('.hsy-filter-btn.hsy-yield.live').hasClass('active')) {              
         numFilters++;
         filterObj.columns.push(allColumns[YIELD]);
         filterObj.colours.push(allColours[YIELD]);
