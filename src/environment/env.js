@@ -105,7 +105,7 @@ const _SHARED = {
 
 // API host and versions for dev, prod, and test            version = major.minor[.build[.revision]]   ..Odd-numbers for development even for stable
 const _API = {
-    LOCAL: { ..._SHARED.API, host: '192.168.1.108:8081', scheme: 'http', versions: { supported: '0.2 0.3', current: '0.3.14.22' } },
+    LOCAL: { ..._SHARED.API, host: '192.168.1.113:8081', scheme: 'http', versions: { supported: '0.2 0.3', current: '0.3.14.22' } },
     DEV: { ..._SHARED.API, host: 'api.dev.sundaya.monitored.equipment', versions: { supported: '0.2 0.3', current: '0.3.14.22' } },
     STAGE: { ..._SHARED.API, host: 'api.stage.sundaya.monitored.equipment' },
     TEST: { ..._SHARED.API, host: 'api.test.sundaya.monitored.equipment' },
@@ -162,7 +162,7 @@ const _LOGGING = {
 
 
 const _KAFKA = {
-    LOCAL: { brokers: ['192.168.1.108:9092'] },
+    LOCAL: { brokers: ['192.168.1.113:9092'] },
     SINGLE: { brokers: ['kafka-1-vm:9092'] },
     HA: { brokers: ['kafka-c-1-w-0:9092', 'kafka-c-1-w-1:9092'] }               // array of kafka message brokers                       // kafka-1-vm  | 10.140.0.11
 }
