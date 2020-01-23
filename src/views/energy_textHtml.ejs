@@ -441,8 +441,7 @@
             const BUY_CHILD_COLUMN = 9; 
             const STORE_GRANDCHILD_COLUMN = 5; 
             const BUY_GRANDCHILD_COLUMN = 8; 
-            const CHART_COLORS = ['#28a745', '58c840', '#007bff', '#007bff', '#000000', '#404040'];        // harvest, yield, store.in, store.out, buy, sell. for red yield #FF0000, , dark green #58c840 #218838, dark blue #0069d9 SteelBlue, light green 'YellowGreen'
-
+            const CHART_COLORS = ['#28a745', '58c840', '#007bff', '#007bff', '#000000', '#404040'];        // harvest, yield, store.in, store.out, buy, sell. for red yield #FF0000, , dark green #58c840 #218838, light blue '#209bff', dark blue #0069d9 SteelBlue, light green 'YellowGreen'
         <% } else if (isStore) { %> 
             const AGGDATA_CHART_COLUMNS = [1, 2];     
             const RAWDATA_HSY_COLUMNS = [2, 3, 4];   
@@ -461,7 +460,7 @@
             const BUY_CHILD_COLUMN = 4; 
             const STORE_GRANDCHILD_COLUMN = undefined; 
             const BUY_GRANDCHILD_COLUMN = 3; 
-            const CHART_COLORS = ['#000000', '#000000'];
+            const CHART_COLORS = ['#000000', '#404040'];
 
         <% } else { %>
             const AGGDATA_CHART_COLUMNS = [1];     
@@ -474,7 +473,7 @@
             <% if (isHarvest) { %> 
                 const CHART_COLORS = ['#28a745'];                                                           // harvest. 
             <% } else if (isYield) { %> 
-                const CHART_COLORS = ['#58c840'];                                                           // for red yield #FF0000, dark green #58c840 #218838
+                const CHART_COLORS = ['#58c840'];                                                           // for red yield #FF0000, dark green #58c840 #218838  'YellowGreen'
             <% } %>    
         <% } %>
 
