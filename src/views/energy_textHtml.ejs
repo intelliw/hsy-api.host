@@ -414,7 +414,7 @@
 
     <script type="text/javascript">
 
-        const API_BASE_URL = '<%= API_BASE_URL %>';     // e.g.  'http://api.sundaya.monitored.equipment'
+        const API_BASE_URL = '<%= API_BASE_URL %>';                     // e.g.  'http://api.sundaya.monitored.equipment'
 
         const ENERGY_PARAM = '<%= params_energy %>';
         const CHILD_PERIOD = '<%= utils.capitalise(child_period) %>';
@@ -432,16 +432,22 @@
 
         // draws the active pane
         function redrawActivePane(pane) {
-            
+            const COLOR_HARVEST = '#28a745';                            // bootstrap success= #28a745, 
+            const COLOR_YIELD = '#58c840';                              // bootstrap danger= #dc3545 hsy= #58c840 #218838    red= #FF0000. green #58c840 #78c840 'YellowGreen'  
+            const COLOR_STORE_IN = '#0780ff';                           // bootstrap info= #17a2b8 hsy= #0780ff
+            const COLOR_STORE_OUT = '#007bff';                          // bootstrap primary= #007bff 
+            const COLOR_BUY = '#000000';
+            const COLOR_SELL = '#343a40';                               // dark #404040
+
         <% if (isHsy) {  %>  
-            const AGGDATA_CHART_COLUMNS = [1, 2, 3, 4, 6, 7];    // if hsy chart 0 and all columns except (store=5) and (buy=8) deficit columns, if store/buy = 0, 1 ,2, 3,  others = 0, 1) // chart order is harvest, yield, storein/out/store, sell/in/buy 
-            const RAWDATA_HSY_COLUMNS = [2, 3, 4, 5, 6, 7, 8, 9];   // 8 cols for hsy,  '2,3,4' if store or buy, otherwise '2'
-            const AGGDATA_HSY_COLUMNS = [1, 2, 3, 4, 5, 6, 7, 8];   // 8 cols for hsy,  '1,2,3' if store or buy, otherwise '1'
+            const AGGDATA_CHART_COLUMNS = [1, 2, 3, 4, 6, 7];           // if hsy chart 0 and all columns except (store=5) and (buy=8) deficit columns, if store/buy = 0, 1 ,2, 3,  others = 0, 1) // chart order is harvest, yield, storein/out/store, sell/in/buy 
+            const RAWDATA_HSY_COLUMNS = [2, 3, 4, 5, 6, 7, 8, 9];       // 8 cols for hsy,  '2,3,4' if store or buy, otherwise '2'
+            const AGGDATA_HSY_COLUMNS = [1, 2, 3, 4, 5, 6, 7, 8];       // 8 cols for hsy,  '1,2,3' if store or buy, otherwise '1'
             const STORE_CHILD_COLUMN = 6;  
             const BUY_CHILD_COLUMN = 9; 
             const STORE_GRANDCHILD_COLUMN = 5; 
             const BUY_GRANDCHILD_COLUMN = 8; 
-            const CHART_COLORS = ['#28a745', '58c840', '#007bff', '#007bff', '#000000', '#404040'];        // harvest, yield, store.in, store.out, buy, sell. for red yield #FF0000, , dark green #58c840 #218838, light blue '#209bff', dark blue #0069d9 SteelBlue, light green 'YellowGreen'
+            const CHART_COLORS = [COLOR_HARVEST, COLOR_YIELD, COLOR_STORE_IN, COLOR_STORE_OUT, COLOR_BUY, COLOR_SELL];        
         <% } else if (isStore) { %> 
             const AGGDATA_CHART_COLUMNS = [1, 2];     
             const RAWDATA_HSY_COLUMNS = [2, 3, 4];   
@@ -450,7 +456,7 @@
             const BUY_CHILD_COLUMN = undefined; 
             const STORE_GRANDCHILD_COLUMN = 3;  
             const BUY_GRANDCHILD_COLUMN = undefined; 
-            const CHART_COLORS = ['#007bff', '#007bff'];
+            const CHART_COLORS = [COLOR_STORE_IN, COLOR_STORE_OUT];
 
         <% } else if (isBuy) { %> 
             const AGGDATA_CHART_COLUMNS = [1, 2];     
@@ -460,7 +466,7 @@
             const BUY_CHILD_COLUMN = 4; 
             const STORE_GRANDCHILD_COLUMN = undefined; 
             const BUY_GRANDCHILD_COLUMN = 3; 
-            const CHART_COLORS = ['#000000', '#404040'];
+            const CHART_COLORS = [COLOR_BUY, COLOR_SELL];
 
         <% } else { %>
             const AGGDATA_CHART_COLUMNS = [1];     
@@ -471,9 +477,9 @@
             const STORE_GRANDCHILD_COLUMN = undefined; 
             const BUY_GRANDCHILD_COLUMN = undefined; 
             <% if (isHarvest) { %> 
-                const CHART_COLORS = ['#28a745'];                                                           // harvest. 
+                const CHART_COLORS = [COLOR_HARVEST];                                                         
             <% } else if (isYield) { %> 
-                const CHART_COLORS = ['#58c840'];                                                           // for red yield #FF0000, dark green #58c840 #218838  'YellowGreen'
+                const CHART_COLORS = [COLOR_YIELD];                                                           
             <% } %>    
         <% } %>
 

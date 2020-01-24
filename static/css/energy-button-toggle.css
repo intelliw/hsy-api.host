@@ -1,3 +1,7 @@
+.hsy-yield {
+  background: #58c840;
+  border-color: #20c997;
+}
 .btn-toggle {
   margin: 0 4rem;
   padding: 0;
@@ -409,7 +413,6 @@
 }
 
 
-
 .sundaya-font-row {
   font-family: 'Open Sans', sans-serif;
   font-size: 0.70rem;
@@ -431,7 +434,3 @@
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-.hsy-yield {
-  background: #58c840;
-  border-color: #58c840;
-}
