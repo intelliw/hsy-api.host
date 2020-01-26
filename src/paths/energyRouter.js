@@ -181,7 +181,7 @@ function executeGet(params) {
       grandchild = child.getChild();
     }
 
-    if (grandchild) {                                                             // second for example does not have a grandchild
+    if (grandchild) {    
       grandchild.addDescription();
       links.addLink(grandchild, enums.linkRender.none, grandchild.description);   // create grandchild with a period description
     }

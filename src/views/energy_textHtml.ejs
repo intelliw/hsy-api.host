@@ -448,6 +448,7 @@
             const STORE_GRANDCHILD_COLUMN = 5; 
             const BUY_GRANDCHILD_COLUMN = 8; 
             const CHART_COLORS = [COLOR_HARVEST, COLOR_YIELD, COLOR_STORE_IN, COLOR_STORE_OUT, COLOR_BUY, COLOR_SELL];        
+
         <% } else if (isStore) { %> 
             const AGGDATA_CHART_COLUMNS = [1, 2];     
             const RAWDATA_HSY_COLUMNS = [2, 3, 4];   
@@ -570,8 +571,8 @@
                 { id: '4', type: 'number', label: '<%= utils.capitalise(enums.energyData.storein.replace('.', ' '), false) %>' },   // 'Store in 
                 { id: '5', type: 'number', label: '<%= utils.capitalise(enums.energyData.storeout.replace('.', ' '), false) %>' },  // 'Store out'
                 { id: '6', type: 'number', label: '(<%= utils.capitalise(enums.params.energy.store, false) %>)' },                  // '(Store)'
-                { id: '7', type: 'number', label: '<%= utils.capitalise(enums.energyData.gridout, false) %>' },      // 'Grid out = Buy'            
-                { id: '8', type: 'number', label: '<%= utils.capitalise(enums.energyData.gridin, false) %>' },      // 'Grid in = Sell'
+                { id: '7', type: 'number', label: '<%= utils.capitalise(enums.energyData.gridout, false) %>' },                     // 'Grid out = Buy'            
+                { id: '8', type: 'number', label: '<%= utils.capitalise(enums.energyData.gridin, false) %>' },                      // 'Grid in = Sell'
                 { id: '9', type: 'number', label: '(<%= utils.capitalise(enums.params.energy.buy, false) %>)' }                     // '(Buy)'
             <% } else if (isStore || isBuy ) { %> 
                 { id: '2', type: 'number', label: '<%= utils.capitalise(params_energy) %> in' },

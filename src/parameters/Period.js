@@ -220,7 +220,7 @@ class Period extends Param {
 
         // lookup child period
         let childMap = consts.period.ancestorChild[`${grandparent ? grandparent : ''}${parent}`];
-        let childEnum = childMap ? childMap.c: consts.NONE;
+        let childEnum = childMap ? childMap.c : consts.NONE;
 
         if (childEnum) {                                                                    // e.g. instant has no child    
 
@@ -362,7 +362,7 @@ function periodEpoch(periodEnum, epoch, format, duration) {
             epoch = moment.utc(epoch).set('minute', 0).format(format);                              // set minute, second, millisecond to zero
             epoch = moment.utc(epoch).set('second', 0).format(format);
             epoch = moment.utc(epoch).set('millisecond', 0).format(format);
-        
+
             periodsToSubtract = Math.sign(duration) < 0 ? Math.abs(duration) * TIMEOFDAY_DURATION_HRS : 0;    // subtract zero periods if duration is positive              
             epoch = moment.utc(epoch).subtract(periodsToSubtract, 'hours').startOf('hour').format(format);
             break;
@@ -382,7 +382,7 @@ function periodEpoch(periodEnum, epoch, format, duration) {
             epoch = moment.utc(epoch).startOf('year').format(format);                               // set to January 1st of that year
 
             periodsToSubtract = Math.sign(duration) < 0 ? Math.abs(duration) * FIVEYEAR_DURATION_YRS : 0;    // subtract durations for 5yr                         
-            epoch = moment.utc(epoch).subtract(periodsToSubtract, 'years').startOf('year').format(format);      
+            epoch = moment.utc(epoch).subtract(periodsToSubtract, 'years').startOf('year').format(format);
             break;
 
         // periods with a clear start
@@ -393,7 +393,7 @@ function periodEpoch(periodEnum, epoch, format, duration) {
         case enums.params.period.month:
         case enums.params.period.quarter:
         case enums.params.period.year:
-            
+
             epoch = moment.utc(epoch).subtract(periodsToSubtract, `${periodEnum}s`).startOf(periodEnum).format(format);  // get the start of the period and subtract if durations are negative
             break;
     }
@@ -492,10 +492,14 @@ function parentChildDescription(periodObj) {
             case 'monthday':                                                            // monthday         
 
                 const DEFAULT_START = 1;
+                const MAXDAYS_PER_MONTH = 31;
 
-                let duration = moment.utc(epochInstant).daysInMonth();                  // get the days for this month  
-                let start = descr ? (descr.split(SPACE_DELIMITER).length) + 1 : DEFAULT_START; // get the days in the constant - this should be 28
+                // get number of days in the month - excepot if grandparent is 'quarter' ..monthday duration should default to  31 days  
+                const isGrandparentQuarter = periodObj.grandparent == enums.params.period.quarter;                      // check if grandparent is quarter as monthday does not apply in this case
+                let duration = isGrandparentQuarter ? MAXDAYS_PER_MONTH : moment.utc(epochInstant).daysInMonth();       // get the days for this month (if grandparent is quarter deffault to 31)
 
+                // create the description string
+                let start = descr ? (descr.split(SPACE_DELIMITER).length) + 1 : DEFAULT_START; // get the days in the constant - this should be 28 - start at 29
                 let howMany = (duration - start) + 1;
 
                 descr = utils.createSequence(start, howMany, SPACE_DELIMITER, descr);
