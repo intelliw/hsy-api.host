@@ -9,7 +9,7 @@
     */ 
    %>
                 <!-- Energy -->
-                <li class="nav-item dropdown select-parent">
+                <li class="nav-item dropdown select-parent" data-toggle="tooltip" title="energy">
                     <a class="nav-link dropdown-toggle pl-1" href="javascript:" role="button" data-toggle="dropdown">
                         Energy <span id="navEnergy" class="badge badge-light select-value"><%=params_energy%></span>
                     </a>
@@ -24,7 +24,7 @@
                 </li>
 
                 <!-- Period -->
-                <li class="nav-item dropdown select-parent">
+                <li class="nav-item dropdown select-parent" data-toggle="tooltip" title="period">
                     <a class="nav-link dropdown-toggle pl-1" href="javascript:" role="button" data-toggle="dropdown">
                         Period <span id="navPeriod" class="badge badge-light select-value"><%=params_period%></span>
                     </a>
@@ -188,7 +188,7 @@
 
                         <!-- Duration-->
                         <div class="btn-group btn-group-sm select-parent px-0" role="group" data-toggle="tooltip" title="duration">
-                            <button type="button" class="btn btn-outline-light dropdown-toggle px-1 pl-0"
+                            <button type="button" class="btn btn-outline-light dropdown-toggle pl-0"
                                 data-toggle="dropdown">
                                 <span id="navDuration" class="badge badge-primary select-value"><%=params_duration%></span>
                             </button>
@@ -206,12 +206,12 @@
                     <div class="btn btn-sm px-0 py-0" role="group">
     
                         <!-- 'site' display -->
-                        <button href="javascript:" type="button" class="btn btn-sm btn-outline-light disabled ml-1" data-toggle="tooltip" title="site">
+                        <button href="javascript:" type="button" class="btn btn-sm btn-outline-light disabled px-0 ml-1" data-toggle="tooltip" title="site">
                             <span id="navSite" class="badge badge-primary"><%=params_site%></span>
                         </button>
 
                         <!-- 'Done' button -->
-                        <button type="button" class="btn pl-2" data-toggle="tooltip" data-placement="right" title="submit">
+                        <button type="button" class="btn pl-2" data-toggle="tooltip" data-placement="below" title="submit">
                             <span id="btnDone" class="badge badge-warning" >ok &raquo;</span>
                         </button>
 
