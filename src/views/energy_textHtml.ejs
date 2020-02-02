@@ -277,15 +277,15 @@
                                                         </div>  
 
                                                     <!-- clear selection -->
-                                                    <div class="flex-grow-1 justify-content-start mt-1">    
-                                                        <button type="button" class="chart-selection-reset btn-outline-light btn btn-sm px-0 py-0"
+                                                    <div class="">    
+                                                        <button type="button" class="chart-selection-reset btn-outline-light btn btn-sm px-0 pb-0 pt-1"
                                                             onclick="clearSelection(panelMap[<%= n_cols %>].<%= pane === 'pane-child' ? 'child' : 'grandchild' %>)">
                                                             <i class="material-icons" data-toggle="tooltip" title="clear selection"
                                                                 style="font-size:18px;color:darkgrey;">link_off</i>
                                                         </button>
                                                     </div>
 
-                                                    <div class="">    
+                                                    <div class="justify-content-md-end flex-grow-1 d-flex flex-nowrap pl-2">    
 
                                                         <!-- up -->
                                                         <% if (link_up) { %>
