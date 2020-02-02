@@ -61,7 +61,7 @@ class Period extends Param {
         this.duration = Math.abs(duration);                                                     // duration could be a negative number - store the absolute value in this.duration as it will be applicable to the adjusted epoch returned for the negative duration, from periodEpoch() 
 
         // epoch and end millisecond timestamps                                                 // validates and normalises the epoch and end, for the supplied period and duration
-        epoch = blendEpoch(epoch);                                                              // blend and normalise the epoch, if not valid the current date and time is returned                    
+        epoch = blendEpoch(epoch);                                                              // blend and normalise the epoch, if not valid the current date and time is returned
         epoch = periodEpoch(reqPeriod, epoch, MILLISECOND_FORMAT, duration);                    // normalise the epoch to the exact start of the period. If duration is negative the returned epoch will be adjusted by subtracting periods for -n durations 
         //..
         this.epochInstant = epoch;
@@ -73,7 +73,7 @@ class Period extends Param {
 
         // hypermedia properties 
         this.rel = enums.linkRelations.self;                                                    // default is 'self' this is overwritten for parent, child, etc after construction
-        this.prompt = periodPrompt(this.epochInstant, this.endInstant, reqPeriod);
+        this.prompt = periodPrompt(this.epochInstant, this.endInstant, reqPeriod, duration);
 
         this.title = periodTitle(this.epochInstant, this.endInstant, reqPeriod);                // "04/02/2019 - 10/02/2019";
         this.description = consts.NONE;                                                         // by default label is undefined except in a collection and overwritten by get Child() after construction
@@ -534,13 +534,15 @@ function periodTitle(epoch, end, periodEnum) {
 }
 
 // returns a formatted string for the prompt property (e.g. "Week 13 2019" or "Week 13 2019 - Week 13 2019" if duration is > 1 )
-function periodPrompt(epoch, end, periodEnum) {
+function periodPrompt(epoch, end, periodEnum, duration) {
 
     let epochPromptStr = datetimePromptStr(epoch, periodEnum);
     let endPromptStr = datetimePromptStr(end, periodEnum);
 
-    // ignore end period for five year
-    let prompt = (epochPromptStr == endPromptStr) ? epochPromptStr : `${epochPromptStr} - ${endPromptStr}`;
+    // suppress end period for five year and week
+    let prompt = (epochPromptStr == endPromptStr) 
+        || (periodEnum == enums.params.period.week && duration == 1)
+        ? epochPromptStr : `${epochPromptStr} - ${endPromptStr}`;
 
     return prompt;                                                                      // return formatted title
 
@@ -625,11 +627,11 @@ function datetimePromptStr(instant, periodEnum) {
         case enums.params.period.quarter:              // 'Q1 2019'
             label = `${selectQuarterLabel(instant)} ${year}`;
             break;
-        case enums.params.period.week:                 // 'Wk 27 2019'
-            label = `Wk ${moment.utc(instant).isoWeek().toString().padStart(2, '0')} ${moment.utc(instant).isoWeekYear()}`;     // pad zers
+        case enums.params.period.week:                 // 'Week of 02/02/2020'
+            label = `Week of ${moment.utc(instant).format(consts.period.datetimeGeneral.week)}`;     
             break;
-        case enums.params.period.hour:                 // 'Hr 2100'
-            label = `Hr ${moment.utc(instant).format('HH')}00`;
+        case enums.params.period.hour:                 // '2100 hrs'
+            label = `${moment.utc(instant).format('HH')}00 hrs`;
             break;
         case enums.params.period.year:                 // '2019'
             label = `${year}`;

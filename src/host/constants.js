@@ -35,6 +35,7 @@ module.exports.period = {
         hour: { 'c': enums.params.period.minute, 'd': '60' },
         timeofday: { 'c': enums.params.period.hour, 'd': '6' },
         day: { 'c': enums.params.period.hour, 'd': '24' },
+        // day: { 'c': enums.params.period.timeofday, 'd': '4' },
         week: { 'c': enums.params.period.day, 'd': '7' },
         // monthday is derived dynamically
         month: { 'c': enums.params.period.day, 'd': this.NONE },
@@ -45,6 +46,7 @@ module.exports.period = {
         hourminute: { 'c': enums.params.period.second, 'd': '60' },
         timeofdayhour: { 'c': enums.params.period.minute, 'd': '60' },
         dayhour: { 'c': enums.params.period.minute, 'd': '60' },
+        //daytimeofday: { 'c': enums.params.period.hour, 'd': '4' },
         weekday: { 'c': enums.params.period.timeofday, 'd': '4' },
         monthday: { 'c': enums.params.period.hour, 'd': '24' },
         // monthday is derived dynamically
