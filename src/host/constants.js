@@ -34,22 +34,22 @@ module.exports.period = {
         minute: { 'c': enums.params.period.second, 'd': '60' },
         hour: { 'c': enums.params.period.minute, 'd': '60' },
         timeofday: { 'c': enums.params.period.hour, 'd': '6' },
-        day: { 'c': enums.params.period.hour, 'd': '24' },
-        // day: { 'c': enums.params.period.timeofday, 'd': '4' },
+        day: { 'c': enums.params.period.timeofday, 'd': '4' },
+            // day: { 'c': enums.params.period.hour, 'd': '24' },
         week: { 'c': enums.params.period.day, 'd': '7' },
-        // monthday is derived dynamically
-        month: { 'c': enums.params.period.day, 'd': this.NONE },
+        month: { 'c': enums.params.period.week, 'd': '4' },
+            // month: { 'c': enums.params.period.day, 'd': this.NONE },         // monthday is derived dynamically
         quarter: { 'c': enums.params.period.month, 'd': '3' },
         year: { 'c': enums.params.period.quarter, 'd': '4' },
         fiveyear: { 'c': enums.params.period.year, 'd': '5' },
         minutesecond: { 'c': enums.params.period.instant, 'd': '1000' },
         hourminute: { 'c': enums.params.period.second, 'd': '60' },
         timeofdayhour: { 'c': enums.params.period.minute, 'd': '60' },
-        dayhour: { 'c': enums.params.period.minute, 'd': '60' },
-        //daytimeofday: { 'c': enums.params.period.hour, 'd': '4' },
+            // dayhour: { 'c': enums.params.period.minute, 'd': '60' },
+        daytimeofday: { 'c': enums.params.period.hour, 'd': '4' },
         weekday: { 'c': enums.params.period.timeofday, 'd': '4' },
-        monthday: { 'c': enums.params.period.hour, 'd': '24' },
-        // monthday is derived dynamically
+        monthweek: { 'c': enums.params.period.day, 'd': '7' },
+            // monthday: { 'c': enums.params.period.hour, 'd': '24' },                 // monthday is derived dynamically
         quartermonth: { 'c': enums.params.period.day, 'd': this.NONE },
         yearquarter: { 'c': enums.params.period.month, 'd': '3' },
         fiveyearyear: { 'c': enums.params.period.quarter, 'd': '4' }
@@ -92,6 +92,7 @@ module.exports.period = {
         dayhour: '00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23',
         daytimeofday: 'Night Morning Afternoon Evening',
         weekday: 'Mon Tue Wed Thu Fri Sat Sun',
+        monthweek: '01 02 03 04',
         // monthday is appended dynamically to the dates for Feb (the shortest month) for better performance
         monthday: '01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28',
         quartermonth: { 'Q1': 'Jan Feb Mar', 'Q2': 'Apr May Jun', 'Q3': 'Jul Aug Sep', 'Q4': 'Oct Nov Dec' },

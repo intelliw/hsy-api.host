@@ -166,6 +166,8 @@ function executeGet(params) {
 
   // get a collection for each period in the duration
   let periods = params.period.getEach();                                          // break up the period duration into individual periods (though typically there is only 1 period) 
+  let duration = periods.length;                                                  // use duration in next/prev links to allow navigation with a similar duration
+
   periods.forEach(period => {
 
     // create the collection links  
@@ -183,12 +185,12 @@ function executeGet(params) {
 
     if (grandchild) {    
       grandchild.addDescription();
-      links.addLink(grandchild, enums.linkRender.none, grandchild.description);   // create grandchild with a period description
+      links.addLink(grandchild, enums.linkRender.none, grandchild.description);     // create grandchild with a period description
     }
 
     links.addLink(period.getParent(), enums.linkRender.link);
-    links.addLink(period.getNext(), enums.linkRender.link);
-    links.addLink(period.getPrev(), enums.linkRender.link);
+    links.addLink(period.getNext(), enums.linkRender.link, consts.NONE, duration);  // use duration in next/prev links to allow navigation with a similar duration
+    links.addLink(period.getPrev(), enums.linkRender.link, consts.NONE, duration);
 
     items = createItems(params.energy, period, params.site);
 

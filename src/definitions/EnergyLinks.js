@@ -23,25 +23,25 @@ class EnergyLinks extends Links {
         this.href = periodHref(energy, period, site);                                   // this href is used for the whole collection 
         
         // the self link is needed for both collections and items - add others after construction if needed e.g. for collections
-        this.addLink(period, enums.linkRender.link, description);                     // self - is rendered, and a description if requested eg hsy 
+        this.addLink(period, enums.linkRender.link, description);                       // self - is rendered, and a description if requested eg hsy 
         
     }
 
-    // adds a link if the period exist
-    addLink(period, render, description) {
+    // adds a link if the period exist. duration is optional, if present use it instead of the period's duration
+    addLink(period, render, description, duration) {
         
         if (period) {
-            let href = periodHref(this.energy, period, this.site);
+            let href = periodHref(this.energy, period, this.site, (duration ? duration: period.duration));
             super.add(period.rel, period.context, period.prompt, period.title, description, href, render);
         }
     }
 
 }
 
-// creates href for the energy resource path (
-function periodHref(energy, period, site) {
+// creates href for the energy resource path. 
+function periodHref(energy, period, site, duration) {
 
-    let href = `${env.active.api.scheme}://${env.active.api.host}/energy/${energy.value}/period/${period.value}/${period.epoch}/${period.duration}?site=${site.value}`;
+    let href = `${env.active.api.scheme}://${env.active.api.host}/energy/${energy.value}/period/${period.value}/${period.epoch}/${duration}?site=${site.value}`;
 
     return href;
 

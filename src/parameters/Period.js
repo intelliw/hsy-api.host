@@ -489,7 +489,7 @@ function parentChildDescription(periodObj) {
 
                 break;
 
-            case 'monthday':                                                            // monthday         
+            case 'monthday':                                                            // monthday
 
                 const DEFAULT_START = 1;
                 const MAXDAYS_PER_MONTH = 31;
@@ -627,8 +627,8 @@ function datetimePromptStr(instant, periodEnum) {
         case enums.params.period.quarter:              // 'Q1 2019'
             label = `${selectQuarterLabel(instant)} ${year}`;
             break;
-        case enums.params.period.week:                 // 'Week of 02/02/2020'
-            label = `Week of ${moment.utc(instant).format(consts.period.datetimeGeneral.week)}`;     
+        case enums.params.period.week:                 // 'Week of 02 Feb'
+            label = `Week of ${moment.utc(instant).format('DD MMM YY')}`;     
             break;
         case enums.params.period.hour:                 // '2100 hrs'
             label = `${moment.utc(instant).format('HH')}00 hrs`;

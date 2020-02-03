@@ -130,6 +130,13 @@ $(document).ready(function () {
 
         card.find('.select-collection-panel').collapse('show');    // make panel visible when toggling
 
+        // select label 
+        let lblCh = $(this).find('.lbl-btn-toggle-ch');
+        let lblGch = $(this).find('.lbl-btn-toggle-gch');
+
+        (toggleOn ? lblGch : lblCh).hide().collapse('hide');
+        (toggleOn ? lblCh : lblGch).show().collapse('show');
+        
     });
     
     // child/grandchild pane after shown
