@@ -627,8 +627,8 @@ function datetimePromptStr(instant, periodEnum) {
         case enums.params.period.quarter:              // 'Q1 2019'
             label = `${selectQuarterLabel(instant)} ${year}`;
             break;
-        case enums.params.period.week:                 // 'Week of 02 Feb'
-            label = `Week of ${moment.utc(instant).format('DD MMM YY')}`;     
+        case enums.params.period.week:                 // 'Week of 02/02/20'
+            label = `Week ${moment.utc(instant).format('DD-MM-YYYY')}`;     
             break;
         case enums.params.period.hour:                 // '2100 hrs'
             label = `${moment.utc(instant).format('HH')}00 hrs`;
