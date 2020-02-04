@@ -156,7 +156,7 @@
             <div class="card-header py-2 px-0 d-flex justify-content-md-between">
 
                 <!-- PERIOD n NAV link buttons -->
-                <h2 class="mb-0 ml-3 pl-1">
+                <h2 class="mb-0 ml-3 pl-1 flex-grow-1">
                     
                     <!-- prev -->
                     <button type="button" class="btn btn-sm btn-light border border-secondary rounded-left px-2 py-0 mr-n1" data-toggle="tooltip"
@@ -173,8 +173,8 @@
                     </button>
 
                     <!-- self -->
-                    <span class="btn select-toggle-collection py-0 px-0">
-                        <h3 class="display-5 text-secondary" data-toggle="tooltip" title="<%= utils.capitalise(link_self.name) + ' ' + link_self.title%>">
+                    <span class="btn select-toggle-collection py-0 px-0" style="cursor: pointer;">
+                        <h3 class="display-5 text-secondary" data-toggle="tooltip" title="<%= utils.capitalise(link_self.name) + ' ' + link_self.title %>">
                             <small><%= link_self.prompt %></small>
                         </h3>
                     </span>
@@ -190,6 +190,7 @@
 
                     <% } %>
 
+                    <!-- down -->
                     <% if (bHasChildren) { %>
 
                     <button type="button" class="btn btn-sm btn-light border border-secondary rounded px-2 py-0" data-toggle="tooltip"
@@ -201,9 +202,14 @@
                     <% } %>
 
                 </h2>
-
+                
+                <!-- child label -->
+                <div class="text-secondary text-nowrap d-flex justify-content-end mt-3 pr-1 mr-4" style="font-size:14px;"> 
+                    <%= utils.capitalise(link_self.name) %>
+                </div>
 
             </div>
+            
 
             <!-- PERIOD n BODY panel -->
             <div class="p-0 mt-2 select-collection-panel collapse <%= n_cols == 0 ? 'show' : 'hide' %>" index=<%= n_cols%>>
@@ -214,7 +220,7 @@
                 <div class="card-body <%= pane === 'pane-child' ? 'pane-child collapse show' : 'pane-grandchild collapse' %> redraw pt-0 pb-2">
 
                     <!-- PERIOD n BODY pane HEADER -->
-                    <div class="d-flex justify-content-start-between px-0">
+                    <div class="d-flex flex-nowrap justify-content-start px-0">
 
                         <div class="text-secondary mt-2"> 
                             <button type="button" class="period-filter-visibility btn btn-outline-light btn-sm py-0 px-0">
@@ -230,22 +236,26 @@
                             <span class="period-filter-title collapse hide"><%= pane === 'pane-child' ? utils.capitalise(grandchild_period): utils.capitalise(child_period) %>s</span>
 
                         </div>    
-
-                        <h3 class="display-5 text-secondary ml-3 pr-2" data-toggle="tooltip" title="<%= pane === 'pane-child' ? 
-                                utils.capitalise(child_period) + 's ' + link_col_children.title : utils.capitalise(grandchild_period) + 's in ' + utils.capitalise(child_period) + 's: ' + link_col_children.prompt %>">
-                            <small class=""><%= pane === 'pane-child' ? link_col_children.prompt : link_col_grandchildren.prompt %></small>
-                        </h3>
+                        
+                        <div class="flex-grow-1"> 
+                            <h3 class="display-5 text-secondary text-nowrap ml-3" data-toggle="tooltip" title="<%= pane === 'pane-child' ? 
+                                    utils.capitalise(child_period) + 's ' + link_col_children.title : utils.capitalise(grandchild_period) + 's in ' + utils.capitalise(child_period) + 's: ' + link_col_children.prompt %>">
+                                <small class=""><%= pane === 'pane-child' ? link_col_children.prompt : link_col_grandchildren.prompt %></small>
+                            </h3>
+                        </div>
 
                         <!-- PERIOD n NAV row CHILD / GRANDCHILD toggle -->
-                        <div class="select-toggle-grandchild justify-content-md-end flex-grow-1 d-flex flex-nowrap ml-2">
+                        <div class="select-toggle-grandchild flex-nowrap"
+                            data-toggle="tooltip" title="show <%= utils.capitalise(link_col_grandchildren.name.replace('.', ' | '), true) %>" >
 
                             <% if (bHasChildren && bHasGrandchildren) { %>
-                            <button type="button" class="btn-outline-light btn btn-toggle-plain <%= pane === 'pane-child' ? 'on' : 'off' %> px-0 py-0" >
-                                <i class="material-icons" data-toggle="tooltip" title="show <%= utils.capitalise(link_col_grandchildren.name.replace('.', ' | '), true) %>"
-                                    style="font-size:36px;"><%= pane === 'pane-child' ? 'toggle_on' : 'toggle_off' %></i>
+
+                            <button type="button" class="btn-outline-light btn btn-toggle-plain <%= pane === 'pane-child' ? 'on' : 'off' %> px-0 py-0 pt-1" >
+                                <i class="material-icons" 
+                                    style="font-size:36px;"><%= pane === 'pane-child' ? 'toggle_off' : 'toggle_on' %></i>
                             </button>                                
 
-                            <span class="lbl-btn-toggle-ch text-secondary collapse show mt-2 pr-2" style="font-size:14px;">
+                            <span class="text-secondary text-nowrap collapse show mt-2 pr-2" style="font-size:14px;cursor:pointer;">
                                 <%= `${utils.capitalise(link_col_grandchildren.name.split('.')[(pane === 'pane-child' ? 0 : 1)])} ` %>
                             </span>
 
