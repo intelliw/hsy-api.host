@@ -237,6 +237,7 @@
 
                         </div>    
                         
+                        <!-- CHILD / GRANDCHILD title -->
                         <div class="flex-grow-1"> 
                             <h3 class="display-5 text-secondary text-nowrap ml-3" data-toggle="tooltip" title="<%= pane === 'pane-child' ? 
                                     utils.capitalise(child_period) + 's ' + link_col_children.title : utils.capitalise(grandchild_period) + 's in ' + utils.capitalise(child_period) + 's: ' + link_col_children.prompt %>">
@@ -400,7 +401,7 @@
                             </button>
                         </div>
                 </div>
-                <button type="button" class="hsy-filter-reset btn collapse<%= !isHsy ? ' hide' : ' show' %> btn-sm m-0 py-0 pr-3">
+                <button type="button" class="hsy-filter-reset btn btn-outline-light collapse<%= !isHsy ? ' hide' : ' show' %> btn-sm m-0 py-0 pr-3">
                     <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="reset energy filters"
                         style="font-size:24px;color:darkgrey;">link_off</i>
                 </button>
