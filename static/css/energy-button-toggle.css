@@ -265,8 +265,6 @@
 }
 
 
-
-
 .btn-toggle.btn-sm > .handle {
   position: absolute;
   top: 0.19rem;
@@ -434,3 +432,12 @@
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
+.btn-toggle-plain.on {
+  color: #b1bace;
+  background: #fff;
+}
+
+.btn-toggle-plain.off {
+  color: #6b7381;
+  background: #fff;
+}

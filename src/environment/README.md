@@ -1,1 +1,2 @@
-# this folder contains symlinks to shared files in C:\_frg\_proj\_shared
+# this folder contains shared files 
+- files are shared as hard symlinks in other projects (hse-consumer)

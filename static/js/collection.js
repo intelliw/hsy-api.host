@@ -118,25 +118,17 @@ $(document).ready(function () {
     // child / grandchild pane toggle button click 
     $(".select-toggle-grandchild").click(function () {
 
-        let toggleOn = $(this).find('.btn-toggle').hasClass('active');
-
+        
         // toggle card visiblity 
         let card = $(this).parents('.card')
         let ch = card.find('.pane-child');
         let gch = card.find('.pane-grandchild');
 
-        (toggleOn ? gch : ch).collapse('hide');
-        (toggleOn ? ch : gch).collapse('show');
+        ch.collapse(ch.hasClass('show') ? 'hide' : 'show');
+        gch.collapse(gch.hasClass('show') ? 'hide' : 'show');
 
         card.find('.select-collection-panel').collapse('show');    // make panel visible when toggling
 
-        // select label 
-        let lblCh = $(this).find('.lbl-btn-toggle-ch');
-        let lblGch = $(this).find('.lbl-btn-toggle-gch');
-
-        (toggleOn ? lblGch : lblCh).hide().collapse('hide');
-        (toggleOn ? lblCh : lblGch).show().collapse('show');
-        
     });
     
     // child/grandchild pane after shown
