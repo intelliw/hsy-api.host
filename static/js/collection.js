@@ -96,16 +96,18 @@ $(document).ready(function () {
 
 
 
-
-
     // collection panel header click
-    $(".select-toggle-collection").click(function () {
-
-        // toggle collection panel visibility 
-        let panel = $(this).parents('.card').find('.select-collection-panel');
+    $(".select-toggle-collection").click(function (e) {
         
-        panel.collapse(panel.hasClass('show') ? 'hide' : 'show');
-
+        // suppress button clicks 
+        if (!['BUTTON','I'].includes(e.target.nodeName)) {
+            
+            // toggle collection panel visibility 
+            let panel = $(this).parents('.card').find('.select-collection-panel');
+            
+            panel.collapse(panel.hasClass('show') ? 'hide' : 'show');
+        }
+                
     });
 
     // collection panel after shown           ...calls redrawPanels
