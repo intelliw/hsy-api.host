@@ -99,7 +99,7 @@ $(document).ready(function () {
     // collection panel header click
     $(".select-toggle-collection").click(function (e) {
         
-        // suppress button clicks 
+        // suppress propogated button clicks
         if (!['BUTTON','I'].includes(e.target.nodeName)) {
             
             // toggle collection panel visibility 
