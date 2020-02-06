@@ -36,6 +36,29 @@ class EnergyLinks extends Links {
         }
     }
 
+    // adds a metadata link to describe the period of the energy data  
+    addPeriodMeta(period) {
+        
+        const LINK_NAME = 'period';
+
+        // select the key 
+        let key = (period.grandparent ? 'grandchild' : (period.parent ? 'child' : 'period'));
+
+        // construct value
+        let value = { 
+            period: period.value, 
+            context: period.context,
+            duration: period.duration,
+            epochInstant: period.epochInstant,
+            endInstant: period.endInstant,            
+            prompt: period.prompt
+        }
+
+        super.addMeta(LINK_NAME, key, value);
+        
+    }
+
+
 }
 
 // creates href for the energy resource path. 

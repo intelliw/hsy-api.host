@@ -226,16 +226,27 @@ class Period extends Param {
 
             // duration - if monthday get the number of days for the month
             if (parent == enums.params.period.month && childEnum == enums.params.period.day) {
-                duration = monthdayDuration(this.epochInstant)
+                duration = monthdaysDuration(this.epochInstant)
+            
+            // in all other cases use the childMap constant (from ancestorChild)
             } else {
                 duration = childMap.d;
             }
-
-            // if grandchild calculate total duration including parent                      // e.g 28 if perent (week.day) is 7 and child (day.timeofday) is 4 
+            
+            // if grandchild calculate total chld periods between parent epoch and end instants      // e.g 28 if perent (week.day) is 7 and child (day.timeofday) is 4 
             if (grandparent) {
-                duration = parseInt(this.duration) * parseInt(duration);
-            }
 
+                // if child is day then use moment to calculate number of days in parent 
+                if (childEnum == enums.params.period.day) {
+                    duration = daysDuration(this.epochInstant, this.endInstant);
+
+                // in all other cases multiply the child duration by the parent duration (e.g. 4 timofdays in 3 days == 12 timeofdays) 
+                } else {
+
+                    duration = parseInt(this.duration) * parseInt(duration);
+                }
+            }
+            
             //set child props and relationship
             child = new Period(childMap.c, this.epochInstant, duration);                    // construct child with a duration  
             child.parent = parent;
@@ -448,10 +459,23 @@ function periodEnd(periodEnum, epoch, format, duration) {
 
 }
 
-// returns the number (as a string) of child periods in the period 
-function monthdayDuration(epochInstant) {
+// returns the total number of days between epoch and end instants 
+function daysDuration(epochInstant, endInstant) {
+    
+    const ONE_MILLISECOND = 1; 
 
-    let duration = moment.utc(epochInstant).daysInMonth().toString();               // get the days for this month  
+    let endInstantInclusive = moment.utc(endInstant).add(ONE_MILLISECOND, 'ms');     // add one millisecond to include the last day
+    
+    let duration = endInstantInclusive.diff(moment.utc(epochInstant), 'days')
+    
+    return duration;
+
+}
+
+// returns the number (as a string) of days in  this epoch's month 
+function monthdaysDuration(epochInstant) {
+
+    let duration = moment.utc(epochInstant).daysInMonth().toString();               // get the number of days in the current month
 
     return duration;
 
@@ -484,8 +508,13 @@ function parentChildDescription(periodObj) {
 
             case 'quartermonth':                    // quartermonth                     // { 'Q1': 'Jan Feb Mar', 'Q2': 'Apr May ...
 
-                let qtrLbl = selectQuarterLabel(epochInstant);                          //  Q1
-                descr = descr[qtrLbl];                                                  //  extract subvalue from label e.g. 'Jan Feb Mar'
+                
+                if (periodObj.grandparent) {                                            // if this is a child-grandchild lookup
+                    descr =  consts.period.grandchildDescription[`${parent}${self}`];   // a grandchild month could apply to any quarter (e.g. '01, 02, 03')
+                } else {                                                                // if this is a parent-child lookup 
+                    let qtrLbl = selectQuarterLabel(epochInstant);                      //  Q1                    
+                    descr = descr[qtrLbl];                                              //  extract subvalue from label e.g. 'Jan Feb Mar'
+                }
 
                 break;
 
@@ -606,14 +635,14 @@ function datetimePromptStr(instant, periodEnum) {
     let year = moment.utc(instant).format('YYYY');
     switch (periodEnum) {
 
-        case enums.params.period.instant:              // 'Instant 090623.554'
-            label = `Instant ${moment.utc(instant).format('HHmmss.SSS')}`;
+        case enums.params.period.instant:              // '090623.554'  ..Instant 
+            label = `${moment.utc(instant).format('HH:mm:ss.SSS')}`;
             break;
-        case enums.params.period.second:               // 'Second 0906:24'
-            label = `Second ${moment.utc(instant).format('HHmm:ss')}`;
+        case enums.params.period.second:               // '0906:24' ..Second 
+            label = `${moment.utc(instant).format('HH:mm:ss')}`;
             break;
-        case enums.params.period.minute:               // 'Minute 09:06'
-            label = `Minute ${moment.utc(instant).format('HH:mm')}`;
+        case enums.params.period.minute:               // '09:06'  ..Minute 
+            label = `${moment.utc(instant).format('HH:mm')}`;
             break;
         case enums.params.period.timeofday:            // 'Jan 1 Morning' 
             label = `${moment.utc(instant).format('MMM')} ${moment.utc(instant).format('D')} ${utils.capitalise(selectTimeOfDayEnum(instant))}`;
@@ -627,11 +656,11 @@ function datetimePromptStr(instant, periodEnum) {
         case enums.params.period.quarter:              // 'Q1 2019'
             label = `${selectQuarterLabel(instant)} ${year}`;
             break;
-        case enums.params.period.week:                 // 'Week of 02/02/20'
+        case enums.params.period.week:                 // 'Week 02/02/20'
             label = `Week ${moment.utc(instant).format('DD-MM-YYYY')}`;     
             break;
         case enums.params.period.hour:                 // '2100 hrs'
-            label = `${moment.utc(instant).format('HH')}00 hrs`;
+            label = `${moment.utc(instant).format('HH')}00`;
             break;
         case enums.params.period.year:                 // '2019'
             label = `${year}`;

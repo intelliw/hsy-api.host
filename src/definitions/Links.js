@@ -17,6 +17,7 @@ class Links extends Definitions {
 
     }
 
+    // adds a collection json link structure - see https://www.iana.org/assignments/link-relations/link-relations.xhtml
     add(rel, name, prompt, title, description, href, render) {
 
 
@@ -26,6 +27,15 @@ class Links extends Definitions {
         super.add(link);
 
     }
+
+    // adds a service description ('service-meta') metadata link. the value can be a JSON object
+    addMeta(name, key, value) {
+        
+        let link = { "rel": enums.linkRelations.meta, "name": name, "key": key, "value": value };
+        
+        super.add(link);
+    }
+
 }
 
 

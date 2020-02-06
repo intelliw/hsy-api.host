@@ -167,35 +167,49 @@ function executeGet(params) {
   // get a collection for each period in the duration
   let periods = params.period.getEach();                                          // break up the period duration into individual periods (though typically there is only 1 period) 
   let duration = periods.length;                                                  // use duration in next/prev links to allow navigation with a similar duration
-
+  
   periods.forEach(period => {
-
+    
     // create the collection links  
     let selfDescription = `${params.energy.value} ${period.value} ${period.epoch} ${period.duration} ${params.site.value}`;    // e.g hsy week 20190204 1 999   (this is the self description format for energy periods) 
     links = new Links.EnergyLinks(params.energy, period, params.site, selfDescription);   // constructor creates a 'self' link with an energy and epoch description
 
+    // child  
     child = period.getChild();                                                    // create the child link with a period description (if one has been configured for it in consts.period.childDescription)
-
+    
     if (child) {                                                                  // instant does not have a child
       child.addDescription();
 
       links.addLink(child, enums.linkRender.none, child.description);             // child collection link - not rendered, with a period description
       grandchild = child.getChild();
+      
     }
 
+    // grandchild 
     if (grandchild) {    
       grandchild.addDescription();
+
       links.addLink(grandchild, enums.linkRender.none, grandchild.description);     // create grandchild with a period description
     }
 
+    // metadata links
+    links.addPeriodMeta(period);
+    if (child) links.addPeriodMeta(child);
+    if (grandchild) links.addPeriodMeta(grandchild);
+
+
+    // nav links
     links.addLink(period.getParent(), enums.linkRender.link);
     links.addLink(period.getNext(), enums.linkRender.link, consts.NONE, duration);  // use duration in next/prev links to allow navigation with a similar duration
     links.addLink(period.getPrev(), enums.linkRender.link, consts.NONE, duration);
 
-    items = createItems(params.energy, period, params.site);
 
-    // add each collection to the collections array
+    // data items
+    items = createItems(params.energy, period, params.site);
+    
+    // add each collect)ion to the collections array
     collections.add(env.active.api.versions.current, links.href, links, items);
+
   });
 
   return collections.getElements();

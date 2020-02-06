@@ -26,61 +26,82 @@ module.exports.timeOfDayStart = {
 // constants for period algebra
 module.exports.period = {
 
-    /* child period ('c') and duration ('d') lookup.  the lookup is parent => child or parent+child => grandchild. The fields are c: for child and d: for duration
-    this lookup needs to be commutatively equivalent to the descendentParent lookup
+    /* child period ('c') and duration ('d') lookup.  
+        the lookup is parent => child or parent+child => grandchild. The fields are c: for child and d: for duration
+        this lookup needs to be commutatively equivalent to descendentParent enum's lookup
     */
     ancestorChild: {
         second: { 'c': enums.params.period.instant, 'd': '1000' },
+        secondinstant: this.NONE,
+
         minute: { 'c': enums.params.period.second, 'd': '60' },
-        hour: { 'c': enums.params.period.minute, 'd': '60' },
-        timeofday: { 'c': enums.params.period.hour, 'd': '6' },
-        day: { 'c': enums.params.period.timeofday, 'd': '4' },
-            // day: { 'c': enums.params.period.hour, 'd': '24' },
-        week: { 'c': enums.params.period.day, 'd': '7' },
-        month: { 'c': enums.params.period.week, 'd': '4' },
-            // month: { 'c': enums.params.period.day, 'd': this.NONE },         // monthday is derived dynamically
-        quarter: { 'c': enums.params.period.month, 'd': '3' },
-        year: { 'c': enums.params.period.quarter, 'd': '4' },
-        fiveyear: { 'c': enums.params.period.year, 'd': '5' },
         minutesecond: { 'c': enums.params.period.instant, 'd': '1000' },
+        
+        hour: { 'c': enums.params.period.minute, 'd': '60' },
         hourminute: { 'c': enums.params.period.second, 'd': '60' },
+
+        timeofday: { 'c': enums.params.period.hour, 'd': '6' },
         timeofdayhour: { 'c': enums.params.period.minute, 'd': '60' },
-            // dayhour: { 'c': enums.params.period.minute, 'd': '60' },
+
+        day: { 'c': enums.params.period.timeofday, 'd': '4' },
         daytimeofday: { 'c': enums.params.period.hour, 'd': '4' },
+            // day: { 'c': enums.params.period.hour, 'd': '24' },
+            // dayhour: { 'c': enums.params.period.minute, 'd': '60' },
+
+        week: { 'c': enums.params.period.day, 'd': '7' },
         weekday: { 'c': enums.params.period.timeofday, 'd': '4' },
+
+        month: { 'c': enums.params.period.week, 'd': '4' },
         monthweek: { 'c': enums.params.period.day, 'd': '7' },
-            // monthday: { 'c': enums.params.period.hour, 'd': '24' },                 // monthday is derived dynamically
-        quartermonth: { 'c': enums.params.period.day, 'd': this.NONE },
+            // month: { 'c': enums.params.period.day, 'd': this.NONE },         // monthday is derived dynamically
+            // monthday: { 'c': enums.params.period.hour, 'd': '24' },          // number of monthdays is derived dynamically
+
+        quarter: { 'c': enums.params.period.month, 'd': '3' },
+        quartermonth: { 'c': enums.params.period.day, 'd': this.NONE },         // number of monthdays is derived dynamically
+        
+        year: { 'c': enums.params.period.quarter, 'd': '4' },
         yearquarter: { 'c': enums.params.period.month, 'd': '3' },
+
+        fiveyear: { 'c': enums.params.period.year, 'd': '5' },
         fiveyearyear: { 'c': enums.params.period.quarter, 'd': '4' }
     },
 
-    /* parent period lookup.  the lookup is child => parent or grandchild-+-child => grandparent.
+    /* parent period lookup.  the lookup is child => parent or grandchild-+-child => parent.
     this lookup needs to be commutatively equivalent to the ancestorChild lookup
     */
     descendentParent: {
         instant: enums.params.period.second,
-        second: enums.params.period.minute,
-        minute: enums.params.period.hour,
-        hour: enums.params.period.timeofday,
-            // hour: enums.params.period.day,
-        day: enums.params.period.week,
-            // day: enums.params.period.month,
-        timeofday: enums.params.period.day,
-        week: enums.params.period.month,
-        month: enums.params.period.quarter,
-        quarter: enums.params.period.year,
-        year: enums.params.period.fiveyear,
         instantsecond: enums.params.period.minute,
+
+        second: enums.params.period.minute,
         secondminute: enums.params.period.hour,
+
+        minute: enums.params.period.hour,
         minutehour: enums.params.period.timeofday,
             //minutehour: enums.params.period.day,
+
+        hour: enums.params.period.timeofday,
+        hourtimeofday: enums.params.period.day,
+            // hour: enums.params.period.day,
+
+        timeofday: enums.params.period.day,
         timeofdayday: enums.params.period.week,
-        hourday: enums.params.period.month,
-        daymonth: enums.params.period.quarter,
-        weekmonth: enums.params.period.year,
+
+        day: enums.params.period.week,
+        dayweek: enums.params.period.month,
+            // day: enums.params.period.month,
+
+        week: enums.params.period.month,
+        weekmonth: enums.params.period.quarter,
+
+        month: enums.params.period.quarter,
         monthquarter: enums.params.period.year,
-        quarteryear: enums.params.period.fiveyear
+
+        quarter: enums.params.period.year,
+        quarteryear: enums.params.period.fiveyear,
+
+        year: enums.params.period.fiveyear
+
     },
 
     // the lookup is parent-child e.g. weekday. returns space delimited labels to diisplay as headers for child or grandchild periods when presented in a parent context. 
@@ -89,18 +110,22 @@ module.exports.period = {
         minutesecond: '01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60',
         hourminute: '01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60',
         timeofdayhour: { 'night': '00 01 02 03 04 05', 'morning': '06 07 08 09 10 11', 'afternoon': '12 13 14 15 16 17', 'evening': '18 19 20 21 22 23' },
-        dayhour: '00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23',
         daytimeofday: 'Night Morning Afternoon Evening',
+            dayhour: '00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23',
         weekday: 'Mon Tue Wed Thu Fri Sat Sun',
         monthweek: '01 02 03 04',
-        // monthday is appended dynamically to the dates for Feb (the shortest month) for better performance
-        monthday: '01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28',
+            monthday: '01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28',        // monthday is appended dynamically to the dates for Feb (the shortest month) for better performance
         quartermonth: { 'Q1': 'Jan Feb Mar', 'Q2': 'Apr May Jun', 'Q3': 'Jul Aug Sep', 'Q4': 'Oct Nov Dec' },
         yearquarter: 'Q1 Q2 Q3 Q4',
         fiveyearyear: this.NONE,
     },
 
-    // returns a format string for UTC compresed datetime for use in links and identifiers
+    // the lookup is specially for child-grandchild lookups which are different to a lookup for the same periods in a parent-child lookup
+    grandchildDescription: {
+        quartermonth: '01 02 03'                    // a grandchild month could apply to any quarter 
+    },
+
+        // returns a format string for UTC compresed datetime for use in links and identifiers
     datetimeISO: {
         instant: 'YYYYMMDDTHHmmss.SSSS',
         second: 'YYYYMMDDTHHmmss',
