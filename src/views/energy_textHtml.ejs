@@ -124,7 +124,8 @@
             link_self = utils.findByPropertyValue(links, 'rel', 'self')[0];
             link_next = utils.findByPropertyValue(links, 'rel', 'next')[0];
             link_prev = utils.findByPropertyValue(links, 'rel', 'prev')[0];
-            link_up = utils.findByPropertyValue(links, 'rel', 'up')[0];
+            link_up = utils.findByPropertyValue(links, 'rel', 'up', FIND_ALL);
+            link_down = utils.findByPropertyValue(links, 'rel', 'down', FIND_ALL);
             link_meta_grandchild = utils.findByPropertyValue(links, 'key', 'grandchild')[0];
 
             link_collections = utils.findByPropertyValue(links, 'rel', 'collection', FIND_ALL);
@@ -181,12 +182,24 @@
                     </span>
 
                     <!-- up -->
-                    <% if (link_up) { %>
+                    <% if (link_up[0]) { %>
 
-                    <button type="button" class="btn btn-sm btn-light border border-secondary rounded px-2 py-0 mr-n1" data-toggle="tooltip"
-                        title="Up to <%= utils.capitalise(link_up.name) + ': ' + link_up.prompt %>"
-                        onclick="window.location.href = '<%= link_up.href %>'">
-                        <i class="material-icons text-secondary font-weight-bolder" style="font-size:12px;">expand_less</i>
+                    <button type="button" class="btn btn-sm btn-light border border-secondary rounded text-nowrap px-2 py-0 mr-n1" data-toggle="tooltip"
+                        title="Up to <%= utils.capitalise(link_up[0].name) + ': ' + link_up[0].prompt %>"
+                        onclick="window.location.href = '<%= link_up[0].href %>'">
+                        <i class="material-icons text-secondary font-weight-bolder px-0 ml-n1" style="font-size:12px;">expand_less</i>
+                        <span class="ml-n1" style="font-size:12px;"><%= link_up[0].name.charAt(0).toUpperCase() %></span>
+                    </button>
+
+                    <% } %>
+                    <!-- up (ALT) -->
+                    <% if (link_up[1]) { %>
+
+                    <button type="button" class="btn btn-sm btn-light border border-secondary rounded text-nowrap px-2 py-0 mr-n1" data-toggle="tooltip"
+                        title="Up to <%= utils.capitalise(link_up[1].name) + ': ' + link_up[1].prompt %>"
+                        onclick="window.location.href = '<%= link_up[1].href %>'">
+                        <i class="material-icons text-secondary font-weight-bolder px-0 ml-n1" style="font-size:12px;">expand_less</i>
+                        <span class="ml-n1" style="font-size:12px;"><%= link_up[1].name.charAt(0).toUpperCase() %></span>
                     </button>
 
                     <% } %>
@@ -194,10 +207,25 @@
                     <!-- down -->
                     <% if (bHasChildren) { %>
 
-                    <button type="button" class="btn btn-sm btn-light border border-secondary rounded px-2 py-0" data-toggle="tooltip"
+                    <span class="mr-1"></span>
+
+                    <button type="button" class="btn btn-sm btn-light border border-secondary rounded text-nowrap px-2 py-0 mr-n1" data-toggle="tooltip"
                         title="Down to <%= utils.capitalise(child_period) + ': ' + items[0].links[0].title %>"
                         onclick="window.location.href = '<%= child_href_disabled ? 'javascript:' : items[0].links[0].href %>'">
-                        <i class="material-icons text-secondary font-weight-bolder" style="font-size:12px;">expand_more</i>
+                        <span class="mr-n1" style="font-size:12px;"><%= child_period.charAt(0).toUpperCase() %></span>
+                        <i class="material-icons text-secondary font-weight-bolder px-0 mr-n1" style="font-size:12px;">expand_more</i>
+                    </button>
+
+                    <% } %>
+
+                    <!-- down (ALT) -->
+                    <% if (link_down[0]) { %>
+
+                    <button type="button" class="btn btn-sm btn-light border border-secondary rounded text-nowrap px-2 py-0 mr-n1" data-toggle="tooltip"
+                        title="Down to <%= utils.capitalise(link_down[0].name) + ': ' + link_down[0].prompt %>"
+                        onclick="window.location.href = '<%= link_down[0].href %>'">
+                        <span class="mr-n1" style="font-size:12px;"><%= link_down[0].name.charAt(0).toUpperCase() %></span>
+                        <i class="material-icons text-secondary font-weight-bolder px-0 mr-n1" style="font-size:12px;">expand_more</i>
                     </button>
 
                     <% } %>

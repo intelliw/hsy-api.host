@@ -11,6 +11,13 @@ const moment = require('moment');
 
 const NONE = global.undefined;
 
+// converts an array to a string with each array element delimited by the specified delimiter  
+module.exports.arrayToString = (array, delimiter) => {
+ 
+    return array.toString().replace(/,/g, delimiter);               // use a regex as js will only replace the first occurrence if replacing with a string argument
+}
+
+
 // capitalise first letter of first word or all words 
 module.exports.capitalise = (str, allWords) => {                   // str = e.g. 'the priest of the palace...'    
 
@@ -436,6 +443,6 @@ module.exports.valueExistsInObject = (obj, value) => {
 }
 
 
-
 // test... node src/environment/utils
-//console.log(this.is200response(201));
+// console.log(this.is200response(201));
+// console.log(this.arrayToString(['Jan', 'Feb', 'Mar'], '-'))

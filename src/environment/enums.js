@@ -123,6 +123,7 @@ module.exports.linkRelations = {
     up: 'up',
     next: 'next',
     prev: 'prev',
+    down: 'down',
     meta: 'service-meta'                                // RFC8631 - https://tools.ietf.org/html/rfc8631#page-8
 }
 

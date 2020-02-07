@@ -156,7 +156,7 @@ class EnergyGetResponse extends Response {
 
 // perform the energy data operation and return a collections array
 function executeGet(params) {
-
+  
   let links;
   let items;
   let collections = new Collections();                                            // stores an array of collections, one for each period in the duration 
@@ -168,6 +168,8 @@ function executeGet(params) {
   let periods = params.period.getEach();                                          // break up the period duration into individual periods (though typically there is only 1 period) 
   let duration = periods.length;                                                  // use duration in next/prev links to allow navigation with a similar duration
   
+  const ALT = true;
+
   periods.forEach(period => {
     
     // create the collection links  
@@ -176,7 +178,6 @@ function executeGet(params) {
 
     // child  
     child = period.getChild();                                                    // create the child link with a period description (if one has been configured for it in consts.period.childDescription)
-    
     if (child) {                                                                  // instant does not have a child
       child.addDescription();
 
@@ -192,16 +193,19 @@ function executeGet(params) {
       links.addLink(grandchild, enums.linkRender.none, grandchild.description);     // create grandchild with a period description
     }
 
+    // nav links
+    links.addLink(period.getChild(ALT), enums.linkRender.link);                     // add a 'down' link if there are alt childrent
+
+    links.addLink(period.getParent(), enums.linkRender.link);
+    links.addLink(period.getParent(ALT), enums.linkRender.link);                    // add the alternate parent link for this period - if one exists 
+    
+    links.addLink(period.getNext(), enums.linkRender.link, consts.NONE, duration);  // use duration in next/prev links to allow navigation with a similar duration
+    links.addLink(period.getPrev(), enums.linkRender.link, consts.NONE, duration);
+
     // metadata links
     links.addPeriodMeta(period);
     if (child) links.addPeriodMeta(child);
     if (grandchild) links.addPeriodMeta(grandchild);
-
-
-    // nav links
-    links.addLink(period.getParent(), enums.linkRender.link);
-    links.addLink(period.getNext(), enums.linkRender.link, consts.NONE, duration);  // use duration in next/prev links to allow navigation with a similar duration
-    links.addLink(period.getPrev(), enums.linkRender.link, consts.NONE, duration);
 
 
     // data items
