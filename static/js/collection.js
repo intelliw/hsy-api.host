@@ -100,7 +100,7 @@ $(document).ready(function () {
     $(".select-toggle-collection").click(function (e) {
         
         // suppress propogated button clicks
-        if (!['BUTTON','I'].includes(e.target.nodeName)) {
+        if (!['BUTTON','I', 'SPAN'].includes(e.target.nodeName)) {
             
             // toggle collection panel visibility 
             let panel = $(this).parents('.card').find('.select-collection-panel');
