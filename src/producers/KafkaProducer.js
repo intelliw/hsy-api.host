@@ -47,24 +47,32 @@ class KafkaProducer extends Producer {
     *                                         }
     * @param {*} sender               // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
     */
-    async sendToTopic(msgObj, sender) {
+    async sendToTopic(data, sender) {
 
         // [start trace] -------------------------------    
         const sp = log.SPAN.createChildSpan({ name: `${log.enums.methods.mbSendToTopic}` });    // 2do  - consumer tracing does not have a root span ..
 
+        // send the message to the topics
+        try {
+            
+            // get the data     - e.g. msgObj = { itemCount: 0, messages: [] };
+            let msgObj = this._extractData(data, sender);                                       // _extractData is implemented by subclass. e.g. results: { itemCount: 9, messages: [. . .] }
 
-        // send the message to the topic
-        await this.producerObj.connect()                                            // try connecting         
-            .then(() => this.producerObj.send({                                     //.. send    
-                topic: this.writeTopic,
-                messages: msgObj.messages,
-                acks: enums.messageBroker.ack.all,                                  //      default is 'all'
-                timeout: env.active.kafkajs.send.timeout                            //      milliseconds    
-            }))
-            .then(r => log.messaging(this.writeTopic, `${r[0].baseOffset}-${parseInt(r[0].baseOffset) + (msgObj.messages.length - 1)}`, msgObj.messages, msgObj.itemCount, sender))         // info = (topic, id, msgqty, itemqty, sender) {
-            .then(this.producerObj.disconnect())                                    // disconnect    
-            .catch(e => log.error(`${this.apiPathIdentifier} ${log.enums.methods.mbSendToTopic} Error [${this.writeTopic}]`, e));
-        
+            // send the message to the topic
+            await this.producerObj.connect()                                                    // try connecting         
+                .then(() => this.producerObj.send({                                             //.. send    
+                    topic: this.writeTopic,
+                    messages: msgObj.messages,
+                    acks: enums.messageBroker.ack.all,                                          //      default is 'all'
+                    timeout: env.active.kafkajs.send.timeout                                    //      milliseconds    
+                }))
+                .then(r => log.messaging(this.writeTopic, `${r[0].baseOffset}-${parseInt(r[0].baseOffset) + (msgObj.messages.length - 1)}`, msgObj.messages, msgObj.itemCount, sender))         // info = (topic, id, msgqty, itemqty, sender) {
+                .then(this.producerObj.disconnect())                                    // disconnect    
+                .catch(e => log.error(`${this.apiPathIdentifier} ${log.enums.methods.mbSendToTopic} Error [${this.writeTopic}]`, e));
+            
+        } catch (e) {
+            log.error(`${this.apiPathIdentifier} ${log.enums.methods.mbSendToTopic}`, e);
+        }
 
         // [end trace] ---------------------------------    
         sp.endSpan();

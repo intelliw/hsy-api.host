@@ -8,7 +8,12 @@
 
 const env = require('../environment');
 const enums = require('../environment/enums');
+const consts = require('../host/constants');
+const utils = require('../environment/utils');
+
 const log = require('../logger').log;
+
+const moment = require('moment');
 
 class Producer {
     /**
@@ -62,6 +67,37 @@ class Producer {
 
         return message;
     }
+
+
+    /* this function adds attributes common to all datasets:
+    *   append event time, zone, and processing time to the data item
+    *   dataItem - contains the data object e.g. "data": [ { "time_local": "2
+    *  note that we convert time_local to bigqueryZonelessTimestampFormat which does not have trailing offset hours 
+    *   - this is done as part of date validation in this stage 
+    *   - but it not required by bigquery as it will convert local time to utc if submitted with a zone offset
+    *  sender is the keyname of the apikey enum, sent in the POST request  and identifies the source of the data. this value is added to sys.source attribute
+    */
+    addGenericAttributes(dataItem, sender) {
+        
+        // create a new dataitem
+        let dataItemClone = utils.clone(dataItem);                // clone the object before any modifications, to prevent errors due to object re-referencing 
+
+        // add standard attributes
+        let eventTime = dataItemClone.time_local;                 // "data": [ { "time_local": "20190209T150017.020+0700",
+
+        dataItemClone.sys = { source: sender };                    // is based on the apikey from the sender and identifies the source of the data. this value is added to sys.source attribute
+
+        dataItemClone.time_event = moment.utc(eventTime).format(consts.dateTime.bigqueryZonelessTimestampFormat);
+        dataItemClone.time_zone = utils.datetimeZoneOffset(eventTime);
+        dataItemClone.time_processing = moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat);
+
+        //  delete time_local as it has been replaced with the 3 standard time attributes above
+        delete dataItemClone.time_local;
+
+        return dataItemClone;
+
+    }
+
 
 
     _isKafka() { return env.active.messagebroker.provider == enums.messageBroker.providers.kafka; }

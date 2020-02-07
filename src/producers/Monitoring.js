@@ -29,24 +29,6 @@ class Monitoring extends ActiveMsgProducer {
 
     }
 
-    /** extracts an array of modified data items and sends these as messages to the broker 
-    * @param {*} data                                                               // the *array* (of datasets) in the req.body e.g. the [.. ] array in {"datasets": [.. ] ..}
-    * @param {*} sender                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
-    */
-    async sendToTopic(data, sender) {
-
-        // send the message to the topics
-        try {
-
-            // get the data     - e.g. msgObj = { itemCount: 0, messages: [] };
-            let msgObj = this._extractData(data, sender);                           // e.g. results: { itemCount: 9, messages: [. . .] }
-            super.sendToTopic(msgObj, sender);                                      // super is PubSubProducer or KafkaProducer depending on which is active  
-
-        } catch (e) {
-            log.error(`${this.apiPathIdentifier} ${log.enums.methods.mbSendToTopic}`, e);
-        }
-        
-    }
 
     /**
      * creates an array of kafka messages and returns them in a results object
@@ -81,13 +63,13 @@ class Monitoring extends ActiveMsgProducer {
         // extract and add messages to results 
         datasetsClone.forEach(dataset => {                                          // e.g. "pms": { "id": "PMS-01-001" }, "data": [ { time_local: '20190809T150006.032+0700', pack: [Object] }, ... ]
 
-            key = dataset[this.apiPathIdentifier].id;                               // e.g. id from.. "pms": { "id": 
+            key = dataset[this.apiPathIdentifier].id;                               // e.g. dataset.pms.id - from.. "pms": { "id": 
 
             // add each data item in the dataset as an individual message
             dataset.data.forEach(dataItem => {                                      // e.g. "data": [ { "time_local": "2
 
                 // add elements into the dataset
-                let dataItemClone = this.addGenericAttributes(dataItem, sender);    // clone the dataItem and add common attributes (time_event, time_zone, time_processing)
+                let dataItemClone = super.addGenericAttributes(dataItem, sender);    // clone the dataItem and add common attributes (time_event, time_zone, time_processing)
 
                 // add the message to the items buffer
                 dataItems.push(dataItemClone);
@@ -106,35 +88,6 @@ class Monitoring extends ActiveMsgProducer {
 
         results.itemCount = dataItemCount;
         return results;
-
-    }
-
-    /* this function adds attributes common to all datasets:
-    *   append event time, zone, and processing time to the data item
-    *   dataItem - contains the data object e.g. "data": [ { "time_local": "2
-    *  note that we convert time_local to bigqueryZonelessTimestampFormat which does not have trailing offset hours 
-    *   - this is done as part of date validation in this stage 
-    *   - but it not required by bigquery as it will convert local time to utc if submitted with a zone offset
-    *  sender is the keyname of the apikey enum, sent in the POST request  and identifies the source of the data. this value is added to sys.source attribute
-    */
-    addGenericAttributes(dataItem, sender) {
-        
-        // create a new dataitem
-        let dataItemClone = utils.clone(dataItem);                // clone the object before any modifications, to prevent errors due to object re-referencing 
-
-        // add standard attributes
-        let eventTime = dataItemClone.time_local;                 // "data": [ { "time_local": "20190209T150017.020+0700",
-
-        dataItemClone.sys = { source: sender };                    // is based on the apikey from the sender and identifies the source of the data. this value is added to sys.source attribute
-
-        dataItemClone.time_event = moment.utc(eventTime).format(consts.dateTime.bigqueryZonelessTimestampFormat);
-        dataItemClone.time_zone = utils.datetimeZoneOffset(eventTime);
-        dataItemClone.time_processing = moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat);
-
-        //  delete time_local as it has been replaced with the 3 standard time attributes above
-        delete dataItemClone.time_local;
-
-        return dataItemClone;
 
     }
 
