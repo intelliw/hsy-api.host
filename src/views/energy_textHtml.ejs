@@ -126,7 +126,7 @@
             link_prev = utils.findByPropertyValue(links, 'rel', 'prev')[0];
             link_up = utils.findByPropertyValue(links, 'rel', 'up', FIND_ALL);
             link_down = utils.findByPropertyValue(links, 'rel', 'down', FIND_ALL);
-            link_meta_grandchild = utils.findByPropertyValue(links, 'key', 'grandchild')[0];
+            link_meta_period = utils.findByPropertyValue(links, 'rel', 'service-meta')[0];
 
             link_collections = utils.findByPropertyValue(links, 'rel', 'collection', FIND_ALL);
             link_col_children = link_collections[0];                                                        // first is child second is grandchild
@@ -142,7 +142,7 @@
             grandchild_descriptions = (link_col_grandchildren.description ? link_col_grandchildren.description.split(' ') : []);
             
             child_period = link_col_children.name.split('.')[1];
-            grandchild_period = link_col_grandchildren.name.split('.')[1];                                                  // e.g day.timeofday
+            grandchild_period = link_col_grandchildren.name.split('.')[1];                                  // e.g day.timeofday
             
             child_href_disabled = ['minute', 'second', 'instant'].includes(child_period);                   // disable links down to fine grained periods for performance reasons
             grandchild_href_disabled = ['minute', 'second', 'instant'].includes(grandchild_period);
@@ -236,7 +236,7 @@
                 </div>
 
                 <!-- child label -->
-                <div class="text-secondary text-nowrap justify-content-end mt-3 pr-1 mr-4" style="font-size:14px;"> 
+                <div class="text-secondary text-nowrap justify-content-end mt-3 pr-1 mr-4" style="font-size:14px;cursor:pointer;"> 
                     <%= utils.capitalise(link_self.name) %>
                 </div>
 
@@ -244,7 +244,7 @@
             
 
             <!-- PERIOD n BODY panel -->
-            <div class="p-0 mt-2 select-collection-panel collapse <%= n_cols == 0 ? 'show' : 'hide' %>" index=<%= n_cols%>>
+            <div class="p-0 mt-2 select-collection-panel collapse <%= collections.length == 1 ? 'show' : 'hide' %>" index=<%= n_cols%>>
                 
                 <% for (var n_panes=0; n_panes < PANES.length; n_panes++) { pane=PANES[n_panes]; %>
 
@@ -296,7 +296,7 @@
                             <span class="text-secondary text-nowrap collapse show mt-2 pr-2" style="font-size:14px;cursor:pointer;">
                                 <%= `${pane === 'pane-child' ? 
                                     items.length + ' ' + utils.capitalise(child_period) : 
-                                    link_meta_grandchild.value.duration + ' ' + utils.capitalise(grandchild_period)}s ` %>
+                                    link_meta_period.description.grandchild.duration + ' ' + utils.capitalise(grandchild_period)}s ` %>
                             </span>
 
                             <% } %>

@@ -58,7 +58,7 @@ class Monitoring extends ActiveMsgProducer {
         let dataItemCount = 0;
         let results = { itemCount: 0, messages: [] };
 
-        let datasetsClone = utils.clone(datasets);                                  // clone the byref object before any modifications 
+        let datasetsClone = utils.deepClone(datasets);                                  // clone the byref object before any modifications 
 
         // extract and add messages to results 
         datasetsClone.forEach(dataset => {                                          // e.g. "pms": { "id": "PMS-01-001" }, "data": [ { time_local: '20190809T150006.032+0700', pack: [Object] }, ... ]
@@ -93,6 +93,5 @@ class Monitoring extends ActiveMsgProducer {
 
 
 }
-
 
 module.exports = Monitoring;

@@ -22,6 +22,10 @@ module.exports.timeOfDayStart = {
     evening: '18',
     night: '0'
 };
+// links to hypermedia resources
+module.exports.links = {
+    energyDocs: "https://docs.sundaya.monitored.equipment/docs/api.sundaya.monitored.equipment/0/c/Getting%20Started/API%20Overview/Energy%20API"
+}
 
 // constants for period algebra
 module.exports.period = {

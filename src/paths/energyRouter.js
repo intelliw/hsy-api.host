@@ -169,25 +169,26 @@ function executeGet(params) {
   let duration = periods.length;                                                  // use duration in next/prev links to allow navigation with a similar duration
   
   const ALT = true;
-
+  
   periods.forEach(period => {
     
     // create the collection links  
     let selfDescription = `${params.energy.value} ${period.value} ${period.epoch} ${period.duration} ${params.site.value}`;    // e.g hsy week 20190204 1 999   (this is the self description format for energy periods) 
     links = new Links.EnergyLinks(params.energy, period, params.site, selfDescription);   // constructor creates a 'self' link with an energy and epoch description
-
+    
     // child  
     child = period.getChild();                                                    // create the child link with a period description (if one has been configured for it in consts.period.childDescription)
     if (child) {                                                                  // instant does not have a child
+    
       child.addDescription();
 
       links.addLink(child, enums.linkRender.none, child.description);             // child collection link - not rendered, with a period description
       grandchild = child.getChild();
-      
     }
 
     // grandchild 
     if (grandchild) {    
+      
       grandchild.addDescription();
 
       links.addLink(grandchild, enums.linkRender.none, grandchild.description);     // create grandchild with a period description
@@ -199,14 +200,11 @@ function executeGet(params) {
     links.addLink(period.getParent(), enums.linkRender.link);
     links.addLink(period.getParent(ALT), enums.linkRender.link);                    // add the alternate parent link for this period - if one exists 
     
-    links.addLink(period.getNext(), enums.linkRender.link, consts.NONE, duration);  // use duration in next/prev links to allow navigation with a similar duration
-    links.addLink(period.getPrev(), enums.linkRender.link, consts.NONE, duration);
+    links.addLink(periods[periods.length-1].getNext(), enums.linkRender.link, consts.NONE, duration);  // use duration in next/prev links to allow navigation with a similar duration. make prev and next relative to the whole group of periods i.e next navagates to the period after the last, and pre navigates to the period before the first in the group 
+    links.addLink(periods[0].getPrev(), enums.linkRender.link, consts.NONE, duration);
 
     // metadata links
-    links.addPeriodMeta(period);
-    if (child) links.addPeriodMeta(child);
-    if (grandchild) links.addPeriodMeta(grandchild);
-
+    links.addPeriodMetadata(period, child, grandchild);                             // add metadata link for the energy data periods
 
     // data items
     items = createItems(params.energy, period, params.site);

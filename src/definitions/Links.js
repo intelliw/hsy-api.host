@@ -28,13 +28,6 @@ class Links extends Definitions {
 
     }
 
-    // adds a service description ('service-meta') metadata link. the value can be a JSON object
-    addMeta(name, key, value) {
-        
-        let link = { "rel": enums.linkRelations.meta, "name": name, "key": key, "value": value };
-        
-        super.add(link);
-    }
 
 }
 

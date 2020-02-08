@@ -21,41 +21,41 @@ class EnergyLinks extends Links {
         this.site = site;
 
         this.href = periodHref(energy, period, site);                                   // this href is used for the whole collection 
-        
+
         // the self link is needed for both collections and items - add others after construction if needed e.g. for collections
         this.addLink(period, enums.linkRender.link, description);                       // self - is rendered, and a description if requested eg hsy 
-        
+
     }
 
     // adds a link if the period exist. duration is optional, if present use it instead of the period's duration
     addLink(period, render, description, duration) {
-        
+
         if (period) {
-            let href = periodHref(this.energy, period, this.site, (duration ? duration: period.duration));
+            let href = periodHref(this.energy, period, this.site, (duration ? duration : period.duration));
             super.add(period.rel, period.context, period.prompt, period.title, description, href, render);
         }
     }
 
-    // adds a metadata link to describe the period of the energy data  
-    addPeriodMeta(period) {
-        
-        const LINK_NAME = 'period';
+    // adds a metadata link for the energy data periods 
+    // adds a service description ('service-meta') metadata link, the 'description' attribute contains JSON metadata
+    addPeriodMetadata(period, child, grandchild) {
 
-        // select the key 
-        let key = (period.grandparent ? 'grandchild' : (period.parent ? 'child' : 'period'));
+        // construct metadata content
+        let meta = periodMeta(period);
+        if (child) meta.child = periodMeta(child);
+        if (grandchild) meta.grandchild = periodMeta(grandchild);
 
-        // construct value
-        let value = { 
-            period: period.value, 
-            context: period.context,
-            duration: period.duration,
-            epochInstant: period.epochInstant,
-            endInstant: period.endInstant,            
-            prompt: period.prompt
-        }
+        // add the link
+        super.add(
+            enums.linkRelations.meta,       // rel, 
+            period.name,                    // name
+            consts.NONE,                    // prompt
+            consts.NONE,                    // title
+            meta,                           // description - contains child and grandchild
+            consts.links.energyDocs,        // href
+            enums.linkRender.none           // render
+        );
 
-        super.addMeta(LINK_NAME, key, value);
-        
     }
 
 
@@ -67,6 +67,23 @@ function periodHref(energy, period, site, duration) {
     let href = `${env.active.api.scheme}://${env.active.api.host}/energy/${energy.value}/period/${period.value}/${period.epoch}/${duration}?site=${site.value}`;
 
     return href;
+
+}
+// creates metadata for the energy data period. 
+function periodMeta(period) {
+    
+    let meta = {}
+    
+    if (period) {
+        meta = {
+            name: period.value,
+            epochInstant: period.epochInstant,
+            endInstant: period.endInstant,
+            duration: period.duration
+        }
+    }
+
+    return meta;
 
 }
 

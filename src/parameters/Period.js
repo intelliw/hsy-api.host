@@ -159,30 +159,6 @@ class Period extends Param {
     }
     
 
-    // returns a clone of the period 
-    getClone() {
-
-        // add a milisecond to the period end to make it the next period's epoch
-        const epoch = this.epoch;
-        const periodEnum = this.value;
-
-        //create the clone and sets its relationship
-        let clone = new Period(periodEnum, epoch, consts.params.defaults.duration);
-
-        clone.context = this.context
-        clone.epochInstant = this.epochInstant
-        clone.endInstant = this.endInstant
-        clone.epoch = this.epoch
-        clone.end = this.end
-        clone.duration = this.duration
-        clone.rel = this.rel
-        clone.prompt = this.prompt
-        clone.title = this.title
-
-        return clone;
-
-    }
-
     // returns each individual period in the duration in an array. Each period in the array will have a duration of 1, and there will be as many objects in the array as the original period's duration 
     getEach() {
 

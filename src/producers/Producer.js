@@ -80,7 +80,7 @@ class Producer {
     addGenericAttributes(dataItem, sender) {
         
         // create a new dataitem
-        let dataItemClone = utils.clone(dataItem);                // clone the object before any modifications, to prevent errors due to object re-referencing 
+        let dataItemClone = utils.deepClone(dataItem);                // clone the object before any modifications, to prevent errors due to object re-referencing 
 
         // add standard attributes
         let eventTime = dataItemClone.time_local;                 // "data": [ { "time_local": "20190209T150017.020+0700",
