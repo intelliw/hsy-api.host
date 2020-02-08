@@ -236,7 +236,7 @@
                 </div>
 
                 <!-- child label -->
-                <div class="text-secondary text-nowrap justify-content-end mt-3 pr-2 mr-4" style="font-size:14px;cursor:pointer;"> 
+                <div class="text-secondary text-nowrap justify-content-end mt-3 pr-2 ml-2 mr-4" style="font-size:14px;cursor:pointer;"> 
                     <%= utils.capitalise(link_self.name) %>
                 </div>
 
@@ -244,7 +244,7 @@
             
 
             <!-- PERIOD n BODY panel -->
-            <div class="px-0 py-1 select-collection-panel collapse <%= collections.length == 1 ? 'show' : 'hide' %>" index=<%= n_cols%>>
+            <div class="px-0 py-1 select-collection-panel collapse <%= n_cols == (collections.length - 1) ? 'show' : 'hide' %>" index=<%= n_cols%>>
                 
                 <% for (var n_panes=0; n_panes < PANES.length; n_panes++) { pane=PANES[n_panes]; %>
 
@@ -288,7 +288,7 @@
 
                             <% if (bHasChildren && bHasGrandchildren) { %>
 
-                            <div class="mr-2 py-2">
+                            <div class="mx-2 py-2">
                                 <span class="border border-secondary rounded text-secondary text-nowrap pr-1" style="font-size:14px;cursor:pointer;">
                                     <span class="ml-1">
                                         <%= `${pane === 'pane-child' ? items.length : link_meta_period.description.grandchild.duration}` %>
