@@ -25,7 +25,7 @@ function test1() {
         // When we are done, test that the parsed output matched what expected
         .on('end', function () {
             // console.dir(record);
-            // console.log(`pack.id: ${record['pack.id']} time_local: ${record.time_local}`);
+            // c@onsole.log(`pack.id: ${record['pack.id']} time_local: ${record.time_local}`);
         })
 }
 
@@ -40,13 +40,13 @@ function test2() {
 
     }, function (err, records) {
         records.forEach(record => {
-            console.log(`pack.id: ${record['pack.id']} time_local: ${record.time_local}`);
+            c@onsole.log(`pack.id: ${record['pack.id']} time_local: ${record.time_local}`);
             output.push(record);
         });
     })
     .on('end', function () {
-        console.log(output.length);
-        // console.log(`pack.id: ${record['pack.id']} time_local: ${record.time_local}`);
+        c@onsole.log(output.length);
+        // c@onsole.log(`pack.id: ${record['pack.id']} time_local: ${record.time_local}`);
     })
 
 }
@@ -58,10 +58,10 @@ function test3() {
         columns: true,
         skip_empty_lines: true
     })
-    console.log('@@@')  // @@@@@
-    console.log(csvRows[0]['pack.id'])  // @@@@@
-    console.log(csvRows[1]['pack.id'])  // @@@@@
-    console.log(`csvRows.length ${csvRows.length}`); // @@@@@
+    c@onsole.log('@@@')  // @@@@@
+    c@onsole.log(csvRows[0]['pack.id'])  // @@@@@
+    c@onsole.log(csvRows[1]['pack.id'])  // @@@@@
+    c@onsole.log(`csvRows.length ${csvRows.length}`); // @@@@@
     //console.dir(csvRows);
 
 }

@@ -39,7 +39,7 @@ router.get('/energy/:energy?/:period?/:epoch?/:duration?', (req, res, next) => {
 // period object test
 router.get('/period/:period?/:epoch?/:duration?', (req, res, next) => {
 
-    console.log(req.params.period);
+    c@onsole.log(req.params.period);
 
     let periodObj = new Param.Period(req.params.period, req.params.epoch, req.params.duration);
     let msg;
@@ -113,7 +113,7 @@ router.get('/car', (req, res, next) => {
     let contentType = (req.accepts(enums.mimeType.textHtml)) ? enums.mimeType.textHtml : enums.mimeType.applicationCollectionJson;
 
     let paramE = new Param.Period('week', '20190321', 1);
-    console.log('paramE Name = ' + paramE.name + ', paramE Value = ' + paramE.value);
+    c@onsole.log('paramE Name = ' + paramE.name + ', paramE Value = ' + paramE.value);
 
     // send the response
     res

@@ -32,7 +32,7 @@ module.exports.messaging = (topic, offset, msgsArray, itemQty, sender) => {
 
         // append console                                                               // e.g. [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
         if (loggingConf.appenders.includes(enums.logging.appenders.console)) {
-            console.log(`[${infoPayload.topic}:${infoPayload.offset}] ${infoPayload.msgsqty} msgs, ${infoPayload.itemqty} items, sender:${infoPayload.sender}`);
+            c@onsole.log(`[${infoPayload.topic}:${infoPayload.offset}] ${infoPayload.msgsqty} msgs, ${infoPayload.itemqty} items, sender:${infoPayload.sender}`);
         };
 
     }
@@ -50,7 +50,7 @@ module.exports.messaging = (topic, offset, msgsArray, itemQty, sender) => {
 
         // append console            
         if (loggingConf.appenders.includes(enums.logging.appenders.console)) {
-            console.log(debugPayload);
+            c@onsole.log(debugPayload);
         };
 
     }
@@ -72,7 +72,7 @@ module.exports.data = (dataset, table, id, rowArray) => {
 
         // append console                                                               // e.g. [monitoring.dev_pms] id: TEST-09, 1 rows     
         if (loggingConf.appenders.includes(enums.logging.appenders.console)) {
-            console.log(`[${infoPayload.dataset}.${infoPayload.table}] id: ${infoPayload.id}, ${infoPayload.rowqty} rows`);          
+            c@onsole.log(`[${infoPayload.dataset}.${infoPayload.table}] id: ${infoPayload.id}, ${infoPayload.rowqty} rows`);          
         };
 
     }
@@ -86,7 +86,7 @@ module.exports.data = (dataset, table, id, rowArray) => {
 
         // append console            
         if (loggingConf.appenders.includes(enums.logging.appenders.console)) {
-            console.log(debugPayload);
+            c@onsole.log(debugPayload);
         };
 
     }

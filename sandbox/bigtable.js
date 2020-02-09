@@ -24,7 +24,7 @@ const getRowGreeting = row => {
     const table = instance.table(TABLE_ID);
     const [tableExists] = await table.exists();
     if (!tableExists) {
-      console.log(`Creating table ${TABLE_ID}`);
+      c@onsole.log(`Creating table ${TABLE_ID}`);
       const options = {
         families: [
           {
@@ -38,7 +38,7 @@ const getRowGreeting = row => {
       await table.create(options);
     }
 
-    console.log('Write some greetings to the table');
+    c@onsole.log('Write some greetings to the table');
     const greetings = ['Hello World!', 'Hello Bigtable!', 'Hello Node!'];
     const rowsToInsert = greetings.map((greeting, index) => ({
       key: `greeting${index}`,
@@ -61,17 +61,17 @@ const getRowGreeting = row => {
       },
     ];
 
-    console.log('Reading a single row by row key');
+    c@onsole.log('Reading a single row by row key');
     const [singleRow] = await table.row('greeting0').get({filter});
-    console.log(`\tRead: ${getRowGreeting(singleRow)}`);
+    c@onsole.log(`\tRead: ${getRowGreeting(singleRow)}`);
 
-    console.log('Reading the entire table');
+    c@onsole.log('Reading the entire table');
     const [allRows] = await table.getRows({filter});
     for (const row of allRows) {
-      console.log(`\tRead: ${getRowGreeting(row)}`);
+      c@onsole.log(`\tRead: ${getRowGreeting(row)}`);
     }
 
-    console.log('Delete the table');
+    c@onsole.log('Delete the table');
     await table.delete();
   } catch (error) {
     console.error('Something went wrong:', error);

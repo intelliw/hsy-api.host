@@ -15,6 +15,7 @@ module.exports.Producer = require('./Producer');
 module.exports.KafkaProducer = require('./KafkaProducer');
 module.exports.PubSubProducer = require('./PubSubProducer');
 module.exports.Monitoring = require('./Monitoring');
+module.exports.MonitoringPms = require('./MonitoringPms');
 module.exports.Feature = require('./Feature');
 
 // static factory method to construct producers    
@@ -24,7 +25,7 @@ module.exports.getProducer = (apiPathIdentifier) => {
 
         // pms
         case enums.params.datasets.pms:
-            producer = new this.Monitoring(enums.params.datasets.pms, env.active.messagebroker.topics.monitoring.pms);
+            producer = new this.MonitoringPms();
             break;
 
         // mppt 

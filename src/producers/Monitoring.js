@@ -14,12 +14,9 @@ const moment = require('moment');
 
 class Monitoring extends ActiveMsgProducer {
     /**
-     * superclass - 
-     * clients must call sendToTopic() 
-     * 
      * instance attributes:  
      * apiPathIdentifier                                                            // enums.params.datasets
-     * kafkaTopic                                                                   // env.active.messagebroker.topics.monitoring
+     * writeTopic                                                                   // env.active.messagebroker.topics.monitoring
      * constructor arguments 
      * @param {*} apiPathIdentifier                                                 // enums.params.datasets              - e.g. pms       
      */
@@ -31,7 +28,7 @@ class Monitoring extends ActiveMsgProducer {
 
 
     /**
-     * creates an array of kafka messages and returns them in a results object
+     * creates an array of messagebroker messages and returns them in a results object
      *  datasets - object array of dataset items. 
      *      the *array* (of datasets) in the req.body e.g. the [.. ] array in {"datasets": [.. ] ..}
      *  each dataset item has an id and an array of data objects

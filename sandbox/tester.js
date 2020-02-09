@@ -89,15 +89,15 @@ function blendEpoch(epoch) {
 }
 
 // test... node sandbox/tester
-console.log(`'' - ${blendEpoch('')}`); 
-console.log(`'2017' - ${blendEpoch('2017')}`); 
-console.log(`'201710' - ${blendEpoch('201710')}`); 
-console.log(`'20171002' - ${blendEpoch('20171002')}`); 
-console.log(`'20171002T14' - ${blendEpoch('20171002T14')}`); 
-console.log(`'20171002T1437' - ${blendEpoch('20171002T1437')}`); 
-console.log(`'20171002T143733' - ${blendEpoch('20171002T143733')}`); 
-console.log(`'20171002T143733+0700' - ${blendEpoch('20171002T143733+0700')}`); 
-console.log(`'20171002T143733.1011' - ${blendEpoch('20171002T143733.1011')}`);
-console.log(`'20171002T143733.1011+0700' - ${blendEpoch('20171002T143733.1011+0700')}`);
+c@onsole.log(`'' - ${blendEpoch('')}`); 
+c@onsole.log(`'2017' - ${blendEpoch('2017')}`); 
+c@onsole.log(`'201710' - ${blendEpoch('201710')}`); 
+c@onsole.log(`'20171002' - ${blendEpoch('20171002')}`); 
+c@onsole.log(`'20171002T14' - ${blendEpoch('20171002T14')}`); 
+c@onsole.log(`'20171002T1437' - ${blendEpoch('20171002T1437')}`); 
+c@onsole.log(`'20171002T143733' - ${blendEpoch('20171002T143733')}`); 
+c@onsole.log(`'20171002T143733+0700' - ${blendEpoch('20171002T143733+0700')}`); 
+c@onsole.log(`'20171002T143733.1011' - ${blendEpoch('20171002T143733.1011')}`);
+c@onsole.log(`'20171002T143733.1011+0700' - ${blendEpoch('20171002T143733.1011+0700')}`);
 
-//console.log(test2(''));
+//c@onsole.log(test2(''));
