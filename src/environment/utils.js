@@ -185,15 +185,14 @@ module.exports.datetimeZoneOffset = (instant) => {
  * searches through the findInObjectArray and finds the first item with a property equal to the findValue 
  * if findAll is true the function will return all the items which match the findvalue, otherwise only the first 
  */
-module.exports.findByPropertyValue = (findInObjectArray, findProperty, findValue, findAll) => {
+module.exports.findByPropertyValue = (findInObjectArray, findProperty, findValue, findAll = false) => {
 
     const EXITFOR = findInObjectArray.length;
 
     let n;
     let foundItems = [];
     let item;
-    let all = findAll ? findAll : false;
-
+    
     for (n = 0; n < findInObjectArray.length; n++) {
 
         item = findInObjectArray[n];
@@ -201,7 +200,7 @@ module.exports.findByPropertyValue = (findInObjectArray, findProperty, findValue
         if (item[findProperty] === findValue) {
             foundItems.push(item);
             // quit after the first if all were not requested
-            if (!all) {
+            if (!findAll) {
                 n = EXITFOR;
             }
 

@@ -207,7 +207,7 @@
                     <!-- down -->
                     <% if (bHasChildren) { %>
 
-                    <span class="mr-1"></span>
+                    <% if (link_down[0]) { %><span class="mr-1"></span><% } %> 
 
                     <button type="button" class="btn btn-sm btn-light border border-secondary rounded text-nowrap px-2 py-0 mr-n1" data-toggle="tooltip"
                         title="Down to <%= utils.capitalise(child_period) + ': ' + items[0].links[0].title %>"
@@ -283,24 +283,24 @@
                         </div>
 
                         <!-- PERIOD n NAV row CHILD / GRANDCHILD toggle -->
-                        <div class="select-toggle-grandchild flex-nowrap"
-                            data-toggle="tooltip" title="show <%= utils.capitalise(link_col_grandchildren.name.replace('.', ' | '), true) %>" >
+                        <% if (bHasChildren && bHasGrandchildren) { %>
 
-                            <% if (bHasChildren && bHasGrandchildren) { %>
-
-                            <div class="mx-2 py-2">
-                                <span class="border border-secondary rounded text-secondary text-nowrap pr-1" style="font-size:14px;cursor:pointer;">
-                                    <span class="ml-1">
-                                        <%= `${pane === 'pane-child' ? items.length : link_meta_period.description.grandchild.duration}` %>
-                                    </span>
-                                    <%= `${pane === 'pane-child' ? utils.capitalise(child_period) : utils.capitalise(grandchild_period)}s ` %> 
-                                </span>                                
-                            </div>
-
-                            <% } %>
-        
+                        <div class="flex-nowrap text-nowrap mx-2 py-1 mt-1">
+                            <span class="text-secondary text-nowrap justify-content-end ml-2" style="font-size:14px;cursor:pointer;"> 
+                                <%= `${pane === 'pane-child' ? items.length + ' ' + utils.capitalise(child_period): 
+                                    link_meta_period.description.grandchild.duration + ' ' + utils.capitalise(grandchild_period)}s` %>
+                            </span>
+                            <button type="button" class="select-toggle-grandchild btn btn-sm btn-light border border-secondary rounded text-nowrap py-0"
+                                data-toggle="tooltip" title="show <%= utils.capitalise(link_col_grandchildren.name.replace('.', ' | '), true) %> " >
+                                <i class="material-icons text-secondary font-weight-bolder px-0 ml-n1" style="font-size:12px;">
+                                    <%= `${(pane === 'pane-child' ? 'expand_more' : 'expand_less')}` %></i>
+                                <span class="ml-n1" style="font-size:12px;"> 
+                                    <%= `${(pane === 'pane-child' ? grandchild_period : child_period).charAt(0).toUpperCase()}` %>
+                                </span> </button> 
                         </div>
-                        
+
+                        <% } %>
+        
                     </div>
 
                     <div class="d-flex flex-nowrap">
