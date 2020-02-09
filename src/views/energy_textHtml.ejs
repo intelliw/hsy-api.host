@@ -291,7 +291,7 @@
                                     link_meta_period.description.grandchild.duration + ' ' + utils.capitalise(grandchild_period)}s` %>
                             </span>
                             <button type="button" class="select-toggle-grandchild btn btn-sm btn-light border border-secondary rounded text-nowrap py-0"
-                                data-toggle="tooltip" title="show <%= utils.capitalise(link_col_grandchildren.name.replace('.', ' | '), true) %> " >
+                                data-toggle="tooltip" title="show <%= `${utils.capitalise(pane === 'pane-child' ? grandchild_period : child_period)}s` %>" >
                                 <i class="material-icons text-secondary font-weight-bolder px-0 ml-n1" style="font-size:12px;">
                                     <%= `${(pane === 'pane-child' ? 'expand_more' : 'expand_less')}` %></i>
                                 <span class="ml-n1" style="font-size:12px;"> 
