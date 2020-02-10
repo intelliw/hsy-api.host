@@ -30,7 +30,7 @@ class MonitoringPms extends ActiveMsgProducer {
      * apiPathIdentifier                                                            // enums.params.datasets
      * writeTopic                                                                   // env.active.messagebroker.topics.monitoring
      * constructor arguments 
-     * @param {*} apiPathIdentifier                                                 // enums.params.datasets              - e.g. pms       
+     * @param {*}                                                                   
      */
     constructor() {
 
@@ -38,27 +38,8 @@ class MonitoringPms extends ActiveMsgProducer {
 
     }
 
-
     /**
      * creates an array of messagebroker messages and returns them in a results object
-     *  datasets - object array of dataset items. 
-     *      the *array* (of datasets) in the req.body e.g. the [.. ] array in {"datasets": [.. ] ..}
-     *  each dataset item has an id and an array of data objects
-     *  each data object has a time_local event timestamp
-     *  dataset objects have a common structure
-     *  the id property must be in an object named after the dataset 
-     *      e.g. { "pms": { "id": "PMS-01-001" },  "data": [ { "time_local": "20190209T150006.032+0700", ..]
-     * the returned results object contains these properties
-     *  itemCount  - a count of the total number of dataitems in all datasets / message
-     *  messages[] - array of kafka messages, includes key,. value, header attributes (header is optional)
-     *              each message.value contains a dataset with modified data items
-     *  returned results object, e.g. :
-     *  { itemCount: 1,
-     *    messages: [ 
-     *    { key: 'TEST-01',
-     *      value: '{"pms":{"id":"TEST-01"},"data":[{"pack":{"id":"0241","dock":1,"amps":-1.601,"temp":[35,33,34],"cell":{"open":[],"volts":[3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.92,3.91]},"fet":{"open":[1,2],"temp":[34.1,32.2]},"status":"0001"},"sys":{"source":"STAGE001"},"time_event":"2019-09-09 08:00:06.0320","time_zone":"+07:00","time_processing":"2019-12-17 04:07:20.7790"}]}' 
-     *      } ]
-     *   }
      */
     _extractData(datasets, sender) {
 
@@ -73,7 +54,7 @@ class MonitoringPms extends ActiveMsgProducer {
         const FET_IN_INDEX = 1, FET_OUT_INDEX = 2;
 
 
-        let results = { itemCount: 0, messages: [] };
+        let msgObj = { itemCount: 0, messages: [] };
 
         // extract and add messages to results 
         datasets.forEach(dataset => {                                                           // e.g. "pms": { "id": "PMS-01-001" }, "data": [ { time_local: '20190809T150006.032+0700', pack: [Object] }, ... ]
@@ -144,7 +125,7 @@ class MonitoringPms extends ActiveMsgProducer {
                 let dataItemClone = super.addGenericAttributes(dataObj, sender);                // clone the dataItem and add common attributes (time_event, time_zone, time_processing)
 
                 // add the dataitem to the message buffer
-                results.messages.push(super.createMessage(key, dataItemClone));                 // add to the message array
+                msgObj.messages.push(super.createMessage(key, dataItemClone));                 // add to the message array
 
             });
 
@@ -154,8 +135,8 @@ class MonitoringPms extends ActiveMsgProducer {
 
         });
         
-        results.itemCount = dataItemCount;
-        return results;
+        msgObj.itemCount = dataItemCount;
+        return msgObj;
 
     }
 

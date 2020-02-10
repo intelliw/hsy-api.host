@@ -79,7 +79,7 @@ router.get('/logging', (req, res, next) => {
         let sender = Param.ApiKey.getSender(enums.apiKey.PROXY);          // make sender the system PROXY as it is an internal message
 
         // communicate logging config changes from host to consumer instances  
-        let producer = producers.getProducer(enums.paths.api.logging);                      // returns a Features producer, apiPathIdentifier = enums.features.. 
+        let producer = producers.getProducer(enums.paths.api.logging);                  // returns a Features producer, apiPathIdentifier = enums.features.. 
         producer.sendToTopic(env.active.logging, sender);                               // send the complete logging configs to the topic: which is env.active.messagebroker.topics.system.feature
 
         // trace log the logging config change

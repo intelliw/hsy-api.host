@@ -29,18 +29,13 @@ class Feature extends ActiveMsgProducer {
     * @param {*} datasets                                                           // an array of datasets
     * @param {*} sender                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
     */
-    async sendToTopic(data, sender) {
+   _extractData(datasets, sender) {
         
-        // send the message to the topics
-        try {
+        let msgObj = { itemCount: 1, messages: [] };
+        
+        msgObj.messages.push(super.createMessage(this.apiPathIdentifier, datasets));   // add to the message array. the key is the feature name e.g. 'logging'
 
-            let msgObj = { itemCount: 1, messages: [] };
-            msgObj.messages.push(super.createMessage(this.apiPathIdentifier, data));   // add to the message array. the key is the feature name e.g. 'logging'
-            super.sendToTopic(msgObj, sender);
-
-        } catch (e) {
-            log.error(`${this.apiPathIdentifier} ${log.enums.methods.mbSendToTopic}`, e);
-        }
+        return msgObj;
 
     }
 

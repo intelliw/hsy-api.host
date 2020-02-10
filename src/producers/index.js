@@ -10,12 +10,15 @@ const enums = require('../environment/enums');
 
 // kafka or pubsub - depending on active configs
 module.exports.ActiveMsgProducer = require(`${env.active.messagebroker.provider == enums.messageBroker.providers.pubsub ? './PubSubProducer' : './KafkaProducer'}`);
-
 module.exports.Producer = require('./Producer');
+
 module.exports.KafkaProducer = require('./KafkaProducer');
 module.exports.PubSubProducer = require('./PubSubProducer');
-module.exports.Monitoring = require('./Monitoring');
+
 module.exports.MonitoringPms = require('./MonitoringPms');
+module.exports.MonitoringMppt = require('./MonitoringMppt');
+module.exports.MonitoringInverter = require('./MonitoringInverter');
+
 module.exports.Feature = require('./Feature');
 
 // static factory method to construct producers    
@@ -30,12 +33,12 @@ module.exports.getProducer = (apiPathIdentifier) => {
 
         // mppt 
         case enums.params.datasets.mppt:
-            producer = new this.Monitoring(enums.params.datasets.mppt, env.active.messagebroker.topics.monitoring.mppt);
+            producer = new this.MonitoringMppt();
             break;
 
         // inverter 
         case enums.params.datasets.inverter:
-            producer = new this.Monitoring(enums.params.datasets.inverter, env.active.messagebroker.topics.monitoring.inverter);
+            producer = new this.MonitoringInverter();
             break;
 
         // logging feature - communicates logging configuration changes from host to consumer instances  
