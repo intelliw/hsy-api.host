@@ -5,6 +5,7 @@
  *  base type for all message producers 
  * this class deleagates to Kafka or PubSub depending on env.active.messagebroker
  */
+const ActiveMsgPublisher = require('../providers').ActiveMsgPublisher;
 
 const env = require('../environment');
 const enums = require('../environment/enums');
@@ -15,19 +16,19 @@ const log = require('../logger').log;
 
 const moment = require('moment');
 
-class Producer {
+class Producer extends ActiveMsgPublisher{
     /**
      * superclass - 
      * clients must call sendToTopic() 
      * 
      * instance attributes:  
      * constructor arguments 
-     * @param {*} apiPathIdentifier                                                 // enums.params.datasets              - e.g. pms       
      * @param {*} writeTopic
      */
-    constructor(apiPathIdentifier, writeTopic) {
+    constructor(writeTopic) {
 
-        this.apiPathIdentifier = apiPathIdentifier;
+        super();
+
         this.writeTopic = writeTopic;
 
     }
@@ -36,7 +37,13 @@ class Producer {
     * @param {*} msgObj                                                             // e.g. msgObj = { itemCount: 0, messages: [] };
     * @param {*} sender                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
     */
-    async sendToTopic(msgObj, sender) {
+    async sendToTopic(datasets, sender) {
+        
+        // get the data     - e.g. msgObj = { itemCount: 0, messages: [] };
+        let msgObj = this._extractData(datasets, sender);                                       // _extractData is implemented by subclass. e.g. results: { itemCount: 9, messages: [. . .] }
+        this.publish(msgObj, this.writeTopic, sender);
+
+
     }
 
     /** creates and returns a formatted message object 
@@ -97,11 +104,6 @@ class Producer {
         return dataItemClone;
 
     }
-
-
-
-    _isKafka() { return env.active.messagebroker.provider == enums.messageBroker.providers.kafka; }
-    _isPubSub() { return env.active.messagebroker.provider == enums.messageBroker.providers.pubsub; }
 
 
 }

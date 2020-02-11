@@ -58,10 +58,10 @@ function test3() {
         columns: true,
         skip_empty_lines: true
     })
-    c@onsole.log('@@@')  // @@@@@
-    c@onsole.log(csvRows[0]['pack.id'])  // @@@@@
-    c@onsole.log(csvRows[1]['pack.id'])  // @@@@@
-    c@onsole.log(`csvRows.length ${csvRows.length}`); // @@@@@
+    c@onsole.log('$$$')  // $$$
+    c@onsole.log(csvRows[0]['pack.id'])  // $$$
+    c@onsole.log(csvRows[1]['pack.id'])  // $$$
+    c@onsole.log(`csvRows.length ${csvRows.length}`); // $$$
     //console.dir(csvRows);
 
 }

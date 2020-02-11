@@ -4,7 +4,6 @@
  * ./producers/MonitoringPms.js
  *  base type for Kafka message producers  
  */
-const ActiveMsgProducer = require('../producers').ActiveMsgProducer;
 
 const consts = require('../host/constants');
 
@@ -15,27 +14,25 @@ const log = require('../logger').log;
 
 const moment = require('moment');
 
-const API_PATH_IDENTIFIER = enums.params.datasets.pms;
 const WRITE_TOPIC = env.active.messagebroker.topics.monitoring.pms;
 
+const Producer = require('./Producer');
 /**
  * instance attributes
  * producer                                                             //  e.g. Dataset - producer object responsible for transforming a consumed message and if requested, sending it to a new topic  
  constructor arguments 
  */
-class MonitoringPms extends ActiveMsgProducer {
+class MonitoringPms extends Producer{
 
     /**
      * instance attributes:  
-     * apiPathIdentifier                                                            // enums.params.datasets
-     * writeTopic                                                                   // env.active.messagebroker.topics.monitoring
      * constructor arguments 
      * @param {*}                                                                   
      */
     constructor() {
 
-        super(API_PATH_IDENTIFIER, WRITE_TOPIC);
-
+        super(WRITE_TOPIC);
+        
     }
 
     /**
