@@ -1,7 +1,7 @@
 //@ts-check
 "use strict";
 /**
- * ./providers/Publisher.js
+ * ./publishers/Publisher.js
  */
 
 class Publisher {

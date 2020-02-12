@@ -5,7 +5,6 @@
  *  base type for all message producers 
  * this class deleagates to Kafka or PubSub depending on env.active.messagebroker
  */
-const ActiveMsgPublisher = require('../providers').ActiveMsgPublisher;
 
 const env = require('../environment');
 const enums = require('../environment/enums');
@@ -13,10 +12,11 @@ const consts = require('../host/constants');
 const utils = require('../environment/utils');
 
 const log = require('../logger').log;
+const pub = require('../publishers').pub;
 
 const moment = require('moment');
 
-class Producer extends ActiveMsgPublisher{
+class Producer {
     /**
      * superclass - 
      * clients must call sendToTopic() 
@@ -26,8 +26,6 @@ class Producer extends ActiveMsgPublisher{
      * @param {*} writeTopic
      */
     constructor(writeTopic) {
-
-        super();
 
         this.writeTopic = writeTopic;
 
@@ -40,9 +38,8 @@ class Producer extends ActiveMsgPublisher{
     async sendToTopic(datasets, sender) {
         
         // get the data     - e.g. msgObj = { itemCount: 0, messages: [] };
-        let msgObj = this._extractData(datasets, sender);                                       // _extractData is implemented by subclass. e.g. results: { itemCount: 9, messages: [. . .] }
-        this.publish(msgObj, this.writeTopic, sender);
-
+        let msgObj = this._extractData(datasets, sender);                           // _extractData is implemented by subclass. e.g. results: { itemCount: 9, messages: [. . .] }
+        pub.publish(msgObj, this.writeTopic, sender);
 
     }
 

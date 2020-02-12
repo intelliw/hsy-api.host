@@ -1,7 +1,7 @@
 //@ts-check
 "use strict";
 /**
- * ./providers/PubSubPublisher.js
+ * ./publishers/PubSubPublisher.js
  *  base type for Kafka message producers  
  */
 const { PubSub } = require('@google-cloud/pubsub');
