@@ -18,10 +18,10 @@ class PubSubPublisher extends Publisher{
     constructor() {
 
         // create a pubsub producer
-        const pubsub = new PubSub();
+        const publisherObj = new PubSub();
 
         // setup instance variables specific to PubSubPublisher 
-        super(pubsub);
+        super(publisherObj);
     }
 
     /** implemented by subtype

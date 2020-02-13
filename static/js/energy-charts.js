@@ -268,7 +268,7 @@ function getActiveHsyFilters(allColumns, allColours) {
     }
 
     // buy
-    if ($('.hsy-filter-btn.btn-dark.live').hasClass('active')) {              
+    if ($('.hsy-filter-btn.btn-secondary.live').hasClass('active')) {              
         numFilters++;
         filterObj.columns.push(allColumns[BUY_IN]);
         filterObj.colours.push(allColours[BUY_IN]);

@@ -210,11 +210,11 @@
   transition: opacity 0.25s;
 }
 .btn-toggle.btn-sm:before {
-  content: "Hide";
+  content: "Show";
   left: -0.5rem;
 }
 .btn-toggle.btn-sm:after {
-  content: "Show";
+  content: "Hide";
   right: -0.5rem;
   opacity: 0.5;
 }

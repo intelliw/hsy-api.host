@@ -38,7 +38,7 @@ class MonitoringMppt extends Producer {
     /**
      * creates an array of messagebroker messages and returns them in a results object
      */
-    _extractData(datasets, sender) {
+    transform(datasets, sender) {
 
         let key
         let dataItemCount = 0;
@@ -112,10 +112,10 @@ class MonitoringMppt extends Producer {
                 }
 
                 // add generic attributes
-                let dataItemClone = super.addGenericAttributes(dataObj, sender);                // clone the dataItem and add common attributes (time_event, time_zone, time_processing)
+                let dataItemClone = super._addGenericAttributes(dataObj, sender);                // clone the dataItem and add common attributes (time_event, time_zone, time_processing)
 
                 // add the dataitem to the message buffer
-                msgObj.messages.push(super.createMessage(key, dataItemClone));                 // add to the message array
+                msgObj.messages.push(super._createMessage(key, dataItemClone));                 // add to the message array
 
             });
 

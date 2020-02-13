@@ -18,10 +18,6 @@ const moment = require('moment');
 
 class Producer {
     /**
-     * superclass - 
-     * clients must call sendToTopic() 
-     * 
-     * instance attributes:  
      * constructor arguments 
      * @param {*} writeTopic
      */
@@ -38,9 +34,16 @@ class Producer {
     async sendToTopic(datasets, sender) {
         
         // get the data     - e.g. msgObj = { itemCount: 0, messages: [] };
-        let msgObj = this._extractData(datasets, sender);                           // _extractData is implemented by subclass. e.g. results: { itemCount: 9, messages: [. . .] }
+        let msgObj = this.transform(datasets, sender);                              // transform is implemented by subclass. e.g. results: { itemCount: 9, messages: [. . .] }
         pub.publish(msgObj, this.writeTopic, sender);
 
+    }
+
+    /**
+     * creates an array of messagebroker messages and returns them in a results object
+     * implemented by subtype
+     */
+    transform(datasets, sender) {
     }
 
     /** creates and returns a formatted message object 
@@ -57,7 +60,7 @@ class Producer {
     * @param {*} headers - a json object e.g. { 'corsrelation-id': '2bfb68bb-893a-423b-a7fa-7b568cad5b67', system-id': 'my-system' }  
     *        (note: kafkajs produces a byte array for headers unlike messages which are a string buffer
     */
-    createMessage(key, data, headers) {
+    _createMessage(key, data, headers) {
 
         // create the message
         let message = {
@@ -81,7 +84,7 @@ class Producer {
     *   - but it not required by bigquery as it will convert local time to utc if submitted with a zone offset
     *  sender is the keyname of the apikey enum, sent in the POST request  and identifies the source of the data. this value is added to sys.source attribute
     */
-    addGenericAttributes(dataItem, sender) {
+    _addGenericAttributes(dataItem, sender) {
         
         // create a new dataitem
         let dataItemClone = utils.deepClone(dataItem);                // clone the object before any modifications, to prevent errors due to object re-referencing 

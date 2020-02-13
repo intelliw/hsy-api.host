@@ -10,12 +10,6 @@ const Producer = require('./Producer');
 
 class Feature extends Producer {
     /**
-     * superclass - 
-     * clients must call sendToTopic() 
-     * 
-     * instance attributes:  
-     * apiPathIdentifier                                                             // enums.features
-     * writeTopic                                                                    // env.active.messagebroker.topics.monitoring
      * constructor arguments 
      * @param {*} apiPathIdentifier                                                  // identifer based on the api path: this is typically from enums.params.datasets - e.g. pms; or 
      */
@@ -30,11 +24,11 @@ class Feature extends Producer {
     * @param {*} datasets                                                           // an array of datasets
     * @param {*} sender                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
     */
-   _extractData(datasets, sender) {
+   transform(datasets, sender) {
         
         let msgObj = { itemCount: 1, messages: [] };
         
-        msgObj.messages.push(super.createMessage(this.apiPathIdentifier, datasets));   // add to the message array. the key is the feature name e.g. 'logging'
+        msgObj.messages.push(super._createMessage(this.apiPathIdentifier, datasets));   // add to the message array. the key is the feature name e.g. 'logging'
 
         return msgObj;
 
