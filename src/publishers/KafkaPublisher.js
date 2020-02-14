@@ -36,7 +36,7 @@ class KafkaPublisher extends Publisher {
     async publish(msgObj, writeTopic, sender) {
 
         // [start trace] -------------------------------    
-        const sp = log.SPAN.createChildSpan({ name: `${log.enums.methods.mbSendToTopic}` });    // 2do  - consumer tracing does not have a root span ..
+        const sp = log.SPAN.createChildSpan({ name: `${log.enums.methods.mbProduce}` });    // 2do  - consumer tracing does not have a root span ..
 
         // send the message to the topics
         try {
@@ -51,10 +51,10 @@ class KafkaPublisher extends Publisher {
                 }))
                 .then(r => log.messaging(writeTopic, `${r[0].baseOffset}-${parseInt(r[0].baseOffset) + (msgObj.messages.length - 1)}`, msgObj.messages, msgObj.itemCount, sender))         // info = (topic, id, msgqty, itemqty, sender) {
                 .then(this.publisherObj.disconnect())                                    // disconnect    
-                .catch(e => log.error(`${sender} ${log.enums.methods.mbSendToTopic} Error [${writeTopic}]`, e));
+                .catch(e => log.error(`${sender} ${log.enums.methods.mbProduce} Error [${writeTopic}]`, e));
             
         } catch (e) {
-            log.error(`${writeTopic} ${log.enums.methods.mbSendToTopic}`, e);
+            log.error(`${writeTopic} ${log.enums.methods.mbProduce}`, e);
         }
 
         // [end trace] ---------------------------------    

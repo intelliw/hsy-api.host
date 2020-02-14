@@ -27,7 +27,7 @@ class PubSubPublisher extends Publisher{
     /** implemented by subtype
     * @param {*} msgObj               
     * @param {*} writeTopic 
-    * @param {*} sender                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
+    * @param {*} sender                                                                                     // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
     */
     async publish(msgObj, writeTopic, sender) {
 
@@ -35,7 +35,7 @@ class PubSubPublisher extends Publisher{
         let dataBuffer, dataAttributes;
 
         // [start trace] -------------------------------    
-        const sp = log.SPAN.createChildSpan({ name: `${log.enums.methods.mbSendToTopic}` });                // 2do  - consumer tracing does not have a root span ..
+        const sp = log.SPAN.createChildSpan({ name: `${log.enums.methods.mbProduce}` });                    // 2do  - consumer tracing does not have a root span ..
 
         // send the message to the topics
         try {
@@ -52,7 +52,7 @@ class PubSubPublisher extends Publisher{
 
                 (async () => {
 
-                    dataBuffer = Buffer.from(msgObj.messages[i].value);                                             // value attribute if kafka 
+                    dataBuffer = Buffer.from(msgObj.messages[i].value);                                     // value attribute if kafka 
                     dataAttributes = {
                         key: msgObj.messages[i].key
                     };
@@ -61,7 +61,7 @@ class PubSubPublisher extends Publisher{
                     await batchPub.publish(dataBuffer, dataAttributes, (e, messageId) => {
                         // log errors
                         if (e) {
-                            log.error(`${writeTopic} ${log.enums.methods.mbSendToTopic} Error [${writeTopic}]`, e);
+                            log.error(`${writeTopic} ${log.enums.methods.mbProduce} Error [${writeTopic}]`, e);
 
                         // log messaging once only, after all messages in this batch/loop have been published 
                         } else {
@@ -73,11 +73,11 @@ class PubSubPublisher extends Publisher{
 
                     });
 
-                })().catch(e => log.error(`${sender} ${log.enums.methods.mbSendToTopic} Error (async) [${writeTopic}]`, e));
+                })().catch(e => log.error(`${sender} ${log.enums.methods.mbProduce} Error (async) [${writeTopic}]`, e));
             }
 
         } catch (e) {
-            log.error(`${writeTopic} ${log.enums.methods.mbSendToTopic}`, e);
+            log.error(`${writeTopic} ${log.enums.methods.mbProduce}`, e);
         }
 
         // [end trace] ---------------------------------    

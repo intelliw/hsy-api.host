@@ -20,31 +20,32 @@ class Producer {
     /**
      * constructor arguments 
      * @param {*} writeTopic
+     * @param {*} sender                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
      */
-    constructor(writeTopic) {
+    constructor(writeTopic, sender) {
 
         this.writeTopic = writeTopic;
-
+        this.sender = sender;  
+        
     }
 
     /** implemented by subtype
     * @param {*} msgObj                                                             // e.g. msgObj = { itemCount: 0, messages: [] };
-    * @param {*} sender                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
     */
-    async sendToTopic(datasets, sender) {
+    async produce(msgObj) {
         
         // get the data     - e.g. msgObj = { itemCount: 0, messages: [] };
-        let msgObj = this.transform(datasets, sender);                              // transform is implemented by subclass. e.g. results: { itemCount: 9, messages: [. . .] }
-        pub.publish(msgObj, this.writeTopic, sender);
+        pub.publish(msgObj, this.writeTopic, this.sender);
 
     }
 
     /**
      * creates an array of messagebroker messages and returns them in a results object
-     * implemented by subtype
+     * transform is implemented by subclass. 
      */
-    transform(datasets, sender) {
+    transform(datasets) {
     }
+
 
     /** creates and returns a formatted message object 
     * this method is for subtypes to call while extracting data from a request body

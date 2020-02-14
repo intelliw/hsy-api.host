@@ -16,24 +16,28 @@ module.exports.MonitoringInverter = require('./MonitoringInverter');
 
 module.exports.Feature = require('./Feature');
 
-// static factory method to construct producers    
-module.exports.getProducer = (apiPathIdentifier) => {
+/** static factory method to construct producers    
+* @param {*} apiPathIdentifier                                                  // apiPathIdentifier = enums.params.datasets..
+* @param {*} sender                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
+*/
+module.exports.getProducer = (apiPathIdentifier, sender) => {
+
     let producer;
     switch (apiPathIdentifier) {
 
         // pms
         case enums.params.datasets.pms:
-            producer = new this.MonitoringPms();
+            producer = new this.MonitoringPms(sender);
             break;
 
         // mppt 
         case enums.params.datasets.mppt:
-            producer = new this.MonitoringMppt();
+            producer = new this.MonitoringMppt(sender);
             break;
 
         // inverter 
         case enums.params.datasets.inverter:
-            producer = new this.MonitoringInverter();
+            producer = new this.MonitoringInverter(sender);
             break;
 
         // logging feature - communicates logging configuration changes from host to consumer instances  

@@ -264,14 +264,16 @@ class DevicesDatasetsPostResponse extends Response {
 function executePost(params) {
 
     // construct a producer
-    let apiPathIdentifier = params.dataset.value;                                   //  enums.params.datasets              - e.g. pms  
+    let apiPathIdentifier = params.dataset.value;                               //  enums.params.datasets              - e.g. pms  
 
-    let sender = Param.ApiKey.getSender(params.apiKey.value);                       // the 'source' is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
-    let datasets = params.datasets.value;                                           // for application/json datasets param is the *array* (of datasets) in the req.body e.g.  the [.. ] array in {"datasets": [.. ] 
+    let sender = Param.ApiKey.getSender(params.apiKey.value);                   // the 'source' is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
+    let datasets = params.datasets.value;                                       // for application/json datasets param is the *array* (of datasets) in the req.body e.g.  the [.. ] array in {"datasets": [.. ] 
 
-    // sendToTopic (asynchronously)
-    let producer = producers.getProducer(apiPathIdentifier);                        // apiPathIdentifier = enums.params.datasets..
-    producer.sendToTopic(datasets, sender);                                         // async sendToTopic() ok as by now we have connected to kafka/pubsub, and the dataset should have been validated and the only outcome is a 200 response
+    // produce (asynchronously)
+    let producer = producers.getProducer(apiPathIdentifier, sender);            // apiPathIdentifier = enums.params.datasets..
+    
+    let msgObj = producer.transform(datasets);
+    producer.produce(msgObj, sender);                                           // async produce() ok as by now we have connected to kafka/pubsub, and the dataset should have been validated and the only outcome is a 200 response
 
     // prepare the response
     let message = 'Data queued for processing.';
