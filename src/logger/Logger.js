@@ -106,7 +106,7 @@ class Logger {
             },
             methods: {                                                              // methods used in trace agent child spans, and trace statements
                 mbProduce: 'mb: produce',                                   // message broker can be kafka or pubsub   
-                bqInsertRows: 'bq: insertRows',
+                bqInsertRows: 'bq: insert',
                 energyExecuteGet: 'energy: executeGet',
             }
         }

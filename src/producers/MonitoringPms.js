@@ -51,7 +51,7 @@ class MonitoringPms extends Producer{
         const FET_IN_INDEX = 1, FET_OUT_INDEX = 2;
 
 
-        let msgObj = { itemCount: 0, messages: [] };
+        let transformedMsgObj = { itemCount: 0, messages: [] };
 
         // extract and add messages to results 
         datasets.forEach(dataset => {                                                           // e.g. "pms": { "id": "PMS-01-001" }, "data": [ { time_local: '20190809T150006.032+0700', pack: [Object] }, ... ]
@@ -122,7 +122,7 @@ class MonitoringPms extends Producer{
                 let dataItemClone = super._addGenericAttributes(dataObj, this.sender);                // clone the dataItem and add common attributes (time_event, time_zone, time_processing)
 
                 // add the dataitem to the message buffer
-                msgObj.messages.push(super._createMessage(key, dataItemClone));                 // add to the message array
+                transformedMsgObj.messages.push(super._createMessage(key, dataItemClone));                 // add to the message array
 
             });
 
@@ -132,8 +132,8 @@ class MonitoringPms extends Producer{
 
         });
         
-        msgObj.itemCount = dataItemCount;
-        return msgObj;
+        transformedMsgObj.itemCount = dataItemCount;
+        return transformedMsgObj;
 
     }
 

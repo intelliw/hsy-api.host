@@ -13,9 +13,9 @@ class Feature extends Producer {
      * constructor arguments 
      * @param {*} apiPathIdentifier                                                  // identifer based on the api path: this is typically from enums.params.datasets - e.g. pms; or 
      */
-    constructor(apiPathIdentifier, writeTopic) {
+    constructor(sender, apiPathIdentifier, writeTopic) {
         
-        super(writeTopic);
+        super(writeTopic, sender);
         this.apiPathIdentifier = apiPathIdentifier;
 
     }

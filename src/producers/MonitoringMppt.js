@@ -47,7 +47,7 @@ class MonitoringMppt extends Producer {
 
         const PRECISION = consts.system.MONITORING_PRECISION;
 
-        let msgObj = { itemCount: 0, messages: [] };
+        let transformedMsgObj = { itemCount: 0, messages: [] };
 
         // extract and add messages to results 
         datasets.forEach(dataset => {                                                           
@@ -115,7 +115,7 @@ class MonitoringMppt extends Producer {
                 let dataItemClone = super._addGenericAttributes(dataObj, this.sender);                // clone the dataItem and add common attributes (time_event, time_zone, time_processing)
 
                 // add the dataitem to the message buffer
-                msgObj.messages.push(super._createMessage(key, dataItemClone));                 // add to the message array
+                transformedMsgObj.messages.push(super._createMessage(key, dataItemClone));                 // add to the message array
 
             });
 
@@ -125,8 +125,8 @@ class MonitoringMppt extends Producer {
 
         });
 
-        msgObj.itemCount = dataItemCount;
-        return msgObj;
+        transformedMsgObj.itemCount = dataItemCount;
+        return transformedMsgObj;
 
     }
 

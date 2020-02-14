@@ -50,7 +50,7 @@ class MonitoringInverter extends Producer {
         const ITEMNUMBER_LENGTH = 2;                                                                // how many digits int he cell number e.g 02
         const SQ_ROOT_OF_THREE = Math.sqrt(3);
 
-        let msgObj = { itemCount: 0, messages: [] };
+        let transformedMsgObj = { itemCount: 0, messages: [] };
 
         // extract and add messages to results 
         datasets.forEach(dataset => {
@@ -121,7 +121,7 @@ class MonitoringInverter extends Producer {
                 let dataItemClone = super._addGenericAttributes(dataObj, this.sender);                // clone the dataItem and add common attributes (time_event, time_zone, time_processing)
 
                 // add the dataitem to the message buffer
-                msgObj.messages.push(super._createMessage(key, dataItemClone));                 // add to the message array
+                transformedMsgObj.messages.push(super._createMessage(key, dataItemClone));                 // add to the message array
 
             });
 
@@ -131,8 +131,8 @@ class MonitoringInverter extends Producer {
 
         });
 
-        msgObj.itemCount = dataItemCount;
-        return msgObj;
+        transformedMsgObj.itemCount = dataItemCount;
+        return transformedMsgObj;
 
     }
 

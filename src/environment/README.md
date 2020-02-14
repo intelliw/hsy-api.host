@@ -1,2 +1,3 @@
-# this folder contains shared files 
-- files are shared as hard symlinks in other projects (hse-consumer)
+# shared files
+this folder contains shared files
+see scripts in `hsy-api.deployment` for sharing details 

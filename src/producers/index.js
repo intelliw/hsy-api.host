@@ -42,12 +42,12 @@ module.exports.getProducer = (apiPathIdentifier, sender) => {
 
         // logging feature - communicates logging configuration changes from host to consumer instances  
         case enums.paths.api.logging:
-            producer = new this.Feature(enums.paths.api.logging, env.active.messagebroker.topics.system.feature);
+            producer = new this.Feature(sender, enums.paths.api.logging, env.active.messagebroker.topics.system.feature);
             break;
 
         // feature toggles
         case enums.paths.api.features:
-            producer = new this.Feature(enums.paths.api.features, env.active.messagebroker.topics.system.feature);
+            producer = new this.Feature(sender, enums.paths.api.features, env.active.messagebroker.topics.system.feature);
             break;
 
     }

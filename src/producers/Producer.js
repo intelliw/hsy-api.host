@@ -26,16 +26,16 @@ class Producer {
 
         this.writeTopic = writeTopic;
         this.sender = sender;  
-        
+
     }
 
-    /** implemented by subtype
-    * @param {*} msgObj                                                             // e.g. msgObj = { itemCount: 0, messages: [] };
+    /** sends messages to the broker  
+    * @param {*} transformedMsgObj                                                             // e.g. msgObj = { itemCount: 0, messages: [] };
     */
-    async produce(msgObj) {
+    async produce(transformedMsgObj) {
         
-        // get the data     - e.g. msgObj = { itemCount: 0, messages: [] };
-        pub.publish(msgObj, this.writeTopic, this.sender);
+        // publish the transformed messages
+        pub.publish(transformedMsgObj, this.writeTopic, this.sender);
 
     }
 

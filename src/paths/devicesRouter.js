@@ -272,8 +272,8 @@ function executePost(params) {
     // produce (asynchronously)
     let producer = producers.getProducer(apiPathIdentifier, sender);            // apiPathIdentifier = enums.params.datasets..
     
-    let msgObj = producer.transform(datasets);
-    producer.produce(msgObj, sender);                                           // async produce() ok as by now we have connected to kafka/pubsub, and the dataset should have been validated and the only outcome is a 200 response
+    let transformedMsgObj = producer.transform(datasets);
+    producer.produce(transformedMsgObj);                                           // async produce() ok as by now we have connected to kafka/pubsub, and the dataset should have been validated and the only outcome is a 200 response
 
     // prepare the response
     let message = 'Data queued for processing.';
