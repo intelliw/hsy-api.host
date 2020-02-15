@@ -52,6 +52,11 @@ class Request {
         this.response = this.validation.isValid === true ? consts.NONE : new ErrorResponse(this.validation);    // ErrorResponse contains a generic error message as specified by the swagger genericMessage definition
     }
 
+    // the senderId is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
+    senderId() {
+        return Param.ApiKey.getSenderId(this.apiKey.value);
+    }
+
 }
 
 module.exports = Request;

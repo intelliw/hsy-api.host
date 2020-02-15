@@ -6,7 +6,6 @@
  */
 const express = require('express');
 const router = express.Router();
-const csvSyncParse = require('csv-parse/lib/sync')
 
 const enums = require('../environment/enums');
 const utils = require('../environment/utils');
@@ -18,7 +17,7 @@ const Param = require('../parameters');
 const Datasets = require('../parameters/Datasets');
 
 const Response = require('./Response');
-const producers = require('../producers');
+const consumers = require('../consumers');
 
 const GenericMessage = require('../definitions/GenericMessage');
 const GenericMessageDetail = require('../definitions/GenericMessageDetail');
@@ -75,116 +74,38 @@ class DevicesDatasetsPost extends Request {
     */
     constructor(req) {
 
-        let datasetName, datasets, contentType, isPmsCsv;
+        let datasetName, contentType, datasets;
+        let params = {};
 
         // body content - check if json or csv                                                      // for application/json this is a datasets object with array of datasets {"datasets": [.. ] 
-        datasetName = req.params.dataset;                                                               // dataset is a query string param         
+        datasetName = req.params.dataset;                                                           // dataset is a query string param         
         contentType = req.headers[enums.request.headers.contentType];                               // text/csv or application/json
+        
+        // create the consumer
+        params.apiKey = new Param.ApiKey(req);
+        let consumer = consumers.getConsumer(datasetName, params.apiKey.senderId());                // apiPathIdentifier = enums.params.datasets.. the senderId is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
 
-        // convert if pms csv                                                                       // for text/csv req body contains raw csv content, for application/json the req.body is a 'datasets' object with array of datasets {"datasets": [.. ]                        
-        isPmsCsv = (contentType == enums.mimeType.textCsv) && (datasetName == enums.params.datasets.pms);     // text/csv supported for pms only
-        if (isPmsCsv) {
-            datasets = pmsCsvToJson(`${req.body}`);                                                 // for text/csv this is raw csv content. use template literal to handle embedded quotes in the data !
-        } else {
-            datasets = req.body.datasets;
-        }
+        // if csv convert dataset to json                                                                   // for text/csv req body contains raw csv content, for application/json the req.body is a 'datasets' object with array of datasets {"datasets": [.. ]                        
+        datasets = (contentType == enums.mimeType.textCsv ? `${req.body}` : req.body.datasets);
+        datasets = consumer.normalise(datasets, contentType);                                       // for text/csv this is raw csv content. use template literal to handle embedded quotes in the data !
 
-        // parameters                                                       
-        let params = {};
+        // create parameter objects, and validate the dataset
         params.dataset = new Param('dataset', datasetName, consts.NONE, enums.params.datasets);     // this is the path parameter e.g. pms
-        params.datasets = new Datasets(datasetName, datasets);                                      // Datasets validates the devices req.body.datasets payload. 
+        params.datasets = new Datasets(datasetName, datasets, consumer.validate(datasets));         // Datasets validates the devices req.body.datasets payload. 
 
-        // super Request- creates a Validate object to validate all params, auth, and accept header
-        super(req, params, DevicesDatasetsPostResponse.produces, DevicesDatasetsPostResponse.consumes);           // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
-        params.apiKey = this.apiKey;                                                                // add apiKey as a param as it is used to produce the sys.source attribute in the Producer  
-
-        // trace log the request
-        log.trace(log.enums.labels.requestStatus, `${datasetName} POST ${contentType}, sender:${Param.ApiKey.getSender(this.apiKey.value)}, valid?${this.validation.isValid}`, JSON.stringify({ datasets: datasets }));
+        // super Request- creates a Validate object to validate request params, auth, and accept header
+        super(req, params, DevicesDatasetsPostResponse.produces, DevicesDatasetsPostResponse.consumes);     // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
+        
+        // trace-log the request
+        log.trace(log.enums.labels.requestStatus, `${datasetName} POST ${contentType}, sender:${this.senderId()}, valid?${this.validation.isValid}`, JSON.stringify({ datasets: params.datasets.value }));
 
         // execute the response only if super isValid                                               // if not isValid  super constuctor would have created a this.response = ErrorResponse 
-        this.response = this.validation.isValid === true ? new DevicesDatasetsPostResponse(this.params, this.accept) : this.response;
+        this.response = this.validation.isValid === true ? new DevicesDatasetsPostResponse(this.params, this.accept, consumer) : this.response;
 
     }
 
 }
 
-// parse csv into json array of datasets - csv must have headers. error rows are skippsed (e.g. missing closing quote)
-function pmsCsvToJson(csvData) {
-
-    const CELL_VOLTS_COLUMNS = 14;
-    const CELL_OPEN_COLUMNS = 14;
-    const FET_OPEN_COLUMNS = 2;
-
-    let dataset = consts.NONE;
-    let json = [];
-    let pmsId = '';
-
-    // sync-parse to get all the csv rows
-    const csvRows = csvSyncParse(csvData.trim(), {
-        columns: true,
-        skip_empty_lines: true
-    })
-
-    // convert each csv row to pms json
-    csvRows.forEach(csvRow => {
-
-        // if new/different pms id 
-        if (pmsId !== csvRow['pms.id'].trim()) {
-
-            // add dataset to json array (except when dataset is empty at the start)
-            if (dataset !== consts.NONE) json.push(dataset);
-
-            // reinitialise dataset as a new one
-            pmsId = csvRow['pms.id'].trim();
-            dataset = { pms: { id: pmsId }, data: [] }
-        }
-
-        // make the data arrays for cell.open[], cell.volts[], fet.open[]
-        let cellOpen = utils.csvBooleanToColumnPosArray(csvRow, 'cell.open', CELL_OPEN_COLUMNS);
-        let cellVolts = utils.csvToFloatArray(csvRow, 'cell.volts', CELL_VOLTS_COLUMNS);
-        let fetOpen = utils.csvBooleanToColumnPosArray(csvRow, 'fet.open', FET_OPEN_COLUMNS);
-
-        // add a data object for this csv row, to the 'dataset.data' array
-        dataset.data.push(csvToPmsDataObj(csvRow, cellOpen, cellVolts, fetOpen));
-
-    });
-
-    json.push(dataset);
-    return json;
-
-}
-
-
-/* converts a csv row into a pms data object e.g. 
-*/
-function csvToPmsDataObj(csvRow, cellOpenArray, cellVoltsArray, fetOpenArray) {
-
-    let dataObj = {
-        time_local: csvRow['time_local'],
-        pack: {
-            id: csvRow['pack.id'],
-            dock: parseInt(csvRow['pack.dock']),
-            amps: parseFloat(csvRow['pack.amps']),
-            temp: [
-                parseFloat(csvRow['pack.temp.1']),
-                parseFloat(csvRow['pack.temp.2']),
-                parseFloat(csvRow['pack.temp.3'])],
-            cell: {
-                open: cellOpenArray,
-                volts: cellVoltsArray
-            },
-            fet: {
-                open: fetOpenArray,
-                temp: [
-                    parseFloat(csvRow['fet.temp.1']),
-                    parseFloat(csvRow['fet.temp.2'])]
-            },
-            status: csvRow['status']
-        }
-    }
-
-    return dataObj;
-}
 
 // RESPONSE -----------------------------------------------------------------------------------------------------------
 
@@ -195,12 +116,23 @@ class DevicesDatasetsPostResponse extends Response {
     * constructor arguments 
       * @param {*} params                                                       // dataset, datasets, apiKey
       * @param {*} reqAcceptParam                                               // request Accepts
+      * @param {*} consumerObj                                                  // the consuemr for this dataset 
     */
-    constructor(params, reqAcceptParam) {
+    constructor(params, reqAcceptParam, consumerObj) {
 
-        let content = executePost(params);                                      // perform the post operation 
+        // call the consumer (to publish asynchronously)
+        let datasets = params.datasets.value;                                       // for application/json datasets param is the *array* (of datasets) in the req.body e.g.  the [.. ] array in {"datasets": [.. ] 
+        consumerObj.consume(datasets);
 
-        super(RESPONSE_STATUS, reqAcceptParam, VIEW_PREFIX, content);
+        // prepare the response
+        let message = 'Data queued for processing.';
+        let description = `datasets:${consumerObj.apiPathIdentifier} | ${datasets.length}`;
+        let code = utils.keynameFromValue(enums.responseStatus, RESPONSE_STATUS);
+        let status = RESPONSE_STATUS;
+        let response = new GenericMessage(code, status,
+            new GenericMessageDetail().add(message, description).getElements());
+
+        super(RESPONSE_STATUS, reqAcceptParam, VIEW_PREFIX, response.getElements());
 
     }
 
@@ -214,32 +146,7 @@ class DevicesDatasetsPostResponse extends Response {
 
 }
 
-// perform the POST operation - all devices will create a kafka producer and send the dataset to a topic
-function executePost(params) {
 
-    // construct a producer
-    let apiPathIdentifier = params.dataset.value;                               //  enums.params.datasets              - e.g. pms  
-
-    let senderId = Param.ApiKey.getSender(params.apiKey.value);                 // the 'source' is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
-    let datasets = params.datasets.value;                                       // for application/json datasets param is the *array* (of datasets) in the req.body e.g.  the [.. ] array in {"datasets": [.. ] 
-
-    // produce (asynchronously)
-    let producer = producers.getProducer(apiPathIdentifier, senderId);          // apiPathIdentifier = enums.params.datasets..
-    
-    let transformedMsgObj = producer.transform(datasets);
-    producer.produce(transformedMsgObj);                                        // async produce() ok as by now we have connected to kafka/pubsub, and the dataset should have been validated and the only outcome is a 200 response
-
-    // prepare the response
-    let message = 'Data queued for processing.';
-    let description = `datasets:${apiPathIdentifier} | ${datasets.length}`;
-    let code = utils.keynameFromValue(enums.responseStatus, RESPONSE_STATUS);
-    let status = RESPONSE_STATUS;
-    let response = new GenericMessage(code, status,
-        new GenericMessageDetail().add(message, description).getElements());
-
-    return response.getElements();
-
-}
 
 
 module.exports = router;

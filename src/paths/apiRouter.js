@@ -7,7 +7,7 @@
 const express = require('express');
 const router = express.Router();
 
-const producers = require('../producers');
+const consumers = require('../consumers');
 const Param = require('../parameters');
 
 const enums = require('../environment/enums');
@@ -76,11 +76,11 @@ router.get('/logging', (req, res, next) => {
     if (hasChanged) {
         log.initialise();
 
-        let sender = Param.ApiKey.getSender(enums.apiKey.PROXY);          // make sender the system PROXY as it is an internal message
+        let senderId = Param.ApiKey.getSenderId(enums.apiKey.PROXY);                      // make sender the system PROXY as it is an internal message
 
         // communicate logging config changes from host to consumer instances  
-        let producer = producers.getProducer(enums.paths.api.logging);                  // returns a Features producer
-        producer.produce(env.active.logging, sender);                               // send the complete logging configs to the topic: which is env.active.messagebroker.topics.system.feature
+        let consumer = consumers.getConsumer(enums.paths.api.logging, senderId);        // returns a Features producer
+        consumerObj.consume(env.active.logging);                                       // send the complete logging configs to the topic: which is env.active.messagebroker.topics.system.feature
 
         // trace log the logging config change
         log.trace(log.enums.labels.configChange, `${enums.paths.api.logging}`, env.active.logging);
@@ -110,11 +110,11 @@ router.get('/features', (req, res, next) => {
     // if there were changes reconfigure the features
     if (hasChanged) {
 
-        let sender = Param.ApiKey.getSender(enums.apiKey.PROXY);                        // make sender the system PROXY as it is an internal message
+        let senderId = Param.ApiKey.getSenderId(enums.apiKey.PROXY);                        // make sender the system PROXY as it is an internal message
 
         // communicate logging config changes from host to consumer instances  
-        let producer = producers.getProducer(enums.paths.api.features);                 // returns a Features producer
-        producer.produce(env.active.features, sender);                              // send the complete logging configs to the topic: which is env.active.messagebroker.topics.system.feature
+        let consumer = consumers.getConsumer(enums.paths.api.features, senderId);         // returns a Features consumer
+        consumerObj.consume(env.active.features);
 
         // trace log the features config change
         log.trace(log.enums.labels.configChange, `${enums.paths.api.features}`, env.active.features);

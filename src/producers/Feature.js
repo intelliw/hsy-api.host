@@ -6,25 +6,28 @@
  */
 
 const log = require('../logger').log;
+const env = require('../environment/env');
+
 const Producer = require('./Producer');
+
+const WRITE_TOPIC = env.active.messagebroker.topics.monitoring.inverter;
 
 class Feature extends Producer {
     /**
      * constructor arguments 
      * @param {*} apiPathIdentifier                                                  // identifer based on the api path: this is typically from enums.params.datasets - e.g. pms; or 
      */
-    constructor(sender, apiPathIdentifier, writeTopic) {
+    constructor(senderId, apiPathIdentifier) {
         
-        super(writeTopic, sender);
+        super(WRITE_TOPIC, senderId);
         this.apiPathIdentifier = apiPathIdentifier;
 
     }
 
     /** extracts an array of modified data items and sends these as messages to the broker 
-    * @param {*} datasets                                                           // an array of datasets
-    * @param {*} sender                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
+    * @param {*} datasets                                                               // an array of datasets
     */
-   transform(datasets, sender) {
+   transform(datasets) {
         
         let msgObj = { itemCount: 1, messages: [] };
         

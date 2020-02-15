@@ -85,7 +85,7 @@ class Producer {
     *   - but it not required by bigquery as it will convert local time to utc if submitted with a zone offset
     *  sender is the keyname of the apikey enum, sent in the POST request  and identifies the source of the data. this value is added to sys.source attribute
     */
-    _addGenericAttributes(dataItem, sender) {
+    _addGenericAttributes(dataItem, senderId) {
         
         // create a new dataitem
         let dataItemClone = utils.deepClone(dataItem);                // clone the object before any modifications, to prevent errors due to object re-referencing 
@@ -93,7 +93,7 @@ class Producer {
         // add standard attributes
         let eventTime = dataItemClone.time_local;                 // "data": [ { "time_local": "20190209T150017.020+0700",
 
-        dataItemClone.sys = { source: sender };                    // is based on the apikey from the sender and identifies the source of the data. this value is added to sys.source attribute
+        dataItemClone.sys = { source: senderId };                    // is based on the apikey from the sender and identifies the source of the data. this value is added to sys.source attribute
 
         dataItemClone.time_event = moment.utc(eventTime).format(consts.dateTime.bigqueryZonelessTimestampFormat);
         dataItemClone.time_zone = utils.datetimeZoneOffset(eventTime);

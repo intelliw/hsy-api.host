@@ -41,7 +41,7 @@ class Param {
         this.isValid = enumTest
             && (this.isOptional === true ? true : this.value != consts.NONE);       // there must be a value unless isOptional    
 
-        // optional exception message set by validatin functions, this is appended to the message below   
+        // optional exception message set by validation functions, this is appended to the message below   
         this.validationError = '';
 
         // produce the message through a function - add the above validation error message, which will be updated by the subclass if there are errors

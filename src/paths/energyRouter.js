@@ -112,7 +112,7 @@ class EnergyGet extends Request {
     super(req, params, EnergyGetResponse.produces, EnergyGetResponse.consumes);                 // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
 
     // trace log the request
-    log.trace(log.enums.labels.requestStatus, `energy GET ${this.accept.value}, sender:${Param.ApiKey.getSender(this.apiKey.value)}, valid?${this.validation.isValid}`, JSON.stringify({ params: params }));
+    log.trace(log.enums.labels.requestStatus, `energy GET ${this.accept.value}, sender:${this.senderId()}, valid?${this.validation.isValid}`, JSON.stringify({ params: params }));
 
     // execute the response only if super isValid                   // if not isValid  super constuctor would have created a this.response = ErrorResponse 
     this.response = this.validation.isValid === true ? new EnergyGetResponse(this.params, this.accept) : this.response;

@@ -40,9 +40,14 @@ class ApiKey extends Param {
         super(THIS_PARAM_NAME, headerKey, enums.apiKey.default);
     }
 
+    // the senderId is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
+    senderId() {
+        return ApiKey.getSenderId(this.value);
+    }
+
     // gets the name of the sender based on the apikey. 
     // If a sender is not registered in enums.apikeys this function returns the last 10 characters of the apikey    
-    static getSender(apiKey) {
+    static getSenderId(apiKey) {
         const NUM_APIKEY_CHARACTERS = 10;
 
         let sender = utils.keynameFromValue(enums.apiKey, apiKey);

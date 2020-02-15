@@ -14,9 +14,10 @@ const log = require('../logger').log;
 
 const moment = require('moment');
 
+const Producer = require('./Producer');
+
 const WRITE_TOPIC = env.active.messagebroker.topics.monitoring.pms;
 
-const Producer = require('./Producer');
 /**
  * instance attributes
  * producer                                                             //  e.g. Dataset - producer object responsible for transforming a consumed message and if requested, sending it to a new topic  
