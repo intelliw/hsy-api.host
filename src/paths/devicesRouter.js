@@ -140,9 +140,9 @@ function pmsCsvToJson(csvData) {
         }
 
         // make the data arrays for cell.open[], cell.volts[], fet.open[]
-        let cellOpen = csvBooleanToColumnPosArray(csvRow, 'cell.open', CELL_OPEN_COLUMNS);
-        let cellVolts = csvToFloatArray(csvRow, 'cell.volts', CELL_VOLTS_COLUMNS);
-        let fetOpen = csvBooleanToColumnPosArray(csvRow, 'fet.open', FET_OPEN_COLUMNS);
+        let cellOpen = utils.csvBooleanToColumnPosArray(csvRow, 'cell.open', CELL_OPEN_COLUMNS);
+        let cellVolts = utils.csvToFloatArray(csvRow, 'cell.volts', CELL_VOLTS_COLUMNS);
+        let fetOpen = utils.csvBooleanToColumnPosArray(csvRow, 'fet.open', FET_OPEN_COLUMNS);
 
         // add a data object for this csv row, to the 'dataset.data' array
         dataset.data.push(csvToPmsDataObj(csvRow, cellOpen, cellVolts, fetOpen));
@@ -154,35 +154,9 @@ function pmsCsvToJson(csvData) {
 
 }
 
-// converts a sequence of csv columns into a float array. numColumns gives the number of 'columnName' columns to parse into the array
-function csvToFloatArray(csvRow, columnName, numColumns) {
-    let floatArray = [];
 
-    for (let col = 1; col <= numColumns; col++) {
-        let value = csvRow[`${columnName}.${col}`].trim();
-        floatArray.push(parseFloat(value));
-    }
-
-    return floatArray;
-}
-
-/* converts boolean true in csv columns into an array of column positiuons. 
- * e.g. csv 0,0,0 returns an empty array [] as there are no true value; 
- * csv 0,1,0 returns [2] as column 2 is true. 
- * number of 'columnName' columns to parse into the array
- */
-function csvBooleanToColumnPosArray(csvRow, columnName, numColumns) {
-    let columnPosArray = [];
-
-    for (let col = 1; col <= numColumns; col++) {
-        let value = parseInt(csvRow[`${columnName}.${col}`].trim());
-        if (value) columnPosArray.push(col);
-    }
-
-    return columnPosArray;
-}
-
-// converts a csv row into a pms data object e.g. 
+/* converts a csv row into a pms data object e.g. 
+*/
 function csvToPmsDataObj(csvRow, cellOpenArray, cellVoltsArray, fetOpenArray) {
 
     let dataObj = {
@@ -221,30 +195,10 @@ class DevicesDatasetsPostResponse extends Response {
     * constructor arguments 
       * @param {*} params                                                       // dataset, datasets, apiKey
       * @param {*} reqAcceptParam                                               // request Accepts
-      * 
-      { dataset:
-      Param {
-        name: 'dataset',
-        value: 'pms',
-        isOptional: false,
-        isValid: true },
-      datasets:
-      Param {
-        name: 'datasets',
-        value: [ [Object], [Object], [Object], [Object] ],
-        isOptional: false,
-        isValid: true },
-      apiKey:
-      Param {
-        name: 'apikey',
-        value: 'AIzaSyBczHFIdt3Q5vvZq_iLbaU6MlqzaVj1Ue0',
-        isOptional: false,
-        isValid: true } }
-      * 
     */
     constructor(params, reqAcceptParam) {
 
-        let content = executePost(params);                                            // perform the post operation 
+        let content = executePost(params);                                      // perform the post operation 
 
         super(RESPONSE_STATUS, reqAcceptParam, VIEW_PREFIX, content);
 
@@ -266,14 +220,14 @@ function executePost(params) {
     // construct a producer
     let apiPathIdentifier = params.dataset.value;                               //  enums.params.datasets              - e.g. pms  
 
-    let sender = Param.ApiKey.getSender(params.apiKey.value);                   // the 'source' is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
+    let senderId = Param.ApiKey.getSender(params.apiKey.value);                 // the 'source' is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
     let datasets = params.datasets.value;                                       // for application/json datasets param is the *array* (of datasets) in the req.body e.g.  the [.. ] array in {"datasets": [.. ] 
 
     // produce (asynchronously)
-    let producer = producers.getProducer(apiPathIdentifier, sender);            // apiPathIdentifier = enums.params.datasets..
+    let producer = producers.getProducer(apiPathIdentifier, senderId);          // apiPathIdentifier = enums.params.datasets..
     
     let transformedMsgObj = producer.transform(datasets);
-    producer.produce(transformedMsgObj);                                           // async produce() ok as by now we have connected to kafka/pubsub, and the dataset should have been validated and the only outcome is a 200 response
+    producer.produce(transformedMsgObj);                                        // async produce() ok as by now we have connected to kafka/pubsub, and the dataset should have been validated and the only outcome is a 200 response
 
     // prepare the response
     let message = 'Data queued for processing.';

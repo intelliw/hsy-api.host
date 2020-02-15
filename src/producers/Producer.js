@@ -20,12 +20,12 @@ class Producer {
     /**
      * constructor arguments 
      * @param {*} writeTopic
-     * @param {*} sender                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
+     * @param {*} senderId                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
      */
-    constructor(writeTopic, sender) {
+    constructor(writeTopic, senderId) {
 
         this.writeTopic = writeTopic;
-        this.sender = sender;  
+        this.senderId = senderId;  
 
     }
 
@@ -35,7 +35,7 @@ class Producer {
     async produce(transformedMsgObj) {
         
         // publish the transformed messages
-        pub.publish(transformedMsgObj, this.writeTopic, this.sender);
+        pub.publish(transformedMsgObj, this.writeTopic, this.senderId);
 
     }
 

@@ -29,9 +29,9 @@ class MonitoringInverter extends Producer {
      * constructor arguments 
      * @param {*}                                                                   
      */
-    constructor(sender) {
+    constructor(senderId) {
 
-        super(WRITE_TOPIC, sender);
+        super(WRITE_TOPIC, senderId);
 
     }
 
@@ -118,7 +118,7 @@ class MonitoringInverter extends Producer {
 
 
                 // add generic attributes
-                let dataItemClone = super._addGenericAttributes(dataObj, this.sender);                // clone the dataItem and add common attributes (time_event, time_zone, time_processing)
+                let dataItemClone = super._addGenericAttributes(dataObj, this.senderId);                // clone the dataItem and add common attributes (time_event, time_zone, time_processing)
 
                 // add the dataitem to the message buffer
                 transformedMsgObj.messages.push(super._createMessage(key, dataItemClone));                 // add to the message array

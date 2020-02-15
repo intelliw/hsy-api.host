@@ -18,36 +18,36 @@ module.exports.Feature = require('./Feature');
 
 /** static factory method to construct producers    
 * @param {*} apiPathIdentifier                                                  // apiPathIdentifier = enums.params.datasets..
-* @param {*} sender                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
+* @param {*} senderId                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
 */
-module.exports.getProducer = (apiPathIdentifier, sender) => {
+module.exports.getProducer = (apiPathIdentifier, senderId) => {
 
     let producer;
     switch (apiPathIdentifier) {
 
         // pms
         case enums.params.datasets.pms:
-            producer = new this.MonitoringPms(sender);
+            producer = new this.MonitoringPms(senderId);
             break;
 
         // mppt 
         case enums.params.datasets.mppt:
-            producer = new this.MonitoringMppt(sender);
+            producer = new this.MonitoringMppt(senderId);
             break;
 
         // inverter 
         case enums.params.datasets.inverter:
-            producer = new this.MonitoringInverter(sender);
+            producer = new this.MonitoringInverter(senderId);
             break;
 
         // logging feature - communicates logging configuration changes from host to consumer instances  
         case enums.paths.api.logging:
-            producer = new this.Feature(sender, enums.paths.api.logging, env.active.messagebroker.topics.system.feature);
+            producer = new this.Feature(senderId, enums.paths.api.logging, env.active.messagebroker.topics.system.feature);
             break;
 
         // feature toggles
         case enums.paths.api.features:
-            producer = new this.Feature(sender, enums.paths.api.features, env.active.messagebroker.topics.system.feature);
+            producer = new this.Feature(senderId, enums.paths.api.features, env.active.messagebroker.topics.system.feature);
             break;
 
     }
