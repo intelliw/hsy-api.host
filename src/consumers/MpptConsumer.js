@@ -11,7 +11,7 @@ const consts = require('../host/constants');
 const env = require('../environment/env');
 const utils = require('../environment/utils');
 
-const MonitoringMppt = require('../producers/MonitoringMppt');
+const MpptProducer = require('../producers/MpptProducer');
 const Consumer = require('./Consumer');
 
 // instance parameters
@@ -28,7 +28,7 @@ class Mppt extends Consumer {
         // construct consumer and its producer
         super(
             API_PATH_IDENTIFIER,
-            new MonitoringMppt(senderId)
+            new MpptProducer(senderId)
         );
 
     }

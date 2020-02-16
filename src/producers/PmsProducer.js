@@ -1,7 +1,7 @@
 //@ts-check
 'use strict';
 /**
- * ./producers/MonitoringPms.js
+ * ./producers/PmsProducer.js
  *  base type for Kafka message producers  
  */
 
@@ -23,7 +23,7 @@ const WRITE_TOPIC = env.active.messagebroker.topics.monitoring.pms;
  * producer                                                             //  e.g. Dataset - producer object responsible for transforming a consumed message and if requested, sending it to a new topic  
  constructor arguments 
  */
-class MonitoringPms extends Producer{
+class PmsProducer extends Producer{
 
     /**
      * instance attributes:  
@@ -142,4 +142,4 @@ class MonitoringPms extends Producer{
 
 
 
-module.exports = MonitoringPms;
+module.exports = PmsProducer;

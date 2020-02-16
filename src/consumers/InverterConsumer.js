@@ -11,7 +11,7 @@ const consts = require('../host/constants');
 const env = require('../environment/env');
 const utils = require('../environment/utils');
 
-const MonitoringInverter = require('../producers/MonitoringInverter');
+const InverterProducer = require('../producers/InverterProducer');
 const Consumer = require('./Consumer');
 
 // instance parameters
@@ -19,7 +19,7 @@ const API_PATH_IDENTIFIER = env.active.messagebroker.topics.monitoring.inverter;
 
 /**
  */
-class Mppt extends Consumer {
+class MpptConsumer extends Consumer {
 
     /**
     */
@@ -28,7 +28,7 @@ class Mppt extends Consumer {
         // construct consumer and its producer
         super(
             API_PATH_IDENTIFIER,
-            new MonitoringInverter(senderId)
+            new InverterProducer(senderId)
         );
 
     }
@@ -89,4 +89,4 @@ class Mppt extends Consumer {
 }
 
 
-module.exports = Mppt;
+module.exports = MpptConsumer;

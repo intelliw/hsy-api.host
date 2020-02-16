@@ -1,7 +1,7 @@
 //@ts-check
 'use strict';
 /**
- * ./producers/MonitoringInverter.js
+ * ./producers/MpptProducer.js
  *  base type for Kafka message producers  
  */
 const consts = require('../host/constants');
@@ -15,14 +15,14 @@ const moment = require('moment');
 
 const Producer = require('./Producer');
 
-const WRITE_TOPIC = env.active.messagebroker.topics.monitoring.inverter;
+const WRITE_TOPIC = env.active.messagebroker.topics.monitoring.mppt;
 
 /**
  * instance attributes
  * producer                                                             //  e.g. Dataset - producer object responsible for transforming a consumed message and if requested, sending it to a new topic  
  constructor arguments 
  */
-class MonitoringInverter extends Producer {
+class MpptProducer extends Producer {
 
     /**
      * instance attributes:  
@@ -42,27 +42,24 @@ class MonitoringInverter extends Producer {
 
         let key
         let dataItemCount = 0;
-
-        let volts, amps, watts, pf;
+        let volts, amps, watts;
         let attrArray;
 
         const PRECISION = consts.system.MONITORING_PRECISION;
-        const ITEMNUMBER_LENGTH = 2;                                                                // how many digits int he cell number e.g 02
-        const SQ_ROOT_OF_THREE = Math.sqrt(3);
 
         let transformedMsgObj = { itemCount: 0, messages: [] };
 
         // extract and add messages to results 
-        datasets.forEach(dataset => {
+        datasets.forEach(dataset => {                                                           
 
-            key = dataset.inverter.id;
+            key = dataset.mppt.id;                                                               
 
             // add each data item in the dataset as an individual message
             dataset.data.forEach(dataItem => {                                                  // e.g. "data": [ { "time_local": "2
 
                 //  reconstruct dataitem - add new attributes and flatten arrays 
                 let dataObj = {
-                    inverter_id: key,
+                    mppt_id: key,
                     time_local: dataItem.time_local                                                         // this gets replaced and deleted in addGenericAttributes()
                 }
 
@@ -97,25 +94,22 @@ class MonitoringInverter extends Producer {
                 };
                 dataObj.load = attrArray;                                                                   // "load": [ {"volts": 48, "amps": 6, "watts": 288 },
 
-
-                // grid
-                attrArray = [];
-                for (let i = 1; i <= dataItem.grid.volts.length; i++) {
-                    attrArray.push({
-                        volts: dataItem.grid.volts[i - 1],
-                        amps: dataItem.grid.amps[i - 1],
-                        pf: dataItem.grid.pf[i - 1],
-                        watts: (volts * amps * pf * SQ_ROOT_OF_THREE).toFixed(PRECISION)                    // grid.watts == V x I x pf x √3  
-                    });
-                };
-                dataObj.grid = attrArray;
-
                 // status
-                let statusBits = utils.hex2bitArray(dataItem.status, consts.equStatus.BIT_LENGTH);         // get a reversed array of bits (bit 0 is least significant bit)
-                dataObj.status = {
-                    bus_connect: utils.tristateBoolean(statusBits[0], false, true)                         // bit 0    "status": { "bus_connect": true }, 
-                }
+                let statusBits = utils.hex2bitArray(dataItem.status, consts.equStatus.BIT_LENGTH);                              // get a reversed array of bits (bit 0 is least significant bit)
 
+                dataObj.status = {
+                    bus_connect: utils.tristateBoolean(statusBits[0], false, true),                                             // bit 0    "status": { "bus_connect": true }, 
+                    input: consts.equStatus.mppt.input[consts.equStatus.ENUM_PREFIX + statusBits[1] + statusBits[2]],           // bit 1,2              "input": "normal"
+                    chgfet: utils.tristateBoolean(statusBits[3], "ok", "short"),                                                              // bit 3                "chgfet": true, 
+                    chgfet_antirev: utils.tristateBoolean(statusBits[4], "ok", "short"),                                                      // bit 4                "chgfet_antirev": true, 
+                    fet_antirev: utils.tristateBoolean(statusBits[5], "ok", "short"),                                                         // bit 5                "fet_antirev": true,   
+                    input_current: utils.tristateBoolean(statusBits[6], "ok", "overcurrent"),                                                       // bit 6                "input_current": true, 
+                    load: consts.equStatus.mppt.load[consts.equStatus.ENUM_PREFIX + statusBits[7] + statusBits[8]],             // bit 7,8              "load": "ok", 
+                    pv_input: utils.tristateBoolean(statusBits[9], "ok", "short"),                                                            // bit 9                "pv_input": true, 
+                    charging: consts.equStatus.mppt.charging[consts.equStatus.ENUM_PREFIX + statusBits[10] + statusBits[11]],   // bit 10,11            "charging": "not-charging", 
+                    system: utils.tristateBoolean(statusBits[12], "ok", "fault"),                                                             // bit 12               "system": true,  
+                    standby: utils.tristateBoolean(statusBits[13], "standby", "running")                                                             // bit 13               "standby": true } 
+                }
 
                 // add generic attributes
                 let dataItemClone = super._addGenericAttributes(dataObj, this.senderId);                // clone the dataItem and add common attributes (time_event, time_zone, time_processing)
@@ -140,4 +134,4 @@ class MonitoringInverter extends Producer {
 
 
 
-module.exports = MonitoringInverter;
+module.exports = MpptProducer;

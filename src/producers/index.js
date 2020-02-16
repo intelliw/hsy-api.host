@@ -7,8 +7,8 @@
  */
 module.exports.Producer = require('./Producer');
 
-module.exports.MonitoringPms = require('./MonitoringPms');
-module.exports.MonitoringMppt = require('./MonitoringMppt');
-module.exports.MonitoringInverter = require('./MonitoringInverter');
+module.exports.PmsProducer = require('./PmsProducer');
+module.exports.MpptProducer = require('./MpptProducer');
+module.exports.InverterProducer = require('./InverterProducer');
 
 module.exports.Feature = require('./Feature');

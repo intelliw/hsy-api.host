@@ -12,7 +12,7 @@ const consts = require('../host/constants');
 const env = require('../environment/env');
 const utils = require('../environment/utils');
 
-const MonitoringPms = require('../producers/MonitoringPms');
+const PmsProducer = require('../producers/PmsProducer');
 const Consumer = require('./Consumer');
 
 // instance parameters
@@ -29,7 +29,7 @@ class Pms extends Consumer {
         // construct consumer and its producer
         super(
             API_PATH_IDENTIFIER,
-            new MonitoringPms(senderId)
+            new PmsProducer(senderId)
         );
 
     }

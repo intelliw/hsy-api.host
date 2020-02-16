@@ -7,6 +7,7 @@
  */
 
 module.exports = require('./Definitions');
+
 module.exports.Collections = require('./Collections');
 module.exports.Items = require('./Items');
 module.exports.Links = require('./Links');

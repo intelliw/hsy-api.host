@@ -9,9 +9,9 @@ const enums = require('../environment/enums');
 
 module.exports.Consumer = require('./Consumer');
 
-module.exports.Pms = require('./Pms');
-module.exports.Mppt = require('./Mppt');
-module.exports.Inverter = require('./Inverter');
+module.exports.PmsConsumer = require('./PmsConsumer');
+module.exports.MpptConsumer = require('./MpptConsumer');
+module.exports.InverterConsumer = require('./InverterConsumer');
 
 module.exports.FeatureConsumer = require('./FeatureConsumer');
 
@@ -26,17 +26,17 @@ module.exports.getConsumer = (apiPathIdentifier, senderId) => {
 
         // pms
         case enums.params.datasets.pms:
-            consumer = new this.Pms(senderId);
+            consumer = new this.PmsConsumer(senderId);
             break;
 
         // mppt 
         case enums.params.datasets.mppt:
-            consumer = new this.Mppt(senderId);
+            consumer = new this.MpptConsumer(senderId);
             break;
 
         // inverter 
         case enums.params.datasets.inverter:
-            consumer = new this.Inverter(senderId);
+            consumer = new this.InverterConsumer(senderId);
             break;
 
         // logging feature - communicates logging configuration changes from host to consumer instances  
