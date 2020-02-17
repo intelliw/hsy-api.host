@@ -12,7 +12,7 @@ const Producer = require('./Producer');
 
 const WRITE_TOPIC = env.active.messagebroker.topics.monitoring.inverter;
 
-class Feature extends Producer {
+class FeatureProducer extends Producer {
     /**
      * constructor arguments 
      * @param {*} apiPathIdentifier                                                  // identifer based on the api path: this is typically from enums.params.datasets - e.g. pms; or 
@@ -27,7 +27,7 @@ class Feature extends Producer {
     /** extracts an array of modified data items and sends these as messages to the broker 
     * @param {*} datasets                                                               // an array of datasets
     */
-   transform(datasets) {
+   transform(datasets, senderId) {
         
         let msgObj = { itemCount: 1, messages: [] };
         
@@ -40,4 +40,4 @@ class Feature extends Producer {
 }
 
 
-module.exports = Feature;
+module.exports = FeatureProducer;

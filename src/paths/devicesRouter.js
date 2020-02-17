@@ -73,29 +73,29 @@ class DevicesDatasetsPost extends Request {
     * @param {*} req                                                    // express req
     */
     constructor(req) {
+        
+        let datasetName = req.params.dataset;                                                       // dataset is a query string param         
+        let contentType = req.headers[enums.request.headers.contentType];                           // text/csv or application/json
+        
+        // create the consumer 
+        let consumer = consumers.getConsumer(datasetName);                // apiPathIdentifier = enums.params.datasets.. the senderId is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
 
-        let datasetName, contentType, datasets;
+        // if csv convert to json                                                                   // for text/csv req body contains raw csv content, for application/json the req.body is a 'datasets' object with array of datasets {"datasets": [.. ]                        
+        let datasets = consumer.convert(
+            contentType == enums.mimeType.textCsv ? `${req.body}` : req.body.datasets,              // check for csv - for text/csv this is raw csv content. use template literal to handle embedded quotes in the data !
+            contentType);
+            
+        // validate the datasets                                                                     // the result is passed into the Dataset param below 
+        let validationError = consumer.validate(datasets);
+
+        // construct super Request                                                                  // this will create a Validate object and validate request params, auth, and accept header
         let params = {};
-
-        // body content - check if json or csv                                                      // for application/json this is a datasets object with array of datasets {"datasets": [.. ] 
-        datasetName = req.params.dataset;                                                           // dataset is a query string param         
-        contentType = req.headers[enums.request.headers.contentType];                               // text/csv or application/json
-        
-        // create the consumer
-        params.apiKey = new Param.ApiKey(req);
-        let consumer = consumers.getConsumer(datasetName, params.apiKey.senderId());                // apiPathIdentifier = enums.params.datasets.. the senderId is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
-
-        // if csv convert dataset to json                                                                   // for text/csv req body contains raw csv content, for application/json the req.body is a 'datasets' object with array of datasets {"datasets": [.. ]                        
-        datasets = (contentType == enums.mimeType.textCsv ? `${req.body}` : req.body.datasets);
-        datasets = consumer.normalise(datasets, contentType);                                       // for text/csv this is raw csv content. use template literal to handle embedded quotes in the data !
-
-        // create parameter objects, and validate the dataset
         params.dataset = new Param('dataset', datasetName, consts.NONE, enums.params.datasets);     // this is the path parameter e.g. pms
-        params.datasets = new Datasets(datasetName, datasets, consumer.validate(datasets));         // Datasets validates the devices req.body.datasets payload. 
-
-        // super Request- creates a Validate object to validate request params, auth, and accept header
-        super(req, params, DevicesDatasetsPostResponse.produces, DevicesDatasetsPostResponse.consumes);     // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
+        params.datasets = new Datasets(datasetName, datasets, validationError);                     // if validationError is not '' super will reject the request
         
+        super(req, params, DevicesDatasetsPostResponse.produces, DevicesDatasetsPostResponse.consumes);     // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
+        params.apiKey = this.apiKey;                                                                // add apiKey from the Request (Param.ApiKey) to the params, as it will be used to produce sys.source attribute in Producer transform and publish
+
         // trace-log the request
         log.trace(log.enums.labels.requestStatus, `${datasetName} POST ${contentType}, sender:${this.senderId()}, valid?${this.validation.isValid}`, JSON.stringify({ datasets: params.datasets.value }));
 
@@ -120,9 +120,11 @@ class DevicesDatasetsPostResponse extends Response {
     */
     constructor(params, reqAcceptParam, consumerObj) {
 
+        let datasets = params.datasets.value;                                   // for application/json datasets param is the *array* (of datasets) in the req.body e.g.  the [.. ] array in {"datasets": [.. ] 
+        let senderId = params.apiKey.senderId();
+        
         // call the consumer (to publish asynchronously)
-        let datasets = params.datasets.value;                                       // for application/json datasets param is the *array* (of datasets) in the req.body e.g.  the [.. ] array in {"datasets": [.. ] 
-        consumerObj.consume(datasets);
+        consumerObj.consume(datasets, senderId);                                
 
         // prepare the response
         let message = 'Data queued for processing.';

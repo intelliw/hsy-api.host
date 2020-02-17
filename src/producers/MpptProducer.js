@@ -29,16 +29,16 @@ class MpptProducer extends Producer {
      * constructor arguments 
      * @param {*}                                                                   
      */
-    constructor(senderId) {
+    constructor() {
 
-        super(WRITE_TOPIC, senderId);
+        super(WRITE_TOPIC);
 
     }
 
     /**
      * creates an array of messagebroker messages and returns them in a results object
      */
-    transform(datasets) {
+    transform(datasets, senderId) {
 
         let key
         let dataItemCount = 0;
@@ -59,8 +59,7 @@ class MpptProducer extends Producer {
 
                 //  reconstruct dataitem - add new attributes and flatten arrays 
                 let dataObj = {
-                    mppt_id: key,
-                    time_local: dataItem.time_local                                                         // this gets replaced and deleted in addGenericAttributes()
+                    mppt_id: key
                 }
 
                 // pv
@@ -112,10 +111,10 @@ class MpptProducer extends Producer {
                 }
 
                 // add generic attributes
-                let dataItemClone = super._addGenericAttributes(dataObj, this.senderId);                // clone the dataItem and add common attributes (time_event, time_zone, time_processing)
+                dataObj = this._addMetadata(dataObj, dataItem.time_local, senderId);       //  "sys": { "source": "STAGE001" },
 
                 // add the dataitem to the message buffer
-                transformedMsgObj.messages.push(super._createMessage(key, dataItemClone));                 // add to the message array
+                transformedMsgObj.messages.push(super._createMessage(key, dataObj));                        // add to the message array
 
             });
 

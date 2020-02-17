@@ -29,16 +29,16 @@ class InverterProducer extends Producer {
      * constructor arguments 
      * @param {*}                                                                   
      */
-    constructor(senderId) {
+    constructor() {
 
-        super(WRITE_TOPIC, senderId);
+        super(WRITE_TOPIC);
 
     }
 
     /**
      * creates an array of messagebroker messages and returns them in a results object
      */
-    transform(datasets) {
+    transform(datasets, senderId) {
 
         let key
         let dataItemCount = 0;
@@ -62,8 +62,7 @@ class InverterProducer extends Producer {
 
                 //  reconstruct dataitem - add new attributes and flatten arrays 
                 let dataObj = {
-                    inverter_id: key,
-                    time_local: dataItem.time_local                                                         // this gets replaced and deleted in addGenericAttributes()
+                    inverter_id: key
                 }
 
                 // pv
@@ -116,12 +115,11 @@ class InverterProducer extends Producer {
                     bus_connect: utils.tristateBoolean(statusBits[0], false, true)                         // bit 0    "status": { "bus_connect": true }, 
                 }
 
-
                 // add generic attributes
-                let dataItemClone = super._addGenericAttributes(dataObj, this.senderId);                // clone the dataItem and add common attributes (time_event, time_zone, time_processing)
+                dataObj = this._addMetadata(dataObj, dataItem.time_local, senderId);       //  "sys": { "source": "STAGE001" },
 
                 // add the dataitem to the message buffer
-                transformedMsgObj.messages.push(super._createMessage(key, dataItemClone));                 // add to the message array
+                transformedMsgObj.messages.push(super._createMessage(key, dataObj));                        // add to the message array
 
             });
 

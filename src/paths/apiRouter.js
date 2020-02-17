@@ -75,12 +75,12 @@ router.get('/logging', (req, res, next) => {
     // if there were changes reconfigure the logger
     if (hasChanged) {
         log.initialise();
-
-        let senderId = Param.ApiKey.getSenderId(enums.apiKey.PROXY);                      // make sender the system PROXY as it is an internal message
-
+        
         // communicate logging config changes from host to consumer instances  
-        let consumer = consumers.getConsumer(enums.paths.api.logging, senderId);        // returns a Features producer
-        consumerObj.consume(env.active.logging);                                       // send the complete logging configs to the topic: which is env.active.messagebroker.topics.system.feature
+        let senderId = Param.ApiKey.getSenderId(enums.apiKey.PROXY);                    // make sender the system PROXY as it is an internal message
+
+        let consumer = consumers.getConsumer(enums.paths.api.logging);                  // returns a Features producer
+        consumerObj.consume(env.active.logging, senderId);                              // send the complete logging configs to the topic: which is env.active.messagebroker.topics.system.feature
 
         // trace log the logging config change
         log.trace(log.enums.labels.configChange, `${enums.paths.api.logging}`, env.active.logging);
@@ -110,11 +110,11 @@ router.get('/features', (req, res, next) => {
     // if there were changes reconfigure the features
     if (hasChanged) {
 
-        let senderId = Param.ApiKey.getSenderId(enums.apiKey.PROXY);                        // make sender the system PROXY as it is an internal message
-
         // communicate logging config changes from host to consumer instances  
-        let consumer = consumers.getConsumer(enums.paths.api.features, senderId);         // returns a Features consumer
-        consumerObj.consume(env.active.features);
+        let senderId = Param.ApiKey.getSenderId(enums.apiKey.PROXY);                    // make sender the system PROXY as it is an internal message
+        
+        let consumer = consumers.getConsumer(enums.paths.api.features);                 // returns a Features consumer
+        consumerObj.consume(env.active.features, senderId);
 
         // trace log the features config change
         log.trace(log.enums.labels.configChange, `${enums.paths.api.features}`, env.active.features);

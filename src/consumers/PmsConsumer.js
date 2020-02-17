@@ -20,42 +20,43 @@ const API_PATH_IDENTIFIER = env.active.messagebroker.topics.monitoring.pms;
 
 /**
  */
-class Pms extends Consumer {
+class PmsConsumer extends Consumer {
 
     /**
     */
-    constructor(senderId) {
+    constructor() {
 
         // construct consumer and its producer
         super(
             API_PATH_IDENTIFIER,
-            new PmsProducer(senderId)
+            new PmsProducer()
         );
 
     }
 
 
-    /* transforms and produces the retrieved messages
+    /** transforms the retrieved messages and calls producer to piublish the transformed messages
+     * @param {*} senderId                                                                      // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
     */
-    consume(retrievedMsgObj) {
+    consume(retrievedMsgObj, senderId) {
 
-        let transformedMsgObj = this.producer.transform(retrievedMsgObj);
-        this.producer.produce(transformedMsgObj);                                           // async produce() ok as by now we have connected to kafka/pubsub, and the dataset should have been validated and the only outcome is a 200 response
+        let transformedMsgObj = this.producer.transform(retrievedMsgObj, senderId);
+        this.producer.produce(transformedMsgObj, senderId);                                           // async produce() ok as by now we have connected to kafka/pubsub, and the dataset should have been validated and the only outcome is a 200 response
 
     }
 
-    /* converts the retrieved messages from csv to application /json
+    /** converts the retrieved messages from the specified mime type, to the standard mime type (usually application /json)
     */
-    normalise(retrievedMsgObj, fromMimeType) {
+    convert(retrievedMsgObj, fromMimeType) {
 
-        let normalisedMsgObj = retrievedMsgObj
+        let convertedMsgObj = retrievedMsgObj
 
         // text/csv - only this mime type is supported for conversion
         if (fromMimeType == enums.mimeType.textCsv) {
-            normalisedMsgObj = this._csvToJson(retrievedMsgObj);
+            convertedMsgObj = this._csvToJson(retrievedMsgObj);
         }
 
-        return normalisedMsgObj;
+        return convertedMsgObj;
     }
 
     // pms schema (see https://docs.sundaya.monitored.equipment/docs/api.sundaya.monitored.equipment/0/c/Examples/POST/pms%20POST%20example)
@@ -166,4 +167,4 @@ class Pms extends Consumer {
 }
 
 
-module.exports = Pms;
+module.exports = PmsConsumer;

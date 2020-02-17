@@ -20,22 +20,21 @@ class Producer {
     /**
      * constructor arguments 
      * @param {*} writeTopic
-     * @param {*} senderId                                                             // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
      */
-    constructor(writeTopic, senderId) {
+    constructor(writeTopic) {
 
         this.writeTopic = writeTopic;
-        this.senderId = senderId;  
 
     }
 
     /** sends messages to the broker  
-    * @param {*} transformedMsgObj                                                             // e.g. msgObj = { itemCount: 0, messages: [] };
+    * @param {*} transformedMsgObj                                                              // e.g. msgObj = { itemCount: 0, messages: [] };
+    * @param {*} senderId                                                                      // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
     */
-    async produce(transformedMsgObj) {
-        
+    async produce(transformedMsgObj, senderId) {
+
         // publish the transformed messages
-        pub.publish(transformedMsgObj, this.writeTopic, this.senderId);
+        pub.publish(transformedMsgObj, this.writeTopic, senderId);
 
     }
 
@@ -76,34 +75,21 @@ class Producer {
         return message;
     }
 
-
-    /* this function adds attributes common to all datasets:
-    *   append event time, zone, and processing time to the data item
-    *   dataItem - contains the data object e.g. "data": [ { "time_local": "2
-    *  note that we convert time_local to bigqueryZonelessTimestampFormat which does not have trailing offset hours 
-    *   - this is done as part of date validation in this stage 
-    *   - but it not required by bigquery as it will convert local time to utc if submitted with a zone offset
-    *  sender is the keyname of the apikey enum, sent in the POST request  and identifies the source of the data. this value is added to sys.source attribute
+    /** add generic metadata attributes to each dataitem in the dataset
+    *   note that this converts time_local to bigqueryZonelessTimestampFormat which does not have trailing offset hours 
+    *       - but not required by bigquery as it will convert local time to utc if submitted with a zone offset
+    * @param {*} senderId   senderId is the keyname of the apikey enum, sent in the POST request  and identifies the source of the data. this value is added to sys.source attribute
+    * @param {*} localEventTime  the local event time, this will be converted to UTC and used to populate time_event and time_zone
     */
-    _addGenericAttributes(dataItem, senderId) {
-        
-        // create a new dataitem
-        let dataItemClone = utils.deepClone(dataItem);                // clone the object before any modifications, to prevent errors due to object re-referencing 
+    _addMetadata(dataObj, localEventTime, senderId) {
 
         // add standard attributes
-        let eventTime = dataItemClone.time_local;                 // "data": [ { "time_local": "20190209T150017.020+0700",
+        dataObj.sys = { source: senderId };               // is based on the apikey from the sender and identifies the source of the data. this value is added to sys.source attribute
+        dataObj.time_event = moment.utc(localEventTime).format(consts.dateTime.bigqueryZonelessTimestampFormat);
+        dataObj.time_zone = utils.datetimeZoneOffset(localEventTime);
+        dataObj.time_processing = moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat);
 
-        dataItemClone.sys = { source: senderId };                    // is based on the apikey from the sender and identifies the source of the data. this value is added to sys.source attribute
-
-        dataItemClone.time_event = moment.utc(eventTime).format(consts.dateTime.bigqueryZonelessTimestampFormat);
-        dataItemClone.time_zone = utils.datetimeZoneOffset(eventTime);
-        dataItemClone.time_processing = moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat);
-
-        //  delete time_local as it has been replaced with the 3 standard time attributes above
-        delete dataItemClone.time_local;
-
-        return dataItemClone;
-
+        return dataObj;
     }
 
 

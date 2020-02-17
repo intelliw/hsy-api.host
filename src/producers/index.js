@@ -11,4 +11,4 @@ module.exports.PmsProducer = require('./PmsProducer');
 module.exports.MpptProducer = require('./MpptProducer');
 module.exports.InverterProducer = require('./InverterProducer');
 
-module.exports.Feature = require('./Feature');
+module.exports.FeatureProducer = require('./FeatureProducer');
