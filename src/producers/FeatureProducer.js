@@ -10,16 +10,16 @@ const env = require('../environment/env');
 
 const Producer = require('./Producer');
 
-const WRITE_TOPIC = env.active.messagebroker.topics.monitoring.inverter;
+const WRITE_TOPIC = env.active.messagebroker.topics.system.feature;
 
 class FeatureProducer extends Producer {
     /**
      * constructor arguments 
      * @param {*} apiPathIdentifier                                                  // identifer based on the api path: this is typically from enums.params.datasets - e.g. pms; or 
      */
-    constructor(senderId, apiPathIdentifier) {
+    constructor(apiPathIdentifier) {
         
-        super(WRITE_TOPIC, senderId);
+        super(WRITE_TOPIC);
         this.apiPathIdentifier = apiPathIdentifier;
 
     }
@@ -32,7 +32,8 @@ class FeatureProducer extends Producer {
         let msgObj = { itemCount: 1, messages: [] };
         
         msgObj.messages.push(super._createMessage(this.apiPathIdentifier, datasets));   // add to the message array. the key is the feature name e.g. 'logging'
-
+        console.log('@@@')
+        console.log(msgObj.messages);
         return msgObj;
 
     }
