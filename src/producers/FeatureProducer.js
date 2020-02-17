@@ -32,8 +32,7 @@ class FeatureProducer extends Producer {
         let msgObj = { itemCount: 1, messages: [] };
         
         msgObj.messages.push(super._createMessage(this.apiPathIdentifier, datasets));   // add to the message array. the key is the feature name e.g. 'logging'
-        console.log('@@@')
-        console.log(msgObj.messages);
+
         return msgObj;
 
     }

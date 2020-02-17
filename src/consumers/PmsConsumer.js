@@ -101,7 +101,7 @@ class PmsConsumer extends Consumer {
 
         let dataset = consts.NONE;
         let json = [];
-        let pmsId = '';
+        let pmsId, pmsTemp;
 
         // sync-parse to get all the csv rows
         const csvRows = csvSyncParse(csvData.trim(), {
@@ -120,7 +120,8 @@ class PmsConsumer extends Consumer {
 
                 // reinitialise dataset as a new one
                 pmsId = csvRow['pms.id'].trim();
-                dataset = { pms: { id: pmsId }, data: [] }
+                pmsTemp = parseFloat(csvRow['pms.temp']);
+                dataset = { pms: { id: pmsId, temp: pmsTemp }, data: [] }
             }
 
             // make the data arrays for cell.open[], cell.volts[], fet.open[]
