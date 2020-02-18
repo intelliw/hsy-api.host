@@ -15,13 +15,7 @@ module.exports.folders = {
     STATIC: path.dirname(require.resolve('../../static'))
 };
 
-// the starting hour of each timeofday 
-module.exports.timeOfDayStart = {
-    morning: '6',
-    afternoon: '12',
-    evening: '18',
-    night: '0'
-};
+
 // links to hypermedia resources
 module.exports.links = {
     energyDocs: "https://docs.sundaya.monitored.equipment/docs/api.sundaya.monitored.equipment/0/c/Getting%20Started/API%20Overview/Energy%20API"
@@ -30,85 +24,99 @@ module.exports.links = {
 // constants for period algebra
 module.exports.period = {
 
-    /* child period ('c') and duration ('d') lookup.  
-        the lookup is parent => child or parent+child => grandchild. The fields are c: for child and d: for duration
-        this lookup needs to be commutatively equivalent to descendentParent enum's lookup
+    /*  this is a lookup for child period ('c') and duration ('d')
+        the lookup is parent => child 
+            or parent+child => grandchild.
+        all entries must be commutatively equivalent to an equivalent entry in descendentParent enum /lookup
+        items prefixed with ALT refer to alternate childreb (some periods have alternate children)
     */
     ancestorChild: {
         second: { 'c': enums.params.period.instant, 'd': '1000' },
-            secondinstant: this.NONE,
+        secondinstant: this.NONE,
 
         minute: { 'c': enums.params.period.second, 'd': '60' },
-            minutesecond: { 'c': enums.params.period.instant, 'd': '1000' },
-        
+        minutesecond: { 'c': enums.params.period.instant, 'd': '1000' },
+
+        qtrhour: { 'c': enums.params.period.minute, 'd': '15' },
+        qtrhourminute: { 'c': enums.params.period.second, 'd': '60' },
+
         hour: { 'c': enums.params.period.minute, 'd': '60' },
-            hourminute: { 'c': enums.params.period.second, 'd': '60' },
+        hourminute: { 'c': enums.params.period.second, 'd': '60' },
+        ALT_hour: { 'c': enums.params.period.qtrhour, 'd': '4' },
+        hourqtrhour: { 'c': enums.params.period.minute, 'd': '15' },
 
         timeofday: { 'c': enums.params.period.hour, 'd': '6' },
-            timeofdayhour: { 'c': enums.params.period.minute, 'd': '60' },
+        timeofdayhour: { 'c': enums.params.period.minute, 'd': '60' },
 
         day: { 'c': enums.params.period.hour, 'd': '24' },
-            dayhour: { 'c': enums.params.period.minute, 'd': '60' },
+        dayhour: { 'c': enums.params.period.minute, 'd': '60' },
         ALT_day: { 'c': enums.params.period.timeofday, 'd': '4' },
-            daytimeofday: { 'c': enums.params.period.hour, 'd': '4' },
-            
+        daytimeofday: { 'c': enums.params.period.hour, 'd': '4' },
+
         week: { 'c': enums.params.period.day, 'd': '7' },
-            weekday: { 'c': enums.params.period.timeofday, 'd': '4' },
+        weekday: { 'c': enums.params.period.timeofday, 'd': '4' },
 
         month: { 'c': enums.params.period.day, 'd': this.NONE },         // monthday is derived dynamically
-            monthday: { 'c': enums.params.period.hour, 'd': '24' },                 // number of monthdays is derived dynamically
+        monthday: { 'c': enums.params.period.hour, 'd': '24' },                 // number of monthdays is derived dynamically
         ALT_month: { 'c': enums.params.period.week, 'd': '4' },
-            monthweek: { 'c': enums.params.period.day, 'd': '7' },
+        monthweek: { 'c': enums.params.period.day, 'd': '7' },
 
         quarter: { 'c': enums.params.period.month, 'd': '3' },
-            quartermonth: { 'c': enums.params.period.day, 'd': this.NONE },         // number of monthdays is derived dynamically
-        
+        quartermonth: { 'c': enums.params.period.day, 'd': this.NONE },         // number of monthdays is derived dynamically
+
         year: { 'c': enums.params.period.month, 'd': '12' },
-            yearmonth: { 'c': enums.params.period.day, 'd': this.NONE },            // number of monthdays is derived dynamically
+        yearmonth: { 'c': enums.params.period.day, 'd': this.NONE },            // number of monthdays is derived dynamically
         ALT_year: { 'c': enums.params.period.quarter, 'd': '4' },
-            yearquarter: { 'c': enums.params.period.month, 'd': '3' },
+        yearquarter: { 'c': enums.params.period.month, 'd': '3' },
 
         fiveyear: { 'c': enums.params.period.year, 'd': '5' },
-            fiveyearyear: { 'c': enums.params.period.month, 'd': '4' }
+        fiveyearyear: { 'c': enums.params.period.month, 'd': '4' }
     },
 
-    /* parent period lookup.  the lookup is child => parent or grandchild-+-child => parent.
-    this lookup needs to be commutatively equivalent to the ancestorChild lookup
-    items prefixed with ALT refer to alternate parents (some periods have alternate parents)
+    /*  parent period lookup.  
+        the lookup is child => parent 
+            or grandchild-+-child => parent.
+        all entries must be commutatively equivalent to an equivalent entry in ancestorChild enum /lookup
+        items prefixed with ALT refer to alternate parents (some periods have alternate parents)
     */
     descendentParent: {
         instant: enums.params.period.second,
-            instantsecond: enums.params.period.minute,
+        instantsecond: enums.params.period.minute,
 
         second: enums.params.period.minute,
-            secondminute: enums.params.period.hour,
+        secondminute: enums.params.period.hour,
 
         minute: enums.params.period.hour,
-            minutehour: enums.params.period.timeofday,
-            ALT_minutehour: enums.params.period.day,
+        minutehour: enums.params.period.timeofday,
+        ALT_minutehour: enums.params.period.day,
+        ALT_minute: enums.params.period.qtrhour,
+        minuteqtrhour: enums.params.period.hour,
+
+        qtrhour: enums.params.period.hour,
+        qtrhourhour: enums.params.period.timeofday,
 
         hour: enums.params.period.day,
-            hourday: enums.params.period.month,
-            ALT_hourday: enums.params.period.week,
-        ALT_hour: enums.params.period.timeofday,            
-            hourtimeofday: enums.params.period.day,
+        hourday: enums.params.period.month,
+        ALT_hourday: enums.params.period.week,
+        ALT_hour: enums.params.period.timeofday,
+        hourtimeofday: enums.params.period.day,
 
         timeofday: enums.params.period.day,
-            timeofdayday: enums.params.period.week,
-        
+        timeofdayday: enums.params.period.week,
+
         day: enums.params.period.month,
         ALT_day: enums.params.period.week,
-            dayweek: enums.params.period.month,
+        dayweek: enums.params.period.month,
 
         week: enums.params.period.month,
-            weekmonth: enums.params.period.quarter,
+        weekmonth: enums.params.period.quarter,
 
         month: enums.params.period.year,
         ALT_month: enums.params.period.quarter,
-            monthquarter: enums.params.period.year,
+        monthquarter: enums.params.period.year,
 
         quarter: enums.params.period.year,
-            quarteryear: enums.params.period.fiveyear,
+        quarteryear: enums.params.period.fiveyear,
 
         year: enums.params.period.fiveyear,
 
@@ -121,6 +129,8 @@ module.exports.period = {
         secondinstant: this.NONE,
         minutesecond: '01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60',
         hourminute: '01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60',
+        hourqtrhour: 'One Two Three Four',
+        qtrhourminute: { 'one': '00 01 02 03 04 05 06 07 08 09 10 11 12 13 14', 'two': '15 16 17 18 19 20 21 22 23 24 25 26 27 28 29', 'three': '30 31 32 33 34 35 36 37 38 39 40 41 42 43 44', 'four': '45 46 47 48 49 50 51 52 53 54 55 56 57 58 59' },
         timeofdayhour: { 'night': '00 01 02 03 04 05', 'morning': '06 07 08 09 10 11', 'afternoon': '12 13 14 15 16 17', 'evening': '18 19 20 21 22 23' },
         dayhour: '00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23',
         daytimeofday: 'Night Morning Afternoon Evening',
@@ -138,11 +148,12 @@ module.exports.period = {
         quartermonth: '01 02 03'                    // a grandchild month could apply to any quarter so make these generic month numbers  
     },
 
-        // returns a format string for UTC compresed datetime for use in links and identifiers
+    // returns a format string for UTC compresed datetime for use in links and identifiers
     datetimeISO: {
         instant: 'YYYYMMDDTHHmmss.SSSS',
         second: 'YYYYMMDDTHHmmss',
         minute: 'YYYYMMDDTHHmm',
+        qtrhour: 'YYYYMMDDTHHmm',                   // same as minute
         hour: 'YYYYMMDDTHHmm',
         timeofday: 'YYYYMMDDTHHmm',                 // timeofday formatted same as hour
         day: 'YYYYMMDD',
@@ -158,6 +169,7 @@ module.exports.period = {
         instant: 'DD/MM/YY HHmmss.SSSS',
         second: 'DD/MM/YY HHmm:ss',
         minute: 'DD/MM/YY HH:mm',
+        qtrhour: 'DD/MM/YY HH:mm',                   // same as minute
         hour: 'DD/MM/YY HH:mm',
         timeofday: 'DD/MM/YY HH:mm',                // timofday formatted same as hour
         day: 'DD/MM/YY',
@@ -170,17 +182,33 @@ module.exports.period = {
 
     // returns max allowed durations for each period. each period cap is proportional to the large number of items in its collection
     maxDurationsAllowed: {
-        instant: '1',                                           // max allowed for time periods is 1 due to large number of items in each collection 
+        instant: '1',                               // max allowed for time periods is 1 due to large number of items in each collection 
         second: '1',
-        minute: '1',                                            // 1 hr     - there are 60 items (seconds) per minute
-        hour: '6',                                              // 6 hrs    - there are 60 items (minutes) per hour
-        timeofday: '8',                                         // 2 days   - there are 6 items (hours) per timeofday 
-        day: '31',                                              // 1 months - there are 4 items (timeofdays) per day    
-        week: '12',                                             // 3 months - there are 7 items (days) in a week
-        month: '6',                                             // 6 months - there are 31 items (days) in a month.. so cap to 6 (2 quarters)
-        quarter: '8',                                           // 2 years  - there are 3 items (months) in a quarter
-        year: '5',                                              // 5 years  - there are 4 items (quarters) in a year
-        fiveyear: '5'                                           // 5 years  - there are 5 items (years) in a fiveyear    
+        minute: '1',                                // 1 hr     - there are 60 items (seconds) per minute
+        qtrhour: '8',                               // 2 days
+        hour: '6',                                  // 6 hrs    - there are 60 items (minutes) per hour
+        timeofday: '8',                             // 2 days   - there are 6 items (hours) per timeofday 
+        day: '31',                                  // 1 months - there are 4 items (timeofdays) per day    
+        week: '12',                                 // 3 months - there are 7 items (days) in a week
+        month: '6',                                 // 6 months - there are 31 items (days) in a month.. so cap to 6 (2 quarters)
+        quarter: '8',                               // 2 years  - there are 3 items (months) in a quarter
+        year: '5',                                  // 5 years  - there are 4 items (quarters) in a year
+        fiveyear: '5'                               // 5 years  - there are 5 items (years) in a fiveyear    
+    },
+    
+    periodStart: {
+        timeOfDay: {                               // the starting hour of each timeofday                                            
+            morning: '6',
+            afternoon: '12',
+            evening: '18',
+            night: '0'
+        },
+        qtrHour: {                                 // the starting minute of each quarter hour                                            
+            one: '0',
+            two: '15',
+            three: '30',
+            four: '45'
+        }
     }
 
 }
@@ -194,10 +222,10 @@ module.exports.dateTime = {
 // constants to define api parameters 
 module.exports.params = {
     names: {
-        apiKey: 'apikey',                                                   
+        apiKey: 'apikey',
         acceptType: 'accept',
         contentType: 'contentType'
-        
+
     },
     defaults: {
         site: '999',
