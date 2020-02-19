@@ -23,7 +23,13 @@ module.exports.links = {
 
 // constants for period algebra
 module.exports.period = {
-
+    
+    periodDuration: {
+        qtrhourminute: 15,                                      // minutes in a quarter hour period
+        timeofdayhour: 6,                                       // hours in a timeofday period
+        fivceyearyear: 5                                        // years in a fiveyear period
+    },
+    
     /*  this is a lookup for child period ('c') and duration ('d')
         the lookup is parent => child 
             or parent+child => grandchild.

@@ -178,25 +178,6 @@ module.exports.datetimeToLocal = (instant, returnUtcFormat, offsetHours) => {
     return localTime;                                                                               // return formatted 
 
 }
-/* rounds down the instant 
-    ..to the nearest start of a block period -  such as a quarter hour (defined by its duration == 15 minutes)
- * for example an instant can be rounded up as follows 
- *  31/03/2020 12:14.59.9990 rounded down to the nearest quarter hour (15 minutes) == 12:15       (31/03/2020 12:15.59.9990)
- *  31/03/2020 12:14.59.9990 rounded down to the nearest timeofday (6 hours) == 12:12 (afternoon) (31/03/2020 12:12.59.9990)
- *  31/03/2011 12:14.59.9990 rounded down to the nearest 5years (5 years) == 2010                 (31/03/2010 12:14.59.9990  
- *  period is a string, can be any of the momentjs periods
-*/
-module.exports.datetimeRoundDown = (instant, period, duration, format) => {
-
-    let epoch;
-
-    let p = moment.utc(instant).get(period);                                                        // get the perioid component e.g.  
-    p = p - (p % duration);
-    epoch = moment.utc(instant).set(period, p).startOf(period).format(format);
-
-    return epoch;
-
-}
 
 /* converts and formats a local or UTC instant, to a zone offset expressed in +/-HH:MM format. 
    Returns a string in the specified return format

@@ -317,7 +317,7 @@ function periodEpoch(periodEnum, epoch, format, duration) {
 
     // if duration is negative, rewind epoch by a number of periods corresponding to duration 
     let periodsToSubtract = Math.sign(duration) < 0 ? Math.abs(duration) : 0;                    // subtract zero periods if duration is positive              
-
+    
     // set the epoch and if needed adjust for negative duration 
     switch (periodEnum) {
 
@@ -328,18 +328,26 @@ function periodEpoch(periodEnum, epoch, format, duration) {
             break;
 
         case enums.params.period.qtrhour:                                                           // adjust to the start of the last 15mt block in the hour
-            const QTRHR_DURATION_MINUTES = 15;                                                      // minutes
+            const QTRHR_DURATION_MINUTES = consts.period.periodDuration.qtrhourminute;              // == 15 (minutes)             ;                                                      // minutes in a quarter hour
             
-            epoch = utils.datetimeRoundDown(epoch, enums.params.period.minute, QTRHR_DURATION_MINUTES, format);     // set minute to 0,15,30,or 45  - get the starting minute for the quarter hour     
-            
+            let min = periodRoundDown(epoch, enums.params.period.minute, QTRHR_DURATION_MINUTES);   // get rounded down minute -  0,15,30,or 45  - get the starting minute for the quarter hour     
+            epoch = moment.utc(epoch)
+                .set(enums.params.period.minute, min)
+                .startOf(enums.params.period.minute)
+                .format(format);
+
             periodsToSubtract = Math.sign(duration) < 0 ? Math.abs(duration) * QTRHR_DURATION_MINUTES : 0;    // subtract zero periods if duration is positive
             epoch = moment.utc(epoch).subtract(periodsToSubtract, 'minutes').startOf('minute').format(format);
             break;
 
         case enums.params.period.timeofday:                                                         // adjust to the start of the last 6hr block in the day (morning=6, afternoon=12, evening-18, night=00)   
-            const TIMEOFDAY_DURATION_HRS = 6;                                                       // hours
+            const TIMEOFDAY_DURATION_HRS = consts.period.periodDuration.timeofdayhour;              // == 6  (hours)
 
-            epoch = utils.datetimeRoundDown(epoch, enums.params.period.hour, TIMEOFDAY_DURATION_HRS, format);     // set hour to 0,6,12,or 18 - the starting hour for the timeofday 
+            let hr = periodRoundDown(epoch, enums.params.period.hour, TIMEOFDAY_DURATION_HRS);      // get rounded down hour to 0,6,12,or 18 - the starting hour for the timeofday 
+            epoch = moment.utc(epoch)
+                .set(enums.params.period.hour, hr)
+                .startOf(enums.params.period.hour)
+                .format(format);
             
             periodsToSubtract = Math.sign(duration) < 0 ? Math.abs(duration) * TIMEOFDAY_DURATION_HRS : 0;    // subtract zero periods if duration is positive              
             epoch = moment.utc(epoch).subtract(periodsToSubtract, 'hours').startOf('hour').format(format);
@@ -352,9 +360,13 @@ function periodEpoch(periodEnum, epoch, format, duration) {
             break;
 
         case enums.params.period.fiveyear:                                                          // adjust to start of last 5 year block (2010, 2015, 2020 etc.)
-            const FIVEYEAR_DURATION_YRS = 5;                // years
+            const FIVEYEAR_DURATION_YRS = consts.period.periodDuration.fivceyearyear;               // == 5 (years)
 
-            epoch = utils.datetimeRoundDown(epoch, enums.params.period.year, FIVEYEAR_DURATION_YRS, format);     // round down year to nearest 5 year epoch - 2010,2015 etc
+            let fiveyr = periodRoundDown(epoch, enums.params.period.year, FIVEYEAR_DURATION_YRS);      // get rounded down year to nearest 5 year epoch - 2010,2015 etc
+            epoch = moment.utc(epoch)
+                .set(enums.params.period.year, fiveyr)
+                .startOf(enums.params.period.year)
+                .format(format);
             
             periodsToSubtract = Math.sign(duration) < 0 ? Math.abs(duration) * FIVEYEAR_DURATION_YRS : 0;    // subtract durations for 5yr                         
             epoch = moment.utc(epoch).subtract(periodsToSubtract, 'years').startOf('year').format(format);
@@ -427,6 +439,24 @@ function periodEnd(periodEnum, epoch, format, duration) {
     }
 
     return periodEnd;
+
+}
+
+/* returns the rounded down period component of the instant
+    ..to the nearest start of a block period -  such as a quarter hour (defined by its duration == 15 minutes)
+ * for example the period in an instant can be rounded down as follows 
+ *  31/03/2020 12:14.59.9990 rounded down to the nearest quarter hour (15 minutes) => returns 15 (minute, =12:15)             (31/03/2020 12:15.59.9990)
+ *  31/03/2020 12:14.59.9990 rounded down to the nearest timeofday (6 hours) => returns 12       (hour, =12:00-afternoon)    (31/03/2020 12:12.59.9990)
+ *  31/03/2011 12:14.59.9990 rounded down to the nearest 5years (5 years) => returns 2010 (year, 31/03/2010 12:14.59.9990
+ *
+ *  period is a string, can be any of the momentjs periods
+*/
+function periodRoundDown (instant, periodEnum, duration) {
+
+    let p = moment.utc(instant).get(periodEnum);                                                        // get the perioid component e.g.  
+    p = p - (p % duration);
+    
+    return p;
 
 }
 
@@ -505,7 +535,8 @@ function parentChildDescription(periodObj) {
 
             case 'qtrhourminute':                                                       // '{ 'one': '00 01 ..', 'two': '15 16 ... etc
                 
-                let min = moment.utc(periodObj.epochInstant).get('minute');             // get the start minute
+                let min = moment.utc(periodObj.epochInstant).get(enums.params.period.minute); // get the start minute
+                
                 let qhLbl = utils.keynameFromValue(                                     // get the key using the start minute as the value
                         consts.period.periodStart.qtrHour, 
                         min.toString());      //  enums.qtrHour.one     
@@ -515,8 +546,11 @@ function parentChildDescription(periodObj) {
 
             
             case 'timeofdayhour':                   // timeofdayhour                    // '{ 'morning': '06 07 08 09 10 11', 'afternoon': '12 13 ... 
-
-                let todLbl = selectTimeOfDayEnum(epochInstant);                         //  enums.timeOfDay.morning     
+                let hr = periodRoundDown(epochInstant, enums.params.period.hour, consts.period.periodDuration.timeofdayhour);       // get the rounded down hour for this instant's timeofday
+                
+                let todLbl = utils.keynameFromValue(                                     // get the key using the start hour as the value
+                    consts.period.periodStart.timeOfDay, 
+                    hr.toString());      //  enums.qtrHour.one     
 
                 descr = descr[todLbl];                                                  //  extract subvalue from label e.g. '06 07 08 09 10 11'
                 break;
@@ -616,29 +650,6 @@ function selectQuarterLabel(epoch) {
     return qtrLbl;
 }
 
-// select the timeofday enum for the epoch
-function selectTimeOfDayEnum(epoch) {
-
-    let todEnum;
-    let hr = moment.utc(epoch).get('hour');                                                 // get the hour of the epoch
-    
-    const hrTod = consts.period.periodStart.timeOfDay;                                      // tod constants for start hour
-
-    if (hr >= parseInt(hrTod.night) && hr < parseInt(hrTod.morning)) {
-        todEnum = enums.timeOfDay.night;
-
-    } else if (hr >= parseInt(hrTod.morning) && hr < parseInt(hrTod.afternoon)) {
-        todEnum = enums.timeOfDay.morning;
-
-    } else if (hr >= parseInt(hrTod.afternoon) && hr < parseInt(hrTod.evening)) {
-        todEnum = enums.timeOfDay.afternoon;
-
-    } else {
-        todEnum = enums.timeOfDay.evening;
-    }
-    return todEnum;
-}
-
 
 // formats the instant in compressed ISO datetime format. Period enum determines the format
 function datetimeFormatISO(instant, periodEnum) {
@@ -680,7 +691,9 @@ function datetimePromptStr(instant, periodEnum) {
             label = `${moment.utc(instant).format('HH')}00 hrs`;
             break;
         case enums.params.period.timeofday:            // 'Jan 1 Morning' 
-            label = `${moment.utc(instant).format('MMM')} ${moment.utc(instant).format('D')} ${utils.capitalise(selectTimeOfDayEnum(instant))}`;
+            let hr = periodRoundDown(instant, enums.params.period.hour, consts.period.periodDuration.timeofdayhour);        // get the rounded down hour for this instant's timeofday   
+            let todLbl = utils.keynameFromValue(consts.period.periodStart.timeOfDay, hr.toString());                        //  enums.qtrHour.one     
+            label = `${moment.utc(instant).format('MMM')} ${moment.utc(instant).format('D')} ${utils.capitalise(todLbl)}`;
             break;
         case enums.params.period.day:                  // 'Mon Jan 1st'
             label = `${moment.utc(instant).format('ddd')} ${moment.utc(instant).format('MMM')} ${moment.utc(instant).format('Do')}`
