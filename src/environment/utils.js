@@ -13,7 +13,7 @@ const NONE = global.undefined;
 
 // converts an array to a string with each array element delimited by the specified delimiter  
 module.exports.arrayToString = (array, delimiter) => {
- 
+
     return array.toString().replace(/,/g, delimiter);               // use a regex as js will only replace the first occurrence if replacing with a string argument
 }
 
@@ -51,8 +51,8 @@ module.exports.deepClone = (jsonObj) => {                           // e.g. { ..
 
 // performs a 1 level shallow clone excluding prototype, using spread operator - 
 module.exports.shallowClone = (jsonObj) => {                        // e.g. { .. }    
-    
-    let clone = { ...jsonObj };                                   
+
+    let clone = { ...jsonObj };
 
     return clone;
 };
@@ -153,7 +153,7 @@ module.exports.datetimeToLocal = (instant, returnUtcFormat, offsetHours) => {
     // get start of trailing +/- offset substring or 'Z' in the input instant                                               
     offsetSubstringStart = instant.search(/[+-]/);                                                  // the instant must have a +/- offset or a z
     zuluStart = offsetSubstringStart == NOT_FOUND ? instant.toUpperCase().indexOf('Z') : NOT_FOUND; // check if Z has been specified 
-    
+
     // if it is a local time with a trailing +/- offset 
     if (offsetSubstringStart > NOT_FOUND) {
 
@@ -176,6 +176,25 @@ module.exports.datetimeToLocal = (instant, returnUtcFormat, offsetHours) => {
     }
 
     return localTime;                                                                               // return formatted 
+
+}
+/* rounds down the instant 
+    ..to the nearest start of a block period -  such as a quarter hour (defined by its duration == 15 minutes)
+ * for example an instant can be rounded up as follows 
+ *  31/03/2020 12:14.59.9990 rounded down to the nearest quarter hour (15 minutes) == 12:15       (31/03/2020 12:15.59.9990)
+ *  31/03/2020 12:14.59.9990 rounded down to the nearest timeofday (6 hours) == 12:12 (afternoon) (31/03/2020 12:12.59.9990)
+ *  31/03/2011 12:14.59.9990 rounded down to the nearest 5years (5 years) == 2010                 (31/03/2010 12:14.59.9990  
+ *  period is a string, can be any of the momentjs periods
+*/
+module.exports.datetimeRoundDown = (instant, period, duration, format) => {
+
+    let epoch;
+
+    let p = moment.utc(instant).get(period);                                                        // get the perioid component e.g.  
+    p = p - (p % duration);
+    epoch = moment.utc(instant).set(period, p).startOf(period).format(format);
+
+    return epoch;
 
 }
 
@@ -220,7 +239,7 @@ module.exports.findByPropertyValue = (findInObjectArray, findProperty, findValue
     let n;
     let foundItems = [];
     let item;
-    
+
     for (n = 0; n < findInObjectArray.length; n++) {
 
         item = findInObjectArray[n];
@@ -251,13 +270,13 @@ module.exports.indexFromValue = (obj, value) => {
 module.exports.is200response = (statusCode) => {
 
     const statusCode200 = 200;
-    
+
     statusCode = parseInt(statusCode);
-    
+
     let is200 = (statusCode >= statusCode200) && (statusCode < (statusCode200 + 100));
 
     return is200;
-    
+
 }
 
 
@@ -481,3 +500,4 @@ module.exports.valueExistsInObject = (obj, value) => {
 // test... node src/environment/utils
 // console.log(this.is200response(201));
 // console.log(this.arrayToString(['Jan', 'Feb', 'Mar'], '-'))
+// console.log(this.datetimeRoundDown('20110331T235959.9990', 'year', 5, 'DD/MM/YY HHmmss.SSSS'));
