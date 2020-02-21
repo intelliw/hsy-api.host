@@ -41,7 +41,7 @@ class PmsProducer extends Producer{
      */
     transform(datasets, senderId) {
 
-        let key
+        let key, status;
         let dataItemCount = 0;
         let vcl, vch, dvcl, volts, watts;
         let attrArray;
@@ -57,7 +57,8 @@ class PmsProducer extends Producer{
         // extract and add messages to results 
         datasets.forEach(dataset => {                                                           // e.g. "pms": { "id": "PMS-01-001" }, "data": [ { time_local: '20190809T150006.032+0700', pack: [Object] }, ... ]
 
-            key = dataset.pms.id;                                                               // e.g. dataset.pms.id - from.. "pms": { "id": 
+            key = dataset.pms_id;                                                               // e.g. { "pms_id": "PMS-01-001", 
+            status = dataset.status;                                                            //      "status": { "code": "0001", "temp": 48.3 }
 
             // add each data item in the dataset as an individual message
             dataset.data.forEach(dataItem => {                                                  // e.g. "data": [ { "time_local": "2
@@ -75,16 +76,11 @@ class PmsProducer extends Producer{
                 //  reconstruct dataitem - add new attributes and flatten arrays 
                 let dataObj = {
                     pms_id: key,                                                                // { "pms_id": "PMS-01-002",
-                    pack_id: p.id                                                               //   "pack_id": "0248",
-                }
-
-                // pms
-                dataObj.pms = {                                                                 //   "pms": {   
-                    temp: dataset.pms.temp                                                      //   get temp from dataset  e.g. { "pms": { "id": "PMS-01-001", "temp": 48.3 },     
+                    pack_id: p.id                                                               //   "pack_id": "0248",                  //  top level field as required by BQ for clustering (instead of pack.id) 
                 }
 
                 // pack    
-                dataObj.pack = {                                                                                  //   "pack": {   
+                dataObj.pack = {                                                                
                     volts: parseFloat(volts), amps: p.amps, watts: parseFloat(watts),           //      "volts": 51.262, "amps": -0.625, "watts": -32.039,    
                     vcl: vcl, vch: vch, dock: parseInt(p.dock),                                 //      "vcl": 3.654, "vch": 3.676, "dock": 4, 
                     temp_top: p.temp[TEMP_TOP_INDEX - 1],                                       //      "temp_top": 35, "temp_mid": 33, "temp_bottom": 34 },
@@ -114,9 +110,10 @@ class PmsProducer extends Producer{
                 }
 
                 // status
-                let statusBits = utils.hex2bitArray(p.status, consts.equStatus.BIT_LENGTH);     // get a reversed array of bits (bit 0 is least significant bit)
+                let statusBits = utils.hex2bitArray(status.code, consts.equStatus.BIT_LENGTH);  // get a reversed array of bits (bit 0 is least significant bit)
                 dataObj.status = {
-                    bus_connect: utils.tristateBoolean(statusBits[0], false, true)              // bit 0    "status": { "bus_connect": true }, 
+                    bus_connect: utils.tristateBoolean(statusBits[0], false, true),             // bit 0    "status": { "bus_connect": true }, 
+                    temp: status.temp                                                           // get temp from dataset.status  e.g. { "pms": { "id": "PMS-01-001", "temp": 48.3 },     
                 }
 
                 // add generic attributes
@@ -124,7 +121,6 @@ class PmsProducer extends Producer{
 
                 // add the dataitem to the message buffer
                 transformedMsgObj.messages.push(super._createMessage(key, dataObj));                 // add to the message array
-
             });
 
             // replace data array with newly created dataItems array

@@ -40,10 +40,10 @@ class InverterProducer extends Producer {
      */
     transform(datasets, senderId) {
 
-        let key
+        let key, status;
         let dataItemCount = 0;
 
-        let volts, amps, watts, pf;
+        let volts, amps, watts, pf, is3phase;
         let attrArray;
 
         const PRECISION = consts.system.MONITORING_PRECISION;
@@ -55,7 +55,8 @@ class InverterProducer extends Producer {
         // extract and add messages to results 
         datasets.forEach(dataset => {
 
-            key = dataset.inverter.id;
+            key = dataset.inverter_id;
+            status = dataset.status;                                                            //      "status": { "code": "0001", "temp": 48.3 }
 
             // add each data item in the dataset as an individual message
             dataset.data.forEach(dataItem => {                                                  // e.g. "data": [ { "time_local": "2
@@ -96,30 +97,32 @@ class InverterProducer extends Producer {
                 };
                 dataObj.load = attrArray;                                                                   // "load": [ {"volts": 48, "amps": 6, "watts": 288 },
 
-
                 // grid
                 attrArray = [];
+                is3phase = dataItem.grid.volts.length == 3;                                                 // check if 3 phase - if there are 3 phases the voltage is line-to-linbe voltage   
                 for (let i = 1; i <= dataItem.grid.volts.length; i++) {
-                    attrArray.push({
-                        volts: dataItem.grid.volts[i - 1],
-                        amps: dataItem.grid.amps[i - 1],
-                        pf: dataItem.grid.pf[i - 1],
-                        watts: (volts * amps * pf * SQ_ROOT_OF_THREE).toFixed(PRECISION)                    // grid.watts == V x I x pf x √3  
-                    });
+                    volts = dataItem.grid.volts[i - 1];
+                    amps = dataItem.grid.amps[i - 1];
+                    pf = dataItem.grid.pf[i - 1];
+                    watts = (volts * amps * pf * (is3phase ? SQ_ROOT_OF_THREE : 1)).toFixed(PRECISION);      // for 3 phase grid.watts == V x I x pf x √3. If the supply is single-phase there will be only one element in the array and accordingly the formula used will be formula: `grid.watts` = `grid.volts` * `grid.amps` * `grid.pf`.  
+
+                    attrArray.push({ volts: volts, amps: amps, pf: pf, watts: parseFloat(watts) });
                 };
                 dataObj.grid = attrArray;
 
                 // status
-                let statusBits = utils.hex2bitArray(dataItem.status, consts.equStatus.BIT_LENGTH);         // get a reversed array of bits (bit 0 is least significant bit)
+                let statusBits = utils.hex2bitArray(status.code, consts.equStatus.BIT_LENGTH);              // get a reversed array of bits (bit 0 is least significant bit)
                 dataObj.status = {
-                    bus_connect: utils.tristateBoolean(statusBits[0], false, true)                         // bit 0    "status": { "bus_connect": true }, 
+                    bus_connect: utils.tristateBoolean(statusBits[0], false, true),                         // bit 0    "status": { "bus_connect": true }, 
                 }
 
                 // add generic attributes
-                dataObj = this._addMetadata(dataObj, dataItem.time_local, senderId);       //  "sys": { "source": "STAGE001" },
+                dataObj = this._addMetadata(dataObj, dataItem.time_local, senderId);                        //  "sys": { "source": "STAGE001" },
 
                 // add the dataitem to the message buffer
                 transformedMsgObj.messages.push(super._createMessage(key, dataObj));                        // add to the message array
+                console.dir(`@@@ `)
+                console.dir(dataObj)
 
             });
 

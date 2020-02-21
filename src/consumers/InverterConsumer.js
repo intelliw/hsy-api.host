@@ -56,11 +56,13 @@ class InverterConsumer extends Consumer {
     // inverter schema (see https://docs.sundaya.monitored.equipment/docs/api.sundaya.monitored.equipment/0/c/Examples/POST/inverter%20POST%20example)
     _getSchema() {
 
-        const schema = Joi.array().items(Joi.object({                               // [
-            inverter: Joi.object({                                                  // { "inverter": { "id": "SPI-B2-01-001" }, 
-                id: Joi.string()                                                    //    
-            }),
-            data: Joi.array().items(Joi.object({                                    //    "data": [
+        const schema = Joi.array().items(Joi.object({                                   // [
+            inverter_id: Joi.string(),                                                  //  { "inverter_id": "SPI-B2-01-001", 
+            status: Joi.object({                                                        //     "status": {              
+                code: Joi.string().hex().length(4)                                      //        "code": "0001",    4-character, hex-encoded                    
+                }
+            ),            
+            data: Joi.array().items(Joi.object({                                        //    "data": [
                 time_local: Joi.date().utc().format(this._validTimestampFormats()),           // "time_local": "20190209T150006.032+0700", 
                 pv: Joi.object({                                                        // "pv": { "volts": [48.000, 48.000], "amps": [6.0, 6.0] },      
                     volts: Joi.array().items(Joi.number().positive()).min(1).max(4),    //      float (array), array size 1-4, + only
@@ -78,9 +80,7 @@ class InverterConsumer extends Consumer {
                     volts: Joi.array().items(Joi.number().positive()).min(1).max(3),    //      float (array), array size 1-3, + only
                     amps: Joi.array().items(Joi.number()).min(1).max(3),                //      float (array), array size 1-3, +/-
                     pf: Joi.array().items(Joi.number().positive().max(1)).min(1).max(3),      //      float, max 1.0, (array), array size 1-3, + only
-                }),
-                status: Joi.string()                                                    // "status": "0801"
-                    .hex().length(4)                                                    //      4-character, hex-encoded                    
+                })
             }))
         }));
 

@@ -63,10 +63,12 @@ class PmsConsumer extends Consumer {
     _getSchema() {
 
         const schema = Joi.array().items(Joi.object({                           // [
-            pms: Joi.object({                                                   //  { "pms": { "id": "PMS-01-001", "temp": 48.3 }, 
-                id: Joi.string(),                                               //    
-                temp: Joi.number().positive()                                   //      float	+ only 
-            }),
+            pms_id: Joi.string(),                                                   //  { "pms_id": "PMS-01-001", 
+            status: Joi.object({                                                    //     "status": {              
+                code: Joi.string().hex().length(4),                                 //        "code": "0001",    4-character, hex-encoded                    
+                temp: Joi.number().positive()                                   //             "temp": 48.3 },float	+ only 
+                }
+            ),
             data: Joi.array().items(Joi.object({                                //      "data": [
                 time_local: Joi.date().utc().format(this._validTimestampFormats()),   //          "time_local": "20190209T150006.032+0700", 
                 pack: Joi.object({                                              //          "pack": { "id": "0241", "dock": 1, "amps": -1.601, "temp": [35.0, 33.0, 34.0],
@@ -81,10 +83,8 @@ class PmsConsumer extends Consumer {
                     fet: Joi.object({                                                       // "load": { "volts": [48.000, 48.000], "amps": [1.2, 1.2] },
                         temp: Joi.array().items(Joi.number().positive()).min(2).max(2),     //      float	array size 2, + only
                         open: Joi.array().unique().items(Joi.number().integer().positive().max(2)).max(2)     // integer (array)	1-2, uniqueitems, array size 2
-                    }),
-                    status: Joi.string()                                                    // "status": "0801"
-                        .hex().length(4)                                                    //      4-character, hex-encoded                    
-                }),
+                    })
+                })
             }))
         }));
 
@@ -101,7 +101,7 @@ class PmsConsumer extends Consumer {
 
         let dataset = consts.NONE;
         let json = [];
-        let pmsId, pmsTemp;
+        let pmsId, statusTemp, statusCode;
 
         // sync-parse to get all the csv rows
         const csvRows = csvSyncParse(csvData.trim(), {
@@ -113,15 +113,16 @@ class PmsConsumer extends Consumer {
         csvRows.forEach(csvRow => {
 
             // if new/different pms id 
-            if (pmsId !== csvRow['pms.id'].trim()) {
+            if (pmsId !== csvRow['pms_id'].trim()) {
 
                 // add dataset to json array (except when dataset is empty at the start)
                 if (dataset !== consts.NONE) json.push(dataset);
 
                 // reinitialise dataset as a new one
-                pmsId = csvRow['pms.id'].trim();
-                pmsTemp = parseFloat(csvRow['pms.temp']);
-                dataset = { pms: { id: pmsId, temp: pmsTemp }, data: [] }
+                pmsId = csvRow['pms_id'].trim();
+                statusTemp = parseFloat(csvRow['status.temp']);
+                statusCode = csvRow['status.code'];
+                dataset = { pms_id: pmsId, status: { code: statusCode, temp: statusTemp }, data: [] }
             }
 
             // make the data arrays for cell.open[], cell.volts[], fet.open[]
@@ -150,7 +151,7 @@ class PmsConsumer extends Consumer {
                             parseFloat(csvRow['fet.temp.1']),
                             parseFloat(csvRow['fet.temp.2'])]
                     },
-                    status: csvRow['status']
+                    
                 }
             }
 
