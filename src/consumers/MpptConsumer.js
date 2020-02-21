@@ -56,10 +56,12 @@ class MpptConsumer extends Consumer {
     // mppt schema (see https://docs.sundaya.monitored.equipment/docs/api.sundaya.monitored.equipment/0/c/Examples/POST/mppt%20POST%20example)
     _getSchema() {
 
-        const schema = Joi.array().items(Joi.object({                               // [
-            mppt: Joi.object({                                                  //  { "mppt": { "id": "IT6415AD-01-001" }, 
-                id: Joi.string()                                                //    
-            }),
+        const schema = Joi.array().items(Joi.object({                                   // [
+            mppt_id: Joi.string(),                                                       //  { "mppt_id": "IT6415AD-01-001",
+            status: Joi.object({                                                        //     "status": {              
+                code: Joi.string().hex().length(4)                                      //        "code": "0001",    4-character, hex-encoded                    
+                }
+            ),
             data: Joi.array().items(Joi.object({                                //    "data": [
                 time_local: Joi.date().utc().format(this._validTimestampFormats()),           // "time_local": "20190209T150006.032+0700", 
                 pv: Joi.object({                                                        // "pv": { "volts": [48.000, 48.000], "amps": [6.0, 6.0] },      
@@ -73,9 +75,7 @@ class MpptConsumer extends Consumer {
                 load: Joi.object({                                                      // "load": { "volts": [48.000, 48.000], "amps": [1.2, 1.2] },
                     volts: Joi.array().items(Joi.number().positive()).min(1).max(2),    //      float (array), array size 1-2, + only
                     amps: Joi.array().items(Joi.number().positive()).min(1).max(2)      //      float (array), array size 1-2, + only 
-                }),
-                status: Joi.string()                                                    // "status": "0801"
-                    .hex().length(4)                                                    //      4-character, hex-encoded                    
+                })
             }))
         }));
 

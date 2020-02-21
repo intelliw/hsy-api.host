@@ -40,7 +40,7 @@ class MpptProducer extends Producer {
      */
     transform(datasets, senderId) {
 
-        let key
+        let key, status;
         let dataItemCount = 0;
         let volts, amps, watts;
         let attrArray;
@@ -52,7 +52,8 @@ class MpptProducer extends Producer {
         // extract and add messages to results 
         datasets.forEach(dataset => {                                                           
 
-            key = dataset.mppt.id;                                                               
+            key = dataset.mppt_id;                                                               
+            status = dataset.status;                                                            //      "status": { "code": "0001", "temp": 48.3 }
 
             // add each data item in the dataset as an individual message
             dataset.data.forEach(dataItem => {                                                  // e.g. "data": [ { "time_local": "2
@@ -94,7 +95,7 @@ class MpptProducer extends Producer {
                 dataObj.load = attrArray;                                                                   // "load": [ {"volts": 48, "amps": 6, "watts": 288 },
 
                 // status
-                let statusBits = utils.hex2bitArray(dataItem.status, consts.equStatus.BIT_LENGTH);                              // get a reversed array of bits (bit 0 is least significant bit)
+                let statusBits = utils.hex2bitArray(status.code, , consts.equStatus.BIT_LENGTH);                                // get a reversed array of bits (bit 0 is least significant bit)
 
                 dataObj.status = {
                     bus_connect: utils.tristateBoolean(statusBits[0], false, true),                                             // bit 0    "status": { "bus_connect": true }, 

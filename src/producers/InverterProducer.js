@@ -121,8 +121,6 @@ class InverterProducer extends Producer {
 
                 // add the dataitem to the message buffer
                 transformedMsgObj.messages.push(super._createMessage(key, dataObj));                        // add to the message array
-                console.dir(`@@@ `)
-                console.dir(dataObj)
 
             });
 
