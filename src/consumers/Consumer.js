@@ -56,7 +56,7 @@ class Consumer {
 
 
     /** transforms the retrieved messages and calls producer to piublish the transformed messages
-     * @param {*} senderId                                                                      // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
+     * @param {*} senderId                                                                      // is based on the api key and identifies the source of the data. this value is added to 'sender' attribute 
     */
     consume(retrievedMsgObj, senderId) {
     }

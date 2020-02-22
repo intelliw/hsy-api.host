@@ -100,14 +100,16 @@ class PmsProducer extends Producer{
                 dataObj.cell = attrArray;                                                       // "cell": [ { "volts": 3.661, "dvcl": 7, "open": false },
 
                 // fets
-                dataObj.fet_in = {                                                              // "fet_in": {
+                attrArray = [];
+                attrArray.push({                                                                // Fet In
                     open: p.fet.open.includes(FET_IN_INDEX) ? true : false,                     //      "open": false, 
                     temp: p.fet.temp[FET_IN_INDEX - 1]                                          //      "temp": 34.1 },        
-                }
-                dataObj.fet_out = {                                                             // "fet_out": {
-                    open: p.fet.open.includes(FET_OUT_INDEX) ? true : false,                    //      "open": false, 
-                    temp: p.fet.temp[FET_OUT_INDEX - 1]                                         //      "temp": 32.2 },        
-                }
+                });
+                attrArray.push({                                                                // Fet Out
+                    open: p.fet.open.includes(FET_IN_INDEX) ? true : false,                     //      "open": false, 
+                    temp: p.fet.temp[FET_IN_INDEX - 1]                                          //      "temp": 34.1 },        
+                });
+                dataObj.fet = attrArray;                                                        // "fet": [ { "open": true, "temp": 34.1 },
 
                 // status
                 let statusBits = utils.hex2bitArray(status.code, consts.equStatus.BIT_LENGTH);  // get a reversed array of bits (bit 0 is least significant bit)

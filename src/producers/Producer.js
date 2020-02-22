@@ -29,7 +29,7 @@ class Producer {
 
     /** sends messages to the broker  
     * @param {*} transformedMsgObj                                                              // e.g. msgObj = { itemCount: 0, messages: [] };
-    * @param {*} senderId                                                                      // is based on the api key and identifies the source of the data. this value is added to sys.source attribute 
+    * @param {*} senderId                                                                      // is based on the api key and identifies the source of the data. this value is added to 'sender' attribute 
     */
     async produce(transformedMsgObj, senderId) {
 
@@ -78,13 +78,13 @@ class Producer {
     /** add generic metadata attributes to each dataitem in the dataset
     *   note that this converts time_local to bigqueryZonelessTimestampFormat which does not have trailing offset hours 
     *       - but not required by bigquery as it will convert local time to utc if submitted with a zone offset
-    * @param {*} senderId   senderId is the keyname of the apikey enum, sent in the POST request  and identifies the source of the data. this value is added to sys.source attribute
+    * @param {*} senderId   senderId is the keyname of the apikey enum, sent in the POST request  and identifies the source of the data. this value is added to 'sender' attribute
     * @param {*} localEventTime  the local event time, this will be converted to UTC and used to populate time_event and time_zone
     */
     _addMetadata(dataObj, localEventTime, senderId) {
 
         // add standard attributes
-        dataObj.sys = { source: senderId };               // is based on the apikey from the sender and identifies the source of the data. this value is added to sys.source attribute
+        dataObj.sender = senderId;               // is based on the apikey from the sender and identifies the source of the data. this value is added to 'sender' attribute
         dataObj.time_event = moment.utc(localEventTime).format(consts.dateTime.bigqueryZonelessTimestampFormat);
         dataObj.time_zone = utils.datetimeZoneOffset(localEventTime);
         dataObj.time_processing = moment.utc().format(consts.dateTime.bigqueryZonelessTimestampFormat);

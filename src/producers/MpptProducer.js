@@ -95,7 +95,7 @@ class MpptProducer extends Producer {
                 dataObj.load = attrArray;                                                                   // "load": [ {"volts": 48, "amps": 6, "watts": 288 },
 
                 // status
-                let statusBits = utils.hex2bitArray(status.code, , consts.equStatus.BIT_LENGTH);                                // get a reversed array of bits (bit 0 is least significant bit)
+                let statusBits = utils.hex2bitArray(status.code, consts.equStatus.BIT_LENGTH);                                // get a reversed array of bits (bit 0 is least significant bit)
 
                 dataObj.status = {
                     bus_connect: utils.tristateBoolean(statusBits[0], false, true),                                             // bit 0    "status": { "bus_connect": true }, 

@@ -94,7 +94,7 @@ class DevicesDatasetsPost extends Request {
         params.datasets = new Datasets(datasetName, datasets, validationError);                     // if validationError is not '' super will reject the request
         
         super(req, params, DevicesDatasetsPostResponse.produces, DevicesDatasetsPostResponse.consumes);     // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
-        params.apiKey = this.apiKey;                                                                // add apiKey from the Request (Param.ApiKey) to the params, as it will be used to produce sys.source attribute in Producer transform and publish
+        params.apiKey = this.apiKey;                                                                // add apiKey from the Request (Param.ApiKey) to the params, as it will be used to produce 'sender' attribute in Producer transform and publish
 
         // trace-log the request
         log.trace(log.enums.labels.requestStatus, `${datasetName} POST ${contentType}, sender:${this.senderId()}, valid?${this.validation.isValid}`, JSON.stringify({ datasets: params.datasets.value }));
