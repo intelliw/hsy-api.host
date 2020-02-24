@@ -38,10 +38,7 @@ class InverterConsumer extends Consumer {
      * @param {*} senderId                                                                      // is based on the api key and identifies the source of the data. this value is added to 'sender' attribute 
     */
     consume(retrievedMsgObj, senderId) {
-
-        let transformedMsgObj = this.producer.transform(retrievedMsgObj, senderId);
-        this.producer.produce(transformedMsgObj, senderId);                                           // async produce() ok as by now we have connected to kafka/pubsub, and the dataset should have been validated and the only outcome is a 200 response
-
+        super.consume(retrievedMsgObj, senderId);
     }
 
     /* converts the retrieved messages from csv to application /json
@@ -49,8 +46,8 @@ class InverterConsumer extends Consumer {
     convert(retrievedMsgObj, fromMimeType) {
 
         let convertedMsgObj = retrievedMsgObj
-
         return convertedMsgObj;
+
     }
 
     // inverter schema (see https://docs.sundaya.monitored.equipment/docs/api.sundaya.monitored.equipment/0/c/Examples/POST/inverter%20POST%20example)
