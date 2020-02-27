@@ -16,7 +16,7 @@ const moment = require('moment');
 
 const Producer = require('./Producer');
 
-const WRITE_TOPIC = env.active.messagebroker.topics.monitoring.pms;
+const WRITE_TOPIC = env.active.messagebroker.topics.timeseries.pms;
 
 /**
  * instance attributes

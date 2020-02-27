@@ -15,7 +15,7 @@ const MpptProducer = require('../producers/MpptProducer');
 const Consumer = require('./Consumer');
 
 // instance parameters
-const API_PATH_IDENTIFIER = env.active.messagebroker.topics.monitoring.mppt;
+const API_PATH_IDENTIFIER = env.active.messagebroker.topics.timeseries.mppt;
 
 /**
  */
