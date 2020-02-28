@@ -16,7 +16,7 @@ const PmsProducer = require('../producers/PmsProducer');
 const Consumer = require('./Consumer');
 
 // instance parameters
-const API_PATH_IDENTIFIER = env.active.messagebroker.topics.timeseries.pms;
+const API_PATH_IDENTIFIER = env.active.messagebroker.topics.monitoring.pms;
 
 /**
  */

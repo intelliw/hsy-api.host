@@ -30,7 +30,7 @@ module.exports.messaging = (topic, offset, msgsArray, itemQty, sender) => {
         };
         logInfo(infoPayload);
 
-        // append console                                                               // e.g. [timeseries.mppt:2-3] 2 messages, 4 items, sender:S001
+        // append console                                                               // e.g. [monitoring.mppt:2-3] 2 messages, 4 items, sender:S001
         if (loggingConf.appenders.includes(enums.logging.appenders.console)) {
             c@onsole.log(`[${infoPayload.topic}:${infoPayload.offset}] ${infoPayload.msgsqty} msgs, ${infoPayload.itemqty} items, sender:${infoPayload.sender}`);
         };
@@ -70,7 +70,7 @@ module.exports.data = (dataset, table, id, rowArray) => {
         let infoPayload = { dataset: dataset, table: table, id: id, rowqty: rowArray.length };
         logInfo(infoPayload);
 
-        // append console                                                               // e.g. [timeseries.dev_pms] id: TEST-09, 1 rows     
+        // append console                                                               // e.g. [monitoring.dev_pms] id: TEST-09, 1 rows     
         if (loggingConf.appenders.includes(enums.logging.appenders.console)) {
             c@onsole.log(`[${infoPayload.dataset}.${infoPayload.table}] id: ${infoPayload.id}, ${infoPayload.rowqty} rows`);          
         };

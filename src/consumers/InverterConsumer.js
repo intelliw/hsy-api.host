@@ -15,7 +15,7 @@ const InverterProducer = require('../producers/InverterProducer');
 const Consumer = require('./Consumer');
 
 // instance parameters
-const API_PATH_IDENTIFIER = env.active.messagebroker.topics.timeseries.inverter;
+const API_PATH_IDENTIFIER = env.active.messagebroker.topics.monitoring.inverter;
 
 /**
  */
