@@ -152,18 +152,27 @@ $(document).ready(function () {
     // period filter buttons reset click       ...calls redrawPanels
     $(".period-filter-reset").click(function () {
 
-        let resetActive;
-        
-        $(this).closest('.card-body').find('.period-filter-btn.active').each(function () {
-            $(this).removeClass("active");
-            resetActive = true;
+        let noneActive = true;
+        let allActive = true;
+        let isActive;
+
+        $(this).closest('.card-body').find('.period-filter-btn').each(function () {
+            isActive = $(this).hasClass("active");
+
+            if (isActive) {  noneActive = false; }
+            
+            allActive = allActive && isActive; 
         });
 
-        if (!resetActive) { 
-            $(this).closest('.card-body').find('.period-filter-btn').each(function () {
+        $(this).closest('.card-body').find('.period-filter-btn').each(function () {
+
+            if (noneActive || !allActive) {
                 if (!$(this).hasClass("active")) { $(this).addClass("active"); }
-            });
-        }            
+            } else {
+                if ($(this).hasClass("active")) { $(this).removeClass("active"); }
+            }
+        });
+
 
         $(this).parents('.card-body').find('.period-filter-btn-panel').collapse('show');    // make buttons visible when resetting
 
@@ -220,18 +229,27 @@ $(document).ready(function () {
     // hsy filter buttons reset click       ...calls redrawPanels
     $(".hsy-filter-reset").click(function () {
 
-        let resetActive;
-        
-        $('.hsy-filter-btn.active.live').each(function () {
-            $(this).removeClass("active");
-            resetActive = true;
+        let noneActive = true;
+        let allActive = true;
+        let isActive;
+
+        $('.hsy-filter-btn.live').each(function () {
+            isActive = $(this).hasClass("active");
+
+            if (isActive) {  noneActive = false; }
+            
+            allActive = allActive && isActive; 
         });
 
-        if (!resetActive) { 
-            $('.hsy-filter-btn.live').each(function () {
+        $('.hsy-filter-btn.live').each(function () {
+
+            if (noneActive || !allActive) {
                 if (!$(this).hasClass("active")) { $(this).addClass("active"); }
-            });
-        }            
+            } else {
+                if ($(this).hasClass("active")) { $(this).removeClass("active"); }
+            }
+        });
+
 
         $('.select-collection-panel').each(function () {
             flagPanelForRedraw($(this));
@@ -329,11 +347,11 @@ function getActivePeriodFilters(pane) {
         ++btnNdx;
     });
 
-    // 'all hidden' means no filters apply sp return all buttons
-    return (showButtons.length > 0 ? showButtons : allButtons) ;
+    // return filters buttons
+    return (showButtons) ;
 }
 
-// returns true if at least one period filter is unselected ('hide') and *all* filters are NOT unselected - as 'all hidden' means no filters apply
+// returns true if at least one period filter is unselected ('hide') 
 function isPeriodFiltered(pane) {
     
     let totalButtons = 0; 
@@ -346,7 +364,7 @@ function isPeriodFiltered(pane) {
         ++totalButtons;
     });
     
-    return (showButtons < totalButtons) && (showButtons > 0);
+    return (showButtons < totalButtons);
     
 }
 // returns the active child or grandchild pane for the panel

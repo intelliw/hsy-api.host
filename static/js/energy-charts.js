@@ -268,7 +268,7 @@ function getActiveHsyFilters(allColumns, allColours) {
     }
 
     // buy
-    if ($('.hsy-filter-btn.btn-secondary.live').hasClass('active')) {              
+    if ($('.hsy-filter-btn.btn-dark.live').hasClass('active')) {              
         numFilters++;
         filterObj.columns.push(allColumns[BUY_IN]);
         filterObj.colours.push(allColours[BUY_IN]);
@@ -278,8 +278,8 @@ function getActiveHsyFilters(allColumns, allColours) {
 
     }
     
-    // if none or all were added then just return the original columns and colours 
-    filterObj = numFilters == 0 || numFilters == ALL_FILTERS_ADDED ?  { columns: allColumns, colours: allColours } : filterObj;
+    // if all were added then just return the original columns and colours 
+    filterObj = numFilters == ALL_FILTERS_ADDED ?  { columns: allColumns, colours: allColours } : filterObj;
 
     return filterObj;
 

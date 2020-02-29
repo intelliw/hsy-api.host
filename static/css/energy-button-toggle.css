@@ -214,7 +214,7 @@
   left: -0.5rem;
 }
 .btn-toggle.btn-sm:after {
-  content: "Hide";
+  content: "✔";    /*Hide / ✓ / ✔ / ☑ / √*/
   right: -0.5rem;
   opacity: 0.5;
 }
