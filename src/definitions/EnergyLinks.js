@@ -19,7 +19,7 @@ class EnergyLinks extends Links {
 
         this.energy = energy;                                                           // store energy and site in the object for addLink when links are added for more periods
         this.site = site;
-
+        
         this.href = periodHref(energy, period, site);                                   // this href is used for the whole collection 
 
         // the self link is needed for both collections and items - add others after construction if needed e.g. for collections
@@ -31,7 +31,7 @@ class EnergyLinks extends Links {
     addLink(period, render, description, duration) {
 
         if (period) {
-            let href = periodHref(this.energy, period, this.site, (duration ? duration : period.duration));
+            let href = periodHref(this.energy, period, this.site, duration);
             super.add(period.rel, period.context, period.prompt, period.title, description, href, render);
         }
     }
@@ -63,6 +63,8 @@ class EnergyLinks extends Links {
 
 // creates href for the energy resource path. 
 function periodHref(energy, period, site, duration) {
+    
+    duration = duration ? duration : period.duration;
 
     let href = `${env.active.api.scheme}://${env.active.api.host}/energy/${energy.value}/period/${period.value}/${period.epoch}/${duration}?site=${site.value}`;
 

@@ -44,13 +44,30 @@ $(document).ready(function () {
 
     // navbar 'done' button click   ...calls the API... Strip colon and space from the hour with regex
     $("#btnDone").click(function () {
-        let apiUrl = API_BASE_URL
-            + "/energy/" + $("#navEnergy").html()
-            + "/period/" + $("#navPeriod").html()
-            + "/" + $("#navEpochYear").html() + $("#navEpochMonth").html() + $("#navEpochDay").html()
-            + "T" + $("#navEpochHour").html().replace(/\s: /g, '')
-            + "/" + $("#navDuration").html()
-            + "?site=" + $("#navSite").html();
+        let apiUrl = constructApiUrl(
+            API_BASE_URL,
+            $("#navEnergy").html(),
+            $("#navPeriod").html(),
+            $("#navEpochYear").html() + $("#navEpochMonth").html() + $("#navEpochDay").html()
+            + "T" + $("#navEpochHour").html().replace(/\s: /g, ''),
+            $("#navDuration").html(),
+            $("#navSite").html()
+        );
+        window.location.href = apiUrl;
+    });
+    
+    // adds 1 period to duration
+    $("#btnAdd").click(function () {
+        let newDuration = parseInt(PARAM_DURATION) + 1;     // add 1 
+        let apiUrl = constructApiUrl(API_BASE_URL, PARAM_ENERGY, PARAM_PERIOD, SELF_EPOCH, newDuration, PARAM_SITE);
+
+        window.location.href = apiUrl;
+    });
+
+    // suctracts 1 period from duration
+    $("#btnSubtract").click(function () {
+        let newDuration = parseInt(PARAM_DURATION) - 1;     // subtract 1 
+        let apiUrl = constructApiUrl(API_BASE_URL, PARAM_ENERGY, PARAM_PERIOD, SELF_EPOCH, newDuration, PARAM_SITE);
 
         window.location.href = apiUrl;
     });
@@ -318,6 +335,19 @@ function revealFilterResetButtons(source) {
         $(this).removeClass('reveal');      // clear the 'reveal' flag 
     });
 
+}
+
+// returns constructs a url which can call the API
+function constructApiUrl(baseUrl, energy, period, epoch, duration, site) {
+
+    let apiUrl = API_BASE_URL
+        + "/energy/" + energy 
+        + "/period/" + period
+        + "/" + epoch
+        + "/" + duration
+        + "?site=" + site;
+
+    return apiUrl;
 }
 
 

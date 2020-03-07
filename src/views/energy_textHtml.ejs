@@ -447,15 +447,28 @@
                 </button>
             </div>                    
 
-            <% if (bHasChildren && bHasGrandchildren) { %> 
+            
             <!-- SUM/AVERAGE -->
-            <div class="mb-2 ml-2" data-toggle="tooltip" data-placement="bottom" title="Sum | Average/<%= grandchild_period %>">
-                <button id="btnSumAvg" type="button" class="btn btn-sm btn-outline-default btn-avg-sum btn-primary btn-toggle mr-2">
+            <div class="ml-2">
+                <% if (params_duration > 1) { %> 
+                <button id="btnSubtract" type="button" class="btn btn-sm btn-outline-light mt-1 mr-1 px-0 py-0">
+                    <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="subtract 1 <%= utils.capitalise(link_next.name) %>"
+                        style="font-size:20px;color:darkgrey;">exposure_neg_1</i>
+                </button>
+                <% } %>
+                <button id="btnAdd" type="button" class="btn btn-sm btn-outline-light mt-1 px-0 py-0">
+                    <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="add 1 <%= utils.capitalise(link_next.name) %>"
+                        style="font-size:20px;color:darkgrey;">plus_one</i>
+                </button>
+                
+                <% if (bHasChildren && bHasGrandchildren) { %> 
+                <button id="btnSumAvg" type="button" class="btn btn-sm btn-outline-default btn-avg-sum btn-primary btn-toggle mr-2"
+                        data-toggle="tooltip" data-placement="bottom" title="Sum | Average/<%= grandchild_period %>">
                     <div class="handle"></div>
                 </button>
+                <% } %>
             </div>
 
-            <% } %>
 
     </nav>
 
@@ -478,7 +491,12 @@
 
         const API_BASE_URL = '<%= API_BASE_URL %>';                     // e.g.  'http://api.sundaya.monitored.equipment'
 
-        const ENERGY_PARAM = '<%= params_energy %>';
+        const PARAM_ENERGY = '<%= params_energy %>';
+        const PARAM_PERIOD = '<%= params_period %>';
+        const SELF_EPOCH = '<%= self_descriptions[2] %>';
+        const PARAM_DURATION = '<%= params_duration %>';
+        const PARAM_SITE    = '<%= params_site %>';
+
         const CHILD_PERIOD = '<%= utils.capitalise(child_period) %>';
         const GRANDCHILD_PERIOD = '<%= utils.capitalise(grandchild_period) %>';
         
@@ -591,8 +609,8 @@
                 panelMapObj.child.table = drawTableChart(filteredData, tableDiv, panelMapObj.child.table);
                 panelMapObj.child.chart = drawColumnChart(groupedData, chartDiv, hsyFilter.columns, hsyFilter.colours, panelMapObj.child.chart);
 
-                // register child event handlers                                                    // currently not using addChartEventHandler(panelMapObj.grandchild);  
-                addTableEventHandler(panelMapObj.child, hsyFilter.columns.length-1);                // skip the id column
+                // register child event handlers                                                        // currently not using addChartEventHandler(panelMapObj.grandchild);  
+                addTableEventHandler(panelMapObj.child, hsyFilter.columns.length-1);                    // skip the id column
                 
             // draw grandchild
             } else {
@@ -613,8 +631,8 @@
                 panelMapObj.grandchild.table = drawTableChart(dt, tableDiv, panelMapObj.grandchild.table);
                 panelMapObj.grandchild.chart = drawColumnChart(dt, chartDiv, hsyFilter.columns, hsyFilter.colours, panelMapObj.child.chart);
 
-                // register grandchild event handlers                                             // currently not using addChartEventHandler(panelMapObj.grandchild);  
-                addTableEventHandler(panelMapObj.grandchild, hsyFilter.columns.length-1);         // skip the id column
+                // register grandchild event handlers                                                   // currently not using addChartEventHandler(panelMapObj.grandchild);  
+                addTableEventHandler(panelMapObj.grandchild, hsyFilter.columns.length-1);               // skip the id column
 
             } 
 
@@ -625,8 +643,8 @@
             let dataRows;
 
             const dataCols = [
-                { id: '0', type: 'number', label: '<%= utils.capitalise(child_period) %>' },        // v: 0, f: 'Mon Feb 4th'
-                { id: '1', type: 'number', label: '<%= utils.capitalise(grandchild_period) %>' },   // v: 0, f: 'Night'
+                { id: '0', type: 'number', label: '<%= utils.capitalise(child_period) %>' },            // v: 0, f: 'Mon Feb 4th'
+                { id: '1', type: 'number', label: '<%= utils.capitalise(grandchild_period) %>' },       // v: 0, f: 'Night'
             <% if (isHsy) {  %>               
                 { id: '2', type: 'number', label: '<%= utils.capitalise(enums.energyData.harvest, false) %>' },                     // 'Harvest'
                 { id: '3', type: 'number', label: '<%= utils.capitalise(enums.energyData.yield, false) %>' },                       // 'Yield'
@@ -685,15 +703,15 @@
 
                             } else if (isBuy) { 
                                 if (n_gch_desc==0) {
-                                    item_data_grid_in = grandchild_item_data[0].value.split(' ');        // grid.in = sell
-                                    item_data_grid_out = grandchild_item_data[1].value.split(' ');       // grid.out = buy
+                                    item_data_grid_in = grandchild_item_data[0].value.split(' ');       // grid.in = sell
+                                    item_data_grid_out = grandchild_item_data[1].value.split(' ');      // grid.out = buy
                                 }
                                 chart_json_data_buy = `{ v: ${item_data_grid_out[n_gch_desc] || 0}}, { v: ${(item_data_grid_in[n_gch_desc] || 0) * -1} }, { v: ${(eval(item_data_grid_out[n_gch_desc]) + eval(item_data_grid_in[n_gch_desc]) * -1).toFixed(4)} }`;
                                 chart_json_data_cols = chart_json_data_buy;
 
                             } else if (isHarvest) {                            
                                 if (n_gch_desc==0) {
-                                    item_data_harvest = grandchild_item_data[0].value.split(' ');      // harvest
+                                    item_data_harvest = grandchild_item_data[0].value.split(' ');       // harvest
                                 }
                                 chart_json_data_harvest = `{ v: ${item_data_harvest[n_gch_desc] || 0} }`;
                                 chart_json_data_cols = chart_json_data_harvest;
