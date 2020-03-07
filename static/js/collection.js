@@ -65,7 +65,7 @@ $(document).ready(function () {
     });
 
     // suctracts 1 period from duration
-    $("#btnSubtract").click(function () {
+    $("#btnRemove").click(function () {
         let newDuration = parseInt(PARAM_DURATION) - 1;     // subtract 1 
         let apiUrl = constructApiUrl(API_BASE_URL, PARAM_ENERGY, PARAM_PERIOD, SELF_EPOCH, newDuration, PARAM_SITE);
 
