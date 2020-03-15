@@ -66,7 +66,7 @@ class Consumer {
     }
 
 
-    /* analyses and retrieved messages for events
+    /* analyses retrieved messages and raises events if needed  
     */
     analyse(retrievedMsgObj) {
     }

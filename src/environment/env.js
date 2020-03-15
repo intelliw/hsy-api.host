@@ -22,11 +22,12 @@ const enums = require('./enums');
 // these configurations are shared across all environments
 const _SHARED = {
     MESSAGEBROKER: {
+        provider: enums.messageBroker.providers.pubsub,                         // OVERRIDDEN in active.CONFIGS
         topics: {                                                               // kafka / pubsub topics for all environments 
             monitoring: { pms: 'pub-monitoring.pms', mppt: 'pub-monitoring.mppt', inverter: 'pub-monitoring.inverter' },
             system: { feature: 'pub-system.feature' }
         },
-        subscriptions: {                                                         // for kafka these are groupids 
+        subscriptions: {                                                        // for kafka these are groupids 
             monitoring: { 
                 analytics: {
                     pms: 'sub-analytics.pms_monitoring', mppt: 'sub-analytics.mppt_monitoring', inverter: 'sub-analytics.inverter_monitoring' 
@@ -36,7 +37,7 @@ const _SHARED = {
         }
     },
     DATAWAREHOUSE: {
-        datasets: { analytics: 'analytics' },                                    // bq datasets are shared by all environments  
+        datasets: { analytics: 'analytics' },                                   // bq datasets are shared by all environments  
         tables: { analytics: {pms: 'pms_monitoring', mppt: 'mppt_monitoring', inverter: 'inverter_monitoring'} }
     },
     PUBSUB: {
