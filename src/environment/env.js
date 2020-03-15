@@ -24,16 +24,16 @@ const _SHARED = {
     MESSAGEBROKER: {
         provider: enums.messageBroker.providers.pubsub,                         // OVERRIDDEN in active.CONFIGS
         topics: {                                                               // kafka / pubsub topics for all environments 
-            monitoring: { pms: 'pub-monitoring.pms', mppt: 'pub-monitoring.mppt', inverter: 'pub-monitoring.inverter' },
-            system: { feature: 'pub-system.feature' }
+            monitoring: { pms: 'pub.tel_pms', mppt: 'pub.tel_mppt', inverter: 'pub.tel_inv' },
+            system: { feature: 'pub.sys_env_config' }
         },
         subscriptions: {                                                        // for kafka these are groupids 
             monitoring: { 
                 analytics: {
-                    pms: 'sub-analytics.pms_monitoring', mppt: 'sub-analytics.mppt_monitoring', inverter: 'sub-analytics.inverter_monitoring' 
+                    pms: 'sub.tel_pms.any_bq', mppt: 'sub.tel_mppt.any_bq', inverter: 'sub.tel_inv.any_bq' 
                 }
             },
-            system: { feature: 'sub-env.active.features' },
+            system: { feature: 'sub.sys_env_config' },
         }
     },
     DATAWAREHOUSE: {
@@ -180,6 +180,7 @@ const _GCP = {
     TEST: { project: enums.gcp.projects.sundayaTest },
     PROD: { project: enums.gcp.projects.sundayaProd }
 }
+
 
 // stackdriver client configuration options
 const _STACKDRIVER = {

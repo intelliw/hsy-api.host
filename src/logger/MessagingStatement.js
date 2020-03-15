@@ -22,7 +22,7 @@ class MessagingStatement extends Statement {
     write(topic, id, msgsArray, itemQty, sender) {
 
         // fully qualified topic name includes provider name prefix 
-        let fqTopic = `[${env.active.messagebroker.provider}]${topic}`           // e.g. [pubsub]pub-monitoring.pms or kafka.pub-monitoring.pms
+        let fqTopic = `[${env.active.messagebroker.provider}]${topic}`           // e.g. [pubsub]pub.tel_pms or kafka.pub.tel_pms
 
         this._writeConsoleInfo(fqTopic, id, msgsArray, itemQty, sender);
         this._writeConsoleDebug(fqTopic, id, msgsArray, itemQty, sender);
