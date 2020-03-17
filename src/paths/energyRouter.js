@@ -227,8 +227,6 @@ function createItems(energy, period, site) {
 
   let periods = period.getEachChild();                                            // gets the child periods for this period         
 
-  let MOCK_skip;
-
   periods.forEach(childPeriod => {                                                // this can be upto 1000 if child is instant
 
     if (childPeriod) {
@@ -313,7 +311,7 @@ function createItemData(energy, childPeriod, grandChildPeriod, site) {
 
       // add up the values for this energyName for both child and grandchild  
       if (energyNameValues !== '') {
-        childData.add(energyName, energyNameTotal.toFixed(childMinMax.precision).toString());                                  // child has the total
+        childData.add(energyName, energyNameTotal.toFixed(childMinMax.precision).toString());   // child has the total
         grandChildData.add(energyName, energyNameValues);                                       // grandchild has the SSV values
       }
 
@@ -336,7 +334,8 @@ function createItemData(energy, childPeriod, grandChildPeriod, site) {
   if (grandChildData._elements.length > 0) {
     dataWrapper.addNested(grandChildPeriod.context, `${grandChildPeriod.epoch}/${grandChildPeriod.duration}`, grandChildData);
   }
-
+  
+  
   return dataWrapper;
 
 }
