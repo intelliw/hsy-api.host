@@ -10,6 +10,7 @@ const consts = require('../host/constants');
 const { ErrorReporting } = require('@google-cloud/error-reporting');
 const { Logging } = require('@google-cloud/logging');                               // google cloud logging client library
 const traceAgent = require('@google-cloud/trace-agent');
+require('@google-cloud/debug-agent').start();                                       /// Cloud Debugger
 
 const MessagingStatement = require('./MessagingStatement');
 const DataStatement = require('./DataStatement');
