@@ -1,0 +1,382 @@
+
+<%  
+    // constants - soime of these are placed into client side script blocks at the bottom of this page
+    const API_BASE_URL = consts.API_SCHEME + '://' + consts.API_HOST;     // e.g.  'http://api.endpoints.sundaya.cloud.goog'
+    const FIND_ALL = true;
+    const SHOW_ALL_PANELS = false;
+
+    // parameters from the first self link, these are common across all collections
+    let links = collections[0].collection.links; 
+
+    let link_self = utils.findByPropertyValue(links, 'rel', 'self')[0] ;
+    let self_descriptions = link_self.description.split(' ');       // e.g. 'hse week 20190204 1' 
+
+    let params_energy = self_descriptions[0]; 
+    let params_period = self_descriptions[1];
+    
+    let params_epoch_year = self_descriptions[2].substring(0, 4); 
+    let params_epoch_month = self_descriptions[2].substring(4, 6); 
+    let params_epoch_day = self_descriptions[2].substring(6, 8); 
+    
+    let params_duration = collections.length;
+    let params_site = self_descriptions[4];
+    
+    let panels = ['child', 'grandchild'];
+
+    // check which energy params are active 
+    let isHarvest = utils.valueExistsInArray(['harvest', 'hse'], params_energy);
+    let isStore = utils.valueExistsInArray(['store', 'hse'], params_energy);
+    let isEnjoy = utils.valueExistsInArray(['enjoy', 'hse'], params_energy);
+    let isGrid = utils.valueExistsInArray(['grid', 'hse'], params_energy);
+
+%> 
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/energy-button-toggle.css">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    <title>Sundaya Energy API</title>
+    
+</head>
+
+<body>    
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+
+        <!-- TITLE / period-->
+        <span class="d-flex align-item-start">
+            <a class="navbar-brand pl-2" href="#navbarAPI, #navbarMain" data-toggle="collapse">Sundaya Energy API</a>
+
+            <ul id="titlePeriod" class="navbar-nav show" data-toggle="tooltip" data-placement="right" title="<%= params_duration %> <%=params_period%><%= params_duration > 1 ? 's' : ''%>">
+                <a class="nav-link pl-1" href="#" data-toggle="collapse"><%= utils.capitalise(link_self.name) %>
+                </a>
+            </ul>
+        </span>
+
+        <!-- HAMBURGER  -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarAPI, #navbarMain">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- NAVBAR ------------------------------------------------------------------------------------------------------------->
+        <div class="collapse navbar-collapse" id="navbarMain">
+            <ul id="navbarAPI" class="navbar-nav mt-auto collapse">
+
+                <% include navbar_energy_textHtml %>
+
+            </ul>
+
+        </div>
+
+    </nav>
+
+    <!-- PANELS  ------------------------------------------------------------------------------------------------------------->
+    <div class="accordion">
+
+        <% for(var n_cols=0; n_cols < collections.length; n_cols++) { 
+
+            links = collections[n_cols].collection.links; 
+            items = collections[n_cols].collection.items; 
+
+            link_self = utils.findByPropertyValue(links, 'rel', 'self')[0];
+            link_next = utils.findByPropertyValue(links, 'rel', 'next')[0];
+            link_prev = utils.findByPropertyValue(links, 'rel', 'prev')[0];
+            link_up = utils.findByPropertyValue(links, 'rel', 'up')[0];
+
+            link_collections = utils.findByPropertyValue(links, 'rel', 'collection', FIND_ALL);
+            link_col_children = link_collections[0];                                                       // first is child second is grandchild
+            link_col_grandchildren = link_collections[1];
+
+            bHasChildren = link_col_children; 
+            bHasGrandchildren = link_col_grandchildren; 
+
+            if (!bHasChildren) {link_col_children = {name: '.', description: '', href: ''}; }                // instant has no child
+            if (!bHasGrandchildren) {link_col_grandchildren = {name: '.', description: '', href: ''}; }      // second has no grandchild
+            
+            child_descriptions = (link_col_children.description ? link_col_children.description.split(' ') : []);
+            grandchild_descriptions = (link_col_grandchildren.description ? link_col_grandchildren.description.split(' ') : []);
+            child_period = link_col_children.name.split('.')[1];
+            grandchild_period = link_col_grandchildren.name.split('.')[1];                                 // e.g day.timeofday
+
+        %>
+
+        <!-- PERIOD n PANEL -->
+        <div class="card border border-top border-primary border-right-0 border-left-0 rounded-0">
+
+            <!-- PERIOD n NAV row -->
+            <div class="card-header py-2 px-0 d-flex">
+
+                <!-- PERIOD n NAV link buttons -->
+                <h2 class="mb-0 ml-3 pl-1">
+                    
+                    <!-- prev -->
+                    <button type="button" class="btn btn-sm btn-light border border-secondary rounded-left py-0 capitalize" data-toggle="tooltip"
+                        title="Previous <%= utils.capitalise(link_prev.name) %>"
+                        onclick="window.location.href = '<%= link_prev.href %>'">
+                        <i class="material-icons text-secondary font-weight-bolder" style="font-size:12px;">navigate_before</i>
+                    </button>
+
+                    <!-- next -->
+                    <button type="button" class="btn btn-sm btn-light border border-secondary rounded-right py-0" data-toggle="tooltip" title="Next <%= utils.capitalise(link_next.name) %>"
+                        onclick="window.location.href = '<%= link_next.href %>'">
+                        <i class="material-icons text-secondary font-weight-bolder" style="font-size:12px;">navigate_next</i>
+                    </button>
+
+                    <!-- self -->
+                    <span class="btn select-toggle-collection py-0 pl-1 pr-1" data-toggle="collapse">
+                        <h3 class="display-5 text-secondary"><small data-toggle="tooltip"
+                            title="<%= utils.capitalise(link_self.name) + ' ' + link_self.title%>"><%= link_self.prompt %></small></h3>
+                    </span>
+
+                    <!-- up -->
+                    <% if (link_up) { %>
+
+                    <button type="button" class="btn btn-sm btn-light border border-secondary rounded-right py-0" data-toggle="tooltip"
+                        title="<%= utils.capitalise(link_up.name) %> (<%= link_up.prompt %>)"
+                        onclick="window.location.href = '<%= link_up.href %>'">
+                        <i class="material-icons text-secondary font-weight-normal" style="font-size:12px;">call_made</i>
+                    </button>
+
+                    <% } %>
+
+                </h2>
+
+                <h2 class="mb-0 ml-3 pl-1 flex-grow-1 select-toggle-collection">
+                </h2>
+
+                <!-- PERIOD n NAV row CHILD / GRANDCHILD toggle -->
+                <div class="d-flex flex-nowrap pt-1 mb-0 pr-3">
+
+                    <div class="d-flex px-1">
+                        <% if (bHasChildren) { %> <h3 class="display-5 text-secondary text-capitalize name-toggle-child collapse show"><small><%= utils.capitalise(child_period) %></small></small></h3> <% } %>
+                        <% if (bHasGrandchildren) { %> <h3 class="display-5 text-secondary text-capitalize name-toggle-grandchild collapse hide"><small><%= utils.capitalise(grandchild_period) %></small></small></h3> <% } %>
+                    </div>
+
+                    <% if (bHasChildren && bHasGrandchildren) { %>
+
+                    <span class="btn select-toggle-grandchild pl-1 mr-1 pr-1" data-toggle="button">
+                        <button type="button" class="btn btn-xs btn-secondary btn-toggle" data-toggle="tooltip"
+                            title="<%= utils.capitalise(link_col_grandchildren.name.replace('.', ' | '), true) %>">
+                            <div class="handle"></div>
+                        </button>
+                    </span>
+
+                    <% } %>
+
+                </div>
+
+            </div>
+
+            <!-- PERIOD n BODY row -->
+            <div class="p-0 mt-2 select-collection-panel collapse <%= n_cols == 0 || SHOW_ALL_PANELS ? 'show' : 'hide' %>">
+                
+                <% for(var n_panels=0; n_panels < panels.length; n_panels++) { panel=panels[n_panels]; %>
+
+                <!-- PERIOD n BODY panel -->
+                <div class="card-body <%= panel === 'child' ? 'panel-child collapse show' : 'panel-grandchild collapse' %> pt-0 pb-2">
+
+                    <div class="d-flex flex-nowrap">
+
+                        <div class="d-flex flex-nowrap">
+                            <div class="flex-grow-1">
+
+                                <!-- PERIOD n BODY panel HEADER -->
+                                <h3 class="display-5 text-secondary"><small data-toggle="tooltip" title="<%= utils.capitalise((panel === 'child' ? link_col_children : link_col_grandchildren).name.split('.')[1]) %>"><%= panel === 'child' ? link_col_children.prompt : link_col_grandchildren.prompt %></small>
+                                </h3>
+
+                                <!-- PERIOD n BODY panel CHARTs  -->
+                                <div class="d-flex flex-nowrap">
+                                    
+                                    <div class="row m-0">
+                                        <div class="row m-0">
+
+                                            <div id="<%= panel === 'child' ? 'childColumnChartDiv_' : 'grandchildColumnChartDiv_' %><%= n_cols + 1 %>" class="col-md px-1 mb-2 mr-2 border border-default">
+                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                                                incididunt
+                                                ut labore
+                                                et dolore magna aliqua.
+
+                                                <div class="btn-group btn-group-sm flex-wrap" 
+                                                    <% if (panel === 'grandchild') { %>
+                                                        data-toggle="tooltip" 
+                                                        title="<%= utils.capitalise(grandchild_period) %> (<%= link_col_grandchildren.title %>)" 
+                                                        onclick="window.location.href = '<%= link_col_grandchildren.href %>'"
+                                                    <% } %>>
+
+                                                    <% for(var n_btns=0; n_btns < (panel==='child' ? child_descriptions : grandchild_descriptions).length; n_btns++) { %>
+
+                                                        <button type="button" class="btn btn-light border border-default py-0 m-0 mb-2 mr-1" 
+                                                                <% if (panel === 'child') { %>
+                                                                    data-toggle="tooltip" 
+                                                                    title="<%= items[n_btns].links[0].prompt %>"
+                                                                    onclick="window.location.href = '<%= items[n_btns].links[0].href %>'"
+                                                                <% } %>>
+                                                            <small class="text-secondary font-weight-bold align-baseline"><%= (panel==='child' ? child_descriptions[n_btns] : grandchild_descriptions[n_btns]) %></small>
+                                                        </button>
+                                                    
+                                                    <% } %>
+                                                </div>
+
+                                            </div>
+                                            
+                                            <div id="<%= panel === 'child' ? 'childTableDiv_' : 'grandchildTableDiv_' %><%= n_cols %>" class="col-md px-1 mb-2 mr-2 border border-default">
+                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                                                et dolore magna aliqua.
+                                            </div>
+
+                                        </div>
+
+                                        <!-- PERIOD n BODY panel HSE BUTTONS -->
+                                        <div class="d-flex pt-0 pb-0">
+                                            <div class="flex-grow-1 mr-2">
+                                                <div class="btn btn-success badge pr-0 mb-1 mr-1<% if (!isHarvest) { %> disabled<% } %>">Harvest
+                                                    <button type="button" class="btn btn-sm btn-success btn-toggle active<% if (!isHarvest) { %> invisible<% } %>"
+                                                        data-toggle="button">
+                                                        <div class="handle"></div>
+                                                    </button></div>
+                                                <div class="btn btn-primary badge pr-0 mb-1 mr-1<% if (!isStore) { %> disabled<% } %>">Store
+                                                    <button type="button" class="btn btn-sm btn-primary btn-toggle active<% if (!isStore) { %> invisible<% } %>"
+                                                        data-toggle="button">
+                                                        <div class="handle"></div>
+                                                    </button></div>
+                                                <div class="btn btn-danger badge pr-0 mb-1 mr-1<% if (!isEnjoy) { %> disabled<% } %>">Enjoy
+                                                    <button type="button" class="btn btn-sm btn-danger btn-toggle active<% if (!isEnjoy) { %> invisible<% } %>"
+                                                        data-toggle="button">
+                                                        <div class="handle"></div>
+                                                    </button></div>
+                                                <div class="btn btn-dark badge pr-0 mb-1 mr-1<% if (!isGrid) { %> disabled<% } %>">Grid
+                                                    <button type="button" class="btn btn-sm btn-dark btn-toggle active<% if (!isGrid) { %> invisible<% } %>"
+                                                        data-toggle="button">
+                                                        <div class="handle"></div>
+                                                    </button></div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>        
+                        </div>
+
+                        <!-- PERIOD n BODY panel FILTER BUTTONS -->                    
+                        <div class="pr-1 my-2">
+                            
+                            <div class="flex-wrap pl-1 pr-0">
+
+                                <div class="d-flex justify-content-end px-0">
+
+                                    <button type="button" class="btn btn-outline-light select-filter-reset collapse hide btn-sm py-0 px-0">
+                                        <i id="btnDone" class="material-icons" data-toggle="tooltip" title="reset filters"
+                                            style="font-size:24px;color:darkgrey;">toggle_on</i>
+                                    </button>
+
+                                    <button type="button" class="btn btn-outline-light select-filter-visibility btn-sm py-0 px-0">
+                                        <i id="btnDone" class="material-icons" data-toggle="tooltip" title="show filters"
+                                            style="font-size:24px;color:darkgrey;">link_off</i>
+                                    </button>
+
+                                </div>
+
+                                <div class="select-filter-btn-panel collapse" style="width: 8.5rem"> 
+
+                                    <div data-toggle="tooltip" title="filter by <%= utils.capitalise((panel==='child' ? link_col_grandchildren : link_col_children).name.split('.')[1]) %> (<%= (panel==='child' ? link_col_grandchildren : link_col_children).title %>)"> 
+                                    <% for(var n_btns=0; n_btns < (panel==='child' ? grandchild_descriptions : child_descriptions).length; n_btns++) { %>
+
+                                        <div class="btn btn-block btn-secondary badge d-flex justify-content-between pr-0">
+                                            <%= (panel==='child' ? grandchild_descriptions[n_btns] : child_descriptions[n_btns]) %>
+                                            <button type="button"
+                                                class="btn btn-sm btn-secondary btn-toggle select-filter-btn active"
+                                                data-toggle="button">
+                                                <div class="handle"></div>
+                                            </button>
+                                        </div>
+                                    
+                                    <% } %>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                    
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <% } %>
+
+            </div>
+
+        </div>
+        
+        <% } %>
+        
+    </div>
+    
+    <!-- FOOTER  ------------------------------------------------------------------------------------------------------------->
+    <nav class="navbar navbar-expand-md navbar-dark bg-light border-top border-primary py-0 pr-3">
+        
+        <div class="d-flex flex-grow-1 justify-content-end">&nbsp
+
+            <% if (bHasChildren && bHasGrandchildren) { %> 
+
+            <!-- AVG/SUM --->
+            <span class="mb-1 mr-1" data-toggle="tooltip" data-placement="right" title="Total | Average/<%= grandchild_period %>">
+                <button type="button" class="btn btn-sm btn-outline-default btn-avg-sum btn-primary btn-toggle" data-toggle="button">
+                    <div class="handle"></div>
+                </button>
+            </span>
+
+            <% } %>
+
+        </div>
+
+    </nav>
+
+    <!-- SCRIPT: jQuery first, then Popper.js, then Bootstrap JS, app scripts must be last -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/energy.js"></script>
+
+    <script type="text/javascript">
+        
+        // constants for client side - some of these are used by energy.js as well
+        const API_BASE_URL = '<%= API_BASE_URL %>';     // e.g.  'http://api.endpoints.sundaya.cloud.goog'
+
+        const isHarvest = <%= isHarvest %>;
+        const isStore = <%= isStore %>;
+        const isEnjoy = <%= isEnjoy %>;
+        const isGrid = <%= isGrid %>;
+
+        $(window).on("load", function () {
+            initialiseCharts();
+            // $('body').find('.navbar-brand').click();
+        });
+
+        function initialiseCharts() {
+            alert('intialised');
+        }
+
+
+    </script>
+
+
+</body>
+</html>

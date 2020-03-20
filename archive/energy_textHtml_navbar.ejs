@@ -1,0 +1,238 @@
+<%  
+    /* 
+        custom IDs 
+            navEnergy, navPeriod, 
+            navEpochYear, navEpochMonth, navEpochDay, navEpochHour
+            navEpochDuration
+            btnToday
+            btnDone
+    */ 
+   %>
+                <!-- Energy -->
+                <li class="nav-item dropdown select-parent">
+                    <a class="nav-link dropdown-toggle pl-1" href="javascript:" role="button" data-toggle="dropdown">
+                        Energy <span id="navEnergy" class="badge badge-light select-value"><%=params_energy%></span>
+                    </a>
+
+                    <div class="dropdown-menu select-text p-0">
+                        <a class="dropdown-item px-2 py-0" href="javascript:"><span class="badge badge-light">hse</span></a>
+                        <a class="dropdown-item px-2 py-0" href="javascript:"><span class="badge badge-success">harvest</span></a>
+                        <a class="dropdown-item px-2 py-0" href="javascript:"><span class="badge badge-primary">store</span></a>
+                        <a class="dropdown-item px-2 py-0" href="javascript:"><span class="badge badge-danger">enjoy</span></a>
+                        <a class="dropdown-item px-2 py-0 pb-2" href="javascript:"><span class="badge badge-dark">grid</span></a>
+                    </div>
+                </li>
+
+                <!-- Period -->
+                <li class="nav-item dropdown select-parent">
+                    <a class="nav-link dropdown-toggle pl-1" href="javascript:" role="button" data-toggle="dropdown">
+                        Period <span id="navPeriod" class="badge badge-light select-value"><%=params_period%></span>
+                    </a>
+
+                    <div class="dropdown-menu select-justtext p-0">
+                        <a class="dropdown-item px-2" href="javascript:">hour</a>
+                        <a class="dropdown-item px-2" href="javascript:">timeofday</a>
+                        <a class="dropdown-item px-2" href="javascript:">day</a>
+                        <a class="dropdown-item px-2" href="javascript:">week</a>
+                        <a class="dropdown-item px-2" href="javascript:">month</a>
+                        <a class="dropdown-item px-2" href="javascript:">quarter</a>
+                        <a class="dropdown-item px-2" href="javascript:">year</a>
+                        <a class="dropdown-item px-2" href="javascript:">fiveyear</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item px-2 disabled" href="javascript:">minute</a>
+                        <a class="dropdown-item px-2 disabled" href="javascript:">second</a>
+                        <a class="dropdown-item px-2 disabled" href="javascript:">instant</a>
+                    </div>
+                </li>
+
+                <!-- Epoch Date -->
+                <li class="nav-item dropdown">
+                    <div class="btn-group btn-group-sm btn-sm pl-0" role="group" data-toggle="tooltip"
+                        data-placement="left" title="date">
+
+                        <!-- Epoch Year-->
+                        <div class="btn-group btn-group-sm select-parent" role="group">
+                            <button type="button" class="btn btn-outline-light dropdown-toggle px-1"
+                                data-toggle="dropdown">
+                                <span id="navEpochYear" class="badge badge-primary select-value"><%=params_epoch_year%></span>
+                            </button>
+
+                            <div class="dropdown-menu py-0 select-justtext">
+                                <a class="dropdown-item px-2" href="javascript:">2015</a>
+                                <a class="dropdown-item px-2" href="javascript:">2016</a>
+                                <a class="dropdown-item px-2" href="javascript:">2017</a>
+                                <a class="dropdown-item px-2" href="javascript:">2018</a>
+                                <a class="dropdown-item px-2" href="javascript:">2019</a>
+                                <a class="dropdown-item px-2" href="javascript:">2020</a>
+                            </div>
+                        </div>
+
+                        <!-- Epoch Month-->
+                        <div class="btn-group btn-group-sm select-parent" role="group">
+                            <button type="button" class="btn btn-outline-light dropdown-toggle px-1 pl-0"
+                                data-toggle="dropdown">
+                                <span id="navEpochMonth" class="badge badge-primary select-value"><%=params_epoch_month%></span>
+                            </button>
+
+                            <div class="dropdown-menu py-0 select-justtext">
+                                <a class="dropdown-item px-2 py-0 pt-1" href="javascript:">01<span
+                                        class="badge btn-outline-primary ml-2">Jan</span></a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">02<span
+                                        class="badge btn-outline-primary ml-2">Feb</span></a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">03<span
+                                        class="badge btn-outline-primary ml-2">Mar</span></a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">04<span
+                                        class="badge btn-outline-primary ml-2">Apr</span></a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">05<span
+                                        class="badge btn-outline-primary ml-2">May</span></a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">06<span
+                                        class="badge btn-outline-primary ml-2">Jun</span></a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">07<span
+                                        class="badge btn-outline-primary ml-2">Jul</span></a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">08<span
+                                        class="badge btn-outline-primary ml-2">Aug</span></a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">09<span
+                                        class="badge btn-outline-primary ml-2">Sep</span></a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">10<span
+                                        class="badge btn-outline-primary ml-2">Oct</span></a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">11<span
+                                        class="badge btn-outline-primary ml-2">Nov</span></a>
+                                <a class="dropdown-item px-2 py-0 pb-1" href="javascript:">12<span
+                                        class="badge btn-outline-primary ml-2">Dec</span></a>
+                            </div>
+                        </div>
+
+                        <!-- Epoch Day-->
+                        <div class="btn-group btn-group-sm select-parent" role="group">
+                            <button type="button" class="btn btn-outline-light dropdown-toggle px-1 pl-0"
+                                data-toggle="dropdown">
+                                <span id="navEpochDay" class="badge badge-primary select-value"><%=params_epoch_day%></span>
+                            </button>
+
+                            <div class="dropdown-menu py-0 select-justtext">
+                                <a class="dropdown-item px-2 py-0" id="btnToday" href="javascript:" ><span class="badge btn-warning">today</span></a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">01</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">02</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">03</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">04</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">05</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">06</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">07</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">08</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">09</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">10</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">11</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">12</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">13</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">14</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">15</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">16</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">17</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">18</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">19</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">21</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">22</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">23</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">24</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">25</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">26</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">27</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">28</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">29</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">30</a>
+                                <a class="dropdown-item px-2 py-0 pb-1" href="javascript:">31</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </li>
+
+
+                <!-- Epoch Time -->
+                <li class="nav-item dropdown">
+                    <div class="btn-group btn-group-sm btn-sm px-0 pr-2" role="group" data-toggle="tooltip"
+                        data-placement="left" title="time">
+
+                        <!-- Epoch Hour-->
+                        <div class="btn-group btn-group-sm select-parent" role="group">
+                            <button type="button" class="btn btn-outline-light dropdown-toggle px-1 pl-0"
+                                data-toggle="dropdown">
+                                <span id="navEpochHour" class="badge badge-primary select-value">12 : 00</span>
+                            </button>
+
+                            <div class="dropdown-menu py-0 select-justtext">
+                                <a class="dropdown-item px-2 py-0 pt-1" href="javascript:">00 : 00</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">01 : 00</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">02 : 00</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">03 : 00</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">04 : 00</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">05 : 00</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">06 : 00</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">07 : 00</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">08 : 00</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">09 : 00</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">10 : 00</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">11 : 00</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">12 : 00</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">13 : 00</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">14 : 00</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">15 : 00</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">16 : 00</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">17 : 00</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">18 : 00</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">19 : 00</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">21 : 00</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">22 : 00</a>
+                                <a class="dropdown-item px-2 py-0 pb-1" href="javascript:">23 : 00</a>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </li>
+
+
+                <!-- Duration -->
+                <li class="nav-item dropdown">
+                    <div class="btn-group btn-group-sm btn-sm px-0 pr-2" role="group">
+
+                        <!-- Duration-->
+                        <div class="btn-group btn-group-sm select-parent" role="group" data-toggle="tooltip"
+                            data-placement="left" title="how many periods">
+                            <button type="button" class="btn btn-outline-light dropdown-toggle px-1 pl-0"
+                                data-toggle="dropdown">
+                                <span id="navDuration" class="badge badge-primary select-value"><%=params_duration%></span>
+                            </button>
+
+                            <div class="dropdown-menu py-0 select-justtext">
+                                <a class="dropdown-item px-2 py-0 pt-1" href="javascript:">1</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">2</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">3</a>
+                                <a class="dropdown-item px-2 py-0" href="javascript:">4</a>
+                                <a class="dropdown-item px-2 py-0 pb-1" href="javascript:">5</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </li>
+
+
+                 <!-- buttons -->
+                <li class="nav-item dropdown">
+                    <div class="btn-group btn-group-sm btn-sm px-0 py-0" role="group">
+    
+                        <!-- 'Done' button -->
+                        <button type="button" class="btn pl-0">
+                            <i id="btnDone" class="material-icons" data-toggle="tooltip" title="done"
+                                style="font-size:24px;color:white;">done</i>
+                        </button>
+
+                        <!-- 'site' display -->
+                        <button href="javascript:" type="button"
+                            class="btn disabled px-0" data-toggle="tooltip" data-placement="right" title="site">
+                            <span id="navSite" class="badge badge-light py-1"><%=params_site%></span>
+                        </button>
+    
+                    </div>
+                </li>

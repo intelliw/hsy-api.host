@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Google Visualization API Sample</title>
+    <!--
+  One script tag loads all the required libraries! Do not specify any chart types in the
+  autoload statement.
+-->
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['corechart'] });
+
+        google.setOnLoadCallback(drawCharts);
+
+        function drawCharts() {
+
+
+            var data = google.visualization.arrayToDataTable([
+                ['', 'Harvest', 'Enjoy', 'Store in', 'Store out', 'Grid in', 'Grid out'],
+                ['Mon', 900, -390, 900, -390, 390, -190],
+                ['Tue', 1000, -400, 200, -400, 400, -390],
+                ['Wed', 1170, -440, 110, -440, 440, -240],
+                ['Thu', 1250, -480, 150, -480, 480, -120],
+                ['Fri', 1250, -480, 150, -480, 480, -120],
+                ['Sat', 1250, -480, 150, -480, 480, -120],
+                ['Sun', 1530, -540, 130, -540, 540, -140]
+
+            ]);
+
+            // pie1 uses setView()
+            var pie1 = new google.visualization.ChartWrapper({
+                dataTable: data,
+                chartType: 'ColumnChart',
+                containerId: 'pie1',
+                'options': {
+                    'width': 600,
+                    'height': 400,
+                    'bar': { 'groupWidth': '80%' },
+                    'isStacked': true,
+                    'axisTitlesPosition': 'in',
+                    'legend': 'none',
+                    'chartArea': { 'left': 45, 'top': 15, 'right': 100, 'bottom': 30 },
+                    'colors': ['#B9F442', '#FF0000', '#0099C5', '#0099C5', '#000000', '#000000']
+                }
+            });
+            pie1.setView({
+                columns: [0, 1, 2, 3, 4, 5, 6]
+            });
+            pie1.draw();
+
+            // pie2 uses 'view' option
+            var pie2 = new google.visualization.ChartWrapper({
+                dataTable: data,
+                chartType: 'ColumnChart',
+                containerId: 'pie2',
+                view: {
+                    columns: [0, 1, 2, 3, 4, 5, 6]
+                },
+                'options': {
+                    'width': 600,
+                    'height': 400,
+                    'bar': { 'groupWidth': '85%' },
+                    'isStacked': true,
+                    'axisTitlesPosition': 'in',
+                    'legend': 'right',
+                    'chartArea': { 'left': 45, 'top': 15, 'right': 100, 'bottom': 30 },
+                    'colors': ['#28a745', '#FF0000', '#007bff', '#007bff', '#000000', '#000000']
+                }
+            });
+            pie2.draw();
+        }    </script>
+</head>
+
+<body>
+    <div id="pie1"></div>
+    <div id="pie2"></div>
+</body>
+
+</html>

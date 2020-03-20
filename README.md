@@ -32,6 +32,16 @@ gcloud builds submit `
     --tag asia.gcr.io/sundaya-dev/host-image . `
 
 
+## Build and deploy to Cloud Run  
+gcloud builds submit --project=sundaya-dev --tag "asia.gcr.io/sundaya-dev/host-image:latest" C:\_frg\_proj\190220-hsy-api-host\. `
+
+gcloud run deploy hse-host-stub `
+    --image asia.gcr.io/sundaya-dev/host-image:latest `
+    --region asia-northeast1 `
+    --platform managed `
+    --allow-unauthenticated `
+    --project=sundaya-dev `
+    --service-account 844926933055-compute@developer.gserviceaccount.com `
 
 ## Local Build
 If running locally, build the image with local.Dockerfile (optional)

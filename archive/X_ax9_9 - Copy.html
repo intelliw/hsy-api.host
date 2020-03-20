@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/energy-button-toggle.css">
+
+    <title>Charts Test Harness</title>
+
+</head>
+
+<body>
+    <script src="/static/js/code.jquery_jquery-3.3.1.slim.min.js"></script>
+    <script src="/static/js/cloudflare.com_ajax_libs_popper.js_1.14.7_umd_popper.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/energy.js"></script>
+    <script type="text/javascript" src="/static/js/gstatic_charts_loader.js"></script>
+
+    <script type="text/javascript">
+
+        google.charts.load('current', { packages: ['table', 'corechart'], callback: initialiseCharts });
+
+        const RAWDATA_CHILD_FORMATTED_COLUMN = 0;
+        const RAWDATA_GRANDCHILD_FORMATTED_COLUMN = 1;
+        const RAWDATA_HSE_COLUMNS = [2, 3, 4, 5, 6, 7, 8, 9];
+
+        const AGGDATA_ID_COLUMN = 0;
+        const AGGDATA_HSE_COLUMNS = [1, 2, 3, 4, 5, 6, 7, 8];
+        const AGGDATA_CHART_COLUMNS = [0, 1, 2, 3, 4, 6, 7];
+        const AGGDATA_JOIN_FORMATTED_COLUMN = 9;
+
+        let childChart_1;
+        let grandchildChart_1;
+        let rawDataTable;
+
+
+        // draws a column chart in the div
+        function drawColumnChart(dataView, div, period) {
+
+            // Set chart options
+            let chartOptions = {
+                width: 700,
+                height: 400,
+                chartArea: { left: 45, top: 30, right: 0, bottom: 15, width: '95%', height: '95%' },
+                bar: { groupWidth: '75.0%' },
+                isStacked: true,
+                selectionMode: 'multiple',
+                tooltip: { trigger: 'selection', showColorCode: true },
+                aggregationTarget: 'category',
+                fontName: 'Open Sans', fontSize: 14,
+                dataOpacity: 0.8,
+                legend: { position: 'top', maxLines: 2, alignment: 'center' },
+                vAxis: {
+                    title: 'Megajoules (MJ)',
+                    textPosition: 'out',
+                    titleTextStyle: { italic: 'false' },
+                    gridlines: { count: 10, color: 'none' }, baselineColor: 'black',
+                    viewWindowMode: 'pretty',
+                    format: '##.####'
+                },
+                hAxis: {
+                    title: period,
+                    textPosition: 'none',
+                    textStyle: { fontSize: 14 },
+                    gridlines: { color: 'none' }, baselineColor: 'none',
+                    titleTextStyle: { italic: 'true' }
+                },
+                axisTitlesPosition: 'none', titlePosition: 'none',
+                backgroundColor: { fill: 'none', stroke: 'none', strokeWidth: 4 },
+                colors: ['#28a745', '#FF0000', '#007bff', '#007bff', '#000000', '#000000']
+            };
+
+            let chartView = new google.visualization.DataView(dataView);
+            chartView.setColumns(AGGDATA_CHART_COLUMNS);
+
+            let chart = new google.visualization.ColumnChart(document.getElementById(div));
+            chart.draw(chartView, chartOptions);
+
+            return chart;
+        }
+
+        // draws a table chart in the div    
+        function drawTableChart(dataView, div) {
+
+            const INITIAL_SORT_COL = 0;
+
+            // Set chart options
+            let tableOptions = {
+                width: 800,
+                height: '100%',     // 100% if paged 
+                alternatingRowStyle: false,
+                allowHtml: true,
+                showRowNumber: false,
+                sortColumn: INITIAL_SORT_COL,
+                page: 'enable', pageSize: 10,
+                cssClassNames: {
+                    headerRow: '',
+                    tableRow: 'sundaya-font',
+                    oddTableRow: ' sundaya-font',
+                    selectedTableRow: 'sundaya-font',
+                    hoverTableRow: '',
+                    headerCell: 'text-left bg-secondary font-weight-bold text-white border-bottom border-top border-right-0 border-dark',
+                    tableCell: 'sundaya-font border-bottom border-right-0 border-secondary',
+                    rowNumberCell: ''
+                }
+            }
+
+            var table = new google.visualization.Table(document.getElementById(div));
+            table.draw(dataView, tableOptions);
+
+        }
+
+        // checks the sum/avg button and returns its current selection
+        function getAggregationMethod() {
+            const TEMP_METHOD = 'sum';
+            return TEMP_METHOD;
+        }
+
+        // returns filtered data rows from the rawDataTable. filterValues is a numeric array.
+        function getFilteredData(filterColumn, filterValues) {
+            let filteredData = new google.visualization.DataView(rawDataTable);
+
+            if (filterValues) {
+                let rows = filteredData.getFilteredRows([{
+                    column: filterColumn,
+
+                    test: function (value, row, column, table) {
+                        //return filterValues.includes(table.getFormattedValue(row, column));    // if filers are a strign array of formatted values
+                        let includeRow = filterValues.includes(table.getValue(row, column));
+                        return includeRow;
+                    }
+                }]);
+
+                filteredData.setRows(rows);
+            }
+
+            filteredData.setColumns([RAWDATA_CHILD_FORMATTED_COLUMN, RAWDATA_GRANDCHILD_FORMATTED_COLUMN].concat(RAWDATA_HSE_COLUMNS));
+
+            return filteredData;
+        }
+
+
+        // returns a DataTable with raw data from the API collection+JSON
+        function createDataTable() {
+
+            let dt;
+
+            let cols = [
+                { id: '0', type: 'number', label: 'Day' },            // v: 0, f: 'Mon Feb 4th'
+                { id: '1', type: 'number', label: 'Timeofday' },       // v: 0, f: 'Night'
+                { id: '2', type: 'number', label: 'Harvest' },
+                { id: '3', type: 'number', label: 'Enjoy' },
+                { id: '4', type: 'number', label: 'Store in' },
+                { id: '5', type: 'number', label: 'Store out' },
+                { id: '6', type: 'number', label: '(Store)' },
+                { id: '7', type: 'number', label: 'Grid in' },
+                { id: '8', type: 'number', label: 'Grid out' },
+                { id: '9', type: 'number', label: '(Grid)' }];
+
+            let rows = [
+                { c: [{ v: 0, f: 'Mon Feb 4th' }, { v: 0, f: 'Night' }, { v: 16.825 }, { v: -18.196 }, { v: -6.566 }, { v: 16.273 }, { v: -9.707 }, { v: 8.519 }, { v: -18.152 }, { v: -9.633 }] },
+                { c: [{ v: 0, f: 'Mon Feb 4th' }, { v: 1, f: 'Afternoon' }, { v: 18.229 }, { v: -3.603 }, { v: -2.950 }, { v: 15.211 }, { v: -12.261 }, { v: 14.878 }, { v: -18.491 }, { v: -3.613 }] },
+                { c: [{ v: 0, f: 'Mon Feb 4th' }, { v: 2, f: 'Evening' }, { v: 20.447 }, { v: -3.137 }, { v: -4.857 }, { v: 16.841 }, { v: -11.984 }, { v: 11.742 }, { v: -17.249 }, { v: -5.507 }] },
+                { c: [{ v: 0, f: 'Mon Feb 4th' }, { v: 3, f: 'Morning' }, { v: 9.415 }, { v: -8.049 }, { v: -14.471 }, { v: 20.649 }, { v: -6.178 }, { v: 6.458 }, { v: -15.513 }, { v: -9.055 }] },
+                { c: [{ v: 1, f: 'Tue Feb 5th' }, { v: 0, f: 'Night' }, { v: 14.648 }, { v: -9.859 }, { v: -17.979 }, { v: 11.470 }, { v: 6.509 }, { v: 6.792 }, { v: -11.471 }, { v: -4.679 }] },
+                { c: [{ v: 1, f: 'Tue Feb 5th' }, { v: 1, f: 'Afternoon' }, { v: 20.593 }, { v: -4.866 }, { v: -4.875 }, { v: 3.434 }, { v: 1.441 }, { v: 2.815 }, { v: -4.383 }, { v: -1.568 }] },
+                { c: [{ v: 1, f: 'Tue Feb 5th' }, { v: 2, f: 'Evening' }, { v: 10.735 }, { v: -19.601 }, { v: -16.177 }, { v: 9.115 }, { v: 7.062 }, { v: 8.004 }, { v: -10.967 }, { v: -2.963 }] },
+                { c: [{ v: 1, f: 'Tue Feb 5th' }, { v: 3, f: 'Morning' }, { v: 14.871 }, { v: -13.650 }, { v: -7.390 }, { v: 13.455 }, { v: -6.065 }, { v: 18.081 }, { v: -11.698 }, { v: 6.383 }] },
+                { c: [{ v: 2, f: 'Wed Feb 6th' }, { v: 0, f: 'Night' }, { v: 10.095 }, { v: -10.221 }, { v: -9.128 }, { v: 19.591 }, { v: -10.463 }, { v: 5.588 }, { v: -3.434 }, { v: 2.154 }] },
+                { c: [{ v: 2, f: 'Wed Feb 6th' }, { v: 1, f: 'Afternoon' }, { v: 6.934 }, { v: -15.391 }, { v: -8.238 }, { v: 9.431 }, { v: -1.193 }, { v: 6.856 }, { v: -9.843 }, { v: -2.987 }] },
+                { c: [{ v: 2, f: 'Wed Feb 6th' }, { v: 2, f: 'Evening' }, { v: 6.354 }, { v: -17.232 }, { v: -3.951 }, { v: 15.713 }, { v: -11.762 }, { v: 19.696 }, { v: -17.337 }, { v: 2.359 }] },
+                { c: [{ v: 2, f: 'Wed Feb 6th' }, { v: 3, f: 'Morning' }, { v: 9.793 }, { v: -6.816 }, { v: -12.542 }, { v: 5.666 }, { v: 6.876 }, { v: 13.171 }, { v: -11.950 }, { v: 1.221 }] },
+                { c: [{ v: 3, f: 'Thu Feb 7th' }, { v: 0, f: 'Night' }, { v: 20.497 }, { v: -14.924 }, { v: -4.945 }, { v: 9.182 }, { v: -4.237 }, { v: 3.490 }, { v: -16.642 }, { v: -13.152 }] },
+                { c: [{ v: 3, f: 'Thu Feb 7th' }, { v: 1, f: 'Afternoon' }, { v: 14.572 }, { v: -9.392 }, { v: -19.099 }, { v: 13.920 }, { v: 5.179 }, { v: 20.537 }, { v: -16.914 }, { v: 3.623 }] },
+                { c: [{ v: 3, f: 'Thu Feb 7th' }, { v: 2, f: 'Evening' }, { v: 3.546 }, { v: -14.066 }, { v: -10.432 }, { v: 3.447 }, { v: 6.985 }, { v: 10.173 }, { v: -12.269 }, { v: -2.096 }] },
+                { c: [{ v: 3, f: 'Thu Feb 7th' }, { v: 3, f: 'Morning' }, { v: 9.007 }, { v: -14.670 }, { v: -9.497 }, { v: 15.301 }, { v: -5.804 }, { v: 6.515 }, { v: -8.791 }, { v: -2.276 }] },
+                { c: [{ v: 4, f: 'Fri Feb 8th' }, { v: 0, f: 'Night' }, { v: 15.891 }, { v: -18.566 }, { v: -3.019 }, { v: 4.127 }, { v: -1.108 }, { v: 6.495 }, { v: -6.130 }, { v: 0.365 }] },
+                { c: [{ v: 4, f: 'Fri Feb 8th' }, { v: 1, f: 'Afternoon' }, { v: 12.017 }, { v: -20.318 }, { v: -20.189 }, { v: 7.685 }, { v: 12.504 }, { v: 11.664 }, { v: -18.634 }, { v: -6.970 }] },
+                { c: [{ v: 4, f: 'Fri Feb 8th' }, { v: 2, f: 'Evening' }, { v: 13.551 }, { v: -16.470 }, { v: -5.462 }, { v: 17.209 }, { v: -11.747 }, { v: 6.206 }, { v: -15.027 }, { v: -8.821 }] },
+                { c: [{ v: 4, f: 'Fri Feb 8th' }, { v: 3, f: 'Morning' }, { v: 13.120 }, { v: -12.507 }, { v: -16.939 }, { v: 7.234 }, { v: 9.705 }, { v: 12.925 }, { v: -6.384 }, { v: 6.541 }] },
+                { c: [{ v: 5, f: 'Sat Feb 9th' }, { v: 0, f: 'Night' }, { v: 16.552 }, { v: -15.924 }, { v: -19.386 }, { v: 18.615 }, { v: 0.771 }, { v: 18.373 }, { v: -9.758 }, { v: 8.615 }] },
+                { c: [{ v: 5, f: 'Sat Feb 9th' }, { v: 1, f: 'Afternoon' }, { v: 4.763 }, { v: -3.811 }, { v: -19.493 }, { v: 8.221 }, { v: 11.272 }, { v: 3.924 }, { v: -3.381 }, { v: 0.543 }] },
+                { c: [{ v: 5, f: 'Sat Feb 9th' }, { v: 2, f: 'Evening' }, { v: 12.947 }, { v: -13.392 }, { v: -19.124 }, { v: 6.174 }, { v: 12.950 }, { v: 17.276 }, { v: -17.566 }, { v: -0.290 }] },
+                { c: [{ v: 5, f: 'Sat Feb 9th' }, { v: 3, f: 'Morning' }, { v: 16.586 }, { v: -3.160 }, { v: -19.840 }, { v: 12.753 }, { v: 7.087 }, { v: 10.506 }, { v: -3.780 }, { v: 6.726 }] },
+                { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 0, f: 'Night' }, { v: 10.436 }, { v: -14.932 }, { v: -12.818 }, { v: 14.797 }, { v: -1.979 }, { v: 6.025 }, { v: -13.962 }, { v: -7.937 }] },
+                { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 1, f: 'Afternoon' }, { v: 12.537 }, { v: -11.915 }, { v: -6.735 }, { v: 19.594 }, { v: -12.859 }, { v: 6.106 }, { v: -12.372 }, { v: -6.266 }] },
+                { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 2, f: 'Evening' }, { v: 18.173 }, { v: -18.794 }, { v: -11.612 }, { v: 5.048 }, { v: 6.564 }, { v: 11.320 }, { v: -16.855 }, { v: -5.535 }] },
+                { c: [{ v: 6, f: 'Sun Feb 10th' }, { v: 3, f: 'Morning' }, { v: 7.448 }, { v: -12.414 }, { v: -16.431 }, { v: 14.193 }, { v: 2.238 }, { v: 18.548 }, { v: -9.476 }, { v: 9.072 }] }
+            ]
+
+            dt = new google.visualization.DataTable({ 'cols': cols, 'rows': rows });
+
+            let formatter = new google.visualization.ColorFormat();
+            formatter.addRange(0, null, 'red', 'white');
+            formatter.format(dt, 6);
+            formatter.format(dt, 9);
+
+            return dt;
+
+        }
+
+        /* returns aggregate (sum or average) from the raw data.
+           returned columns are: 'AGGDATA_ID_COLUMN (e.g: 0),  'AGGDATA_CHILD_LABEL  (e.g: Mon Feb 4th)
+                        'Harvest', Enjoy', 'Store in' 'Store out', 'Grid in', 'Grid out'
+        */
+        function getAggregateData(filteredData, rawDataGroupColumn, aggMethod) {
+
+            // choose the agg function based on request {sum' or avg')
+            aggMethod = aggMethod ? aggMethod.toLowerCase() : 'sum';
+            aggFunction = aggMethod === 'sum' ? google.visualization.data.sum : google.visualization.data.avg;
+
+            // group and aggregate the data
+            let groupedData = google.visualization.data.group(
+                filteredData,
+                [   // group by these columns and include them in the output
+                    { column: rawDataGroupColumn },
+                ],
+                [   // in addition output these columns 
+                    { column: RAWDATA_HSE_COLUMNS[0], aggregation: aggFunction, type: 'number' },
+                    { column: RAWDATA_HSE_COLUMNS[1], aggregation: aggFunction, type: 'number' },
+                    { column: RAWDATA_HSE_COLUMNS[2], aggregation: aggFunction, type: 'number' },
+                    { column: RAWDATA_HSE_COLUMNS[3], aggregation: aggFunction, type: 'number' },
+                    { column: RAWDATA_HSE_COLUMNS[4], aggregation: aggFunction, type: 'number' },
+                    { column: RAWDATA_HSE_COLUMNS[5], aggregation: aggFunction, type: 'number' },
+                    { column: RAWDATA_HSE_COLUMNS[6], aggregation: aggFunction, type: 'number' },
+                    { column: RAWDATA_HSE_COLUMNS[7], aggregation: aggFunction, type: 'number' }
+                ]);
+
+
+            // join with raw data to get the formatted key column (as the group drops all formatting) 
+            let joinedData = google.visualization.data.join(groupedData, filteredData, 'left', [[AGGDATA_ID_COLUMN, rawDataGroupColumn]], AGGDATA_HSE_COLUMNS, [rawDataGroupColumn]);
+            joinedData = new google.visualization.DataView(joinedData);
+            joinedData.setColumns([AGGDATA_JOIN_FORMATTED_COLUMN].concat(AGGDATA_HSE_COLUMNS));
+
+            return joinedData;
+        }
+
+        // this is the callback
+        function initialiseCharts() {
+
+            rawDataTable = createDataTable();
+            drawChildPane('childColumnChartDiv_1', 'childTableDiv_1', 'Day', [0, 1, 2, 3, 4, 5, 6]);
+            drawGrandchildPane('grandchildColumnChartDiv_1', 'grandchildTableDiv_1', 'Timeofday', [0, 1, 2, 3]);
+        }
+
+        function drawChildPane(chartDiv, tableDiv, period, filterValues) {
+
+            const FILTER_COLUMN = RAWDATA_GRANDCHILD_FORMATTED_COLUMN;
+            const GROUP_COLUMN = RAWDATA_CHILD_FORMATTED_COLUMN;
+
+            let filteredData = getFilteredData(FILTER_COLUMN, filterValues);
+
+            let aggregationMethod = getAggregationMethod();
+            let aggregateData = getAggregateData(filteredData, GROUP_COLUMN, aggregationMethod);
+            childChart_1 = drawColumnChart(aggregateData, chartDiv, period);
+
+            // grandchild table is the raw filtered data
+            drawTableChart(filteredData, tableDiv);
+
+        }
+
+        function drawGrandchildPane(chartDiv, tableDiv, period, filterValues) {
+
+            const FILTER_COLUMN = RAWDATA_CHILD_FORMATTED_COLUMN;
+            const GROUP_COLUMN = RAWDATA_GRANDCHILD_FORMATTED_COLUMN;
+
+            let filteredData = getFilteredData(FILTER_COLUMN, filterValues);
+
+            let aggregationMethod = getAggregationMethod();
+            let aggregateData = getAggregateData(filteredData, GROUP_COLUMN, aggregationMethod);
+
+            grandchildChart_1 = drawColumnChart(aggregateData, chartDiv, period);
+
+            // child table - rawdata/filtered/grouped-by-child,  
+            drawTableChart(aggregateData, tableDiv);
+
+        }
+
+
+
+    </script>
+
+    <div class="col-md px-1 mb-2 mr-2 border border-default">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+        incididunt
+        ut labore
+        et dolore magna aliqua.
+        <div id="childColumnChartDiv_1" class="py-0"></div>
+
+        <div class="btn-group btn-group-sm flex-wrap ">
+
+            <button type="button" class="btn btn-light border border-default py-0 m-0 mb-2 mr-1" data-toggle="tooltip"
+                title="Mon Jan 1st"
+                onclick="window.location.href = 'http://localhost:8080/energy/hse/period/day/20240101/1?site=999'">
+                <small class="text-secondary font-weight-bold align-baseline">Mon</small>
+            </button>
+            <button type="button" class="btn btn-light border border-default py-0 m-0 mb-2 mr-1" data-toggle="tooltip"
+                title="Tue Jan 2nd"
+                onclick="window.location.href = 'http://localhost:8080/energy/hse/period/day/20240102/1?site=999'">
+                <small class="text-secondary font-weight-bold align-baseline">Tue</small>
+            </button>
+            <button type="button" class="btn btn-light border border-default py-0 m-0 mb-2 mr-1" data-toggle="tooltip"
+                title="Wed Jan 3rd"
+                onclick="window.location.href = 'http://localhost:8080/energy/hse/period/day/20240103/1?site=999'">
+                <small class="text-secondary font-weight-bold align-baseline">Wed</small>
+            </button>
+            <button type="button" class="btn btn-light border border-default py-0 m-0 mb-2 mr-1" data-toggle="tooltip"
+                title="Thu Jan 4th"
+                onclick="window.location.href = 'http://localhost:8080/energy/hse/period/day/20240104/1?site=999'">
+                <small class="text-secondary font-weight-bold align-baseline">Thu</small>
+            </button>
+            <button type="button" class="btn btn-light border border-default py-0 m-0 mb-2 mr-1" data-toggle="tooltip"
+                title="Fri Jan 5th"
+                onclick="window.location.href = 'http://localhost:8080/energy/hse/period/day/20240105/1?site=999'">
+                <small class="text-secondary font-weight-bold align-baseline">Fri</small>
+            </button>
+            <button type="button" class="btn btn-light border border-default py-0 m-0 mb-2 mr-1" data-toggle="tooltip"
+                title="Sat Jan 6th"
+                onclick="window.location.href = 'http://localhost:8080/energy/hse/period/day/20240106/1?site=999'">
+                <small class="text-secondary font-weight-bold align-baseline">Sat</small>
+            </button>
+            <button type="button" class="btn btn-light border border-default py-0 m-0 mb-2 mr-1" data-toggle="tooltip"
+                title="Sun Jan 7th"
+                onclick="window.location.href = 'http://localhost:8080/energy/hse/period/day/20240107/1?site=999'">
+                <small class="text-secondary font-weight-bold align-baseline">Sun</small>
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="w-15 btn btn-primary badge pr-0 mb-1 mr-1" onclick="childChart_1.setSelection()">Store
+        <button type="button" class="btn btn-sm btn-primary btn-toggle active" data-toggle="button">
+            <div class="handle"></div>
+        </button></div>
+
+    <div class="testButton w-15 btn btn-danger badge pr-0 mb-1 mr-1">Enjoy
+        <button type="button" class="btn btn-sm btn-danger btn-toggle active" data-toggle="button">
+            <div class="handle"></div>
+        </button></div>
+
+
+
+    <div id="childTableDiv_1" class="card border border-secondary rounded-0 pt-1 m-2"></div>
+
+    <div id="grandchildColumnChartDiv_1" class="card border border-secondary rounded-0 pt-1 m-2"></div>
+    <div id="grandchildTableDiv_1" class="card border border-secondary rounded-0 pt-1 ml-2"></div>
+
+</body>
+
+</html>
