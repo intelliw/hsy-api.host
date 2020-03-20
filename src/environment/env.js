@@ -100,7 +100,7 @@ const _SHARED = {
         scheme: 'https',
         versions: {
             supported: '0.3.14',
-            current: '0.5.0.01'
+            current: '0.5.0.02'
         },
         instanceId: `${utils.randomIntegerString(1, 9999)}`                     // random ID for each instance
     }
@@ -228,4 +228,4 @@ module.exports.CONFIGS = {
 }
 
 // env.active returns the active environment 
-module.exports.active = this.CONFIGS.local;      // change enums.environments to 'local' to develop locally or to 'devcloud' to develop online                               
+module.exports.active = this.CONFIGS.devcloud;      // change enums.environments to 'local' to develop locally or to 'devcloud' to develop online                               

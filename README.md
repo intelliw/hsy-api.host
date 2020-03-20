@@ -7,7 +7,7 @@ git add . ; git commit -m "ok" ; git push origin master ; git push origin --tags
 
 
 ## Package structure 
-API packages more or less mirror, the OpenAPI specification's structure.
+API packages more or less mirror, the OpenAPI specification document structure.
     - sandbox               // ignore - this package contains stashed or transient content which will eventually be deleted.   
     - src                 
         -  definitions       // data objects
