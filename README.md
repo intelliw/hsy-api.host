@@ -1,12 +1,14 @@
 # Energy Management API Host
 
 # GIT
+
 https://github.com/intelliw/hsy-api.host
 
 git add . ; git commit -m "ok" ; git push origin master ; git push origin --tags
 
 
 ## Package structure 
+
 API packages more or less mirror, the OpenAPI specification document structure.
     - sandbox               // ignore - this package contains stashed or transient content which will eventually be deleted.   
     - src                 
@@ -27,13 +29,18 @@ Before building copy these packages to hsy-consumer project and test.
 
 ## Cloud Build 
 
+_check which files will be uploaded (check .gcloudignore file)_
+    gcloud meta list-files-for-upload
+
+_upload and submit build_
 gcloud builds submit `
     --project=sundaya-dev `
     --tag asia.gcr.io/sundaya-dev/host-image . `
 
-
-## Build and deploy to Cloud Run  
 gcloud builds submit --project=sundaya-dev --tag "asia.gcr.io/sundaya-dev/host-image:latest" C:\_frg\_proj\190220-hsy-api-host\. `
+
+
+## Cloud Run  
 
 gcloud run deploy hse-host-stub `
     --image asia.gcr.io/sundaya-dev/host-image:latest `

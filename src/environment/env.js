@@ -201,7 +201,7 @@ module.exports.CONFIGS = {
         api: _API.LOCAL, gcp: _GCP.DEV,
         features: _FEATURES.DEV, logging: _LOGGING.DEV, stackdriver: _STACKDRIVER.DEV
     },
-    devcloud: {                                                                 // single node kafka, or Kafka Std - 1 master, N workers
+    local: {                                                                 // single node kafka, or Kafka Std - 1 master, N workers
         messagebroker: { ..._SHARED.MESSAGEBROKER, provider: enums.messageBroker.providers.pubsub },
         kafka: _KAFKA.SINGLE, pubsub: _SHARED.PUBSUB, kafkajs: _SHARED.KAFKAJS, datawarehouse: _SHARED.DATAWAREHOUSE,
         api: _API.DEV, gcp: _GCP.DEV,
@@ -228,4 +228,4 @@ module.exports.CONFIGS = {
 }
 
 // env.active returns the active environment 
-module.exports.active = this.CONFIGS.devcloud;      // change enums.environments to 'local' to develop locally or to 'devcloud' to develop online                               
+module.exports.active = this.CONFIGS.local;      // change enums.environments to 'local' to develop locally or to 'devcloud' to develop online                               
