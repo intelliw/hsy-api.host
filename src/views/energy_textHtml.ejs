@@ -291,12 +291,13 @@
                                     link_meta_period.description.grandchild.duration + ' ' + utils.capitalise(grandchild_period)}s` %>
                             </span>
                             <button type="button" class="select-toggle-grandchild btn btn-sm btn-light border border-secondary rounded text-nowrap py-0"
-                                data-toggle="tooltip" title="show <%= `${utils.capitalise(pane === 'pane-child' ? grandchild_period : child_period)}s` %>" >
-                                <i class="material-icons text-secondary font-weight-bolder px-0 ml-n1" style="font-size:12px;">
-                                    <%= `${(pane === 'pane-child' ? 'expand_more' : 'expand_less')}` %></i>
-                                <span class="ml-n1" style="font-size:12px;"> 
+                                data-toggle="tooltip" title="Show <%= utils.capitalise(link_self.name) %>: <%= `${utils.capitalise(pane === 'pane-child' ? grandchild_period : child_period)}s` %>" >
+                                <span class="mr-n1" style="font-size:12px;"> 
                                     <%= `${(pane === 'pane-child' ? grandchild_period : child_period).charAt(0).toUpperCase()}` %>
-                                </span> </button> 
+                                </span>
+                                <i class="material-icons text-secondary font-weight-bolder px-0 mr-n1" style="font-size:12px;">
+                                    <%= `${(pane === 'pane-child' ? 'expand_more' : 'expand_less')}` %></i>
+                            </button> 
                         </div>
 
                         <% } %>
@@ -375,7 +376,10 @@
                                                                 data-toggle="tooltip" 
                                                                 title="Down to: <%= utils.capitalise(child_period) + ': ' + items[n_btns].links[0].prompt %>" onclick="window.location.href = '<%= child_href_disabled ? 'javascript:' : items[n_btns].links[0].href %>'"
                                                             <% } %>>
-                                                            <small class="text-secondary font-weight-bold align-baseline"><%= (pane === 'pane-child' ? child_descriptions[n_btns] : grandchild_descriptions[n_btns]) %></small>
+                                                            <small class="text-secondary font-weight-bold align-baseline">
+                                                                <%= (pane === 'pane-child' ? child_descriptions[n_btns] : grandchild_descriptions[n_btns]) %>
+                                                                <i class="material-icons text-secondary font-weight-bolder px-0 mx-n1" style="font-size:12px;">expand_more</i>
+                                                            </small>
                                                         </button>
                                                     
                                                     <% } %>
