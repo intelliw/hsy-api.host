@@ -223,11 +223,11 @@
 
 
 .btn-toggle.btn-sm.btn-avg-sum:before {
-  content: "Avg";
+  content: "Sum";
   left: -0.5rem;
 }
 .btn-toggle.btn-sm.btn-avg-sum:after {
-  content: "Sum";
+  content: "Avg";
   right: -0.5rem;
   opacity: 0.5;
 }
