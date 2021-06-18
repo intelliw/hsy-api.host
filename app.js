@@ -12,7 +12,7 @@ const consts = host.consts;
 const paths = require('./src/paths');
 
 const log = require('./src/logger').log;
-
+ 
 const express = require('express');
 const bodyParser = require('body-parser')
 const Buffer = require('safe-buffer').Buffer;

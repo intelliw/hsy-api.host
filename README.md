@@ -7,6 +7,7 @@ https://github.com/intelliw/hsy-api.host
 git add . ; git commit -m "ok" ; git push origin master ; git push origin --tags
 
 
+
 ## Package structure 
 
 API packages more or less mirror, the OpenAPI specification document structure.
@@ -55,6 +56,27 @@ If running locally, build the image with local.Dockerfile (optional)
 
 docker build -f local.Dockerfile -t axc-hsy .
 
+## Local authentication
+
+    to run the app locally choose the service account you want to use with one of the following methods
+    
+    set the vscode variable 
+
+```json
+"terminal.integrated.env.windows": {
+        // "GOOGLE_APPLICATION_CREDENTIALS":"M:\_vlt\_credentials\sundaya-dev_compute_developer.gserviceaccount.json",
+        "GOOGLE_APPLICATION_CREDENTIALS": "M:\\_vlt\\_credentials\\axc-svceaccount_my-project-85848-0c51b85ca540.json"
+},
+```
+
+    or.... temporarily override the vscode variable for this session only as follows
+    
+`$env:GOOGLE_APPLICATION_CREDENTIALS="M:\_vlt\_credentials\sundaya-dev_compute_developer.gserviceaccount.json"`
+
+    or..
+    use Cloud Code with Secret Manager
+        https://cloud.google.com/code/docs/vscode/secret-manager
+        
 
 ## Local ESP
 
