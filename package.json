@@ -1,6 +1,6 @@
 {
   "name": "endpoints",
-  "description": "Sundaya Energy API host, target Node.js/GCE (docker: FROM gcr.io/google_appengine/nodejs)",
+  "description": "Sundaya Energy API host, target gcr.io/google_appengine/nodejs",
   "version": "0.0.1",
   "private": true,
   "license": "Apache-2.0",

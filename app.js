@@ -22,7 +22,7 @@ const GenericMessageDetail = require('./src/definitions/GenericMessageDetail');
 
 const UNEXPECTED_CODE = 500;
 const UNEXPECTED_STATUS = enums.responseStatus[UNEXPECTED_CODE];
-const DEFAULT_PORT = process.env.PORT || 8081;
+const DEFAULT_PORT = process.env.PORT || 8081;                                          // PORT is set in Dockerfile. During dev default to 8081
 
 // [START setup]------------------------------
 const app = express();
