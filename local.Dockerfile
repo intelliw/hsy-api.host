@@ -3,6 +3,9 @@
 # This image is based on Debian Jessie and includes nodejs and npm
 # installed from nodejs.org. The source is located in
 # https://github.com/GoogleCloudPlatform/nodejs-docker
+# can be used as base image for running applications on 
+#       Google App Engine Flexible, Google Kubernetes Engine, or any other Docker host
+
 FROM gcr.io/google_appengine/nodejs
 
 ADD . /app

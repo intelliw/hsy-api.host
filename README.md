@@ -56,11 +56,13 @@ If running locally, build the image with local.Dockerfile (optional)
 
 docker build -f local.Dockerfile -t axc-hsy .
 
-## Local authentication
 
-    to run the app locally choose the service account you want to use with one of the following methods
+## run Local 
+    with Service Account authentication for GCP services
+
+#### run locally in `vscode`
     
-    set the vscode variable 
+- set `GOOGLE_APPLICATION_CREDENTIALS` vscode env variable 
 
 ```json
 "terminal.integrated.env.windows": {
@@ -68,16 +70,45 @@ docker build -f local.Dockerfile -t axc-hsy .
         "GOOGLE_APPLICATION_CREDENTIALS": "M:\\_vlt\\_credentials\\axc-svceaccount_my-project-85848-0c51b85ca540.json"
 },
 ```
-
-    or.... temporarily override the vscode variable for this session only as follows
+- or.... override vscode env variable for **this session only**, as follows
     
 `$env:GOOGLE_APPLICATION_CREDENTIALS="M:\_vlt\_credentials\sundaya-dev_compute_developer.gserviceaccount.json"`
 
-    or..
-    use Cloud Code with Secret Manager
+#### run in local container
+
+    map a volume 
+    ..and reference service account key in env. var 
+    note: if running in bash/wsl you need to map m drive in fstab 
+    (see intelliweave.wiki/Linux#Folder Mount)
+    
+
+    ```bash 
+
+        docker run \
+        --name="hsyhost" \
+        -p 8080:8081 \
+        -e GOOGLE_APPLICATION_CREDENTIALS=/keys/sundaya-dev_compute_developer.gserviceaccount.json \
+        -v /mnt/m/_vlt/_credentials:/keys \
+            axc-hsy:latest \
+    ```
+
+    ```powershell
+
+        docker run `
+        --name="hsyhost" `
+        -p 8080:8081 `
+        -e GOOGLE_APPLICATION_CREDENTIALS=/keys/sundaya-dev_compute_developer.gserviceaccount.json `
+        -v M:/_vlt/_credentials:/keys `
+            axc-hsy:latest `
+    ```
+
+
+
+#### using Cloud Code with Secret Manager
         https://cloud.google.com/code/docs/vscode/secret-manager
         
 
+## ---------------------------------------------
 ## Local ESP
 
 docker run `
