@@ -36,22 +36,14 @@ router.post('/dataset/:dataset',
         // request ---------------------                                
         let request = new DevicesDatasetsPost(req);
 
-        //  execute if valid
-        let response = request.response;                                // execute the operation and return a response 
-        let items = response.content;
-
         // trace log the response if it is not a 200 
+        let response = request.response;                                // execute the operation and return a response 
         if (!utils.is200response(response.statusCode)) {
             log.trace(log.enums.labels.responseStatus, `${response.statusCode}`, JSON.stringify(items));
         }
 
-        // response
-        res
-            .status(response.statusCode)
-            .type(response.contentType)
-            .render(response.view, {
-                collections: items
-            });
+        // send the response
+        response.render(res)
 
     });
 
@@ -73,10 +65,10 @@ class DevicesDatasetsPost extends Request {
     * @param {*} req                                                    // express req
     */
     constructor(req) {
-        
+
         let datasetName = req.params.dataset;                                                       // dataset is a query string param         
         let contentType = req.headers[enums.request.headers.contentType];                           // text/csv or application/json
-        
+
         // create the consumer 
         let consumer = consumers.getConsumer(datasetName);                // apiPathIdentifier = enums.params.datasets.. the senderId is the keyname of the apikey enum (e.g. S001 for Sundaya dev and V001 for vendor dev)
 
@@ -84,7 +76,7 @@ class DevicesDatasetsPost extends Request {
         let datasets = consumer.convert(
             contentType == enums.mimeType.textCsv ? `${req.body}` : req.body.datasets,              // check for csv - for text/csv this is raw csv content. use template literal to handle embedded quotes in the data !
             contentType);
-            
+
         // validate the datasets                                                                     // the result is passed into the Dataset param below 
         let validationError = consumer.validate(datasets);
 
@@ -92,7 +84,7 @@ class DevicesDatasetsPost extends Request {
         let params = {};
         params.dataset = new Param('dataset', datasetName, consts.NONE, enums.params.datasets);     // this is the path parameter e.g. pms
         params.datasets = new Datasets(datasetName, datasets, validationError);                     // if validationError is not '' super will reject the request
-        
+
         super(req, params, DevicesDatasetsPostResponse.produces, DevicesDatasetsPostResponse.consumes);     // super validates and sets this.accepts this.isValid, this.isAuthorised params valid
         params.apiKey = this.apiKey;                                                                // add apiKey from the Request (Param.ApiKey) to the params, as it will be used to produce 'sender' attribute in Producer transform and publish
 
@@ -122,9 +114,9 @@ class DevicesDatasetsPostResponse extends Response {
 
         let datasets = params.datasets.value;                                   // for application/json datasets param is the *array* (of datasets) in the req.body e.g.  the [.. ] array in {"datasets": [.. ] 
         let senderId = params.apiKey.senderId();
-        
+
         // call the consumer (to publish asynchronously)
-        consumerObj.consume(datasets, senderId);                                
+        consumerObj.consume(datasets, senderId);
 
         // prepare the response
         let message = 'Data queued for processing.';
@@ -138,6 +130,16 @@ class DevicesDatasetsPostResponse extends Response {
 
     }
 
+    // renders the response
+    render(res) {
+
+        super.render(res)
+            .render(this.view, {
+                collections: this.content
+            });
+
+    }
+
     /**
       * a list of mimetypes which this responder's request (DeviceDataPost) is able to support. 
       * the default mimetype must be the first item
@@ -147,8 +149,6 @@ class DevicesDatasetsPostResponse extends Response {
     static get consumes() { return [enums.mimeType.applicationJson, enums.mimeType.textCsv] };
 
 }
-
-
 
 
 module.exports = router;

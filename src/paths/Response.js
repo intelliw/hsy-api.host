@@ -28,20 +28,32 @@ class Response {
 
         // response contentType is request Accept
         this.contentType = reqAcceptParam.value;
-        
+
         // view
-        let contentTypeKeyname = utils.keynameFromValue(enums.mimeType,reqAcceptParam.value);
+        let contentTypeKeyname = utils.keynameFromValue(enums.mimeType, reqAcceptParam.value);
         this.view = `${viewPrefix}${contentTypeKeyname}`;                           // e.g. energy_textHtml, or energy_applicationCollectionJson - todo: this should really be a dynamic selection
 
         // statusCode    
-        let statusCode = utils.keynameFromValue(enums.responseStatus,statusEnum);   // e.g. '200'   
+        let statusCode = utils.keynameFromValue(enums.responseStatus, statusEnum);   // e.g. '200'   
         this.statusCode = parseInt(statusCode);                                     // 400
 
         // content 
         this.content = content;
-        
+
     }
 
+    // pre-renders the response in common. Subclasses can add their own specific headers 
+    render(res) {
+
+        return res
+            .status(this.statusCode)
+            .type(this.contentType)
+            .header("x-content-type-options", "nosniff")
+            .header("x-frame-options", "sameorigin")
+            .header("x-xss-protection", "1; mode=block")
+            .header("referrer-policy", "same-origin")
+            .header("feature-policy", "microphone 'none'; camera 'none'; geolocation 'none'; usb 'none'; payment 'none'" )
+    }
 }
 
 module.exports = Response;

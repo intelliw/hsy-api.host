@@ -44,22 +44,15 @@ router.route([
     // request ---------------------
     let request = new EnergyGet(req);
 
-    //  execute if valid
+
+    // trace log the response status if it is not a 200 
     let response = request.response;                       // execute the operation and return a response 
-    let collections = response.content;
-    
-    // trace log the response if it is not a 200 
     if (!utils.is200response(response.statusCode)) {
       log.trace(log.enums.labels.responseStatus, `${response.statusCode}`, JSON.stringify(collections));
     }
 
-    // /* response
-    res
-      .status(response.statusCode)
-      .type(response.contentType)
-      .render(response.view, {                            // all responses are rendered into an ejs view, including e.g. energy_textHtml, or energy_applicationCollectionJson
-        collections: collections, utils: utils, env: env, enums: enums
-      });
+    // send the response
+    response.render(res)
 
     /* // debug START
     res
@@ -143,6 +136,21 @@ class EnergyGetResponse extends Response {
 
   }
 
+  // renders the response
+  render(res) {
+
+    super.render(res)
+      .header("Content-Security-Policy", 
+          "default-src 'self'; font-src 'self' *.gstatic.com; " + 
+          "img-src 'self' data: https: *.cloudflare.com *.gstatic.com; " + 
+          "script-src 'self' 'unsafe-inline' *.jquery.com *.cloudflare.com *.gstatic.com ; " + 
+          "style-src 'self' 'unsafe-inline' *.gstatic.com *.googleapis.com")
+      .render(this.view, {                            // all responses are rendered into an ejs view, including e.g. energy_textHtml, or energy_applicationCollectionJson
+        collections: this.content, utils: utils, env: env, enums: enums
+      });
+
+  }
+
 
   /**
     * a list of mimetypes which this responder's request (EnergyGetRequest) is able to support. 
@@ -156,7 +164,7 @@ class EnergyGetResponse extends Response {
 
 // perform the energy data operation and return a collections array
 function executeGet(params) {
-  
+
   let links;
   let items;
   let collections = new Collections();                                            // stores an array of collections, one for each period in the duration 
@@ -167,19 +175,19 @@ function executeGet(params) {
   // get a collection for each period in the duration
   let periods = params.period.getEach();                                          // break up the period duration into individual periods (though typically there is only 1 period) 
   let duration = periods.length;                                                  // use duration in next/prev links to allow navigation with a similar duration
-  
+
   const ALT = true;
-  
+
   periods.forEach(period => {
-    
+
     // create the collection links  
     let selfDescription = `${params.energy.value} ${period.value} ${period.epoch} ${period.duration} ${params.site.value}`;    // e.g hsy week 20190204 1 999   (this is the self description format for energy periods) 
     links = new Links.EnergyLinks(params.energy, period, params.site, selfDescription);   // constructor creates a 'self' link with an energy and epoch description
-    
+
     // child  
     child = period.getChild();                                                    // create the child link with a period description (if one has been configured for it in consts.period.childDescription)
     if (child) {                                                                  // instant does not have a child
-    
+
       child.addDescription();
 
       links.addLink(child, enums.linkRender.none, child.description);             // child collection link - not rendered, with a period description
@@ -187,8 +195,8 @@ function executeGet(params) {
     }
 
     // grandchild 
-    if (grandchild) {    
-      
+    if (grandchild) {
+
       grandchild.addDescription();
 
       links.addLink(grandchild, enums.linkRender.none, grandchild.description);     // create grandchild with a period description
@@ -199,8 +207,8 @@ function executeGet(params) {
 
     links.addLink(period.getParent(), enums.linkRender.link);
     links.addLink(period.getParent(ALT), enums.linkRender.link);                    // add the alternate parent link for this period - if one exists 
-    
-    links.addLink(periods[periods.length-1].getNext(), enums.linkRender.link, consts.NONE, duration);  // use duration in next/prev links to allow navigation with a similar duration. make prev and next relative to the whole group of periods i.e next navagates to the period after the last, and pre navigates to the period before the first in the group 
+
+    links.addLink(periods[periods.length - 1].getNext(), enums.linkRender.link, consts.NONE, duration);  // use duration in next/prev links to allow navigation with a similar duration. make prev and next relative to the whole group of periods i.e next navagates to the period after the last, and pre navigates to the period before the first in the group 
     links.addLink(periods[0].getPrev(), enums.linkRender.link, consts.NONE, duration);
 
     // metadata links
@@ -208,7 +216,7 @@ function executeGet(params) {
 
     // data items
     items = createItems(params.energy, period, params.site);
-    
+
     // add each collect)ion to the collections array
     collections.add(env.active.api.versions.current, links.href, links, items);
 
@@ -334,8 +342,8 @@ function createItemData(energy, childPeriod, grandChildPeriod, site) {
   if (grandChildData._elements.length > 0) {
     dataWrapper.addNested(grandChildPeriod.context, `${grandChildPeriod.epoch}/${grandChildPeriod.duration}`, grandChildData);
   }
-  
-  
+
+
   return dataWrapper;
 
 }

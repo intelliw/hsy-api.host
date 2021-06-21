@@ -74,7 +74,7 @@ docker build -f local.Dockerfile -t axc-hsy .
     
 `$env:GOOGLE_APPLICATION_CREDENTIALS="M:\_vlt\_credentials\sundaya-dev_compute_developer.gserviceaccount.json"`
 
-#### run in local container
+#### run in Local container
 
     map a volume 
     ..and reference service account key in env. var 

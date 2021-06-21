@@ -37,15 +37,10 @@ router.get(['/:device?/dataset/:dataset?',
 
         //  execute if valid
         let response = request.response;                            // execute the operation and return a response 
-        let items = response.content;
 
-        // response
-        res
-            .status(response.statusCode)
-            .type(response.contentType)
-            .render(response.view, {
-                collections: items
-            });
+        // send the response
+        response.render(res)
+
 
     });
 
@@ -113,6 +108,17 @@ class DeviceDatasetGetResponse extends Response {
 
     }
 
+    // renders the response
+    render(res) {
+
+        super.render(res)
+            .render(this.view, {
+                collections: this.content
+            });
+
+    }
+    
+    
     /**
       * a list of mimetypes which this responder's request (DeviceDataPost) is able to support. 
       * the default mimetype must be the first item
