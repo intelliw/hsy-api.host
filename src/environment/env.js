@@ -99,7 +99,7 @@ const _SHARED = {
         host: 'api.dev.sundaya.monitored.equipment',                            // dev is the default for _SHARED.API, each environment will override this in _API
         scheme: 'https',
         versions: {
-            supported: '0.3.14',
+            supported: '0.3.14, 0.5.0.02',
             current: '0.6.0.01'
         },
         instanceId: `${utils.randomIntegerString(1, 9999)}`                     // random ID for each instance
