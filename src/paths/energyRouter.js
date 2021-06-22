@@ -139,8 +139,8 @@ class EnergyGetResponse extends Response {
   // renders the response
   render(res) {
 
-    super.render(res)
-      .header("Content-Security-Policy", 
+    super.render(res) 
+      .header("Content-Security-Policy",                    // start with Content-Security-Policy-Report-Only and monitor in Chrome-> network-> Console
           "default-src 'self'; font-src 'self' *.gstatic.com; " + 
           "img-src 'self' data: https: *.cloudflare.com *.gstatic.com; " + 
           "script-src 'self' 'unsafe-inline' *.jquery.com *.cloudflare.com *.gstatic.com ; " + 
