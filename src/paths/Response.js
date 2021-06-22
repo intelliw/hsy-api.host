@@ -48,11 +48,14 @@ class Response {
         return res
             .status(this.statusCode)
             .type(this.contentType)
-            .header("x-content-type-options", "nosniff")
-            .header("x-frame-options", "sameorigin")
-            .header("x-xss-protection", "1; mode=block")
-            .header("referrer-policy", "same-origin")
-            .header("feature-policy", "microphone 'none'; camera 'none'; geolocation 'none'; usb 'none'; payment 'none'" )
+            .header("X-Content-Type-Options", "nosniff")
+            .header("X-Frame-Options", "sameorigin")
+            .header("X-XSS-Protection", "1; mode=block")
+            .header("Referrer-Policy", "same-origin")
+            .header("Feature-Policy", "microphone 'none'; camera 'none'; geolocation 'none'; usb 'none'; payment 'none';" )
+            .header("Permissions-Policy", "microphone=(), camera=(), geolocation=(self), usb=(), payment=(), sync-xhr=(self),  autoplay=(self)")
+            .header("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload;")
+            
     }
 }
 
