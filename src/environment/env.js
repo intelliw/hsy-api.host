@@ -100,7 +100,7 @@ const _SHARED = {
         scheme: 'https',
         versions: {
             supported: '0.3.14, 0.5.0.02',
-            current: '0.6.0.05'
+            current: '0.6.0.06'
         },
         instanceId: `${utils.randomIntegerString(1, 9999)}`                     // random ID for each instance
     }
