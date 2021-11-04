@@ -10,22 +10,31 @@ git add . ; git commit -m "ok" ; git push origin master ; git push origin --tags
 
 ## Package structure 
 
-API packages more or less mirror, the OpenAPI specification document structure.
-    - sandbox               // ignore - this package contains stashed or transient content which will eventually be deleted.   
+API packages more or less mirrors the OpenAPI specification structure.
+    
+    - sandbox               // ignore this package - contains stashed content which will be deleted.   
+    
     - src                 
         -  definitions       // data objects
-        - `environment`       // configs and enums shared by other services in the environment. 
+        - `environment`      // configs and enums shared by other services in the environment. 
         -  host              // setup and configuration needed by hsy-api-host (not shared). 
-        - `logger`            // logging framework, shared by other services in the environment. 
-        -  parameters        // generic class for simple params, specialised classes for complex params such as Period
-        -  paths             // routers for paths, these handle top level routes. 
-        -  producers         // message producers
-        -  responses         // views and response handlers for data and errors.
-                                Each response object is constructed with a data object; and selects a view based on headers
+        - `logger`           // logging framework, shared by other services in the environment. 
+        -  parameters        // base param class is for simple params, specialised classes are 
+                                    for  complex params such as Period
+        -  paths             // 
+                router          express.js routers for each path, these handle top level routes. 
+                request         each path has a request class
+                response        a response object is constructed by request with a data object; it selects a view based on request headers
+        -  producers         // message producers. will transform message into application-specified format 
+                                then call write on a Storage class. 
+                                Optionally it will also republish to a new topic
+        -  consumers         // instantiates a Subscriber and listens to a topic in the Consumer's callback reference
+        -  publishers        // if a Producer had optionally re-published the mesage, publishers will call broker client library
+                                 to deliver a transformed message to a new topic in the Message Broker.
         -  views             // view templates
 
 `environment` and `logger` packages are mastered in hsy-api-host (this project) and shared with hsy-api-consumers.
-Before building copy these packages to hsy-consumer project and test.
+Before building, make sure these are checked-in and pulled into your local build.
 
 
 ## Cloud Build 

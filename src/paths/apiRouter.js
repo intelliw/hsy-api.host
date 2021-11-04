@@ -23,7 +23,7 @@ router.get('/', (req, res, next) => {
     res
         .status(200)
         .json({
-            paths: utils.objectKeysToArray(enums.paths),                    // e.g. {"paths":["logging","features","versions"]}        
+            paths: utils.objectKeysToArray(enums.paths),                            // e.g. {"paths":["logging","features","versions"]}        
             api: {
                 logging: {                                                          // e.g. {"logging":{"verbosity":["info"]}}
                     statements: utils.objectKeysToArray(enums.logging.statements),

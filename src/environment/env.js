@@ -96,11 +96,11 @@ const _SHARED = {
         }
     },
     API: {
-        host: 'api.dev.sundaya.monitored.equipment',                            // dev is the default for _SHARED.API, each environment will override this in _API
+        host: 'api.sundaya.intelliweave.com',                            // dev is the default for _SHARED.API, each environment will override this in _API
         scheme: 'https',
         versions: {
             supported: '0.3.14, 0.5.0.02',
-            current: '0.6.0.06'
+            current: '0.6.0.07'
         },
         instanceId: `${utils.randomIntegerString(1, 9999)}`                     // random ID for each instance
     }
@@ -110,10 +110,10 @@ const _SHARED = {
 // API host and versions for dev, prod, and test            version = major.minor[.build[.revision]]   ..Odd-numbers for development even for stable
 const _API = {
     LOCAL: { ..._SHARED.API, host: '192.168.1.113:8081', scheme: 'http', versions: { supported: '0.5', current: '0.6.0.03' } },
-    DEV: { ..._SHARED.API, host: 'api.dev.sundaya.monitored.equipment' },
-    STAGE: { ..._SHARED.API, host: 'api.stage.sundaya.monitored.equipment' },
+    DEV: { ..._SHARED.API, host: 'api.sundaya.intelliweave.com' },
+    STAGE: { ..._SHARED.API, host: 'sundaya-api-as5joi0v.an.gateway.dev' },
     TEST: { ..._SHARED.API, host: 'api.test.sundaya.monitored.equipment' },
-    PROD: { ..._SHARED.API, host: 'api.sundaya.monitored.equipment' }
+    PROD: { ..._SHARED.API, host: 'api.sundaya.intelliweave.com' }
 }
 
 // feature toggles - a feature is 'on' if it is present in the list    
